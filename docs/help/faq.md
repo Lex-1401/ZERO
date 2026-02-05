@@ -270,7 +270,7 @@ Use um agente de IA local que possa **ver sua máquina**. Isso é muito mais efi
 Essas ferramentas podem ler o repositório, executar comandos, inspecionar logs e ajudar a corrigir a configuração no nível da máquina (PATH, serviços, permissões, arquivos de autenticação). Dê a eles o **checkout completo do código-fonte** via a instalação hackeável (git):
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --install-method git
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git
 ```
 
 Isso instala o ZERO **a partir de um checkout do git**, para que o agente possa ler o código + documentos e raciocinar sobre a versão exata que você está executando. Você sempre pode voltar para a versão estável (stable) mais tarde, executando novamente o instalador sem `--install-method git`.
@@ -305,7 +305,7 @@ Documentos de instalação: [Instalar](/install), [Flags do instalador](/install
 O repositório recomenda rodar a partir do código-fonte e usar o assistente de integração:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 zero onboard --install-daemon
 ```
 
@@ -462,15 +462,15 @@ See what changed:
 One‑liners (macOS/Linux):
 
 ```bash
-curl -fsSL --proto '=https' --tlsv1.2 https://zero.local/install.sh | bash -s -- --beta
+curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --beta
 ```
 
 ```bash
-curl -fsSL --proto '=https' --tlsv1.2 https://zero.local/install.sh | bash -s -- --install-method git
+curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git
 ```
 
 Windows installer (PowerShell):
-<https://zero.local/install.ps1>
+<https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1>
 
 More detail: [Development channels](/install/development-channels) and [Installer flags](/install/installer).
 
@@ -499,7 +499,7 @@ This switches to the `main` branch and updates from source.
 1) **Hackable install (from the installer site):**
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --install-method git
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git
 ```
 
 That gives you a local repo you can edit, then update via git.
@@ -521,19 +521,19 @@ Docs: [Update](/cli/update), [Development channels](/install/development-channel
 Re-run the installer with **verbose output**:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --verbose
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --verbose
 ```
 
 Beta install with verbose:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --beta --verbose
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --beta --verbose
 ```
 
 For a hackable (git) install:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --install-method git --verbose
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git --verbose
 ```
 
 More options: [Installer flags](/install/installer).
@@ -694,7 +694,7 @@ Se você usou o instalador automático, ele deve ter tentado fazer isso por voc�
 O script de instalação de uma linha funciona na maioria das distribuições Linux (Ubuntu, Debian, Fedora, Arch):
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 ```
 
 ### Como instalo o ZERO em uma VPS?

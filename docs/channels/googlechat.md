@@ -27,7 +27,7 @@ Status: pronto para DMs + spaces via webhooks da API do Google Chat (apenas HTTP
 5) Crie um app Google Chat na [Configuração de Chat do Console Google Cloud](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat):
    - Preencha as **Informações do aplicativo** (Application info):
      - **Nome do app**: (ex. `ZERO`)
-     - **URL do Avatar**: (ex. `https://zero.local/logo.png`)
+     - **URL do Avatar**: (ex. `https://raw.githubusercontent.com/Lex-1401/ZERO/main/logo.png`)
      - **Descrição**: (ex. `Assistente Pessoal de IA`)
    - Ative **Recursos interativos** (Interactive features).
    - Em **Funcionalidade** (Functionality), marque **Participar de espaços e conversas em grupo** (Join spaces and group conversations).

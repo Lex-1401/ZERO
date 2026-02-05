@@ -51,7 +51,7 @@ Windows: use **WSL2** (Ubuntu recomendado). O WSL2 é fortemente recomendado; o 
 ## 1) Instale a CLI (recomendado)
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 ```
 
 Opções do instalador (método de instalação, não interativo, a partir do GitHub): [Instalação](/install).
@@ -59,7 +59,7 @@ Opções do instalador (método de instalação, não interativo, a partir do Gi
 Windows (PowerShell):
 
 ```powershell
-iwr -useb https://zero.local/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex
 ```
 
 Alternativa (instalação global):

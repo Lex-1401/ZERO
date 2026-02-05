@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${ZERO_INSTALL_URL:-https://zero.local/install.sh}"
+INSTALL_URL="${ZERO_INSTALL_URL:-https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh}"
 SMOKE_PREVIOUS_VERSION="${ZERO_INSTALL_SMOKE_PREVIOUS:-}"
 SKIP_PREVIOUS="${ZERO_INSTALL_SMOKE_SKIP_PREVIOUS:-0}"
 

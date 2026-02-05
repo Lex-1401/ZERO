@@ -10,20 +10,20 @@ read_when:
 
 ZERO ships two installer scripts (served from `zero.local`):
 
-- `https://zero.local/install.sh` — “recommended” installer (global npm install by default; can also install from a GitHub checkout)
-- `https://zero.local/install-cli.sh` — non-root-friendly CLI installer (installs into a prefix with its own Node)
- - `https://zero.local/install.ps1` — Windows PowerShell installer (npm by default; optional git install)
+- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh` — “recommended” installer (global npm install by default; can also install from a GitHub checkout)
+- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install-cli.sh` — non-root-friendly CLI installer (installs into a prefix with its own Node)
+ - `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1` — Windows PowerShell installer (npm by default; optional git install)
 
 To see the current flags/behavior, run:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --help
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --help
 ```
 
 Windows (PowerShell) help:
 
 ```powershell
-& ([scriptblock]::Create((iwr -useb https://zero.local/install.ps1))) -?
+& ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1))) -?
 ```
 
 If the installer completes but `zero` is not found in a new terminal, it’s usually a Node/npm PATH issue. See: [Install](/install#nodejs--npm-path-sanity).
@@ -45,7 +45,7 @@ What it does (high level):
 If you *want* `sharp` to link against a globally-installed libvips (or you’re debugging), set:
 
 ```bash
-SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://zero.local/install.sh | bash
+SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 ```
 
 ### Discoverability / “git install” prompt
@@ -78,7 +78,7 @@ This script installs `zero` into a prefix (default: `~/.zero`) and also installs
 Help:
 
 ```bash
-curl -fsSL https://zero.local/install-cli.sh | bash -s -- --help
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install-cli.sh | bash -s -- --help
 ```
 
 ## install.ps1 (Windows PowerShell)
@@ -94,15 +94,15 @@ What it does (high level):
 Examples:
 
 ```powershell
-iwr -useb https://zero.local/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex
 ```
 
 ```powershell
-iwr -useb https://zero.local/install.ps1 | iex -InstallMethod git
+iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex -InstallMethod git
 ```
 
 ```powershell
-iwr -useb https://zero.local/install.ps1 | iex -InstallMethod git -GitDir "C:\\zero"
+iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex -InstallMethod git -GitDir "C:\\zero"
 ```
 
 Environment variables:

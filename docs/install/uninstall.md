@@ -113,7 +113,7 @@ If you used a profile, delete the matching task name and `~\.zero-<profile>\gate
 
 ### Normal install (install.sh / npm / pnpm / bun)
 
-If you used `https://zero.local/install.sh` or `install.ps1`, the CLI was installed with `npm install -g zero@latest`.
+If you used `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh` or `install.ps1`, the CLI was installed with `npm install -g zero@latest`.
 Remove it with `npm rm -g zero` (or `pnpm remove -g` / `bun remove -g` if you installed that way).
 
 ### Source checkout (git clone)

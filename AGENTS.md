@@ -10,7 +10,7 @@
 - Docs: `docs/` (imagens, fila, configuração Pi). A saída da compilação vive em `dist/`.
 - Plugins/extensões: vivem em `extensions/*` (pacotes do workspace). Mantenha dependências exclusivas de plugins no `package.json` da extensão; não as adicione ao `package.json` raiz, a menos que o núcleo as utilize.
 - Plugins: a instalação executa `npm install --omit=dev` no diretório do plugin; dependências de tempo de execução devem viver em `dependencies`. Evite `workspace:*` em `dependencies` (o npm install quebra); coloque `zero` em `devDependencies` ou `peerDependencies` (o tempo de execução resolve `zero/plugin-sdk` via alias jiti).
-- Instaladores servidos de `https://zero.local/*`: vivem no repositório irmão `../zero.local` (`public/install.sh`, `public/install-cli.sh`, `public/install.ps1`).
+- Instaladores servidos de `https://raw.githubusercontent.com/Lex-1401/ZERO/main/*`: vivem no repositório irmão `../zero.local` (`public/install.sh`, `public/install-cli.sh`, `public/install.ps1`).
 - Canais de mensagens: sempre considere **todos** os canais integrados + extensões ao refatorar lógica compartilhada (roteamento, listas de permissão, pareamento, bloqueio de comandos, onboarding, docs).
   - Docs de canais principais: `docs/channels/`
   - Código de canais principais: `src/telegram`, `src/discord`, `src/slack`, `src/signal`, `src/imessage`, `src/web` (WhatsApp web), `src/channels`, `src/routing`
@@ -22,9 +22,9 @@
 - Links internos em `docs/**/*.md`: relativos à raiz, sem `.md`/`.mdx` (exemplo: `[Config](/configuration)`).
 - Referências cruzadas de seção: use âncoras em caminhos relativos à raiz (exemplo: `[Hooks](/configuration#hooks)`).
 - Cabeçalhos e âncoras de documentos: evite travessões e apóstrofos nos cabeçalhos porque eles quebram os links de âncora.
-- Quando o operador pedir links, responda com as URLs completas `https://zero.local/docs/...` (não relativas à raiz).
-- Quando você mexer nos documentos, termine a resposta com as URLs `https://zero.local/docs/...` que você referenciou.
-- README (GitHub): mantenha as URLs absolutas da documentação (`https://zero.local/docs/...`) para que os links funcionem no GitHub.
+- Quando o operador pedir links, responda com as URLs completas `https://raw.githubusercontent.com/Lex-1401/ZERO/main/docs/...` (não relativas à raiz).
+- Quando você mexer nos documentos, termine a resposta com as URLs `https://raw.githubusercontent.com/Lex-1401/ZERO/main/docs/...` que você referenciou.
+- README (GitHub): mantenha as URLs absolutas da documentação (`https://raw.githubusercontent.com/Lex-1401/ZERO/main/docs/...`) para que os links funcionem no GitHub.
 - O conteúdo da documentação deve ser genérico: sem nomes de dispositivos pessoais/hostnames/caminhos; use placeholders como `user@gateway-host` e “host do gateway”.
 
 ## Operações na VM exe.dev (geral)
