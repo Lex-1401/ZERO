@@ -233,7 +233,7 @@
     "lit": "^3.3.2",
     "lucide": "^0.563.0",
     "ollama": "^0.6.3",
-    "oxfmt": "0.26.0",
+    "oxfmt": "0.28.0",
     "oxlint": "^1.41.0",
     "oxlint-tsgolint": "^0.11.1",
     "quicktype-core": "^23.2.6",
