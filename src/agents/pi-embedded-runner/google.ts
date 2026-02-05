@@ -342,11 +342,11 @@ export async function sanitizeSessionHistory(params: {
   const priorSnapshot = hasSnapshot ? readLastModelSnapshot(params.sessionManager) : null;
   const modelChanged = priorSnapshot
     ? !isSameModelSnapshot(priorSnapshot, {
-      timestamp: 0,
-      provider: params.provider,
-      modelApi: params.modelApi,
-      modelId: params.modelId,
-    })
+        timestamp: 0,
+        provider: params.provider,
+        modelApi: params.modelApi,
+        modelId: params.modelId,
+      })
     : false;
   const sanitizedOpenAI =
     isOpenAIResponsesApi && modelChanged

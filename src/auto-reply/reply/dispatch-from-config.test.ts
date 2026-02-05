@@ -19,13 +19,15 @@ const diagnosticMocks = vi.hoisted(() => ({
   logSessionStateChange: vi.fn(),
 }));
 const diagnosticEventsMocks = vi.hoisted(() => ({
-  isDiagnosticsEnabled: vi.fn((cfg: { diagnostics?: { enabled?: boolean } } | undefined) =>
-    cfg?.diagnostics?.enabled === true),
+  isDiagnosticsEnabled: vi.fn(
+    (cfg: { diagnostics?: { enabled?: boolean } } | undefined) =>
+      cfg?.diagnostics?.enabled === true,
+  ),
 }));
 const hookMocks = vi.hoisted(() => ({
   runner: {
     hasHooks: vi.fn(() => false),
-    runMessageReceived: vi.fn(async () => { }),
+    runMessageReceived: vi.fn(async () => {}),
   },
 }));
 
@@ -71,7 +73,7 @@ function createDispatcher(): ReplyDispatcher {
     sendToolResult: vi.fn(() => true),
     sendBlockReply: vi.fn(() => true),
     sendFinalReply: vi.fn(() => true),
-    waitForIdle: vi.fn(async () => { }),
+    waitForIdle: vi.fn(async () => {}),
     getQueuedCounts: vi.fn(() => ({ tool: 0, block: 0, final: 0 })),
   };
 }

@@ -393,8 +393,8 @@ function collectBrowserControlFindings(cfg: ZEROConfig): SecurityAuditFinding[] 
     const gatewayAuth = resolveGatewayAuth({ authConfig: cfg.gateway?.auth, tailscaleMode });
     const gatewayToken =
       gatewayAuth.mode === "token" &&
-        typeof gatewayAuth.token === "string" &&
-        gatewayAuth.token.trim()
+      typeof gatewayAuth.token === "string" &&
+      gatewayAuth.token.trim()
         ? gatewayAuth.token.trim()
         : null;
 
@@ -833,7 +833,7 @@ async function maybeProbeGateway(params: {
           ? remote.token.trim()
           : undefined
         : process.env.ZERO_GATEWAY_TOKEN?.trim() ||
-        (typeof authToken === "string" && authToken.trim() ? authToken.trim() : undefined);
+          (typeof authToken === "string" && authToken.trim() ? authToken.trim() : undefined);
     const password =
       process.env.ZERO_GATEWAY_PASSWORD?.trim() ||
       (mode === "remote"
@@ -927,10 +927,10 @@ export async function runSecurityAudit(opts: SecurityAuditOptions): Promise<Secu
   const deep =
     opts.deep === true
       ? await maybeProbeGateway({
-        cfg,
-        timeoutMs: Math.max(250, opts.deepTimeoutMs ?? 5000),
-        probe: opts.probeGatewayFn ?? probeGateway,
-      })
+          cfg,
+          timeoutMs: Math.max(250, opts.deepTimeoutMs ?? 5000),
+          probe: opts.probeGatewayFn ?? probeGateway,
+        })
       : undefined;
 
   if (deep?.gateway?.attempted && deep.gateway.ok === false) {
@@ -956,9 +956,10 @@ export async function runSecurityAudit(opts: SecurityAuditOptions): Promise<Secu
 
       const gatewayAuth = resolveGatewayAuth({
         authConfig: cfg.gateway?.auth,
-        tailscaleMode: cfg.gateway?.tailscale?.mode ?? "off"
+        tailscaleMode: cfg.gateway?.tailscale?.mode ?? "off",
       });
-      const token = (typeof gatewayAuth.token === "string" ? gatewayAuth.token : "ZERO_EMERGENCY_KEY");
+      const token =
+        typeof gatewayAuth.token === "string" ? gatewayAuth.token : "ZERO_EMERGENCY_KEY";
 
       const encrypted = AuditCrypt.encrypt(JSON.stringify(report, null, 2), token);
       await fs.writeFile(reportPath, encrypted, { mode: 0o600 });

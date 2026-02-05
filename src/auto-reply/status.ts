@@ -157,12 +157,12 @@ const readUsageFromSessionLog = (
   sessionEntry?: SessionEntry,
 ):
   | {
-    input: number;
-    output: number;
-    promptTokens: number;
-    total: number;
-    model?: string;
-  }
+      input: number;
+      output: number;
+      promptTokens: number;
+      total: number;
+      model?: string;
+    }
   | undefined => {
   // Transcripts are stored at the session file path (fallback: ~/.zero/sessions/<SessionId>.jsonl)
   if (!sessionId) return undefined;
@@ -376,21 +376,21 @@ export function buildStatusMessage(args: StatusArgs): string {
   const showCost = authLabelValue === "api-key" || authLabelValue === "mixed";
   const costConfig = showCost
     ? resolveModelCostConfig({
-      provider,
-      model,
-      config: args.config,
-    })
+        provider,
+        model,
+        config: args.config,
+      })
     : undefined;
   const hasUsage = typeof inputTokens === "number" || typeof outputTokens === "number";
   const cost =
     showCost && hasUsage
       ? estimateUsageCost({
-        usage: {
-          input: inputTokens ?? undefined,
-          output: outputTokens ?? undefined,
-        },
-        cost: costConfig,
-      })
+          usage: {
+            input: inputTokens ?? undefined,
+            output: outputTokens ?? undefined,
+          },
+          cost: costConfig,
+        })
       : undefined;
   const costLabel = showCost && hasUsage ? formatUsd(cost) : undefined;
 

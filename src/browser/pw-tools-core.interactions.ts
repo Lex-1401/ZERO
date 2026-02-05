@@ -225,7 +225,7 @@ export async function evaluateViaPlaywright(opts: {
   } catch (err) {
     throw new Error(
       `Security validation failed: ${err instanceof Error ? err.message : String(err)}. ` +
-      `The function contains forbidden constructs (eval, Function, require, etc.).`
+        `The function contains forbidden constructs (eval, Function, require, etc.).`,
     );
   }
 
@@ -498,7 +498,7 @@ export async function screenshotWithLabelsViaPlaywright(opts: {
         const existing = document.querySelectorAll("[data-zero-labels]");
         existing.forEach((el) => el.remove());
       })
-      .catch(() => { });
+      .catch(() => {});
   }
 }
 

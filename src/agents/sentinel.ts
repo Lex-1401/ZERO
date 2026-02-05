@@ -16,7 +16,7 @@ export type SentinelOptions = {
  * (como resultados de web_fetch ou web_search) antes que elas cheguem ao agente principal.
  */
 export class SentinelAgent {
-  constructor(private readonly options: SentinelOptions) { }
+  constructor(private readonly options: SentinelOptions) {}
 
   /**
    * Resume e limpa conteúdo potencialmente malicioso.

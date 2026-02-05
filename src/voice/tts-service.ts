@@ -39,7 +39,7 @@ function playAudio(filePath: string) {
     execFile("afplay", [filePath], (_err) => {
       try {
         fs.unlinkSync(filePath);
-      } catch { }
+      } catch {}
     });
   } else if (process.platform === "linux") {
     // Try aplay first, fallback to mpg123
@@ -48,12 +48,12 @@ function playAudio(filePath: string) {
         execFile("mpg123", [filePath], () => {
           try {
             fs.unlinkSync(filePath);
-          } catch { }
+          } catch {}
         });
       } else {
         try {
           fs.unlinkSync(filePath);
-        } catch { }
+        } catch {}
       }
     });
   } else if (process.platform === "win32") {
@@ -67,7 +67,7 @@ function playAudio(filePath: string) {
       (_err) => {
         try {
           fs.unlinkSync(filePath);
-        } catch { }
+        } catch {}
       },
     );
   }

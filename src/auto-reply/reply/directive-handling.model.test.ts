@@ -22,7 +22,7 @@ vi.mock("../../agents/sandbox.js", () => ({
 }));
 
 vi.mock("../../config/sessions.js", () => ({
-  updateSessionStore: vi.fn(async () => { }),
+  updateSessionStore: vi.fn(async () => {}),
 }));
 
 vi.mock("../../infra/system-events.js", () => ({

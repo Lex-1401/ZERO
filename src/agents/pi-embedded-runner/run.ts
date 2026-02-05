@@ -61,7 +61,7 @@ const ANTHROPIC_MAGIC_STRING_REPLACEMENT = "ANTHROPIC MAGIC STRING TRIGGER REFUS
 /**
  * Sanitizes the prompt by removing Anthropic-specific magic strings that might trigger
  * unintended refusal behaviors in certain models.
- * 
+ *
  * @param prompt - The input prompt text to be scrubbed.
  * @returns The sanitized prompt with magic strings replaced by a neutral redacted placeholder.
  * @internal
@@ -76,26 +76,26 @@ function scrubAnthropicRefusalMagic(prompt: string): string {
 
 /**
  * Orchestrates a complete embedded Pi Agent execution session.
- * 
+ *
  * [PT] Executa uma sessão de agente Pi incorporada.
  *
- * This function serves as the primary execution engine for agentic deliberative loops, 
+ * This function serves as the primary execution engine for agentic deliberative loops,
  * managing the following lifecycle phases:
- * 
+ *
  * 1. **Resource Isolation**: Resolves session and global lanes for command prioritization.
  * 2. **Model Selection & Routing**: Determines the optimal provider/model pairing via hybrid routing rules.
  * 3. **Context Governance**: Evaluates context window guardrails and initiates auto-compaction upon overflow detection.
- * 4. **Identity Management**: Handles authentication profile resolution, including failover mechanisms 
+ * 4. **Identity Management**: Handles authentication profile resolution, including failover mechanisms
  *    and rate-limit cooling strategies.
- * 5. **Deliberation Loop**: Executes the agent loop via `runEmbeddedAttempt`, supporting tool use, 
+ * 5. **Deliberation Loop**: Executes the agent loop via `runEmbeddedAttempt`, supporting tool use,
  *    reasoning streams, and multimodal inputs.
- * 6. **Error Recovery**: Implements sophisticated retry logic for role-ordering conflicts, 
+ * 6. **Error Recovery**: Implements sophisticated retry logic for role-ordering conflicts,
  *    transient provider errors, and unsupported thinking/reasoning levels.
  * 7. **Telemetry & Auditing**: Records execution metrics (latency, token usage) and builds the final result payload.
  *
- * @param params - A comprehensive set of parameters (RunEmbeddedPiAgentParams) defining the agent's context, 
+ * @param params - A comprehensive set of parameters (RunEmbeddedPiAgentParams) defining the agent's context,
  *                 prompt, configuration, and callback hooks for streaming updates.
- * @returns A Promise resolving to an `EmbeddedPiRunResult` object containing the execution payloads, 
+ * @returns A Promise resolving to an `EmbeddedPiRunResult` object containing the execution payloads,
  *          telemetry metadata, and agent state report.
  * @throws {FailoverError} if the model fails and recovery strategies are exhausted or disabled.
  * @throws {Error} for critical system failures or invalid configurations.
@@ -103,7 +103,6 @@ function scrubAnthropicRefusalMagic(prompt: string): string {
 export async function runEmbeddedPiAgent(
   params: RunEmbeddedPiAgentParams,
 ): Promise<EmbeddedPiRunResult> {
-
   const sessionLane = resolveSessionLane(params.sessionKey?.trim() || params.sessionId);
   const globalLane = resolveGlobalLane(params.lane);
   const enqueueGlobal =
@@ -597,9 +596,9 @@ export async function runEmbeddedPiAgent(
               const message =
                 (lastAssistant
                   ? formatAssistantErrorText(lastAssistant, {
-                    cfg: params.config,
-                    sessionKey: params.sessionKey ?? params.sessionId,
-                  })
+                      cfg: params.config,
+                      sessionKey: params.sessionKey ?? params.sessionId,
+                    })
                   : undefined) ||
                 lastAssistant?.errorMessage?.trim() ||
                 (timedOut
@@ -678,12 +677,12 @@ export async function runEmbeddedPiAgent(
               stopReason: attempt.clientToolCall ? "tool_calls" : undefined,
               pendingToolCalls: attempt.clientToolCall
                 ? [
-                  {
-                    id: `call_${Date.now()}`,
-                    name: attempt.clientToolCall.name,
-                    arguments: JSON.stringify(attempt.clientToolCall.params),
-                  },
-                ]
+                    {
+                      id: `call_${Date.now()}`,
+                      name: attempt.clientToolCall.name,
+                      arguments: JSON.stringify(attempt.clientToolCall.params),
+                    },
+                  ]
                 : undefined,
             },
             didSendViaMessagingTool: attempt.didSendViaMessagingTool,
