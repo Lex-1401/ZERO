@@ -6,7 +6,7 @@
 
 [![Status do CI](https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge)](https://github.com/zero/zero/actions/workflows/ci.yml?branch=main)
 [![License](https://img.shields.io/badge/License-MIT-000000?style=for-the-badge)](LICENSE)
-[![QI](https://img.shields.io/badge/Engineered_by-PhD_Master_Team-000000?style=for-the-badge)](https://github.com/zero/zero)
+[![QI](https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge)](https://github.com/zero/zero)
 
 **ZERO** não é apenas uma distribuição de IA; é o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Projetado como um **Sistema Operacional de Agente (A-POS)**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
 
