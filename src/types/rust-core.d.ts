@@ -1,0 +1,45 @@
+/* eslint-disable */
+// Type declarations for @zero/ratchet native module
+
+declare module "../../rust-core/index.js" {
+    export function triggerPanic(secret: string): void;
+    export function resetPanic(): void;
+    export function isPanicMode(): boolean;
+
+    export class VadEngine {
+        constructor(threshold: number, silenceTimeoutMs: number);
+        processChunk(chunk: Buffer): string;
+    }
+
+    export interface ModelMetric {
+        model: string;
+        count: number;
+    }
+
+    export interface MetricsSummary {
+        totalTokens: number;
+        modelBreakdown: ModelMetric[];
+        avgLatencyMs: number;
+    }
+
+    export class MetricsEngine {
+        constructor();
+        recordTokens(model: string, count: number): void;
+        recordLatency(ms: number): void;
+        summarize(): MetricsSummary;
+    }
+
+    export class RatchetDedupe {
+        constructor(ttlMs: number, maxSize: number);
+        check(key: string, timestampMs?: number): boolean;
+        clear(): void;
+        size(): number;
+    }
+
+    export class SecurityEngine {
+        constructor();
+        detectInjection(text: string): string | null;
+        redactPii(text: string): string;
+        calculateEntropy(text: string): number;
+    }
+}
