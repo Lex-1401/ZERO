@@ -1,0 +1,114 @@
+/* ===========================================
+   Premium Mobile Layout - Responsive Drawer
+   =========================================== */
+
+/* Mobile-specific styles */
+@media (max-width: 800px) {
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 52px 1fr;
+    grid-template-areas:
+      "topbar"
+      "content";
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Sidebar Drawer */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-subtle);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-direction: column !important;
+    padding: 20px 12px;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .shell.mobile-nav-open .nav {
+    transform: translateX(0);
+  }
+
+  /* Restore nav items to vertical list style */
+  .nav-item {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    padding: 8px 12px;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    border-radius: 6px;
+    gap: 12px !important;
+  }
+
+  .nav-item.active::after {
+    display: none;
+  }
+
+  /* Topbar Adjustments */
+  .topbar {
+    grid-area: topbar;
+    padding: 0 16px !important;
+    height: 52px !important;
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  /* Hamburger Menu Button (to be added in markup) */
+  .btn-mobile-menu {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  /* Overlay Backdrop */
+  .mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+  }
+
+  .shell.mobile-nav-open .mobile-nav-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}
+
+/* Tablet / Desktop - Hide mobile elements */
+@media (min-width: 801px) {
+  .btn-mobile-menu {
+    display: none !important;
+  }
+
+  .mobile-nav-overlay {
+    display: none !important;
+  }
+}

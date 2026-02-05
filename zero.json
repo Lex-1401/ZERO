@@ -1,0 +1,16 @@
+{
+    "agents": {
+        "defaults": {
+            "model": {
+                "primary": "ollama/deepseek-r1:latest"
+            },
+            "thinkingDefault": "medium"
+        }
+    },
+    "gateway": {
+        "auth": {
+            "mode": "token",
+            "token": "7bf451373053fc5769f3bb3e107b197f8bf3494863cdc2b46804e43bcfcb036c"
+        }
+    }
+}

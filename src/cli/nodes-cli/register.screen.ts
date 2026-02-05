@@ -1,0 +1,84 @@
+import type { Command } from "commander";
+import { randomIdempotencyKey } from "../../gateway/call.js";
+import { defaultRuntime } from "../../runtime.js";
+import {
+  parseScreenRecordPayload,
+  screenRecordTempPath,
+  writeScreenRecordToFile,
+} from "../nodes-screen.js";
+import { parseDurationMs } from "../parse-duration.js";
+import { runNodesCommand } from "./cli-utils.js";
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc.js";
+import type { NodesRpcOpts } from "./types.js";
+import { shortenHomePath } from "../../utils.js";
+
+export function registerNodesScreenCommands(nodes: Command) {
+  const screen = nodes.command("screen").description("Capturar gravações de tela de um nó pareado");
+
+  nodesCallOpts(
+    screen
+      .command("record")
+      .description("Capturar uma pequena gravação de tela de um nó (imprime MEDIA:<path>)")
+      .requiredOption("--node <idOrNameOrIp>", "ID, nome ou IP do nó")
+      .option("--screen <index>", "Índice da tela (0 = primária)", "0")
+      .option("--duration <ms|10s>", "Duração do clipe (ms ou 10s)", "10000")
+      .option("--fps <fps>", "Quadros por segundo", "10")
+      .option("--no-audio", "Desabilitar captura de áudio do microfone")
+      .option("--out <path>", "Caminho de saída")
+      .option("--invoke-timeout <ms>", "Timeout de invocação do nó em ms (padrão 120000)", "120000")
+      .action(async (opts: NodesRpcOpts & { out?: string }) => {
+        await runNodesCommand("screen record", async () => {
+          const nodeId = await resolveNodeId(opts, String(opts.node ?? ""));
+          const durationMs = parseDurationMs(opts.duration ?? "");
+          const screenIndex = Number.parseInt(String(opts.screen ?? "0"), 10);
+          const fps = Number.parseFloat(String(opts.fps ?? "10"));
+          const timeoutMs = opts.invokeTimeout
+            ? Number.parseInt(String(opts.invokeTimeout), 10)
+            : undefined;
+
+          const invokeParams: Record<string, unknown> = {
+            nodeId,
+            command: "screen.record",
+            params: {
+              durationMs: Number.isFinite(durationMs) ? durationMs : undefined,
+              screenIndex: Number.isFinite(screenIndex) ? screenIndex : undefined,
+              fps: Number.isFinite(fps) ? fps : undefined,
+              format: "mp4",
+              includeAudio: opts.audio !== false,
+            },
+            idempotencyKey: randomIdempotencyKey(),
+          };
+          if (typeof timeoutMs === "number" && Number.isFinite(timeoutMs)) {
+            invokeParams.timeoutMs = timeoutMs;
+          }
+
+          const raw = (await callGatewayCli("node.invoke", opts, invokeParams)) as unknown;
+          const res = typeof raw === "object" && raw !== null ? (raw as { payload?: unknown }) : {};
+          const parsed = parseScreenRecordPayload(res.payload);
+          const filePath = opts.out ?? screenRecordTempPath({ ext: parsed.format || "mp4" });
+          const written = await writeScreenRecordToFile(filePath, parsed.base64);
+
+          if (opts.json) {
+            defaultRuntime.log(
+              JSON.stringify(
+                {
+                  file: {
+                    path: written.path,
+                    durationMs: parsed.durationMs,
+                    fps: parsed.fps,
+                    screenIndex: parsed.screenIndex,
+                    hasAudio: parsed.hasAudio,
+                  },
+                },
+                null,
+                2,
+              ),
+            );
+            return;
+          }
+          defaultRuntime.log(`MEDIA:${shortenHomePath(written.path)}`);
+        });
+      }),
+    { timeoutMs: 180_000 },
+  );
+}

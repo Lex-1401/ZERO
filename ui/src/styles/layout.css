@@ -1,0 +1,238 @@
+/* ===========================================
+   VISION OS SHELL - SEQUOIA EDITION
+   Premium Native Interface
+   =========================================== */
+
+.shell {
+  display: grid;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: 52px 1fr;
+  grid-template-areas:
+    "sidebar topbar"
+    "sidebar content";
+  background: var(--bg-main);
+}
+
+/* Window Controls (Cosmetic Native Feel) */
+.window-controls {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+
+.window-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot-red {
+  background: #ff5f57;
+  border: 0.5px solid #e0443e;
+}
+
+.dot-yellow {
+  background: #febc2e;
+  border: 0.5px solid #d8a224;
+}
+
+.dot-green {
+  background: #28c840;
+  border: 0.5px solid #1aab29;
+}
+
+/* --- SIDEBAR (Navigation) --- */
+.nav {
+  grid-area: sidebar;
+  background: var(--bg-sidebar);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  padding: 52px 12px 20px 12px;
+  z-index: 50;
+}
+
+.sidebar-search {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.sidebar-search input {
+  width: 100%;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding-left: 30px;
+  color: var(--text-main);
+  font-size: 12px;
+}
+
+.nav-group {
+  margin-bottom: 24px;
+}
+
+.nav-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-left: 8px;
+  letter-spacing: 0.05em;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.1s ease;
+  margin-bottom: 2px;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.active {
+  background: var(--accent-blue);
+  color: #ffffff;
+}
+
+.nav-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-item__icon svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5px;
+}
+
+.nav-item.active .nav-item__icon {
+  color: #ffffff;
+}
+
+/* --- TOPBAR --- */
+.topbar {
+  grid-area: topbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: transparent;
+  z-index: 40;
+}
+
+.topbar-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-nav-history {
+  width: 32px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.page-info {
+  flex: 1;
+  text-align: left;
+  margin-left: 16px;
+}
+
+.page-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* --- CONTENT --- */
+.content {
+  grid-area: content;
+  padding: 24px 40px;
+  overflow-y: auto;
+  background: var(--bg-main);
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+  .shell {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .sidebar-search,
+  .nav-group-title,
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 10px;
+  }
+}
+
+/* --- FOCUS MODE (Deep Work) --- */
+body.focus-mode .shell {
+  grid-template-columns: 0 1fr;
+  grid-template-areas: "content content";
+}
+
+body.focus-mode .nav,
+body.focus-mode .topbar,
+body.focus-mode .window-controls {
+  display: none !important;
+}
+
+body.focus-mode .content {
+    grid-area: 1 / 1 / 3 / 3;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000; /* Deep Focus Black */
+}
+
+/* Exit button for Focus Mode */
+body.focus-mode::after {
+    content: "Pressione ESC para sair do Modo Foco";
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.3);
+    font-size: 12px;
+    pointer-events: none;
+}

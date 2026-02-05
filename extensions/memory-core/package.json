@@ -1,0 +1,14 @@
+{
+  "name": "@zero/memory-core",
+  "version": "2026.1.25",
+  "type": "module",
+  "description": "Zero core memory search plugin",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "zero": "*"
+  }
+}

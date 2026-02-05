@@ -1,0 +1,11 @@
+{
+  "name": "@zero/google-cloud-auth",
+  "version": "2026.1.25",
+  "type": "module",
+  "description": "Zero Google Cloud OAuth provider plugin",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

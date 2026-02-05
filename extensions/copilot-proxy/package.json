@@ -1,0 +1,11 @@
+{
+  "name": "@zero/copilot-proxy",
+  "version": "2026.1.25",
+  "type": "module",
+  "description": "Zero Copilot Proxy provider plugin",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -1,0 +1,137 @@
+import type { Component, SelectItem } from "@mariozechner/pi-tui";
+import { spawn } from "node:child_process";
+import { createSearchableSelectList } from "./components/selectors.js";
+
+type LocalShellDeps = {
+  chatLog: {
+    addSystem: (line: string) => void;
+  };
+  tui: {
+    requestRender: () => void;
+  };
+  openOverlay: (component: Component) => void;
+  closeOverlay: () => void;
+  createSelector?: (
+    items: SelectItem[],
+    maxVisible: number,
+  ) => Component & {
+    onSelect?: (item: SelectItem) => void;
+    onCancel?: () => void;
+  };
+  spawnCommand?: typeof spawn;
+  getCwd?: () => string;
+  env?: NodeJS.ProcessEnv;
+  maxOutputChars?: number;
+};
+
+export function createLocalShellRunner(deps: LocalShellDeps) {
+  let localExecAsked = false;
+  let localExecAllowed = false;
+  const createSelector = deps.createSelector ?? createSearchableSelectList;
+  const spawnCommand = deps.spawnCommand ?? spawn;
+  const getCwd = deps.getCwd ?? (() => process.cwd());
+  const env = deps.env ?? process.env;
+  const maxChars = deps.maxOutputChars ?? 40_000;
+
+  const ensureLocalExecAllowed = async (): Promise<boolean> => {
+    if (localExecAllowed) return true;
+    if (localExecAsked) return false;
+    localExecAsked = true;
+
+    return await new Promise<boolean>((resolve) => {
+      deps.chatLog.addSystem("Permitir comandos de shell local para esta sessão?");
+      deps.chatLog.addSystem(
+        "Isso executa comandos na SUA máquina (não no gateway) e pode deletar arquivos ou revelar segredos.",
+      );
+      deps.chatLog.addSystem("Selecione Sim/Não (setas + Enter), Esc para cancelar.");
+      const selector = createSelector(
+        [
+          { value: "no", label: "Não" },
+          { value: "yes", label: "Sim" },
+        ],
+        2,
+      );
+      selector.onSelect = (item) => {
+        deps.closeOverlay();
+        if (item.value === "yes") {
+          localExecAllowed = true;
+          deps.chatLog.addSystem("shell local: ativado para esta sessão");
+          resolve(true);
+        } else {
+          deps.chatLog.addSystem("shell local: não ativado");
+          resolve(false);
+        }
+        deps.tui.requestRender();
+      };
+      selector.onCancel = () => {
+        deps.closeOverlay();
+        deps.chatLog.addSystem("shell local: cancelado");
+        deps.tui.requestRender();
+        resolve(false);
+      };
+      deps.openOverlay(selector);
+      deps.tui.requestRender();
+    });
+  };
+
+  const runLocalShellLine = async (line: string) => {
+    const cmd = line.slice(1);
+    // NOTE: A lone '!' is handled by the submit handler as a normal message.
+    // Keep this guard anyway in case this is called directly.
+    if (cmd === "") return;
+
+    if (localExecAsked && !localExecAllowed) {
+      deps.chatLog.addSystem("shell local: não ativado para esta sessão");
+      deps.tui.requestRender();
+      return;
+    }
+
+    const allowed = await ensureLocalExecAllowed();
+    if (!allowed) return;
+
+    deps.chatLog.addSystem(`[local] $ ${cmd}`);
+    deps.tui.requestRender();
+
+    await new Promise<void>((resolve) => {
+      const child = spawnCommand(cmd, {
+        shell: true,
+        cwd: getCwd(),
+        env,
+      });
+
+      let stdout = "";
+      let stderr = "";
+      child.stdout.on("data", (buf) => {
+        stdout += buf.toString("utf8");
+      });
+      child.stderr.on("data", (buf) => {
+        stderr += buf.toString("utf8");
+      });
+
+      child.on("close", (code, signal) => {
+        const combined = (stdout + (stderr ? (stdout ? "\n" : "") + stderr : ""))
+          .slice(0, maxChars)
+          .trimEnd();
+
+        if (combined) {
+          for (const line of combined.split("\n")) {
+            deps.chatLog.addSystem(`[local] ${line}`);
+          }
+        }
+        deps.chatLog.addSystem(
+          `[local] saída ${code ?? "?"}${signal ? ` (sinal ${String(signal)})` : ""}`,
+        );
+        deps.tui.requestRender();
+        resolve();
+      });
+
+      child.on("error", (err) => {
+        deps.chatLog.addSystem(`[local] erro: ${String(err)}`);
+        deps.tui.requestRender();
+        resolve();
+      });
+    });
+  };
+
+  return { runLocalShellLine };
+}
