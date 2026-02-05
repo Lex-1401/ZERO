@@ -69,3 +69,9 @@ USER.md
 
 # local tooling
 .serena/
+
+# Build artifacts
+*.node
+*.map
+.build-info.json
+dist/
