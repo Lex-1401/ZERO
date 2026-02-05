@@ -66,7 +66,7 @@ jobs:
           pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true
 
       - name: Build native core (Rust)
-        run: cd rust-core && pnpm build
+        run: cd rust-core && pnpm install && pnpm build
 
   checks:
     runs-on: ubuntu-24.04
@@ -160,7 +160,7 @@ jobs:
           pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true || pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true
 
       - name: Build native core (Rust)
-        run: cd rust-core && pnpm build
+        run: cd rust-core && pnpm install && pnpm build
 
       - name: Run ${{ matrix.task }} (${{ matrix.runtime }})
         run: ${{ matrix.command }}
@@ -278,7 +278,7 @@ jobs:
           pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true || pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true
 
       - name: Build native core (Rust)
-        run: cd rust-core && pnpm build
+        run: cd rust-core && pnpm install && pnpm build
 
       - name: Run ${{ matrix.task }} (${{ matrix.runtime }})
         run: ${{ matrix.command }}
