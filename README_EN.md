@@ -49,9 +49,39 @@ Visualize **ZERO** in operation. These are real captures of the unified control 
 - **Package Manager**: pnpm (recommended)
 - **Rust Toolchain**: Required for native compilation of the `rust-core`.
 
-### 📦 Development Workspace Installation
+#### 💻 System Requirements (Hardware)
 
-1. **Clone and Dependencies**:
+To ensure stability and performance:
+
+- **🖥️ Local Desktop (Mac/Windows/Linux)**:
+  - **Minimum**: 8 GB RAM (ZERO has low overhead, but OS + Browser need the rest).
+  - **Recommended**: 16 GB+ RAM (For fluid use with VS Code + Browser + ZERO).
+- **🌐 Server / VPS (Cloud)**:
+  - **Minimum**: 1 vCPU, 1 GB RAM (with Swap), 20 GB SSD.
+  - **Ideal**: 2 vCPUs, 2 GB+ RAM, 40 GB+ SSD.
+  - **Elite**: 4 vCPUs, 4 GB+ RAM (For browser automation and multiple agents).
+
+### 🛠️ One-Liner Installation (Simplified)
+
+Choose the method that best fits your environment:
+
+#### 🖥️ Local (Mac/Linux/Windows WSL)
+
+Ideal for developers and daily use on a personal computer.
+
+```bash
+curl -fsSL https://zero.local/quickstart.sh | bash
+```
+
+#### 🌐 VPS / Cloud (Docker)
+
+Ideal for keeping ZERO online 24/7 with total isolation.
+
+```bash
+curl -fsSL https://zero.local/deploy-docker.sh | bash
+```
+
+### 📦 Development Workspace Installation (Manual)
 
    ```bash
    git clone https://github.com/zero/zero.git
@@ -59,14 +89,14 @@ Visualize **ZERO** in operation. These are real captures of the unified control 
    pnpm install
    ```
 
-2. **Subsystem Compilation**:
+1. **Subsystem Compilation**:
 
    ```bash
    pnpm ui:build    # Compiles the Altair Interface (Glassmorphism Control UI)
    pnpm build       # Compiles the TypeScript Core and Native Core
    ```
 
-3. **Initial Orchestration**:
+2. **Initial Orchestration**:
 
    ```bash
    pnpm zero onboard --install-daemon

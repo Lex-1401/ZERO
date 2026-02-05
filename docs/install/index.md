@@ -29,9 +29,18 @@ zero onboard --install-daemon
 
 ## System requirements
 
-- **Node >=22**
-- macOS, Linux, or Windows via WSL2
-- `pnpm` only if you build from source
+- **Runtime**: Node.js >= 22.x
+- **OS**: macOS, Linux, or Windows (via WSL2)
+- **Package Manager**: `pnpm` (required for build from source)
+
+### Hardware Specifications
+
+| Profile | CPU | RAM | Recommended for... |
+| :--- | :--- | :--- | :--- |
+| **Local Desktop** | Any | 8GB - 16GB | Daily development and standard use. |
+| **VPS (Minimum)** | 1 vCPU | 1GB | Light personal use (chat only, requires Swap). |
+| **VPS (Ideal)** | 2 vCPUs | 2GB | Daily routine and simple automations. |
+| **VPS (Elite)** | 4 vCPUs | 4GB+ | Heavy browser tools and multi-agent loops. |
 
 ## Choose your install path
 
