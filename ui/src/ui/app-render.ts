@@ -341,7 +341,7 @@ export function renderApp(state: AppViewState) {
         onToggleFocusMode: () => state.applySettings({ ...state.settings, chatFocusMode: !state.settings.chatFocusMode }),
         onChatScroll: (e) => state.handleChatScroll(e),
         onDraftChange: (n) => (state.chatMessage = n),
-        onSend: () => state.handleSendChat(),
+        onSend: (msg?: string) => state.handleSendChat(msg),
         canAbort: !!state.chatRunId,
         onAbort: () => state.handleAbortChat(),
         onQueueRemove: (id) => state.removeQueuedMessage(id),

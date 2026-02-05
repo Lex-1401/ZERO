@@ -237,7 +237,7 @@ function renderScheduleFields(props: CronProps) {
 function renderJob(job: CronJob, props: CronProps) {
   const isSelected = props.runsJobId === job.id;
   return html`
-    <div class="group-item" style="cursor: pointer; ${isSelected ? "background: rgba(0,122,255,0.05);" : ""}" @click=${() => props.onLoadRuns(job.id)}>
+    <div class="group-item ${isSelected ? "list-item-selected" : ""}" style="cursor: pointer; ${isSelected ? "background: rgba(0,122,255,0.05);" : ""}" @click=${() => props.onLoadRuns(job.id)}>
       <div class="group-label">
         <div class="group-title" style="display: flex; align-items: center; gap: 8px;">
             <div class="status-orb ${job.enabled ? "success" : "dim"}"></div>

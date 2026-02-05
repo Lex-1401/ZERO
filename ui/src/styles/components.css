@@ -74,7 +74,7 @@
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-normal) var(--ease-premium);
   user-select: none;
 }
 
@@ -178,7 +178,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.1);
-  transition: .2s;
+  transition: var(--duration-normal) var(--ease-premium);
   border-radius: 22px;
 }
 
@@ -190,7 +190,7 @@
   left: 2px;
   bottom: 2px;
   background-color: #ffffff;
-  transition: .2s;
+  transition: var(--duration-normal) var(--ease-premium);
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -286,7 +286,7 @@ input:checked+.toggle-slider:before {
   border-radius: 5px;
   cursor: pointer;
   padding: 6px 12px;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-normal) var(--ease-premium);
   white-space: nowrap;
 }
 
@@ -320,7 +320,7 @@ input:checked+.toggle-slider:before {
 .btn--chip {
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  transition: all 0.2s ease;
+  transition: all var(--duration-normal) var(--ease-premium);
 }
 
 .btn--chip:hover {
@@ -344,7 +344,7 @@ input:checked+.toggle-slider:before {
 }
 
 .callout--active {
-  animation: slide-up 0.4s var(--ease-out);
+  animation: slide-up var(--duration-slow) var(--ease-premium);
 }
 
 .callout.info {

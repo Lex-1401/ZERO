@@ -58,7 +58,7 @@ export type ChatProps = {
   onRefresh: () => void;
   onToggleFocusMode: () => void;
   onDraftChange: (next: string) => void;
-  onSend: () => void;
+  onSend: (message?: string) => void;
   onAbort?: () => void;
   onQueueRemove: (id: string) => void;
   onNewSession: () => void;
@@ -141,11 +141,7 @@ export function renderChat(props: ChatProps) {
               <button 
                 class="btn btn--chip" 
                 style="justify-content: flex-start; padding: 12px 16px; height: auto; border-radius: 12px;"
-                @click=${() => {
-      props.onDraftChange(chip.prompt);
-      // Wait for draft change to propagate then send
-      setTimeout(() => props.onSend(), 0);
-    }}
+                @click=${() => props.onSend(chip.prompt)}
               >
                 <div style="text-align: left;">
                     <div style="font-weight: 600; font-size: 13px; color: var(--text-main); margin-bottom: 2px;">${chip.label}</div>

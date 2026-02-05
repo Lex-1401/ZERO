@@ -94,7 +94,9 @@
 
     --duration-fast: 120ms;
     --duration-normal: 200ms;
+    --duration-slow: 400ms;
     --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ease-premium: cubic-bezier(0.2, 0, 0, 1);
 }
 
 :root[data-theme="light"] {
