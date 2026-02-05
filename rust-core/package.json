@@ -11,5 +11,9 @@
     "license": "MIT",
     "devDependencies": {
         "@napi-rs/cli": "^3.5.1"
+    },
+    "scripts": {
+        "build": "napi build --platform --release",
+        "build:dev": "napi build --platform"
     }
 }

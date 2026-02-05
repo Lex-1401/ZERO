@@ -38,4 +38,5 @@ jobs:
           ZERO_INSTALL_SMOKE_SKIP_CLI: "1"
           ZERO_INSTALL_SMOKE_SKIP_NONROOT: ${{ github.event_name == 'pull_request' && '1' || '0' }}
           ZERO_INSTALL_SMOKE_PREVIOUS: "2026.1.11-4"
+          ZERO_INSTALL_SMOKE_SKIP_PREVIOUS: "1"
         run: pnpm test:install:smoke

@@ -3,6 +3,7 @@ node_modules
 .env
 docker-compose.extra.yml
 dist
+!dist/protocol.schema.json
 *.bun-build
 # pnpm-lock.yaml (Removed from ignore to allow CI/CD builds)
 bun.lock
