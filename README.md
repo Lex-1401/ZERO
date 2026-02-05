@@ -106,7 +106,7 @@ Estamos construindo a infraestrutura do amanhã. Contribuições são bem-vindas
 - **Padrões de Docstrings**: Seguimos o padrão JSDoc rigoroso para documentação técnica.
 - **Pilha Moderna**: TS (Node 22), Rust (napi-rs), Vitest, Playwright.
 
-Este repositório é um fork de https://openclaw.ai/ adaptado por **Leandro Azevedo** com novas funcionalidades e Segurança.
+Este repositório é um fork de https://openclaw.ai/ adaptado por **Leandro Azevedo** para Brasileiros, incluindo funcionalidades e segurança.
 
 ---
 
