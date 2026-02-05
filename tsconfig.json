@@ -24,7 +24,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "rust-core",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/test-helpers.ts"
