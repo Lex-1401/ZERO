@@ -70,7 +70,7 @@ Choose the method that best fits your environment:
 Ideal for developers and daily use on a personal computer.
 
 ```bash
-curl -fsSL https://zero.local/quickstart.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
 #### 🌐 VPS / Cloud (Docker)
@@ -78,7 +78,7 @@ curl -fsSL https://zero.local/quickstart.sh | bash
 Ideal for keeping ZERO online 24/7 with total isolation.
 
 ```bash
-curl -fsSL https://zero.local/deploy-docker.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh | bash
 ```
 
 ### 📦 Development Workspace Installation (Manual)

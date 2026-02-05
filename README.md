@@ -70,7 +70,7 @@ Escolha o método que melhor se adapta ao seu ambiente:
 Ideal para desenvolvedores e uso diário no computador pessoal.
 
 ```bash
-curl -fsSL https://zero.local/quickstart.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
 #### 🌐 VPS / Nuvem (Docker)
@@ -78,7 +78,7 @@ curl -fsSL https://zero.local/quickstart.sh | bash
 Ideal para manter o ZERO online 24/7 com isolamento total.
 
 ```bash
-curl -fsSL https://zero.local/deploy-docker.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh | bash
 ```
 
 ### 📦 Instalação do Workspace de Desenvolvimento (Manual)
@@ -136,7 +136,7 @@ Estamos construindo a infraestrutura do amanhã. Contribuições são bem-vindas
 - **Padrões de Docstrings**: Seguimos o padrão JSDoc rigoroso para documentação técnica.
 - **Pilha Moderna**: TS (Node 22), Rust (napi-rs), Vitest, Playwright.
 
-Este repositório é um fork de https://openclaw.ai/ adaptado por **Leandro Azevedo** para Brasileiros, incluindo funcionalidades e segurança.
+Este repositório é um fork de <https://openclaw.ai/> adaptado por **Leandro Azevedo** para Brasileiros, incluindo funcionalidades e segurança.
 
 ---
 
