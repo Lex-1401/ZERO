@@ -87,7 +87,7 @@ const matchLevelDirective = (
   // don't treat the next word as an argument.
   if (argEnd > argStart && !hasColon) {
     const nextChar = body[argEnd];
-    const isDelimiter = !nextChar || /[\s.,!?;:]/.test(nextChar);
+    const isDelimiter = !nextChar || /[\s.,!?;:/]/.test(nextChar);
     if (!isDelimiter) {
       argEnd = argStart;
     }

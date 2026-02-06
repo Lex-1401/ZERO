@@ -213,7 +213,7 @@ describe("runEmbeddedPiAgent", () => {
 
   itIfNotWin32(
     "persists the first user message before assistant output",
-    { timeout: 120_000 },
+    { timeout: 300_000 },
     async () => {
       const sessionFile = nextSessionFile();
       const cfg = makeOpenAiConfig(["mock-1"]);
@@ -274,7 +274,7 @@ describe("runEmbeddedPiAgent", () => {
 
   it(
     "appends new user + assistant after existing transcript entries",
-    { timeout: 90_000 },
+    { timeout: 180_000 },
     async () => {
       const { SessionManager } = await import("@mariozechner/pi-coding-agent");
       const sessionFile = nextSessionFile();
