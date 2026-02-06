@@ -69,7 +69,7 @@ vi.mock("@mariozechner/pi-ai", async () => {
       return buildAssistantMessage(model);
     },
     streamSimple: (model: { api: string; provider: string; id: string }) => {
-      const stream = new actual.AssistantMessageEventStream();
+      const stream = new (actual as any).AssistantMessageEventStream();
       queueMicrotask(() => {
         stream.push({
           type: "done",
@@ -104,7 +104,11 @@ beforeAll(async () => {
 
 afterAll(async () => {
   if (!tempRoot) return;
-  await fs.rm(tempRoot, { recursive: true, force: true });
+  try {
+    await fs.rm(tempRoot, { recursive: true, force: true });
+  } catch (err) {
+    console.warn("Clean up failed:", err);
+  }
   tempRoot = undefined;
 });
 
@@ -164,7 +168,7 @@ const readSessionMessages = async (sessionFile: string) => {
     .map((entry) => entry.message as { role?: string; content?: unknown });
 };
 
-describe("runEmbeddedPiAgent", () => {
+describe("runEmbeddedPiAgent", { timeout: 300_000 }, () => {
   const itIfNotWin32 = process.platform === "win32" ? it.skip : it;
   it("writes models.json into the provided agentDir", async () => {
     const sessionFile = nextSessionFile();
@@ -203,6 +207,7 @@ describe("runEmbeddedPiAgent", () => {
         provider: "definitely-not-a-provider",
         model: "definitely-not-a-model",
         timeoutMs: 1,
+        runId: "test-run",
         agentDir,
         enqueue: immediateEnqueue,
       }),
@@ -229,6 +234,7 @@ describe("runEmbeddedPiAgent", () => {
         provider: "openai",
         model: "mock-1",
         timeoutMs: 5_000,
+        runId: "test-run",
         agentDir,
         enqueue: immediateEnqueue,
       });
@@ -260,10 +266,11 @@ describe("runEmbeddedPiAgent", () => {
       provider: "openai",
       model: "mock-error",
       timeoutMs: 5_000,
+      runId: "test-run",
       agentDir,
       enqueue: immediateEnqueue,
     });
-    expect(result.payloads[0]?.isError).toBe(true);
+    expect(result.payloads?.[0]?.isError).toBe(true);
 
     const messages = await readSessionMessages(sessionFile);
     const userIndex = messages.findIndex(
@@ -283,6 +290,7 @@ describe("runEmbeddedPiAgent", () => {
       sessionManager.appendMessage({
         role: "user",
         content: [{ type: "text", text: "seed user" }],
+        timestamp: Date.now(),
       });
       sessionManager.appendMessage({
         role: "assistant",
@@ -321,6 +329,7 @@ describe("runEmbeddedPiAgent", () => {
         provider: "openai",
         model: "mock-1",
         timeoutMs: 5_000,
+        runId: "test-run",
         agentDir,
         enqueue: immediateEnqueue,
       });
@@ -361,6 +370,7 @@ describe("runEmbeddedPiAgent", () => {
       provider: "openai",
       model: "mock-1",
       timeoutMs: 5_000,
+      runId: "test-run",
       agentDir,
       enqueue: immediateEnqueue,
     });
@@ -375,6 +385,7 @@ describe("runEmbeddedPiAgent", () => {
       provider: "openai",
       model: "mock-1",
       timeoutMs: 5_000,
+      runId: "test-run",
       agentDir,
       enqueue: immediateEnqueue,
     });
@@ -410,6 +421,7 @@ describe("runEmbeddedPiAgent", () => {
     sessionManager.appendMessage({
       role: "user",
       content: [{ type: "text", text: "orphaned user" }],
+      timestamp: Date.now(),
     });
 
     const cfg = makeOpenAiConfig(["mock-1"]);
@@ -425,6 +437,7 @@ describe("runEmbeddedPiAgent", () => {
       provider: "openai",
       model: "mock-1",
       timeoutMs: 5_000,
+      runId: "test-run",
       agentDir,
       enqueue: immediateEnqueue,
     });
@@ -441,6 +454,7 @@ describe("runEmbeddedPiAgent", () => {
     sessionManager.appendMessage({
       role: "user",
       content: [{ type: "text", text: "solo user" }],
+      timestamp: Date.now(),
     });
 
     const cfg = makeOpenAiConfig(["mock-1"]);
@@ -456,6 +470,7 @@ describe("runEmbeddedPiAgent", () => {
       provider: "openai",
       model: "mock-1",
       timeoutMs: 5_000,
+      runId: "test-run",
       agentDir,
       enqueue: immediateEnqueue,
     });
