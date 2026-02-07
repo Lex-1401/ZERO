@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IMAGE_NAME="${ZERO_INSTALL_E2E_IMAGE:-zero-install-e2e:local}"
-INSTALL_URL="${ZERO_INSTALL_URL:-https://zero.local/install.sh}"
+INSTALL_URL="${ZERO_INSTALL_URL:-https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh}"
 
 OPENAI_API_KEY="${OPENAI_API_KEY:-}"
 ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}"

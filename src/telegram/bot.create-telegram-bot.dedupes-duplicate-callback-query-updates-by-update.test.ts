@@ -99,7 +99,7 @@ vi.mock("grammy", () => ({
       botCtorSpy(token, options);
     }
   },
-  InputFile: class { },
+  InputFile: class {},
   webhookCallback: vi.fn(),
 }));
 
@@ -121,7 +121,10 @@ vi.mock("@grammyjs/transformer-throttler", () => ({
 
 vi.mock("../auto-reply/reply/provider-dispatcher.js", () => ({
   dispatchReplyWithBufferedBlockDispatcher: vi.fn(async (opts) => {
-    console.log("DEBUG: dispatchReplyWithBufferedBlockDispatcher called with ctx.Body:", opts.ctx?.Body);
+    console.log(
+      "DEBUG: dispatchReplyWithBufferedBlockDispatcher called with ctx.Body:",
+      opts.ctx?.Body,
+    );
     // Simula o fluxo real: chama onReplyStart
     await opts.dispatcherOptions.onReplyStart?.();
 
@@ -189,9 +192,7 @@ describe("createTelegramBot", () => {
     });
 
     createTelegramBot({ token: "tok" });
-    const handler = getHandler("callback_query") as (
-      ctx: Record<string, unknown>,
-    ) => Promise<void>;
+    const handler = getHandler("callback_query") as (ctx: Record<string, unknown>) => Promise<void>;
 
     const ctx = {
       update: { update_id: 222 },
@@ -226,9 +227,7 @@ describe("createTelegramBot", () => {
     });
 
     createTelegramBot({ token: "tok" });
-    const handler = getHandler("callback_query") as (
-      ctx: Record<string, unknown>,
-    ) => Promise<void>;
+    const handler = getHandler("callback_query") as (ctx: Record<string, unknown>) => Promise<void>;
 
     await handler({
       callbackQuery: {

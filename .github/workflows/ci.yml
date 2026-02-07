@@ -6,7 +6,7 @@ on:
 
 jobs:
   install-check:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,8 +65,11 @@ jobs:
           pnpm -v
           pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true
 
+      - name: Build native core (Rust)
+        run: cd rust-core && pnpm install && pnpm build && cd .. && git checkout rust-core/index.d.ts
+
   checks:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -156,11 +159,14 @@ jobs:
           pnpm -v
           pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true || pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true
 
+      - name: Build native core (Rust)
+        run: cd rust-core && pnpm install && pnpm build && cd .. && git checkout rust-core/index.d.ts
+
       - name: Run ${{ matrix.task }} (${{ matrix.runtime }})
         run: ${{ matrix.command }}
 
   secrets:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -185,7 +191,7 @@ jobs:
           fi
 
   checks-windows:
-    runs-on: blacksmith-4vcpu-windows-2025
+    runs-on: windows-2025
     env:
       NODE_OPTIONS: --max-old-space-size=4096
     defaults:
@@ -270,6 +276,9 @@ jobs:
           node -v
           pnpm -v
           pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true || pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true
+
+      - name: Build native core (Rust)
+        run: cd rust-core && pnpm install && pnpm build && cd .. && git checkout rust-core/index.d.ts
 
       - name: Run ${{ matrix.task }} (${{ matrix.runtime }})
         run: ${{ matrix.command }}
@@ -587,7 +596,7 @@ jobs:
           PY
 
   android:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:

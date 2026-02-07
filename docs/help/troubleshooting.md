@@ -38,13 +38,13 @@ Quase sempre é um problema de PATH do Node/npm. Comece por aqui:
 Execute novamente o instalador em modo detalhado (verbose) para ver o rastreamento completo e a saída do npm:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --verbose
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --verbose
 ```
 
 Para instalações beta:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --beta --verbose
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --beta --verbose
 ```
 
 Você também pode definir `ZERO_VERBOSE=1` em vez da flag.

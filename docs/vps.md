@@ -9,6 +9,14 @@ read_when:
 
 Este hub contém links para os guias de VPS/hospedagem suportados e explica como as implantações na nuvem funcionam em alto nível.
 
+## Requisitos de Hardware (Especificações)
+
+| Perfil | CPU | RAM | Disco | Recomendado para... |
+| :--- | :--- | :--- | :--- | :--- |
+| **Mínimo** | 1 vCPU | 1 GB | 20 GB | Uso pessoal leve, apenas chat. |
+| **Ideal** | 2 vCPUs | 2 GB | 40 GB | Uso diário, automação simples. |
+| **Elite** | 4 vCPUs | 4 GB+ | 60 GB+ | Automação de navegador, múltiplos agentes. |
+
 ## Escolha um provedor
 
 - **Railway** (template de um clique + configuração via navegador): [Railway](/railway)

@@ -49,9 +49,39 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
 - **Package Manager**: pnpm (recomendado)
 - **Rust Toolchain**: Requerido para compilação nativa do `rust-core`.
 
-### 📦 Instalação do Workspace de Desenvolvimento
+#### 💻 Requisitos de Sistema (Hardware)
 
-1. **Clonagem e Dependências**:
+Para garantir estabilidade e performance:
+
+- **🖥️ Desktop Local (Mac/Windows/Linux)**:
+  - **Mínimo**: 8 GB RAM (O ZERO consome pouco, mas o OS e Browser exigem o restante).
+  - **Recomendado**: 16 GB+ RAM (Para uso fluido com VS Code + Browser + ZERO).
+- **🌐 Servidor / VPS (Cloud)**:
+  - **Mínimo**: 1 vCPU, 1 GB RAM (com Swap), 20 GB SSD.
+  - **Ideal**: 2 vCPUs, 2 GB+ RAM, 40 GB+ SSD.
+  - **Elite**: 4 vCPUs, 4 GB+ RAM (Para automação de navegador e múltiplos agentes).
+
+### �️ Instalação "One-Liner" (Simplificada)
+
+Escolha o método que melhor se adapta ao seu ambiente:
+
+#### 🖥️ Local (Mac/Linux/Windows WSL)
+
+Ideal para desenvolvedores e uso diário no computador pessoal.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
+```
+
+#### 🌐 VPS / Nuvem (Docker)
+
+Ideal para manter o ZERO online 24/7 com isolamento total.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh | bash
+```
+
+### 📦 Instalação do Workspace de Desenvolvimento (Manual)
 
    ```bash
    git clone https://github.com/zero/zero.git
@@ -59,14 +89,14 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
    pnpm install
    ```
 
-2. **Compilação de Subsistemas**:
+1. **Compilação de Subsistemas**:
 
    ```bash
    pnpm ui:build    # Compila a Interface Altair (Glassmorphism Control UI)
    pnpm build       # Compila o Núcleo TypeScript e Native Core
    ```
 
-3. **Orquestração Inicial**:
+2. **Orquestração Inicial**:
 
    ```bash
    pnpm zero onboard --install-daemon
@@ -106,7 +136,7 @@ Estamos construindo a infraestrutura do amanhã. Contribuições são bem-vindas
 - **Padrões de Docstrings**: Seguimos o padrão JSDoc rigoroso para documentação técnica.
 - **Pilha Moderna**: TS (Node 22), Rust (napi-rs), Vitest, Playwright.
 
-Este repositório é um fork de https://openclaw.ai/ adaptado por **Leandro Azevedo** para Brasileiros, incluindo funcionalidades e segurança.
+Este repositório é um fork de <https://openclaw.ai/> adaptado por **Leandro Azevedo** para Brasileiros, incluindo funcionalidades e segurança.
 
 ---
 

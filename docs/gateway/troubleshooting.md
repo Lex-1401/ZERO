@@ -528,13 +528,13 @@ Use o **instalador do site** e selecione o método de instalação com uma flag.
 Alternar **para instalação git**:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --install-method git --no-onboard
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git --no-onboard
 ```
 
 Alternar **para npm global**:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 ```
 
 Notas:

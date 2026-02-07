@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${ZERO_INSTALL_URL:-https://zero.local/install.sh}"
+INSTALL_URL="${ZERO_INSTALL_URL:-https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh}"
 MODELS_MODE="${ZERO_E2E_MODELS:-both}" # both|openai|anthropic
 INSTALL_TAG="${ZERO_INSTALL_TAG:-latest}"
 E2E_PREVIOUS_VERSION="${ZERO_INSTALL_E2E_PREVIOUS:-}"

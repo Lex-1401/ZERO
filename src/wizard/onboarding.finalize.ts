@@ -467,7 +467,7 @@ export async function finalizeOnboardingWizard(options: FinalizeOnboardingOption
   );
 
   await prompter.note(
-    'O que agora: https://zero.local/showcase ("O que as pessoas estão construindo").',
+    'O que agora: https://raw.githubusercontent.com/Lex-1401/ZERO/main/showcase ("O que as pessoas estão construindo").',
     "O que fazer agora",
   );
 

@@ -3,8 +3,9 @@ node_modules
 .env
 docker-compose.extra.yml
 dist
+!dist/protocol.schema.json
 *.bun-build
-pnpm-lock.yaml
+# pnpm-lock.yaml (Removed from ignore to allow CI/CD builds)
 bun.lock
 bun.lockb
 coverage
@@ -63,9 +64,13 @@ apps/ios/*.mobileprovision
 # Local untracked files
 .local/
 .vscode/
-IDENTITY.md
-USER.md
 .tgz
 
 # local tooling
 .serena/
+
+# Build artifacts
+*.node
+*.map
+.build-info.json
+dist/

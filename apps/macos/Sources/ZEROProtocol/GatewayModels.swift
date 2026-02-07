@@ -2413,6 +2413,52 @@ public struct ShutdownEvent: Codable, Sendable {
     }
 }
 
+public struct MemorySearchParams: Codable, Sendable {
+    public let query: String
+    public let agentid: String?
+    public let limit: Double?
+    public let minscore: Double?
+    public let sessionkey: String?
+
+    public init(
+        query: String,
+        agentid: String?,
+        limit: Double?,
+        minscore: Double?,
+        sessionkey: String?
+    ) {
+        self.query = query
+        self.agentid = agentid
+        self.limit = limit
+        self.minscore = minscore
+        self.sessionkey = sessionkey
+    }
+    private enum CodingKeys: String, CodingKey {
+        case query
+        case agentid = "agentId"
+        case limit
+        case minscore = "minScore"
+        case sessionkey = "sessionKey"
+    }
+}
+
+public struct MemorySearchResult: Codable, Sendable {
+    public let ts: Double
+    public let results: [[String: AnyCodable]]
+
+    public init(
+        ts: Double,
+        results: [[String: AnyCodable]]
+    ) {
+        self.ts = ts
+        self.results = results
+    }
+    private enum CodingKeys: String, CodingKey {
+        case ts
+        case results
+    }
+}
+
 public enum GatewayFrame: Codable, Sendable {
     case req(RequestFrame)
     case res(ResponseFrame)

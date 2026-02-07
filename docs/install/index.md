@@ -12,13 +12,13 @@ Use the installer unless you have a reason not to. It sets up the CLI and runs o
 ## Quick install (recommended)
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 ```
 
 Windows (PowerShell):
 
 ```powershell
-iwr -useb https://zero.local/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex
 ```
 
 Next step (if you skipped onboarding):
@@ -29,9 +29,18 @@ zero onboard --install-daemon
 
 ## System requirements
 
-- **Node >=22**
-- macOS, Linux, or Windows via WSL2
-- `pnpm` only if you build from source
+- **Runtime**: Node.js >= 22.x
+- **OS**: macOS, Linux, or Windows (via WSL2)
+- **Package Manager**: `pnpm` (required for build from source)
+
+### Hardware Specifications
+
+| Profile | CPU | RAM | Recommended for... |
+| :--- | :--- | :--- | :--- |
+| **Local Desktop** | Any | 8GB - 16GB | Daily development and standard use. |
+| **VPS (Minimum)** | 1 vCPU | 1GB | Light personal use (chat only, requires Swap). |
+| **VPS (Ideal)** | 2 vCPUs | 2GB | Daily routine and simple automations. |
+| **VPS (Elite)** | 4 vCPUs | 4GB+ | Heavy browser tools and multi-agent loops. |
 
 ## Choose your install path
 
@@ -40,13 +49,13 @@ zero onboard --install-daemon
 Installs `zero` globally via npm and runs onboarding.
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 ```
 
 Installer flags:
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --help
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --help
 ```
 
 Details: [Installer internals](/install/installer).
@@ -54,7 +63,7 @@ Details: [Installer internals](/install/installer).
 Non-interactive (skip onboarding):
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash -s -- --no-onboard
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --no-onboard
 ```
 
 ### 2) Global install (manual)
@@ -123,10 +132,10 @@ The installer supports two methods:
 
 ```bash
 # Explicit npm
-curl -fsSL https://zero.local/install.sh | bash -s -- --install-method npm
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method npm
 
 # Install from GitHub (source checkout)
-curl -fsSL https://zero.local/install.sh | bash -s -- --install-method git
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git
 ```
 
 Common flags:

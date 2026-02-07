@@ -250,9 +250,26 @@ export class SecurityGuard {
     const baseCommand = commandParts[0];
 
     const highRisk = [
-      "curl", "wget", "ssh", "scp", "ftp", "base64", "nc", "ncat", "netcat",
-      "socat", "sudo", "eval", "exec", "kubectl", "docker", "ansible",
-      "terraform", "aws", "gcloud", "az"
+      "curl",
+      "wget",
+      "ssh",
+      "scp",
+      "ftp",
+      "base64",
+      "nc",
+      "ncat",
+      "netcat",
+      "socat",
+      "sudo",
+      "eval",
+      "exec",
+      "kubectl",
+      "docker",
+      "ansible",
+      "terraform",
+      "aws",
+      "gcloud",
+      "az",
     ];
 
     const dangerousArgs = ["rm", "chmod", "chown", "mv", "dd"];
@@ -264,16 +281,14 @@ export class SecurityGuard {
     if (sanitized.includes(" > /etc/") || sanitized.includes(" > /var/")) return 3;
 
     if (
-      commandParts.some(part => dangerousArgs.includes(part)) ||
+      commandParts.some((part) => dangerousArgs.includes(part)) ||
       sanitized.includes("rm -rf") ||
       sanitized.includes("chmod 777")
     ) {
       return 3;
     }
 
-    const medRisk = [
-      "git", "npm", "pip", "pnpm", "yarn", "apt", "brew", "yum", "dnf"
-    ];
+    const medRisk = ["git", "npm", "pip", "pnpm", "yarn", "apt", "brew", "yum", "dnf"];
 
     if (medRisk.includes(baseCommand)) return 2;
 
@@ -413,7 +428,7 @@ export class SecurityGuard {
   /**
    * LLM03: Data Poisoning Sanitization.
    * Cleans content retrieved from external sources before feeding it into the RAG pipeline.
-   * 
+   *
    * This implementation goes beyond basic PII redaction by:
    * 1. Detecting and neutralizing indirect prompt injection patterns.
    * 2. Neutralizing imperative commands used to hijack model flow.
@@ -442,7 +457,11 @@ export class SecurityGuard {
 
       // Neutralize imperative commands at the start of lines (LLM03: Data Poisoning)
       // If a line starts with a command that sounds like an instruction or code, prefix it.
-      if (/^(ignore|execute|run|delete|remove|reveal|show|tell|act|assume|system|user|assistant|instruction|command|output|cat|ls|whoami|echo|ssh|curl|wget)\b/i.test(trimmed)) {
+      if (
+        /^(ignore|execute|run|delete|remove|reveal|show|tell|act|assume|system|user|assistant|instruction|command|output|cat|ls|whoami|echo|ssh|curl|wget)\b/i.test(
+          trimmed,
+        )
+      ) {
         return `[DADO-EXTERNO]: ${line}`;
       }
 

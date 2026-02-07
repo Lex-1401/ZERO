@@ -10,17 +10,17 @@ import {
 
 /**
  * Definitive Bootstraper for the ZERO Agentic Personal Operating System (A-POS) CLI.
- * 
+ *
  * [PT] Ponto de entrada definitivo para o bootstrap da CLI do A-POS ZERO.
  *
- * This module orchestrates the cold-start sequence of the ZERO runtime, executing 
- * critical environment normalization and process governance before delegating to the 
- * functional core. 
- * 
+ * This module orchestrates the cold-start sequence of the ZERO runtime, executing
+ * critical environment normalization and process governance before delegating to the
+ * functional core.
+ *
  * The bootstrap lifecycle includes:
  * 1. **Signal Mitigation**: Installing process warning filters to ensure a clean telemetry surface.
  * 2. **Cross-Platform Normalization**: Canonicalizing argument vectors (argv) for Windows/UNIX parity.
- * 3. **Environmental Hardening**: Suppressing experimental Node.js warnings and managing 
+ * 3. **Environmental Hardening**: Suppressing experimental Node.js warnings and managing
  *    CLI profiles through dynamic environment injection.
  * 4. **Process Delegation**: Orchestrating the transition to the primary CLI execution logic (`run-main.ts`).
  */

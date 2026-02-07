@@ -10,7 +10,7 @@
 - Docs: `docs/` (images, queue, Pi configuration). Compilation output resides in `dist/`.
 - Plugins/Extensions: Reside in `extensions/*` (workspace packages). Keep plugin-exclusive dependencies in the extension's `package.json`; do not add them to the root `package.json` unless the core utilizes them.
 - Plugins: Installation executes `npm install --omit=dev` in the plugin directory; runtime dependencies must live in `dependencies`. Avoid `workspace:*` in `dependencies` (npm install breaks); put `zero` in `devDependencies` or `peerDependencies` (the runtime resolves `zero/plugin-sdk` via jiti alias).
-- Installers served from `https://zero.local/*`: Reside in the sibling repository `../zero.local` (`public/install.sh`, `public/install-cli.sh`, `public/install.ps1`).
+- Installers served from `https://raw.githubusercontent.com/Lex-1401/ZERO/main/*`: Reside in the sibling repository `../zero.local` (`public/install.sh`, `public/install-cli.sh`, `public/install.ps1`).
 - Messaging Channels: Always consider **all** integrated channels + extensions when refactoring shared logic (routing, allowlists, pairing, command blocking, onboarding, docs).
   - Main Channel Docs: `docs/channels/`
   - Main Channel Code: `src/telegram`, `src/discord`, `src/slack`, `src/signal`, `src/imessage`, `src/web` (WhatsApp web), `src/channels`, `src/routing`
@@ -22,9 +22,9 @@
 - Internal links in `docs/**/*.md`: Relative to root, without `.md`/`.mdx` (example: `[Config](/configuration)`).
 - Section Cross-references: Use anchors in root-relative paths (example: `[Hooks](/configuration#hooks)`).
 - Document Headers and Anchors: Avoid hyphens and apostrophes in headers as they break anchor links.
-- When requested for links, respond with full URLs `https://zero.local/docs/...` (not root-relative).
-- When modifying documents, conclude the response with the `https://zero.local/docs/...` URLs referenced.
-- README (GitHub): Maintain absolute documentation URLs (`https://zero.local/docs/...`) so links function on GitHub.
+- When requested for links, respond with full URLs `https://raw.githubusercontent.com/Lex-1401/ZERO/main/docs/...` (not root-relative).
+- When modifying documents, conclude the response with the `https://raw.githubusercontent.com/Lex-1401/ZERO/main/docs/...` URLs referenced.
+- README (GitHub): Maintain absolute documentation URLs (`https://raw.githubusercontent.com/Lex-1401/ZERO/main/docs/...`) so links function on GitHub.
 - Documentation content must remain generic: No personal device names/hostnames/paths; use placeholders like `user@gateway-host` and "gateway host".
 
 ## Operations on exe.dev VM (General)

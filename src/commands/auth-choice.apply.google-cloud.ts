@@ -12,4 +12,3 @@ export async function applyAuthChoiceGoogleCloudAuth(
     label: "Google Cloud Auth",
   });
 }
-

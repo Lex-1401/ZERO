@@ -16,10 +16,10 @@ import { tryRouteCli } from "./route.js";
 
 /**
  * Normalizes the process arguments by transforming the `--update` flag into a dedicated `update` command.
- * 
+ *
  * [PT] Reescreve os argumentos do processo para converter a flag `--update` no comando `update`.
  *
- * This normalization facilitates a more intuitive CLI interface, allowing `zero --update` 
+ * This normalization facilitates a more intuitive CLI interface, allowing `zero --update`
  * to be semantically equivalent to `zero update`, thereby streamlining self-update workflows.
  *
  * @param argv - The raw command-line argument array.
@@ -36,10 +36,10 @@ export function rewriteUpdateFlagArgv(argv: string[]): string[] {
 
 /**
  * The primary execution entry point for the ZERO CLI.
- * 
+ *
  * [PT] A função principal de execução para a CLI do ZERO.
  *
- * This function orchestrates the CLI's initialization sequence, ensuring environmental 
+ * This function orchestrates the CLI's initialization sequence, ensuring environmental
  * stability and runtime compliance. Key responsibilities include:
  * 1. **Argument Sanitization**: Handling platform-specific (Windows) argument inconsistencies.
  * 2. **Environment Bootstraps**: Loading `.env` configurations and normalizing process variables.
@@ -90,13 +90,13 @@ export async function runCli(argv: string[] = process.argv) {
 }
 
 /**
- * Aggressively sanitizes the argument list on Windows environments to identify and excise 
+ * Aggressively sanitizes the argument list on Windows environments to identify and excise
  * redundant Node.js executable paths.
- * 
+ *
  * [PT] Sanitiza agressivamente a lista de argumentos no Windows para remover o caminho do executável do Node.js.
  *
- * Windows argument parsing during shell invocation can be non-deterministic, often injecting 
- * the Node.js binary path in unexpected indices. This utility employs heuristic normalization 
+ * Windows argument parsing during shell invocation can be non-deterministic, often injecting
+ * the Node.js binary path in unexpected indices. This utility employs heuristic normalization
  * and path comparisons to ensure a stable `[node, script, ...args]` sequence.
  *
  * @param argv - The raw process arguments.
@@ -152,10 +152,9 @@ function stripWindowsNodeExec(argv: string[]): string[] {
 
 /**
  * Determines whether the current module is the primary entry point for the CLI process.
- * 
+ *
  * @returns `true` if this module is the main entry point, `false` otherwise.
  */
 export function isCliMainModule(): boolean {
   return isMainModule({ currentFile: fileURLToPath(import.meta.url) });
 }
-

@@ -94,23 +94,23 @@ const canvasRuntime = runtimeForLogger(logCanvas);
 
 /**
  * Represents a running instance of the Gateway Server.
- * 
+ *
  * [PT] Representa uma instância em execução do Servidor Gateway.
  * Provides granular control over the server's lifecycle, including graceful shutdown protocols
  * and diagnostic state management.
  */
 export type GatewayServer = {
   /**
-   * Gracefully terminates the gateway server, orchestrating the shutdown of all active 
+   * Gracefully terminates the gateway server, orchestrating the shutdown of all active
    * connections, sidecars, and internal subsystems (cron, discovery, agents).
-   * 
-   * [PT] Encerra graciosamente o servidor gateway, orquestrando o desligamento de todas 
+   *
+   * [PT] Encerra graciosamente o servidor gateway, orquestrando o desligamento de todas
    * as conexões ativas, sidecars e subsistemas internos.
    *
    * @param opts - Encapsulates parameters for the decommissioning process.
-   * @param opts.reason - A declarative string describing the motivation for the shutdown, 
+   * @param opts.reason - A declarative string describing the motivation for the shutdown,
    *                      utilized for auditing and logging purposes.
-   * @param opts.restartExpectedMs - A temporal hint provided to connected clients, suggesting 
+   * @param opts.restartExpectedMs - A temporal hint provided to connected clients, suggesting
    *                                 a reconnection attempt after the specified millisecond interval.
    * @returns A Promise that resolves once the decommissioning sequence is complete.
    */
@@ -119,15 +119,15 @@ export type GatewayServer = {
 
 /**
  * Configuration schema for the Gateway Server initialization.
- * 
+ *
  * [PT] Esquema de configuração para a inicialização do Servidor Gateway.
  */
 export type GatewayServerOptions = {
   /**
    * Defines the network interface binding strategy for the Gateway's WebSocket and HTTP endpoints.
-   * 
+   *
    * [PT] Define a estratégia de vinculação da interface de rede para os endpoints WS e HTTP do Gateway.
-   * 
+   *
    * - `loopback`: Restricts access to the local loopback interface (127.0.0.1).
    * - `lan`: Exposes endpoints to all interfaces available on the local network (0.0.0.0).
    * - `tailnet`: Specifically binds to the Tailscale virtual interface address.
@@ -137,50 +137,50 @@ export type GatewayServerOptions = {
   /**
    * Explicitly overrides the host resolution logic. When defined, this value takes precedence
    * over the `bind` policy.
-   * 
+   *
    * [PT] Sobrescreve explicitamente a lógica de resolução de host.
    */
   host?: string;
   /**
    * Determines if the Altair browser-based Control UI should be served by the gateway.
-   * 
+   *
    * [PT] Determina se a UI de Controle Altair deve ser servida pelo gateway.
    */
   controlUiEnabled?: boolean;
   /**
-   * Enables the OpenAI-compatible REST API bridge, allowing standardized LLM clients 
+   * Enables the OpenAI-compatible REST API bridge, allowing standardized LLM clients
    * to interact with the system's underlying agent logic.
-   * 
+   *
    * [PT] Habilita a ponte de API REST compatível com OpenAI.
    */
   openAiChatCompletionsEnabled?: boolean;
   /**
    * Activates the OpenResponses API, facilitating structured agent interaction schemas.
-   * 
+   *
    * [PT] Ativa a API OpenResponses.
    */
   openResponsesEnabled?: boolean;
   /**
    * Optional authentication policy overrides, including token configurations and RBAC rules.
-   * 
+   *
    * [PT] Sobrescritas opcionais de política de autenticação.
    */
   auth?: import("../config/config.js").GatewayAuthConfig;
   /**
    * Specialized configuration for Tailscale persistent exposure (Serve/Funnel).
-   * 
+   *
    * [PT] Configuração especializada para exposição persistente via Tailscale.
    */
   tailscale?: import("../config/config.js").GatewayTailscaleConfig;
   /**
    * Debugging/Testing flag that bypasses the test-environment restriction for the Canvas host.
-   * 
+   *
    * [PT] Sinalizador de teste que ignora a restrição de ambiente de teste para o host do Canvas.
    */
   allowCanvasHostInTests?: boolean;
   /**
    * Dependency injection hook for capturing or overriding the onboarding wizard's execution.
-   * 
+   *
    * [PT] Gancho de injeção de dependência para capturar ou substituir a execução do wizard de onboarding.
    */
   wizardRunner?: (
@@ -192,9 +192,9 @@ export type GatewayServerOptions = {
 
 /**
  * Bootstraps the Zero Gateway Server, initializing the "nervous system" of the A-POS.
- * 
+ *
  * [PT] Inicializa o Servidor Gateway Zero, o "sistema nervoso" do A-POS.
- * 
+ *
  * This high-level orchestrator executes the following sequence:
  * 1.  Standardizes environment invariants (ports, paths).
  * 2.  Validates and migrates configuration schema integrity.
@@ -202,7 +202,7 @@ export type GatewayServerOptions = {
  * 4.  Spins up the HTTP/WS core with optional TLS/Tailscale networking.
  * 5.  Registers discovery hooks (Bonjour/mDNS) and maintenance sidecars.
  * 6.  Establishes the communication matrix between Channels, Nodes, and the PI Agent.
- * 
+ *
  * @param port - The numeric TCP port for the primary listener (Internal protocol default: 18789).
  * @param opts - A set of optional configuration parameters (GatewayServerOptions).
  * @returns A Promise resolving to an initialized `GatewayServer` instance with lifecycle control.
@@ -212,7 +212,6 @@ export async function startGatewayServer(
   port = 18789,
   opts: GatewayServerOptions = {},
 ): Promise<GatewayServer> {
-
   // Ensure all default port derivations (browser/canvas) see the actual runtime port.
   process.env.ZERO_GATEWAY_PORT = String(port);
   logAcceptedEnvOption({
@@ -252,8 +251,8 @@ export async function startGatewayServer(
     const issues =
       configSnapshot.issues.length > 0
         ? configSnapshot.issues
-          .map((issue) => `${issue.path || "<root>"}: ${issue.message}`)
-          .join("\n")
+            .map((issue) => `${issue.path || "<root>"}: ${issue.message}`)
+            .join("\n")
         : "Unknown validation issue.";
     throw new Error(
       `Invalid config at ${configSnapshot.path}.\n${issues}\nRun "${formatCliCommand("zero doctor")}" to repair, then retry.`,

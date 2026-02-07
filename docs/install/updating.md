@@ -16,14 +16,14 @@ detects existing installs, upgrades in place, and runs `zero doctor` when
 needed.
 
 ```bash
-curl -fsSL https://zero.local/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
 ```
 
 Notes:
 - Add `--no-onboard` if you don’t want the onboarding wizard to run again.
 - For **source installs**, use:
   ```bash
-  curl -fsSL https://zero.local/install.sh | bash -s -- --install-method git --no-onboard
+  curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git --no-onboard
   ```
   The installer will `git pull --rebase` **only** if the repo is clean.
 - For **global installs**, the script uses `npm install -g zero@latest` under the hood.
