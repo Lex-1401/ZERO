@@ -1,4 +1,3 @@
-
 import type { ZEROConfig } from "../config/config.js";
 import { resolvePluginTools } from "../plugins/tools.js";
 import type { GatewayMessageChannel } from "../utils/message-channel.js";
@@ -64,11 +63,11 @@ export function createZEROTools(options?: {
 }): AnyAgentTool[] {
   const imageTool = options?.agentDir?.trim()
     ? createImageTool({
-      config: options?.config,
-      agentDir: options.agentDir,
-      sandboxRoot: options?.sandboxRoot,
-      modelHasVision: options?.modelHasVision,
-    })
+        config: options?.config,
+        agentDir: options.agentDir,
+        sandboxRoot: options?.sandboxRoot,
+        modelHasVision: options?.modelHasVision,
+      })
     : null;
   const webSearchTool = createWebSearchTool({
     config: options?.config,

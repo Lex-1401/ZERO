@@ -1,4 +1,3 @@
-
 # Walkthrough: ACI Integration for ZERO
 
 This document details the successful integration of ACI and procedural memory capabilities (Search, See, Remember) into the ZERO agent framework.

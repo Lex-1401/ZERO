@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -10,6 +10,10 @@ fi
 
 tool="$1"
 shift
+
+if [[ -f "$ROOT_DIR/node_modules/.bin/$tool" ]]; then
+  exec "$ROOT_DIR/node_modules/.bin/$tool" "$@"
+fi
 
 if [[ -f "$ROOT_DIR/pnpm-lock.yaml" ]] && command -v pnpm >/dev/null 2>&1; then
   exec pnpm exec "$tool" "$@"

@@ -103,8 +103,8 @@ function resolvePluginModuleExport(moduleExport: unknown): {
 } {
   const resolved =
     moduleExport &&
-      typeof moduleExport === "object" &&
-      "default" in (moduleExport as Record<string, unknown>)
+    typeof moduleExport === "object" &&
+    "default" in (moduleExport as Record<string, unknown>)
       ? (moduleExport as { default: unknown }).default
       : moduleExport;
   if (typeof resolved === "function") {

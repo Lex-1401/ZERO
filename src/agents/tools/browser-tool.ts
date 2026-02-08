@@ -278,8 +278,8 @@ export function createBrowserTool(opts?: {
     opts?.allowHostControl === false ? "Host target blocked by policy." : "Host target allowed.";
   const allowlistHint =
     opts?.allowedControlUrls?.length ||
-      opts?.allowedControlHosts?.length ||
-      opts?.allowedControlPorts?.length
+    opts?.allowedControlHosts?.length ||
+    opts?.allowedControlPorts?.length
       ? "Custom targets are restricted by sandbox allowlists."
       : "Custom targets are unrestricted.";
   return {
@@ -336,37 +336,37 @@ export function createBrowserTool(opts?: {
       const baseUrl = nodeTarget
         ? ""
         : resolveBrowserBaseUrl({
-          target: resolvedTarget,
-          controlUrl,
-          defaultControlUrl: opts?.defaultControlUrl,
-          allowHostControl: opts?.allowHostControl,
-          allowedControlUrls: opts?.allowedControlUrls,
-          allowedControlHosts: opts?.allowedControlHosts,
-          allowedControlPorts: opts?.allowedControlPorts,
-        });
+            target: resolvedTarget,
+            controlUrl,
+            defaultControlUrl: opts?.defaultControlUrl,
+            allowHostControl: opts?.allowHostControl,
+            allowedControlUrls: opts?.allowedControlUrls,
+            allowedControlHosts: opts?.allowedControlHosts,
+            allowedControlPorts: opts?.allowedControlPorts,
+          });
 
       const proxyRequest = nodeTarget
         ? async (opts: {
-          method: string;
-          path: string;
-          query?: Record<string, string | number | boolean | undefined>;
-          body?: unknown;
-          timeoutMs?: number;
-          profile?: string;
-        }) => {
-          const proxy = await callBrowserProxy({
-            nodeId: nodeTarget.nodeId,
-            method: opts.method,
-            path: opts.path,
-            query: opts.query,
-            body: opts.body,
-            timeoutMs: opts.timeoutMs,
-            profile: opts.profile,
-          });
-          const mapping = await persistProxyFiles(proxy.files);
-          applyProxyPaths(proxy.result, mapping);
-          return proxy.result;
-        }
+            method: string;
+            path: string;
+            query?: Record<string, string | number | boolean | undefined>;
+            body?: unknown;
+            timeoutMs?: number;
+            profile?: string;
+          }) => {
+            const proxy = await callBrowserProxy({
+              nodeId: nodeTarget.nodeId,
+              method: opts.method,
+              path: opts.path,
+              query: opts.query,
+              body: opts.body,
+              timeoutMs: opts.timeoutMs,
+              profile: opts.profile,
+            });
+            const mapping = await persistProxyFiles(proxy.files);
+            applyProxyPaths(proxy.result, mapping);
+            return proxy.result;
+          }
         : null;
 
       switch (action) {
@@ -471,16 +471,16 @@ export function createBrowserTool(opts?: {
           if (proxyRequest) {
             const result = targetId
               ? await proxyRequest({
-                method: "DELETE",
-                path: `/tabs/${encodeURIComponent(targetId)}`,
-                profile,
-              })
+                  method: "DELETE",
+                  path: `/tabs/${encodeURIComponent(targetId)}`,
+                  profile,
+                })
               : await proxyRequest({
-                method: "POST",
-                path: "/act",
-                profile,
-                body: { kind: "close" },
-              });
+                  method: "POST",
+                  path: "/act",
+                  profile,
+                  body: { kind: "close" },
+                });
             return jsonResult(result);
           }
           if (targetId) await browserCloseTab(baseUrl, targetId, { profile });
@@ -509,8 +509,8 @@ export function createBrowserTool(opts?: {
               : undefined;
           const maxChars =
             typeof params.maxChars === "number" &&
-              Number.isFinite(params.maxChars) &&
-              params.maxChars > 0
+            Number.isFinite(params.maxChars) &&
+            params.maxChars > 0
               ? Math.floor(params.maxChars)
               : undefined;
           const resolvedMaxChars =
@@ -532,10 +532,25 @@ export function createBrowserTool(opts?: {
           const frame = typeof params.frame === "string" ? params.frame.trim() : undefined;
           const snapshot = proxyRequest
             ? ((await proxyRequest({
-              method: "GET",
-              path: "/snapshot",
-              profile,
-              query: {
+                method: "GET",
+                path: "/snapshot",
+                profile,
+                query: {
+                  format,
+                  targetId,
+                  limit,
+                  ...(typeof resolvedMaxChars === "number" ? { maxChars: resolvedMaxChars } : {}),
+                  refs,
+                  interactive,
+                  compact,
+                  depth,
+                  selector,
+                  frame,
+                  labels,
+                  mode,
+                },
+              })) as Awaited<ReturnType<typeof browserSnapshot>>)
+            : await browserSnapshot(baseUrl, {
                 format,
                 targetId,
                 limit,
@@ -548,23 +563,8 @@ export function createBrowserTool(opts?: {
                 frame,
                 labels,
                 mode,
-              },
-            })) as Awaited<ReturnType<typeof browserSnapshot>>)
-            : await browserSnapshot(baseUrl, {
-              format,
-              targetId,
-              limit,
-              ...(typeof resolvedMaxChars === "number" ? { maxChars: resolvedMaxChars } : {}),
-              refs,
-              interactive,
-              compact,
-              depth,
-              selector,
-              frame,
-              labels,
-              mode,
-              profile,
-            });
+                profile,
+              });
           if (snapshot.format === "ai") {
             if (labels && snapshot.imagePath) {
               return await imageResultFromFile({
@@ -589,25 +589,25 @@ export function createBrowserTool(opts?: {
           const type = params.type === "jpeg" ? "jpeg" : "png";
           const result = proxyRequest
             ? ((await proxyRequest({
-              method: "POST",
-              path: "/screenshot",
-              profile,
-              body: {
+                method: "POST",
+                path: "/screenshot",
+                profile,
+                body: {
+                  targetId,
+                  fullPage,
+                  ref,
+                  element,
+                  type,
+                },
+              })) as Awaited<ReturnType<typeof browserScreenshotAction>>)
+            : await browserScreenshotAction(baseUrl, {
                 targetId,
                 fullPage,
                 ref,
                 element,
                 type,
-              },
-            })) as Awaited<ReturnType<typeof browserScreenshotAction>>)
-            : await browserScreenshotAction(baseUrl, {
-              targetId,
-              fullPage,
-              ref,
-              element,
-              type,
-              profile,
-            });
+                profile,
+              });
           return await imageResultFromFile({
             label: "browser:screenshot",
             path: result.path,
@@ -660,11 +660,11 @@ export function createBrowserTool(opts?: {
           const targetId = typeof params.targetId === "string" ? params.targetId.trim() : undefined;
           const result = proxyRequest
             ? ((await proxyRequest({
-              method: "POST",
-              path: "/pdf",
-              profile,
-              body: { targetId },
-            })) as Awaited<ReturnType<typeof browserPdfSave>>)
+                method: "POST",
+                path: "/pdf",
+                profile,
+                body: { targetId },
+              })) as Awaited<ReturnType<typeof browserPdfSave>>)
             : await browserPdfSave(baseUrl, { targetId, profile });
           return {
             content: [{ type: "text", text: `FILE:${result.path}` }],
@@ -746,7 +746,6 @@ export function createBrowserTool(opts?: {
           const profile = readStringParam(params, "profile");
           const _target = readStringParam(params, "target");
 
-
           // We construct an internal 'evaluate' request to inject the ACI logic
           // and retrieve the JSON result, then formatting it as a text prompt.
           // This avoids the need for full browser control rewiring.
@@ -754,18 +753,22 @@ export function createBrowserTool(opts?: {
 
           const result = proxyRequest
             ? await proxyRequest({
-              method: "POST",
-              path: "/act",
-              profile,
-              body: {
-                kind: "evaluate",
-                fn: script,
-              },
-            })
-            : await browserAct(baseUrl, {
-              kind: "evaluate",
-              fn: script
-            }, { profile });
+                method: "POST",
+                path: "/act",
+                profile,
+                body: {
+                  kind: "evaluate",
+                  fn: script,
+                },
+              })
+            : await browserAct(
+                baseUrl,
+                {
+                  kind: "evaluate",
+                  fn: script,
+                },
+                { profile },
+              );
 
           // Parse result (it might come wrapped) -> generate prompt string
           // The result from evaluate is generally the return value of the function.
@@ -773,7 +776,9 @@ export function createBrowserTool(opts?: {
           const snapshotData = (result as any).result as ACISnapshot;
           if (!snapshotData || !Array.isArray(snapshotData.elements)) {
             return {
-              content: [{ type: "text", text: "ACI Scan failed: Invalid data returned from browser." }],
+              content: [
+                { type: "text", text: "ACI Scan failed: Invalid data returned from browser." },
+              ],
               details: undefined,
             };
           }
@@ -792,26 +797,26 @@ export function createBrowserTool(opts?: {
           try {
             const result = proxyRequest
               ? await proxyRequest({
-                method: "POST",
-                path: "/act",
-                profile,
-                body: request,
-              })
+                  method: "POST",
+                  path: "/act",
+                  profile,
+                  body: request,
+                })
               : await browserAct(baseUrl, request as Parameters<typeof browserAct>[1], {
-                profile,
-              });
+                  profile,
+                });
             return jsonResult(result);
           } catch (err) {
             const msg = String(err);
             if (msg.includes("404:") && msg.includes("tab not found") && profile === "chrome") {
               const tabs = proxyRequest
                 ? ((
-                  (await proxyRequest({
-                    method: "GET",
-                    path: "/tabs",
-                    profile,
-                  })) as { tabs?: unknown[] }
-                ).tabs ?? [])
+                    (await proxyRequest({
+                      method: "GET",
+                      path: "/tabs",
+                      profile,
+                    })) as { tabs?: unknown[] }
+                  ).tabs ?? [])
                 : await browserTabs(baseUrl, { profile }).catch(() => []);
               if (!tabs.length) {
                 throw new Error(
