@@ -151,4 +151,4 @@ async function runShowcase() {
     log("\n✅ SESSION COMPLETE.", "\x1b[35m");
 }
 
-runShowcase();
+await runShowcase(); // Await to satisfy no-floating-promises

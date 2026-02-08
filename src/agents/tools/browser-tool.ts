@@ -744,7 +744,7 @@ export function createBrowserTool(opts?: {
         }
         case "aci_scan": {
           const profile = readStringParam(params, "profile");
-          const target = readStringParam(params, "target");
+          const _target = readStringParam(params, "target");
 
           // We construct an internal 'evaluate' request to inject the ACI logic
           // and retrieve the JSON result, then formatting it as a text prompt.

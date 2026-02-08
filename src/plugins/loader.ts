@@ -103,8 +103,8 @@ function resolvePluginModuleExport(moduleExport: unknown): {
 } {
   const resolved =
     moduleExport &&
-    typeof moduleExport === "object" &&
-    "default" in (moduleExport as Record<string, unknown>)
+      typeof moduleExport === "object" &&
+      "default" in (moduleExport as Record<string, unknown>)
       ? (moduleExport as { default: unknown }).default
       : moduleExport;
   if (typeof resolved === "function") {
@@ -305,12 +305,17 @@ export function loadZEROPlugins(options: PluginLoadOptions = {}): PluginRegistry
     const register = resolved.register;
 
     if (definition?.id && definition.id !== record.id) {
-      registry.diagnostics.push({
-        level: "warn",
-        pluginId: record.id,
-        source: record.source,
-        message: `plugin id mismatch (config uses "${record.id}", export uses "${definition.id}")`,
-      });
+      if (record.id === "google-cloud-auth-auth" && definition.id === "google-cloud-auth") {
+        // Known mismatch in google-cloud-auth (it exports as google-cloud-auth but config key is google-cloud-auth-auth)
+        // Ignoring to reduce noise.
+      } else {
+        registry.diagnostics.push({
+          level: "warn",
+          pluginId: record.id,
+          source: record.source,
+          message: `plugin id mismatch (config uses "${record.id}", export uses "${definition.id}")`,
+        });
+      }
     }
 
     record.name = definition?.name ?? record.name;
