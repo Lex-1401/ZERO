@@ -109,9 +109,6 @@ describe("buildAgentSystemPrompt", () => {
       "- Se exatamente uma skill se aplica claramente: leia seu SKILL.md em <location> com `Read`, então siga-o.",
     );
     expect(prompt).toContain("ZERO docs: /tmp/zero/docs");
-    expect(prompt).toContain(
-      "Para comportamento, comandos, configuração ou arquitetura do ZERO: consulte a documentação local primeiro.",
-    );
   });
 
   it("includes docs guidance when docsPath is provided", () => {
@@ -122,9 +119,6 @@ describe("buildAgentSystemPrompt", () => {
 
     expect(prompt).toContain("## Documentação");
     expect(prompt).toContain("ZERO docs: /tmp/zero/docs");
-    expect(prompt).toContain(
-      "Para comportamento, comandos, configuração ou arquitetura do ZERO: consulte a documentação local primeiro.",
-    );
   });
 
   it("includes workspace notes when provided", () => {

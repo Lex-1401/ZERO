@@ -36,6 +36,7 @@ export function renderPlayground(props: PlaygroundProps) {
                     <div class="group-content" style="width: 100%;">
                         <select class="select-native" style="width: 100%;" .value=${props.model} @change=${(e: Event) => props.onModelChange((e.target as HTMLSelectElement).value)}>
                             <option value="" disabled ?selected=${!props.model}>Selecione um modelo...</option>
+                            <option value="llama3.2:latest">Llama 3.2 (Local)</option>
                             <option value="gpt-4o">GPT-4o</option>
                             <option value="gpt-4-turbo">GPT-4 Turbo</option>
                             <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>

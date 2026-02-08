@@ -1,4 +1,5 @@
 import { html, nothing } from "lit";
+import { t } from "../i18n";
 import { guard } from "lit/directives/guard.js";
 import { repeat } from "lit/directives/repeat.js";
 import type { SessionsListResult } from "../types";
@@ -77,7 +78,7 @@ function renderCompactionIndicator(status: CompactionIndicatorStatus | null | un
   if (status.active) {
     return html`
       <div class="callout info compaction-indicator compaction-indicator--active" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-        ${icons.loader} Compactando contexto...
+        ${icons.loader} ${t("chat.compacting" as any)}
       </div>
     `;
   }
@@ -88,7 +89,7 @@ function renderCompactionIndicator(status: CompactionIndicatorStatus | null | un
     if (elapsed < COMPACTION_TOAST_DURATION_MS) {
       return html`
         <div class="callout success compaction-indicator compaction-indicator--complete" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-          ${icons.check} Contexto compactado
+          ${icons.check} ${t("chat.compacted" as any)}
         </div>
       `;
     }
@@ -112,8 +113,8 @@ export function renderChat(props: ChatProps) {
   };
 
   const composePlaceholder = props.connected
-    ? "Envie uma mensagem..."
-    : "Conecte-se ao gateway para começar.";
+    ? t("chat.placeholder.connected" as any)
+    : t("chat.placeholder.disconnected" as any);
 
   const splitRatio = props.splitRatio ?? 0.6;
   const sidebarOpen = Boolean(props.sidebarOpen && props.onCloseSidebar);
@@ -128,19 +129,19 @@ export function renderChat(props: ChatProps) {
 
   const renderWelcomeStack = () => html`
     <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 1; min-height: 400px; padding: 40px; padding-bottom: 180px;">
-      <div class="card--welcome" style="padding: 40px; text-align: center; max-width: 420px; border-radius: 24px;">
-          <div style="width: 64px; height: 64px; border-radius: 16px; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--text-main); border: 1px solid rgba(255,255,255,0.1);">
+      <div class="card--welcome" style="padding: 40px; text-align: center; max-width: 420px; border-radius: var(--radius-xl);">
+          <div style="width: 64px; height: 64px; border-radius: var(--radius-xl); background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--text-main); border: 1px solid rgba(255,255,255,0.1);">
               ${icons.brain}
           </div>
-          <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Consciência Ativa</h2>
+          <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">${t("chat.welcome.title" as any)}</h2>
           <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 32px; opacity: 0.8;">
-              O sistema está online e pronto para processar comandos complexos. Selecione uma tarefa inicial ou digite sua instrução.
+              ${t("chat.welcome.desc" as any)}
           </p>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             ${starterChips.map(chip => html`
               <button 
                 class="btn btn--chip" 
-                style="justify-content: flex-start; padding: 12px 16px; height: auto; border-radius: 12px;"
+                style="justify-content: flex-start; padding: 12px 16px; height: auto; border-radius: var(--radius-lg);"
                 @click=${() => props.onSend(chip.prompt)}
               >
                 <div style="text-align: left;">
@@ -162,12 +163,8 @@ export function renderChat(props: ChatProps) {
       @click=${handleCodeCopyClick}
       style="background: var(--bg-main); padding: 0 0 180px 0;"
     >
-      ${props.loading ? html`
-        <div class="loading-overlay" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: ${items.length > 0 ? '80px' : '100%'}; color: var(--text-main); gap: 12px; transition: opacity 0.3s ease; padding: 40px;">
-            <div class="animate-spin" style="color: var(--accent-blue); transform: scale(1.2);">${icons.loader}</div>
-            <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.05em; opacity: 1; text-shadow: 0 0 10px rgba(0, 122, 255, 0.3);">CARREGANDO HISTÓRICO NEURAL...</span>
-        </div>
-      ` : nothing}
+      ${nothing}
+
       ${showWelcome ? renderWelcomeStack() : nothing}
       ${guard([props.messages, props.toolMessages, props.stream, props.showThinking, props.loading], () => repeat(items, (item) => item.key, (item) => {
     if (item.kind === "reading-indicator") {
@@ -205,7 +202,7 @@ export function renderChat(props: ChatProps) {
           <div style="color: var(--warning);">${icons.plug}</div>
           <div style="font-size: 13px;">
              ${props.disabledReason.includes("1006") || props.disabledReason.includes("disconnect")
-          ? "Sinal do Gateway interrompido. Tentando restabelecer conexão neural..."
+          ? t("chat.status.reconnecting" as any)
           : props.disabledReason}
           </div>
         </div>`
@@ -228,7 +225,7 @@ export function renderChat(props: ChatProps) {
           ${thread}
           
           <div class="chat-compose-wrapper" style="padding: 24px; position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; background: linear-gradient(to top, var(--bg-main) 80%, transparent);">
-            <div class="chat-compose" style="pointer-events: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 16px; box-shadow: var(--shadow-deep); padding: 8px; display: flex; flex-direction: column;">
+            <div class="chat-compose" style="pointer-events: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-deep); padding: 8px; display: flex; flex-direction: column;">
                 <div class="chat-compose__field">
                     <textarea
                         style="background: transparent; border: none; padding: 12px; font-size: 14px; line-height: 1.5; resize: none; width: 100%; outline: none; color: var(--text-main); font-family: var(--font-sans);"
@@ -269,10 +266,10 @@ export function renderChat(props: ChatProps) {
                     <button
                         class="btn primary"
                         ?disabled=${!props.connected || !props.draft.trim()}
-                        @click=${props.onSend}
-                        style="border-radius: 20px; padding: 0 16px; height: 32px; font-size: 13px; font-weight: 600;"
+                        @click=${() => props.onSend()}
+                        style="border-radius: var(--radius-full); padding: 0 16px; height: 32px; font-size: 13px; font-weight: 600;"
                     >
-                        ${isBusy ? "Enfileirar" : "Enviar"} ${icons.arrowUp}
+                        ${isBusy ? t("chat.enqueue" as any) : t("chat.send" as any)} ${icons.arrowUp}
                     </button>
                 </div>
             </div>
@@ -280,8 +277,8 @@ export function renderChat(props: ChatProps) {
              ${props.queue.length > 0 ? html`
                 <div style="margin-top: 12px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; pointer-events: auto; box-shadow: var(--shadow-vision);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                      <div style="font-size: 11px; font-weight: 700; color: var(--text-muted);">FILA DE AÇÃO (${props.queue.length})</div>
-                      ${!isBusy ? html`<button class="btn primary btn--xs" style="height: 24px; padding: 0 8px; font-size: 10px;" @click=${() => props.onSend()}>Processar Fila</button>` : nothing}
+                      <div style="font-size: 11px; font-weight: 700; color: var(--text-muted);">${t("chat.queue.title" as any)} (${props.queue.length})</div>
+                      ${!isBusy ? html`<button class="btn primary btn--xs" style="height: 24px; padding: 0 8px; font-size: 10px;" @click=${() => props.onSend()}>${t("chat.queue.process" as any)}</button>` : nothing}
                     </div>
                      ${props.queue.map(item => html`
                         <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.03); margin-top: 4px; border: 1px solid rgba(255,255,255,0.02);">
@@ -370,7 +367,7 @@ function buildChatItems(props: ChatProps): Array<ChatItem | MessageGroup> {
       key: "chat:history:notice",
       message: {
         role: "system",
-        content: `Exibindo as últimas ${CHAT_HISTORY_RENDER_LIMIT} mensagens (${historyStart} ocultas).`,
+        content: t("chat.history.limit" as any).replace("{limit}", String(CHAT_HISTORY_RENDER_LIMIT)).replace("{hidden}", String(historyStart)),
         timestamp: Date.now(),
       },
     });

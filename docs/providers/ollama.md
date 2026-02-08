@@ -214,6 +214,28 @@ ps aux | grep ollama
 ollama serve
 ```
 
+### Perfil de Autenticação Manual (Avançado)
+
+Se você encontrar erros de "No API key found" ao usar o Ollama mesmo com a variável de ambiente definida (especialmente em ambientes de desenvolvimento ou gateways isolados), você pode criar um perfil de autenticação manual no arquivo `auth-profiles.json` do seu agente:
+
+1) Localize ou crie o arquivo em `~/.zero/agents/<agente>/agent/auth-profiles.json`.
+2) Adicione a seguinte entrada:
+
+```json
+{
+  "version": 1,
+  "profiles": {
+    "ollama:manual": {
+      "type": "api_key",
+      "provider": "ollama",
+      "key": "ollama"
+    }
+  }
+}
+```
+
+Isso garante que o Gateway sempre tenha uma credencial nominal disponível para despachar chamadas ao motor do Ollama.
+
 ## Veja também
 
 - [Provedores de Modelos](/concepts/model-providers) - Visão geral de todos os provedores

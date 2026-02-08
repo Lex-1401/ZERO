@@ -135,7 +135,7 @@ export class ZEROApp extends LitElement {
   sessionStore = new SessionStore(this);
 
   @state() settings: UiSettings = loadSettings();
-  @state() password = "";
+  @state() password = this.settings.token || "";
   @state() tab: Tab = "chat";
   @state() onboarding = resolveOnboardingMode();
   @state() connected = false;

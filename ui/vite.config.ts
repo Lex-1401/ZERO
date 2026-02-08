@@ -30,6 +30,16 @@ export default defineConfig(({ command }) => {
       host: true,
       port: 5173,
       strictPort: true,
+      proxy: {
+        "/v1": {
+          target: `http://localhost:${process.env.ZERO_GATEWAY_PORT || 19001}`,
+          changeOrigin: true,
+        },
+        "/api": {
+          target: `http://localhost:${process.env.ZERO_GATEWAY_PORT || 19001}`,
+          changeOrigin: true,
+        },
+      },
     },
   };
 });

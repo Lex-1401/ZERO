@@ -18,7 +18,7 @@
 
 O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados por rigorosos padrões de arquitetura de software:
 
-1. **Soberania Local-First**: Todos os vetores de dados, modelos de pensamento e logs de auditoria residem no seu diretório `~/.zero`. A soberania não é uma opção; é o estado padrão da malha de conhecimento.
+1. **Soberania Local-First (LLMs Locais)**: Todos os vetores de dados, modelos de pensamento e logs de auditoria residem no seu diretório `~/.zero`. Com suporte nativo a **Ollama** e execução de modelos como **Llama 3.2**, o ZERO garante sua autonomia mesmo sem conexão com a nuvem.
 2. **Arquitetura Híbrida de Performance**: Um núcleo de performance crítica escrito em **Rust** (gerenciando VAD, telemetria de densidade e criptografia) integra-se perfeitamente com a flexibilidade do **TypeScript** para orquestração de canais.
 3. **Segurança Zero Trust (Cripta de Auditoria)**: Cada ação agêntica é registrada em logs permanentes e cifrados. O acesso é governado por políticas de menor privilégio (RBAC) e pareamento de dispositivos via mDNS/Bonjour.
 4. **Autonomia Agêntica Proativa**: Através do **Nudge Engine**, o sistema transcende a reatividade, antecipando necessidades baseadas em contexto e operando em loops de deliberação de alta fidelidade.
@@ -126,6 +126,7 @@ O módulo **Zero Sentinel** implementa defesas ativas contra ameaças vetoriais:
 - **LLM Security Guardrails**: Detecção nativa de injeção de prompt via Chain-of-Thought (CoT).
 - **Redação de PII**: Identificação e ocultação automática de informações sensíveis em tempo real.
 - **Panic Protocol**: Interrupção imediata de todos os processos agênticos via `zero panic`.
+- **Local LLM Sovereignty**: Integração otimizada com Ollama para modelos Llama 3.x e DeepSeek.
 
 ---
 

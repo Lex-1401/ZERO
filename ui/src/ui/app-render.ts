@@ -45,7 +45,7 @@ import {
 import { loadNodes } from "./controllers/nodes";
 import { loadChatHistory } from "./controllers/chat";
 import { loadConfig, saveConfig, updateConfigFormValue, runUpdate } from "./controllers/config";
-import { getLanguage, setLanguage } from "./i18n";
+import { getLanguage, setLanguage, t } from "./i18n";
 import {
   loadExecApprovals,
   removeExecApprovalsFormValue,
@@ -84,7 +84,7 @@ export function renderApp(state: AppViewState) {
         </div>
 
         <div class="sidebar-search">
-            <input type="text" placeholder="Buscar" />
+            <input type="text" placeholder="${t("common.search" as any)}" />
         </div>
 
         <nav style="flex: 1; overflow-y: auto;">
@@ -112,9 +112,9 @@ export function renderApp(state: AppViewState) {
         <div class="topbar-status">
             <div style="display: flex; align-items: center; gap: 8px; margin-right: 12px;">
                 <div class="status-orb ${state.connected ? "success" : "danger"}"></div>
-                <span class="text-xs font-bold text-muted uppercase tracking-wider">${state.connected ? "Online" : "Offline"}</span>
+                <span class="text-xs font-bold text-muted uppercase tracking-wider">${state.connected ? t("app.online" as any) : t("app.offline" as any)}</span>
             </div>
-            <button class="btn danger" @click=${() => state.handlePanic()}>PANIC</button>
+            <button class="btn danger" @click=${() => state.handlePanic()}>${t("app.panic" as any)}</button>
         </div>
       </header>
 
@@ -355,7 +355,7 @@ export function renderApp(state: AppViewState) {
         onSplitRatioChange: (r) => state.handleSplitRatioChange(r),
         assistantName: state.assistantName,
         assistantAvatar: state.assistantAvatar,
-      })), html`<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim);">${icons.loader} <span style="margin-left: 8px;">Carregando Interface Neural...</span></div>`)
+      })), nothing)
       : nothing}
 
         ${state.tab === "config"
@@ -463,7 +463,7 @@ export function renderApp(state: AppViewState) {
         onMaxTokensChange: (n) => state.handlePlaygroundUpdate({ maxTokens: n }),
         onRun: () => state.handlePlaygroundRun(),
         onClear: () => state.handlePlaygroundUpdate({ userPrompt: "", output: "" }),
-      })), html`<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim);">${icons.loader} <span style="margin-left: 8px;">Carregando Laboratório...</span></div>`)
+      })), nothing)
       : nothing
     }
 

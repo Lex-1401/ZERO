@@ -191,14 +191,6 @@ function truncateValue(value: unknown, maxLen = 40): string {
 }
 
 export function renderConfig(props: ConfigProps) {
-  const translations = {
-    valid: "válido",
-    invalid: "inválido",
-    unknown: "desconhecido"
-  };
-  const validityRaw = props.valid == null ? "unknown" : props.valid ? "valid" : "invalid";
-  const validity = translations[validityRaw as keyof typeof translations];
-
   const analysis = analyzeConfigSchema(props.schema);
   const formUnsafe = analysis.schema
     ? analysis.unsupportedPaths.length > 0
@@ -272,7 +264,7 @@ export function renderConfig(props: ConfigProps) {
                 <div class="config-section-hero__icon">${icons.sun}</div>
                 <div class="group-label">
                     <div class="group-title">${t("settings.theme")}</div>
-                    <div class="group-desc">Escolha como a interface do ZERO deve se comportar visualmente.</div>
+                    <div class="group-desc">${t("config.appearance.theme.desc" as any)}</div>
                 </div>
             </div>
             <div style="padding: 16px;">
@@ -296,7 +288,7 @@ export function renderConfig(props: ConfigProps) {
                 <div class="config-section-hero__icon">${icons.globe}</div>
                 <div class="group-label">
                     <div class="group-title">${t("settings.language")}</div>
-                    <div class="group-desc">Altere o idioma global da interface e das interações do sistema.</div>
+                    <div class="group-desc">${t("config.appearance.lang.desc" as any)}</div>
                 </div>
             </div>
             <div style="padding: 16px;">
@@ -328,7 +320,7 @@ export function renderConfig(props: ConfigProps) {
       <aside class="config-sidebar">
         <div class="config-search">
             <div class="config-search__icon">${icons.search}</div>
-            <input class="config-search__input" type="text" placeholder="Buscar ajustes…" .value=${props.searchQuery} @input=${(e: Event) => props.onSearchChange((e.target as HTMLInputElement).value)} />
+            <input class="config-search__input" type="text" placeholder="${t("config.search.placeholder" as any)}" .value=${props.searchQuery} @input=${(e: Event) => props.onSearchChange((e.target as HTMLInputElement).value)} />
         </div>
 
         <nav class="config-nav">
@@ -337,10 +329,10 @@ export function renderConfig(props: ConfigProps) {
             @click=${() => props.onSectionChange(null)}
           >
             <span class="config-nav__icon">${sidebarIcons.all}</span>
-            <span>Visão Geral</span>
+            <span>${t("config.nav.overview" as any)}</span>
           </button>
           
-          <div class="section-title" style="margin-top: 16px; margin-bottom: 8px;">Configurações</div>
+          <div class="section-title" style="margin-top: 16px; margin-bottom: 8px;">${t("config.nav.settings" as any)}</div>
           
           ${allSections.map(section => html`
             <button
@@ -355,8 +347,8 @@ export function renderConfig(props: ConfigProps) {
 
         <div class="config-sidebar__footer">
             <div class="config-mode-toggle">
-                <button class="config-mode-toggle__btn ${props.formMode === "form" ? "active" : ""}" ?disabled=${props.schemaLoading || !props.schema} @click=${() => props.onFormModeChange("form")}>Padrão</button>
-                <button class="config-mode-toggle__btn ${props.formMode === "raw" ? "active" : ""}" @click=${() => props.onFormModeChange("raw")}>JSON</button>
+                <button class="config-mode-toggle__btn ${props.formMode === "form" ? "active" : ""}" ?disabled=${props.schemaLoading || !props.schema} @click=${() => props.onFormModeChange("form")}>${t("config.mode.default" as any)}</button>
+                <button class="config-mode-toggle__btn ${props.formMode === "raw" ? "active" : ""}" @click=${() => props.onFormModeChange("raw")}>${t("config.mode.json" as any)}</button>
             </div>
         </div>
       </aside>
@@ -369,24 +361,24 @@ export function renderConfig(props: ConfigProps) {
              <div class="config-actions__left">
                 ${hasChanges ? html`
                     <div class="config-changes-badge animate-fade-in">
-                        ${props.formMode === "raw" ? "Edição Manual" : `${diff.length} alteraç${diff.length !== 1 ? "ões" : "ão"}`}
+                        ${props.formMode === "raw" ? t("config.status.manual" as any) : t("config.status.changes" as any).replace("{count}", String(diff.length)).replace("{suffix}", diff.length !== 1 ? (props.language === "en-US" ? "s" : "ões") : (props.language === "en-US" ? "" : "ão"))}
                     </div>
                 ` : html`
-                    <div class="badge muted">Sincronizado</div>
+                    <div class="badge muted">${t("config.status.synced" as any)}</div>
                 `}
                 
                 ${props.issues.length > 0 ? html`
                     <div class="badge danger animate-fade-in">
-                        ${props.issues.length} Erro${props.issues.length !== 1 ? "s" : ""}
+                        ${t("config.status.errors" as any).replace("{count}", String(props.issues.length)).replace("{suffix}", props.issues.length !== 1 ? (props.language === "en-US" ? "s" : "s") : "")}
                     </div>
                 ` : nothing}
              </div>
 
              <div class="config-actions__right">
-                 <button class="btn" title="Descartar alterações e recarregar" ?disabled=${props.loading} @click=${props.onReload}>Reverter</button>
-                 <button class="btn primary" ?disabled=${!canSave} @click=${props.onSave}>${props.saving ? "Salvando…" : "Salvar"}</button>
-                 <button class="btn" ?disabled=${!canApply} @click=${props.onApply}>${props.applying ? "Aplicando…" : "Aplicar"}</button>
-                 <button class="btn btn--icon" title="Atualizar via upstream" ?disabled=${!canUpdate} @click=${props.onUpdate}>${icons.gitMerge}</button>
+                 <button class="btn" title="${t("config.action.revert.desc" as any)}" ?disabled=${props.loading} @click=${props.onReload}>${t("config.action.revert" as any)}</button>
+                 <button class="btn primary" ?disabled=${!canSave} @click=${props.onSave}>${props.saving ? t("config.action.saving" as any) : t("config.action.save" as any)}</button>
+                 <button class="btn" ?disabled=${!canApply} @click=${props.onApply}>${props.applying ? t("config.action.applying" as any) : t("config.action.apply" as any)}</button>
+                 <button class="btn btn--icon" title="${t("config.action.update.desc" as any)}" ?disabled=${!canUpdate} @click=${props.onUpdate}>${icons.gitMerge}</button>
              </div>
         </div>
 
@@ -396,7 +388,7 @@ export function renderConfig(props: ConfigProps) {
             ${hasChanges && props.formMode === "form" ? html`
                 <div class="config-diff animate-fade-in" style="margin: 0 0 24px 0;">
                     <div class="config-diff__summary" style="padding: 10px 16px; background: rgba(255, 68, 68, 0.1);">
-                        Alterações Pendentes
+                        ${t("config.diff.title" as any)}
                     </div>
                     <div style="padding: 8px;">
                         ${diff.map(change => html`
@@ -429,7 +421,7 @@ export function renderConfig(props: ConfigProps) {
                 ${props.schemaLoading ? html`
                     <div style="padding: 80px; text-align: center; color: var(--text-dim);">
                         <div class="animate-spin" style="display: inline-block; margin-bottom: 12px; opacity: 0.5;">${icons.loader}</div>
-                        <div style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;">Carregando definições…</div>
+                        <div style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;">${t("config.loading.defs" as any)}</div>
                     </div>
                 ` : props.activeSection === "appearance" ? renderAppearance() : renderConfigForm({
     schema: analysis.schema,
@@ -451,7 +443,7 @@ export function renderConfig(props: ConfigProps) {
             ${props.issues.length > 0 ? html`
                 <div class="group-list" style="margin-top: 32px; border-color: var(--danger); background: rgba(255, 59, 48, 0.03);">
                     <div class="group-item" style="border-bottom: 1px solid rgba(255, 59, 48, 0.1);">
-                        <div class="group-title" style="color: var(--danger); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;">Diagnóstico Crítico</div>
+                        <div class="group-title" style="color: var(--danger); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;">${t("config.diag.critical" as any)}</div>
                     </div>
                     <div style="padding: 16px;">
                         <pre class="code-block" style="background: transparent; border: none; padding: 0; color: var(--danger); font-size: 11px; opacity: 0.8;">${JSON.stringify(props.issues, null, 2)}</pre>

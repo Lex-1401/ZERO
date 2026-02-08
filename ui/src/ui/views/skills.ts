@@ -161,18 +161,18 @@ function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
         <div class="group-desc">${clampText(skill.description, 120)}</div>
         <div style="display: flex; gap: 4px; margin-top: 8px;">
             <span class="badge">${skill.source}</span>
-            <span class="badge ${skill.eligible ? "active" : "danger"}">${skill.eligible ? "Elegível" : "Incompatível"}</span>
-            ${skill.disabled ? html`<span class="badge danger">Desativada</span>` : nothing}
+            <span class="badge ${skill.eligible ? "active" : "danger"}">${skill.eligible ? t("skills.eligible" as any) : t("skills.incompatible" as any)}</span>
+            ${skill.disabled ? html`<span class="badge danger">${t("skills.status.disabled" as any)}</span>` : nothing}
         </div>
       </div>
       <div class="group-content" style="flex-direction: column; align-items: flex-end; gap: 8px; width: 100%;">
         <div class="skill-actions">
             ${skill.primaryEnv ? html`
-                <input class="input-native" type="password" style="width: 140px; height: 24px;" placeholder="Chave API" .value=${apiKey} @input=${(e: Event) => props.onEdit(skill.skillKey, (e.target as HTMLInputElement).value)} />
-                <button class="btn btn--sm primary" ?disabled=${busy || !apiKey} @click=${() => props.onSaveKey(skill.skillKey)}>Salvar</button>
+                <input class="input-native" type="password" style="width: 140px; height: 24px;" placeholder="API Key" .value=${apiKey} @input=${(e: Event) => props.onEdit(skill.skillKey, (e.target as HTMLInputElement).value)} />
+                <button class="btn btn--sm primary" ?disabled=${busy || !apiKey} @click=${() => props.onSaveKey(skill.skillKey)}>${t("skills.save" as any)}</button>
             ` : nothing}
-            <button class="btn btn--sm" ?disabled=${busy} @click=${() => props.onToggle(skill.skillKey, skill.disabled)}>${skill.disabled ? "Ativar" : "Desativar"}</button>
-            ${canInstall ? html`<button class="btn btn--sm primary" ?disabled=${busy} @click=${() => props.onInstall(skill.skillKey, skill.name, skill.install[0].id)}>${busy ? "Instalando…" : skill.install[0].label}</button>` : nothing}
+            <button class="btn btn--sm" ?disabled=${busy} @click=${() => props.onToggle(skill.skillKey, skill.disabled)}>${skill.disabled ? t("skills.activate" as any) : t("skills.deactivate" as any)}</button>
+            ${canInstall ? html`<button class="btn btn--sm primary" ?disabled=${busy} @click=${() => props.onInstall(skill.skillKey, skill.name, skill.install[0].id)}>${busy ? t("skills.installing" as any) : skill.install[0].label}</button>` : nothing}
         </div>
         ${message ? html`<div style="font-size: 11px; color: ${message.kind === "error" ? "var(--danger)" : "var(--success)"};">${message.message}</div>` : nothing}
       </div>

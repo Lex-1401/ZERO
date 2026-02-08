@@ -1,4 +1,5 @@
 import { html, nothing } from "lit";
+import { t } from "../i18n";
 
 import type { GatewayHelloOk } from "../gateway";
 import { formatAgo, formatDurationMs } from "../format";
@@ -38,12 +39,12 @@ export function renderNexus(props: NexusProps) {
       <div style="display: grid; grid-template-columns: minmax(400px, 640px) 340px; gap: 40px; align-items: start;">
         
         <div>
-          <div class="section-title">Acesso ao Núcleo</div>
+          <div class="section-title">${t("nexus.core" as any)}</div>
           <div class="group-list">
             <div class="group-item">
               <div class="group-label">
-                <div class="group-title">Gateway Endpoint</div>
-                <div class="group-desc">Endereço do protocolo de controle local.</div>
+                <div class="group-title">${t("nexus.endpoint" as any)}</div>
+                <div class="group-desc">${t("nexus.endpoint.desc" as any)}</div>
               </div>
               <div class="group-content">
                 <input
@@ -63,8 +64,8 @@ export function renderNexus(props: NexusProps) {
 
             <div class="group-item">
               <div class="group-label">
-                <div class="group-title">Access Token</div>
-                <div class="group-desc">Chave de provisionamento do gateway.</div>
+                <div class="group-title">${t("nexus.token" as any)}</div>
+                <div class="group-desc">${t("nexus.token.desc" as any)}</div>
               </div>
               <div class="group-content">
                 <input
@@ -83,8 +84,8 @@ export function renderNexus(props: NexusProps) {
 
             <div class="group-item">
               <div class="group-label">
-                <div class="group-title">Master Key</div>
-                <div class="group-desc">Senha mestra para volumes criptografados.</div>
+                <div class="group-title">${t("nexus.masterkey" as any)}</div>
+                <div class="group-desc">${t("nexus.masterkey.desc" as any)}</div>
               </div>
               <div class="group-content">
                 <input
@@ -109,10 +110,10 @@ export function renderNexus(props: NexusProps) {
               @click=${() => props.onConnect()} 
               ?disabled=${props.connected}
             >
-              ${props.connected ? "Conectado" : "Conectar ao Gateway"}
+              ${props.connected ? t("nexus.connected" as any) : t("nexus.connect" as any)}
             </button>
             <button class="btn" @click=${() => props.onRefresh()}>
-              ${icons.rotateCcw} Sincronizar
+              ${icons.rotateCcw} ${t("nexus.sync" as any)}
             </button>
           </div>
 
@@ -127,28 +128,28 @@ export function renderNexus(props: NexusProps) {
             </div>
           ` : nothing}
 
-          <div class="section-title" style="margin-top: 48px;">Métricas Executivas</div>
+          <div class="section-title" style="margin-top: 48px;">${t("nexus.metrics" as any)}</div>
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
             <div class="group-list" style="padding: 16px; min-height: 120px;">
-                <div class="text-xs font-bold text-dim uppercase tracking-wider">Instâncias</div>
+                <div class="text-xs font-bold text-dim uppercase tracking-wider">${t("nexus.instances" as any)}</div>
                 <div style="font-size: 32px; font-weight: 800; margin-top: 8px;">${props.presenceCount}</div>
-                <div class="text-xs text-dim mt-2">Ambientes isolados.</div>
+                <div class="text-xs text-dim mt-2">${t("nexus.instances.desc" as any)}</div>
             </div>
             <div class="group-list" style="padding: 16px; min-height: 120px;">
-                <div class="text-xs font-bold text-dim uppercase tracking-wider">Memória</div>
+                <div class="text-xs font-bold text-dim uppercase tracking-wider">${t("nexus.memory" as any)}</div>
                 <div style="font-size: 32px; font-weight: 800; margin-top: 8px;">${props.sessionsCount ?? "0"}</div>
-                <div class="text-xs text-dim mt-2">Contextos em buffer.</div>
+                <div class="text-xs text-dim mt-2">${t("nexus.memory.desc" as any)}</div>
             </div>
             <div class="group-list" style="padding: 16px; min-height: 120px; border-left: 3px solid var(--accent-blue);">
-                <div class="text-xs font-bold text-dim uppercase tracking-wider">Status</div>
-                <div style="font-size: 18px; font-weight: 800; margin-top: 14px; letter-spacing: -0.05em;">SOBERANO</div>
-                <div class="text-xs text-dim mt-2">Hardware-local.</div>
+                <div class="text-xs font-bold text-dim uppercase tracking-wider">${t("nexus.status" as any)}</div>
+                <div style="font-size: 18px; font-weight: 800; margin-top: 14px; letter-spacing: -0.05em;">${t("nexus.status.sovereign" as any)}</div>
+                <div class="text-xs text-dim mt-2">${t("nexus.status.local" as any)}</div>
             </div>
           </div>
         </div>
 
         <div>
-          <div class="section-title" style="text-align: center;">Telemetria</div>
+          <div class="section-title" style="text-align: center;">${t("nexus.telemetry" as any)}</div>
           <div class="group-list" style="padding: 32px 24px; display: flex; flex-direction: column; align-items: center; min-height: 380px; justify-content: center; background: radial-gradient(circle at center, rgba(0,122,255,0.05) 0%, transparent 70%);">
             
             <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
@@ -176,10 +177,10 @@ export function renderNexus(props: NexusProps) {
 
             <div style="margin-top: 32px; text-align: center;">
                 <div style="font-size: 18px; font-weight: 700;">
-                    ${props.connected ? "Sistemas Online" : "Desconectado"}
+                    ${props.connected ? t("nexus.online" as any) : t("nexus.offline" as any)}
                 </div>
                 <div class="text-xs text-dim mt-1" style="max-width: 200px;">
-                    ${props.connected ? "Integridade do núcleo em regime nominal." : "Aguardando conexão com o comando central."}
+                    ${props.connected ? t("nexus.telemetry.desc" as any) : t("nexus.offline.desc" as any)}
                 </div>
             </div>
 
@@ -187,39 +188,39 @@ export function renderNexus(props: NexusProps) {
             <div style="margin-top: 24px; display: flex; gap: 8px;">
                <button class="btn primary" style="background: var(--accent-red); width: 100%; justify-content: center;"
                   @click=${() => alert("Iniciando Módulo de Visão...\n(Solicitando permissão de captura de tela ao navegador...)")}>
-                  🔴 Piloto Automático
+                  🔴 ${t("nexus.autopilot" as any)}
                </button>
             </div>
              <div style="margin-top: 8px; display: flex; gap: 8px;">
                <button class="btn" style="width: 100%; justify-content: center;"
                   @click=${() => document.body.classList.toggle("focus-mode")}>
-                  🧘 Modo Foco
+                  🧘 ${t("nexus.focus" as any)}
                </button>
             </div>
 
             <div style="width: 100%; margin-top: 40px; border-top: 1px solid var(--border-subtle); padding-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <div style="text-align: center;">
-                    <div class="text-xs font-bold text-dim uppercase">Uptime</div>
+                    <div class="text-xs font-bold text-dim uppercase">${t("common.uptime" as any)}</div>
                     <div style="font-size: 14px; font-weight: 600; margin-top: 4px;">${uptime}</div>
                 </div>
                 <div style="text-align: center;">
-                    <div class="text-xs font-bold text-dim uppercase">Rate</div>
+                    <div class="text-xs font-bold text-dim uppercase">${t("common.rate" as any)}</div>
                     <div style="font-size: 14px; font-weight: 600; margin-top: 4px;">${tick}</div>
                 </div>
             </div>
           </div>
           
-          <div class="section-title">Informações do Sistema</div>
+          <div class="section-title">${t("nexus.system.info" as any)}</div>
           <div class="group-list">
             <div class="group-item">
                 <div class="group-label">
-                    <div class="group-title">Sincronização</div>
+                    <div class="group-title">${t("nexus.sync.time" as any)}</div>
                     <div class="group-desc">${props.lastChannelsRefresh ? formatAgo(props.lastChannelsRefresh) : "Nunca"}</div>
                 </div>
             </div>
             <div class="group-item">
                 <div class="group-label">
-                    <div class="group-title">Versão</div>
+                    <div class="group-title">${t("nexus.version" as any)}</div>
                     <div class="group-desc">Altair 1.4.0-stable</div>
                 </div>
             </div>

@@ -8,6 +8,7 @@ import {
   type JsonSchema,
 } from "./config-form.shared";
 import { renderNode } from "./config-form.node";
+import { t } from "../i18n";
 
 export type ConfigFormProps = {
   schema: JsonSchema | null;
@@ -56,34 +57,34 @@ const sectionIcons = {
 
 // Section metadata
 export const SECTION_META: Record<string, { label: string; description: string }> = {
-  env: { label: "Variáveis de Ambiente", description: "Variáveis de sistema passadas para o processo do gateway" },
-  update: { label: "Atualizações", description: "Configurações de auto-atualização e canal de lançamento" },
-  agents: { label: "Agentes", description: "Configurações de agentes, modelos e identidades" },
-  auth: { label: "Autenticação", description: "Chaves de API e perfis de autenticação" },
-  channels: { label: "Canais", description: "Canais de mensageria (Telegram, Discord, Slack, etc.)" },
-  messages: { label: "Mensagens", description: "Configurações de processamento e roteamento de mensagens" },
-  commands: { label: "Comandos", description: "Comandos de barra personalizados (slash commands)" },
-  hooks: { label: "Hooks", description: "Webhooks e ganchos de eventos" },
-  skills: { label: "Habilidades", description: "Pacotes de habilidades e capacidades (Sinapses)" },
-  tools: { label: "Ferramentas", description: "Configurações de ferramentas (navegador, busca, etc.)" },
-  gateway: { label: "Gateway", description: "Configurações do servidor gateway (porta, autenticação, vínculo)" },
-  wizard: { label: "Assistente de Configuração", description: "Estado e histórico do assistente de configuração" },
+  env: { label: t("config.section.env.label" as any), description: t("config.section.env.desc" as any) },
+  update: { label: t("config.section.update.label" as any), description: t("config.section.update.desc" as any) },
+  agents: { label: t("config.section.agents.label" as any), description: t("config.section.agents.desc" as any) },
+  auth: { label: t("config.section.auth.label" as any), description: t("config.section.auth.desc" as any) },
+  channels: { label: t("config.section.channels.label" as any), description: t("config.section.channels.desc" as any) },
+  messages: { label: t("config.section.messages.label" as any), description: t("config.section.messages.desc" as any) },
+  commands: { label: t("config.section.commands.label" as any), description: t("config.section.commands.desc" as any) },
+  hooks: { label: t("config.section.hooks.label" as any), description: t("config.section.hooks.desc" as any) },
+  skills: { label: t("config.section.skills.label" as any), description: t("config.section.skills.desc" as any) },
+  tools: { label: t("config.section.tools.label" as any), description: t("config.section.tools.desc" as any) },
+  gateway: { label: t("config.section.gateway.label" as any), description: t("config.section.gateway.desc" as any) },
+  wizard: { label: t("config.section.wizard.label" as any), description: t("config.section.wizard.desc" as any) },
   // Additional sections
-  meta: { label: "Metadados", description: "Metadados do gateway e informações de versão" },
-  logging: { label: "Logs", description: "Níveis de log e configuração de saída" },
-  browser: { label: "Navegador", description: "Configurações de automação de navegador" },
-  ui: { label: "Interface (UI)", description: "Preferências de interface do usuário" },
-  models: { label: "Modelos", description: "Configurações de modelos de IA e provedores" },
-  bindings: { label: "Atalhos", description: "Atalhos de teclado e combinações de teclas" },
-  broadcast: { label: "Transmissão", description: "Configurações de transmissão e notificações" },
-  audio: { label: "Áudio", description: "Configurações de entrada/saída de áudio" },
-  session: { label: "Sessão", description: "Gerenciamento e persistência de sessões" },
-  cron: { label: "Agendador", description: "Tarefas agendadas e automações permanentes" },
-  web: { label: "Web", description: "Configurações de servidor web e API" },
-  discovery: { label: "Descoberta", description: "Descoberta de serviços e rede" },
-  canvasHost: { label: "Canvas Host", description: "Renderização e exibição de tela" },
-  talk: { label: "Voz (Talk)", description: "Configurações de voz e fala" },
-  plugins: { label: "Plugins", description: "Gerenciamento de plugins e extensões" },
+  meta: { label: t("config.section.meta.label" as any), description: t("config.section.meta.desc" as any) },
+  logging: { label: t("config.section.logging.label" as any), description: t("config.section.logging.desc" as any) },
+  browser: { label: t("config.section.browser.label" as any), description: t("config.section.browser.desc" as any) },
+  ui: { label: t("config.section.ui.label" as any), description: t("config.section.ui.desc" as any) },
+  models: { label: t("config.section.models.label" as any), description: t("config.section.models.desc" as any) },
+  bindings: { label: t("config.section.bindings.label" as any), description: t("config.section.bindings.desc" as any) },
+  broadcast: { label: t("config.section.broadcast.label" as any), description: t("config.section.broadcast.desc" as any) },
+  audio: { label: t("config.section.audio.label" as any), description: t("config.section.audio.desc" as any) },
+  session: { label: t("config.section.session.label" as any), description: t("config.section.session.desc" as any) },
+  cron: { label: t("config.section.cron.label" as any), description: t("config.section.cron.desc" as any) },
+  web: { label: t("config.section.web.label" as any), description: t("config.section.web.desc" as any) },
+  discovery: { label: t("config.section.discovery.label" as any), description: t("config.section.discovery.desc" as any) },
+  canvasHost: { label: t("config.section.canvasHost.label" as any), description: t("config.section.canvasHost.desc" as any) },
+  talk: { label: t("config.section.talk.label" as any), description: t("config.section.talk.desc" as any) },
+  plugins: { label: t("config.section.plugins.label" as any), description: t("config.section.plugins.desc" as any) },
 };
 
 function getSectionIcon(key: string) {
@@ -145,15 +146,15 @@ export function renderConfigForm(props: ConfigFormProps) {
     return html`
       <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-dim); gap: 16px;">
         <div style="transform: scale(2); opacity: 0.5;">${icons.settings}</div>
-        <div>Esquema de configuração indisponível</div>
-        <div style="font-size: 13px; max-width: 300px; text-align: center; opacity: 0.8;">O servidor não retornou a definição de configuração. Verifique a conexão com o Gateway.</div>
+        <div>${t("config.schema.unavailable" as any)}</div>
+        <div style="font-size: 13px; max-width: 300px; text-align: center; opacity: 0.8;">${t("config.schema.unavailable.desc" as any)}</div>
       </div>
     `;
   }
   const schema = props.schema;
   const value = props.value ?? {};
   if (schemaType(schema) !== "object" || !schema.properties) {
-    return html`<div class="callout danger">Esquema não suportado. Use modo Bruto.</div>`;
+    return html`<div class="callout danger">${t("config.schema.unsupported" as any)}</div>`;
   }
   const unsupported = new Set(props.unsupportedPaths ?? []);
   const properties = schema.properties;
@@ -199,8 +200,8 @@ export function renderConfigForm(props: ConfigFormProps) {
         <div class="config-empty__icon">${icons.search}</div>
         <div class="config-empty__text">
           ${searchQuery
-        ? `Nenhuma configuração corresponde a "${searchQuery}"`
-        : "Nenhuma configuração nesta seção"}
+        ? t("config.search.none" as any).replace("{query}", searchQuery)
+        : t("config.search.empty" as any)}
         </div>
       </div>
     `;

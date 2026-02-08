@@ -2,13 +2,13 @@ import type { IconName } from "./icons.js";
 import { t } from "./i18n.js";
 
 export const TAB_GROUPS = [
-  { label: "Conversa", tabs: ["chat"] },
+  { label: t("group.Conversa" as any), tabs: ["chat"] },
   {
-    label: "Controle",
+    label: t("group.Controle" as any),
     tabs: ["mission-control", "overview", "channels", "instances", "sessions", "cron"],
   },
-  { label: "Agente", tabs: ["skills", "nodes", "graph", "playground"] },
-  { label: "Ajustes", tabs: ["config", "debug", "logs"] },
+  { label: t("group.Agente" as any), tabs: ["skills", "nodes", "graph", "playground"] },
+  { label: t("group.Ajustes" as any), tabs: ["config", "debug", "logs"] },
 ] as const;
 
 export type Tab =

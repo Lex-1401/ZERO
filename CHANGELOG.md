@@ -2,6 +2,25 @@
 
 Docs: <https://docs.zero.bot>
 
+## 2026.2.8
+
+### Highlights
+
+- **Soberania com LLMs Locais**: Melhoria na integração nativa com Ollama, permitindo uso 100% offline com modelos como Llama 3.2.
+- **Auditoria de Interface (Audit V5)**: Revisão completa da Interface Altair e Laboratório, garantindo estabilidade na sincronização de tokens e conectividade do Gateway em ambientes de desenvolvimento.
+- **Hardware Peering**: Estabilização do pareamento de nós de computação para execução de modelos locais e ferramentas de sistema.
+
+### Changes
+
+- UI: Adição do modelo "Llama 3.2 (Local)" ao menu de seleção do Laboratório.
+- Gateway: Atualização do proxy de desenvolvimento para a porta 19001, alinhando a UI com o ambiente dev nativo.
+- Auth: Suporte a perfis de autenticação manuais para provedores locais (Ollama) via `auth-profiles.json`.
+
+### Fixes
+
+- UI: Correção na sincronização do token de autenticação entre as configurações e o motor de inferência, eliminando erros de autorização no chat e playground.
+- Gateway: Ajuste na resolução de modelos locais para garantir descoberta imediata após instalação via Ollama.
+
 ## 2026.2.4
 
 ### Highlights

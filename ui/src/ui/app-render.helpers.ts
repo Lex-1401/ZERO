@@ -1,5 +1,6 @@
 import { html } from "lit";
 import { repeat } from "lit/directives/repeat.js";
+import { t } from "./i18n";
 
 import type { AppViewState } from "./app-view-state";
 import { iconForTab, pathForTab, titleForTab, type Tab } from "./navigation";
@@ -89,7 +90,7 @@ export function renderChatControls(state: AppViewState) {
       state.resetToolStream();
       void loadChatHistory(state);
     }}
-        title="Atualizar histórico da conversa"
+        title="${t("chat.controls.refresh" as any)}"
       >
         ${refreshIcon}
       </button>
@@ -106,8 +107,8 @@ export function renderChatControls(state: AppViewState) {
     }}
         aria-pressed=${showThinking}
         title=${disableThinkingToggle
-      ? "Desativado durante a integração"
-      : "Alternar exibição do pensamento/trabalho do assistente"}
+      ? t("chat.controls.onboarding" as any)
+      : t("chat.controls.thinking" as any)}
       >
         ${icons.brain}
       </button>
@@ -123,8 +124,8 @@ export function renderChatControls(state: AppViewState) {
     }}
         aria-pressed=${focusActive}
         title=${disableFocusToggle
-      ? "Desativado durante a integração"
-      : "Alternar modo foco (esconder barra lateral + cabeçalho)"}
+      ? t("chat.controls.onboarding" as any)
+      : t("chat.controls.focus" as any)}
       >
         ${focusIcon}
       </button>
@@ -171,11 +172,11 @@ export function renderAutopilotToggle(state: AppViewState) {
       class="btn btn--sm pilot-toggle ${active ? "active" : ""}"
       style="gap: 6px;"
       @click=${toggle}
-      title=${active ? "Modo Piloto Ativo (Aprovação Automática)" : "Ativar Modo Piloto (Aprovação Automática)"}
+      title=${active ? t("chat.autopilot.on" as any) : t("chat.autopilot.off" as any)}
       aria-pressed=${active}
     >
       ${icons.autopilot}
-      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.05em;">PILOTO</span>
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.05em;">${t("chat.autopilot.label" as any)}</span>
     </button>
   `;
 }
@@ -200,8 +201,8 @@ export function renderThemeToggle(state: AppViewState) {
           class="theme-toggle__button ${state.theme === "system" ? "active" : ""}"
           @click=${applyTheme("system")}
           aria-pressed=${state.theme === "system"}
-          aria-label="Tema do sistema"
-          title="Sistema"
+          aria-label="${t("theme.system" as any)}"
+          title="${t("theme.label.system" as any)}"
         >
           ${renderMonitorIcon()}
         </button>
@@ -209,8 +210,8 @@ export function renderThemeToggle(state: AppViewState) {
           class="theme-toggle__button ${state.theme === "light" ? "active" : ""}"
           @click=${applyTheme("light")}
           aria-pressed=${state.theme === "light"}
-          aria-label="Tema claro"
-          title="Claro"
+          aria-label="${t("theme.light" as any)}"
+          title="${t("theme.label.light" as any)}"
         >
           ${renderSunIcon()}
         </button>
@@ -218,8 +219,8 @@ export function renderThemeToggle(state: AppViewState) {
           class="theme-toggle__button ${state.theme === "dark" ? "active" : ""}"
           @click=${applyTheme("dark")}
           aria-pressed=${state.theme === "dark"}
-          aria-label="Tema escuro"
-          title="Escuro"
+          aria-label="${t("theme.dark" as any)}"
+          title="${t("theme.label.dark" as any)}"
         >
           ${renderMoonIcon()}
         </button>

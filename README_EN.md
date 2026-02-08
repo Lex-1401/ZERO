@@ -18,7 +18,7 @@
 
 The ZERO ecosystem is built upon four fundamental pillars, validated by rigorous software architecture standards:
 
-1. **Local-First Sovereignty**: Every data vector, thought model, and audit log resides in your `~/.zero` directory. Sovereignty is not an option; it is the default state of the knowledge mesh.
+1. **Local-First Sovereignty (Local LLMs)**: Every data vector, thought model, and audit log resides in your `~/.zero` directory. With native **Ollama** support and models like **Llama 3.2**, ZERO ensures your autonomy even without a cloud connection.
 2. **Hybrid Performance Architecture**: A performance-critical core written in **Rust** (handling density telemetry, VAD, and encryption) integrates seamlessly with the flexibility of **TypeScript** for channel orchestration.
 3. **Zero Trust Security (Audit Crypt)**: Every agentic action is recorded in permanent, encrypted logs. Access is governed by least-privilege (RBAC) policies and explicit device pairing via mDNS/Bonjour.
 4. **Proactive Agentic Autonomy**: Through the **Nudge Engine**, the system transcends reactivity—it anticipates needs based on context, operating within high-fidelity deliberation loops.
@@ -126,6 +126,7 @@ The **Zero Sentinel** module implements active defenses against modern vector th
 - **LLM Security Guardrails**: Native prompt injection detection via Chain-of-Thought (CoT).
 - **PII Redaction**: Automatic identification and masking of sensitive information in real-time.
 - **Panic Protocol**: Immediate interruption of all agentic processes via `zero panic`.
+- **Local LLM Sovereignty**: Optimized integration with Ollama for Llama 3.x and DeepSeek models.
 
 ---
 

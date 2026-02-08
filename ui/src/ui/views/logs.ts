@@ -3,6 +3,7 @@ import { virtualize } from "@lit-labs/virtualizer/virtualize.js";
 import { guard } from "lit/directives/guard.js";
 
 import { icons } from "../icons";
+import { t } from "../i18n";
 import type { LogEntry, LogLevel } from "../types";
 
 const LEVELS: LogLevel[] = ["trace", "debug", "info", "warn", "error", "fatal"];
@@ -47,22 +48,22 @@ export function renderLogs(props: LogsProps) {
         if (entry.level && !props.levelFilters[entry.level]) return false;
         return matchesFilter(entry, needle);
     });
-    const exportLabel = needle || levelFiltered ? "filtrados" : "visíveis";
+    const exportLabel = needle || levelFiltered ? t("logs.export.filtered" as any) : t("logs.export.visible" as any);
 
     return html`
     <div class="animate-fade-in" style="height: 100%; display: flex; flex-direction: column;">
         <div style="flex: 0 0 auto;">
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
                 <div>
-                    <div class="section-title" style="margin: 0;">Registro de Eventos</div>
-                    <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Auditoria de operações e trilhas de erro.</div>
+                    <div class="section-title" style="margin: 0;">${t("logs.title" as any)}</div>
+                    <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">${t("logs.desc" as any)}</div>
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <button class="btn" ?disabled=${props.loading} @click=${props.onRefresh}>
-                        ${icons.rotateCcw} ${props.loading ? "Atualizando…" : "Atualizar"}
+                        ${icons.rotateCcw} ${props.loading ? t("logs.refreshing" as any) : t("logs.refresh" as any)}
                     </button>
                     <button class="btn" ?disabled=${filtered.length === 0} @click=${() => props.onExport(filtered.map((entry) => entry.raw), exportLabel)}>
-                        ${icons.download} Exportar
+                        ${icons.download} ${t("logs.export" as any)}
                     </button>
                 </div>
             </div>
@@ -70,7 +71,7 @@ export function renderLogs(props: LogsProps) {
             <div class="group-list" style="padding: 12px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;">
                 <div style="display: flex; gap: 16px; align-items: center;">
                     <div class="sidebar-search" style="margin: 0; padding: 0; height: 28px; width: 240px;">
-                        <input class="input-native" style="width: 100%;" type="text" placeholder="Buscar na trilha…" .value=${props.filterText} @input=${(e: Event) => props.onFilterTextChange((e.target as HTMLInputElement).value)} />
+                        <input class="input-native" style="width: 100%;" type="text" placeholder="${t("logs.search.placeholder" as any)}" .value=${props.filterText} @input=${(e: Event) => props.onFilterTextChange((e.target as HTMLInputElement).value)} />
                     </div>
                     
                     <div style="display: flex; gap: 4px; border-left: 1px solid var(--border-subtle); padding-left: 16px;">
@@ -84,7 +85,7 @@ export function renderLogs(props: LogsProps) {
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 8px; padding-top: 2px;">
-                    <span style="font-size: 11px; font-weight: 600; color: var(--text-dim);">Auto-scroll</span>
+                    <span style="font-size: 11px; font-weight: 600; color: var(--text-dim);">${t("logs.autoscroll" as any)}</span>
                     <label class="toggle-switch">
                         <input type="checkbox" .checked=${props.autoFollow} @change=${(e: Event) => props.onToggleAutoFollow((e.target as HTMLInputElement).checked)} />
                         <span class="toggle-slider"></span>
@@ -94,7 +95,7 @@ export function renderLogs(props: LogsProps) {
 
             ${props.error ? html`
                 <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
-                    <div style="color: var(--danger); font-size: 12px; font-weight: 700;">Erro de Leitura</div>
+                    <div style="color: var(--danger); font-size: 12px; font-weight: 700;">${t("logs.error.reading" as any)}</div>
                     <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${props.error}</div>
                 </div>
             ` : nothing}
@@ -105,7 +106,7 @@ export function renderLogs(props: LogsProps) {
                 ${filtered.length === 0 ? html`
                     <div style="padding: 40px; text-align: center; color: var(--text-dim); display: flex; flex-direction: column; align-items: center; gap: 12px; justify-content: center; height: 100%;">
                         <div style="font-size: 24px; opacity: 0.2;">${icons.scrollText}</div>
-                        <div>Sem registros correspondentes.</div>
+                        <div>${t("logs.empty" as any)}</div>
                     </div>
                 ` : virtualize({
         items: filtered,
@@ -122,14 +123,14 @@ export function renderLogs(props: LogsProps) {
             </div>
             ${props.truncated ? html`
                 <div style="padding: 4px 12px; background: rgba(255, 159, 10, 0.1); border-top: 1px solid rgba(255, 159, 10, 0.2); color: var(--warning); font-size: 10px; text-align: center;">
-                    Buffer truncado. Mostrando os ${filtered.length} eventos mais recentes.
+                    ${t("logs.truncated" as any).replace("{count}", String(filtered.length))}
                 </div>
             ` : nothing}
         </div>
         
         ${props.file ? html`
             <div style="font-size: 10px; color: var(--text-dim); margin-top: 8px; text-align: right; font-family: var(--font-mono);">
-                Origem: ${props.file}
+                ${t("logs.source" as any).replace("{file}", props.file)}
             </div>
         ` : nothing}
     </div>
