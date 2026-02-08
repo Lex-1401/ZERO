@@ -1,3 +1,4 @@
+
 import type { ZEROConfig } from "../config/config.js";
 import { resolvePluginTools } from "../plugins/tools.js";
 import type { GatewayMessageChannel } from "../utils/message-channel.js";
@@ -21,6 +22,7 @@ import { createWebFetchTool, createWebSearchTool } from "./tools/web-tools.js";
 import { createTtsTool } from "./tools/tts-tool.js";
 import { createMemoryTools } from "./tools/memory-tool.js";
 import { createGraphTools } from "./tools/graph-tool.js";
+import { createBrowserACIMemoryTools } from "./tools/browser-aci-tool.js";
 
 export function createZEROTools(options?: {
   browserControlUrl?: string;
@@ -62,11 +64,11 @@ export function createZEROTools(options?: {
 }): AnyAgentTool[] {
   const imageTool = options?.agentDir?.trim()
     ? createImageTool({
-        config: options?.config,
-        agentDir: options.agentDir,
-        sandboxRoot: options?.sandboxRoot,
-        modelHasVision: options?.modelHasVision,
-      })
+      config: options?.config,
+      agentDir: options.agentDir,
+      sandboxRoot: options?.sandboxRoot,
+      modelHasVision: options?.modelHasVision,
+    })
     : null;
   const webSearchTool = createWebSearchTool({
     config: options?.config,
@@ -164,6 +166,7 @@ export function createZEROTools(options?: {
         config: options?.config,
       }),
     }),
+    ...createBrowserACIMemoryTools(),
   ];
 
   const pluginTools = resolvePluginTools({

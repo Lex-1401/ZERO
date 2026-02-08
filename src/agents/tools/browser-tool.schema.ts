@@ -33,6 +33,7 @@ const BROWSER_TOOL_ACTIONS = [
   "upload",
   "dialog",
   "act",
+  "aci_scan",
 ] as const;
 
 const BROWSER_TARGETS = ["sandbox", "host", "custom", "node"] as const;

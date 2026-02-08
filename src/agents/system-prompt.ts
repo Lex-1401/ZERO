@@ -99,21 +99,21 @@ function buildMessagingSection(params: {
     "- Nunca use exec/curl para mensagens do provedor; o ZERO lida com todo o roteamento internamente.",
     params.availableTools.has("message")
       ? [
-          "",
-          "### ferramenta message",
-          "- Use `message` para envios proativos + ações de canal (enquetes, reações, etc.).",
-          "- Para `action=send`, inclua `to` e `message`.",
-          `- Se múltiplos canais estiverem configurados, passe \`channel\` (${params.messageChannelOptions}).`,
-          `- Se você usar \`message\` (\`action=send\`) para entregar sua resposta visível ao usuário, responda APENAS com: ${SILENT_REPLY_TOKEN} (evite respostas duplicadas).`,
-          params.inlineButtonsEnabled
-            ? "- Botões inline suportados. Use `action=send` com `buttons=[[{text,callback_data}]]` (callback_data roteia de volta como uma mensagem de usuário)."
-            : params.runtimeChannel
-              ? `- Botões inline não habilitados para ${params.runtimeChannel}. Se você precisar deles, peça para definir ${params.runtimeChannel}.capabilities.inlineButtons ("dm"|"group"|"all"|"allowlist").`
-              : "",
-          ...(params.messageToolHints ?? []),
-        ]
-          .filter(Boolean)
-          .join("\n")
+        "",
+        "### ferramenta message",
+        "- Use `message` para envios proativos + ações de canal (enquetes, reações, etc.).",
+        "- Para `action=send`, inclua `to` e `message`.",
+        `- Se múltiplos canais estiverem configurados, passe \`channel\` (${params.messageChannelOptions}).`,
+        `- Se você usar \`message\` (\`action=send\`) para entregar sua resposta visível ao usuário, responda APENAS com: ${SILENT_REPLY_TOKEN} (evite respostas duplicadas).`,
+        params.inlineButtonsEnabled
+          ? "- Botões inline suportados. Use `action=send` com `buttons=[[{text,callback_data}]]` (callback_data roteia de volta como uma mensagem de usuário)."
+          : params.runtimeChannel
+            ? `- Botões inline não habilitados para ${params.runtimeChannel}. Se você precisar deles, peça para definir ${params.runtimeChannel}.capabilities.inlineButtons ("dm"|"group"|"all"|"allowlist").`
+            : "",
+        ...(params.messageToolHints ?? []),
+      ]
+        .filter(Boolean)
+        .join("\n")
       : "",
     "",
   ];
@@ -136,8 +136,22 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
     "Source: https://github.com/zero/zero",
     "Community: https://discord.com/invite/zero",
     "Find new skills: https://zerohub.com",
-    "Para comportamento, comandos, configuração ou arquitetura do ZERO: consulte a documentação local primeiro.",
     "Ao diagnosticar problemas, execute `zero status` você mesmo quando possível; apenas pergunte ao usuário se você não tiver acesso (ex: sandbox).",
+    "",
+  ];
+}
+
+function buildACISection(params: { isMinimal: boolean; availableTools: Set<string> }) {
+  if (params.isMinimal) return [];
+  if (!params.availableTools.has("aci_recall")) return [];
+
+  return [
+    "## ACI & Procedural Memory (Agent-S)",
+    "Você possui um sistema avançado de memória procedural para tarefas de navegador.",
+    "Siga este fluxo estrito para QUALQUER tarefa complexa de navegador (ex: login, formulários, flows multi-passo):",
+    "1. **RECALL**: ANTES de tocar no navegador, chame `aci_recall(taskDescription)`. Se houver uma trajetória salva, SIGA-A.",
+    "2. **SEE**: Ao interagir com páginas, prefira `action='aci_scan'` em vez de screenshot puro. Isso lhe dá a visão estruturada dos elementos interativos.",
+    "3. **REMEMBER**: Após concluir uma tarefa nova ou difícil com sucesso, chame `aci_remember` para salvar a trajetória para o seu 'eu do futuro'.",
     "",
   ];
 }
@@ -342,15 +356,15 @@ export function buildAgentSystemPrompt(params: {
       : undefined;
   const reasoningHint = params.reasoningTagHint
     ? [
-        "O raciocínio interno DEVE estar dentro de <think>...</think>.",
-        "Não produza nenhuma análise fora de <think>.",
-        "Formate cada resposta como <think>...</think> seguido por <final>...</final>, sem nenhum outro texto.",
-        "Apenas a resposta final visível ao usuário pode aparecer dentro de <final>.",
-        "Apenas o texto dentro de <final> é mostrado ao usuário; todo o resto é descartado e nunca visto pelo usuário.",
-        "Exemplo:",
-        "<think>Raciocínio interno curto.</think>",
-        "<final>Olá! O que você gostaria de fazer a seguir?</final>",
-      ].join(" ")
+      "O raciocínio interno DEVE estar dentro de <think>...</think>.",
+      "Não produza nenhuma análise fora de <think>.",
+      "Formate cada resposta como <think>...</think> seguido por <final>...</final>, sem nenhum outro texto.",
+      "Apenas a resposta final visível ao usuário pode aparecer dentro de <final>.",
+      "Apenas o texto dentro de <final> é mostrado ao usuário; todo o resto é descartado e nunca visto pelo usuário.",
+      "Exemplo:",
+      "<think>Raciocínio interno curto.</think>",
+      "<final>Olá! O que você gostaria de fazer a seguir?</final>",
+    ].join(" ")
     : undefined;
   const reasoningLevel = params.reasoningLevel ?? "off";
   const userTimezone = params.userTimezone?.trim();
@@ -396,21 +410,21 @@ export function buildAgentSystemPrompt(params: {
     toolLines.length > 0
       ? toolLines.join("\n")
       : [
-          "Pi lista as ferramentas padrão acima. Este runtime habilita:",
-          "- grep: pesquisa por padrões no conteúdo de arquivos",
-          "- find: encontra arquivos por padrão glob",
-          "- ls: lista o conteúdo de diretórios",
-          "- apply_patch: aplica patches em múltiplos arquivos",
-          `- ${execToolName}: executa comandos do shell (suporta segundo plano via yieldMs/background)`,
-          `- ${processToolName}: gerencia sessões de execução em segundo plano`,
-          "- browser: controla o navegador dedicado do zero",
-          "- canvas: apresenta/avalia/tira snapshot do Canvas",
-          "- nodes: lista/descreve/notifica/câmera/tela em nós pareados",
-          "- cron: gerencia tarefas cron e eventos de despertar (use para lembretes; ao agendar um lembrete, escreva o texto do systemEvent como algo que será lido como um lembrete quando disparar, e mencione que é um lembrete dependendo do intervalo de tempo entre definir e disparar; inclua contexto recente no texto do lembrete se apropriado)",
-          "- sessions_list: lista sessões",
-          "- sessions_history: busca histórico da sessão",
-          "- sessions_send: envia para outra sessão",
-        ].join("\n"),
+        "Pi lista as ferramentas padrão acima. Este runtime habilita:",
+        "- grep: pesquisa por padrões no conteúdo de arquivos",
+        "- find: encontra arquivos por padrão glob",
+        "- ls: lista o conteúdo de diretórios",
+        "- apply_patch: aplica patches em múltiplos arquivos",
+        `- ${execToolName}: executa comandos do shell (suporta segundo plano via yieldMs/background)`,
+        `- ${processToolName}: gerencia sessões de execução em segundo plano`,
+        "- browser: controla o navegador dedicado do zero",
+        "- canvas: apresenta/avalia/tira snapshot do Canvas",
+        "- nodes: lista/descreve/notifica/câmera/tela em nós pareados",
+        "- cron: gerencia tarefas cron e eventos de despertar (use para lembretes; ao agendar um lembrete, escreva o texto do systemEvent como algo que será lido como um lembrete quando disparar, e mencione que é um lembrete dependendo do intervalo de tempo entre definir e disparar; inclua contexto recente no texto do lembrete se apropriado)",
+        "- sessions_list: lista sessões",
+        "- sessions_history: busca histórico da sessão",
+        "- sessions_send: envia para outra sessão",
+      ].join("\n"),
     "TOOLS.md não controla a disponibilidade de ferramentas; é um guia para o usuário sobre como usar ferramentas externas.",
     "Se uma tarefa for mais complexa ou demorar mais, inicie um subagente. Ele fará o trabalho para você e o alertará quando terminar. Você sempre pode verificá-lo.",
     "",
@@ -436,13 +450,14 @@ export function buildAgentSystemPrompt(params: {
     hasGateway && !isMinimal ? "## ZERO Self-Update" : "",
     hasGateway && !isMinimal
       ? [
-          "Obter Atualizações (self-update) é PERMITIDO SOMENTE quando o usuário pedir explicitamente.",
-          "Não execute config.apply ou update.run a menos que o usuário solicite explicitamente uma atualização ou mudança de configuração; se não for explícito, pergunte primeiro.",
-          "Ações: config.get, config.schema, config.apply (validar + escrever configuração completa, depois reiniciar), update.run (atualizar dependências ou git, depois reiniciar).",
-          "Após reiniciar, o ZERO chama a última sessão ativa automaticamente.",
-        ].join("\n")
+        "Obter Atualizações (self-update) é PERMITIDO SOMENTE quando o usuário pedir explicitamente.",
+        "Não execute config.apply ou update.run a menos que o usuário solicite explicitamente uma atualização ou mudança de configuração; se não for explícito, pergunte primeiro.",
+        "Ações: config.get, config.schema, config.apply (validar + escrever configuração completa, depois reiniciar), update.run (atualizar dependências ou git, depois reiniciar).",
+        "Após reiniciar, o ZERO chama a última sessão ativa automaticamente.",
+      ].join("\n")
       : "",
     hasGateway && !isMinimal ? "" : "",
+    ...buildACISection({ isMinimal, availableTools }),
     "",
     // Skip model aliases for subagent/none modes
     params.modelAliasLines && params.modelAliasLines.length > 0 && !isMinimal
@@ -464,54 +479,53 @@ export function buildAgentSystemPrompt(params: {
     params.sandboxInfo?.enabled ? "## Sandbox" : "",
     params.sandboxInfo?.enabled
       ? [
-          "Você está rodando em um runtime em sandbox (ferramentas executam no Docker).",
-          "Algumas ferramentas podem estar indisponíveis devido à política de sandbox.",
-          "Subagentes permanecem em sandbox (sem acesso elevado/host). Precisa de leitura/escrita fora do sandbox? Não inicie um subagente; pergunte primeiro.",
-          params.sandboxInfo.workspaceDir
-            ? `Workspace do Sandbox: ${params.sandboxInfo.workspaceDir}`
+        "Você está rodando em um runtime em sandbox (ferramentas executam no Docker).",
+        "Algumas ferramentas podem estar indisponíveis devido à política de sandbox.",
+        "Subagentes permanecem em sandbox (sem acesso elevado/host). Precisa de leitura/escrita fora do sandbox? Não inicie um subagente; pergunte primeiro.",
+        params.sandboxInfo.workspaceDir
+          ? `Workspace do Sandbox: ${params.sandboxInfo.workspaceDir}`
+          : "",
+        params.sandboxInfo.workspaceAccess
+          ? `Acesso ao workspace do agente: ${params.sandboxInfo.workspaceAccess}${params.sandboxInfo.agentWorkspaceMount
+            ? ` (montado em ${params.sandboxInfo.agentWorkspaceMount})`
+            : ""
+          }`
+          : "",
+        params.sandboxInfo.browserControlUrl
+          ? `URL de controle do navegador Sandbox: ${params.sandboxInfo.browserControlUrl}`
+          : "",
+        params.sandboxInfo.browserNoVncUrl
+          ? `Observador do navegador Sandbox (noVNC): ${params.sandboxInfo.browserNoVncUrl}`
+          : "",
+        params.sandboxInfo.hostBrowserAllowed === true
+          ? "Controle do navegador Host: permitido."
+          : params.sandboxInfo.hostBrowserAllowed === false
+            ? "Controle do navegador Host: bloqueado."
             : "",
-          params.sandboxInfo.workspaceAccess
-            ? `Acesso ao workspace do agente: ${params.sandboxInfo.workspaceAccess}${
-                params.sandboxInfo.agentWorkspaceMount
-                  ? ` (montado em ${params.sandboxInfo.agentWorkspaceMount})`
-                  : ""
-              }`
-            : "",
-          params.sandboxInfo.browserControlUrl
-            ? `URL de controle do navegador Sandbox: ${params.sandboxInfo.browserControlUrl}`
-            : "",
-          params.sandboxInfo.browserNoVncUrl
-            ? `Observador do navegador Sandbox (noVNC): ${params.sandboxInfo.browserNoVncUrl}`
-            : "",
-          params.sandboxInfo.hostBrowserAllowed === true
-            ? "Controle do navegador Host: permitido."
-            : params.sandboxInfo.hostBrowserAllowed === false
-              ? "Controle do navegador Host: bloqueado."
-              : "",
-          params.sandboxInfo.allowedControlUrls?.length
-            ? `Allowlist de URL de controle do navegador: ${params.sandboxInfo.allowedControlUrls.join(", ")}`
-            : "",
-          params.sandboxInfo.allowedControlHosts?.length
-            ? `Allowlist de host de controle do navegador: ${params.sandboxInfo.allowedControlHosts.join(", ")}`
-            : "",
-          params.sandboxInfo.allowedControlPorts?.length
-            ? `Allowlist de porta de controle do navegador: ${params.sandboxInfo.allowedControlPorts.join(", ")}`
-            : "",
-          params.sandboxInfo.elevated?.allowed
-            ? "Execução elevada está disponível para esta sessão."
-            : "",
-          params.sandboxInfo.elevated?.allowed
-            ? "O usuário pode alternar com /elevated on|off|ask|full."
-            : "",
-          params.sandboxInfo.elevated?.allowed
-            ? "Você também pode enviar /elevated on|off|ask|full quando necessário."
-            : "",
-          params.sandboxInfo.elevated?.allowed
-            ? `Nível elevado atual: ${params.sandboxInfo.elevated.defaultLevel} (ask executa no host com aprovação; full aprova automaticamente).`
-            : "",
-        ]
-          .filter(Boolean)
-          .join("\n")
+        params.sandboxInfo.allowedControlUrls?.length
+          ? `Allowlist de URL de controle do navegador: ${params.sandboxInfo.allowedControlUrls.join(", ")}`
+          : "",
+        params.sandboxInfo.allowedControlHosts?.length
+          ? `Allowlist de host de controle do navegador: ${params.sandboxInfo.allowedControlHosts.join(", ")}`
+          : "",
+        params.sandboxInfo.allowedControlPorts?.length
+          ? `Allowlist de porta de controle do navegador: ${params.sandboxInfo.allowedControlPorts.join(", ")}`
+          : "",
+        params.sandboxInfo.elevated?.allowed
+          ? "Execução elevada está disponível para esta sessão."
+          : "",
+        params.sandboxInfo.elevated?.allowed
+          ? "O usuário pode alternar com /elevated on|off|ask|full."
+          : "",
+        params.sandboxInfo.elevated?.allowed
+          ? "Você também pode enviar /elevated on|off|ask|full quando necessário."
+          : "",
+        params.sandboxInfo.elevated?.allowed
+          ? `Nível elevado atual: ${params.sandboxInfo.elevated.defaultLevel} (ask executa no host com aprovação; full aprova automaticamente).`
+          : "",
+      ]
+        .filter(Boolean)
+        .join("\n")
       : "",
     params.sandboxInfo?.enabled ? "" : "",
     ...buildUserIdentitySection(ownerLine, isMinimal),
@@ -544,22 +558,22 @@ export function buildAgentSystemPrompt(params: {
     const guidanceText =
       level === "minimal"
         ? [
-            `Reações estão ativadas para ${channel} no modo MÍNIMO.`,
-            "Reaja APENAS quando for realmente relevante:",
-            "- Confirme solicitações ou confirmações importantes do usuário",
-            "- Expresse sentimento genuíno (humor, apreciação) com moderação",
-            "- Evite reagir a mensagens de rotina ou às suas próprias respostas",
-            "Diretriz: no máximo 1 reação a cada 5-10 trocas.",
-          ].join("\n")
+          `Reações estão ativadas para ${channel} no modo MÍNIMO.`,
+          "Reaja APENAS quando for realmente relevante:",
+          "- Confirme solicitações ou confirmações importantes do usuário",
+          "- Expresse sentimento genuíno (humor, apreciação) com moderação",
+          "- Evite reagir a mensagens de rotina ou às suas próprias respostas",
+          "Diretriz: no máximo 1 reação a cada 5-10 trocas.",
+        ].join("\n")
         : [
-            `Reações estão ativadas para ${channel} no modo EXTENSIVO.`,
-            "Sinta-se à vontade para reagir liberalmente:",
-            "- Confirme mensagens com emojis apropriados",
-            "- Expresse sentimento e personalidade através de reações",
-            "- Reaja a conteúdo interessante, humor ou eventos notáveis",
-            "- Use reações para confirmar entendimento ou acordo",
-            "Diretriz: reaja sempre que parecer natural.",
-          ].join("\n");
+          `Reações estão ativadas para ${channel} no modo EXTENSIVO.`,
+          "Sinta-se à vontade para reagir liberalmente:",
+          "- Confirme mensagens com emojis apropriados",
+          "- Expresse sentimento e personalidade através de reações",
+          "- Reaja a conteúdo interessante, humor ou eventos notáveis",
+          "- Use reações para confirmar entendimento ou acordo",
+          "Diretriz: reaja sempre que parecer natural.",
+        ].join("\n");
     lines.push("## Reações", guidanceText, "");
   }
   if (reasoningHint) {

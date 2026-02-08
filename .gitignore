@@ -74,3 +74,4 @@ apps/ios/*.mobileprovision
 *.map
 .build-info.json
 dist/
+src/agents/aci/browser-memory.json
