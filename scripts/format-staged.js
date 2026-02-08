@@ -79,7 +79,6 @@ function getGitPaths(args, repoRoot) {
 }
 
 function formatFiles(repoRoot, oxfmt, files) {
-  process.stderr.write(`[pre-commit] Running oxfmt on ${files.length} files (arch: ${process.arch})\n`);
   const result = spawnSync(oxfmt.command, ["--write", ...oxfmt.args, ...files], {
     cwd: repoRoot,
     stdio: "inherit",
