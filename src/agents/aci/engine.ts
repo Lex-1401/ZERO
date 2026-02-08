@@ -124,3 +124,33 @@ export function generateACIPrompt(snapshot: ACISnapshot): string {
 
     return prompt;
 }
+
+/**
+ * Returns the full script to be evaluated in the browser context.
+ * This encapsulates all client-side logic for ACI scanning.
+ */
+export function getBrowserInjectionScript(): string {
+    return `
+    (function() {
+        ${EXTRACT_SNAPSHOT_FN_SOURCE}
+
+        const all = Array.from(document.querySelectorAll('*'));
+        let id = 1;
+        const snapshots = [];
+        for (const el of all) {
+            // Function is injected above
+            const snap = extractElementSnapshot(el, id);
+            if (snap) {
+                snapshots.push(snap);
+                id++;
+            }
+        }
+        return {
+            url: window.location.href,
+            title: document.title,
+            elements: snapshots,
+            timestamp: Date.now()
+        };
+    })()
+    `;
+}

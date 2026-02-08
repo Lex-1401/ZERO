@@ -1,5 +1,5 @@
 
-import { Type } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
 import {
     saveBrowserMemory,
     retrieveRelevantExperience
@@ -12,6 +12,8 @@ const AciRecallSchema = Type.Object({
         description: "What are you trying to do? e.g., 'login to google', 'download statement from bank'"
     }),
 });
+
+type AciRecallParams = Static<typeof AciRecallSchema>;
 
 const AciRememberSchema = Type.Object({
     taskId: Type.String({ description: "Unique ID for this task (e.g., 'google-login-v1')" }),
@@ -29,6 +31,8 @@ const AciRememberSchema = Type.Object({
     tags: Type.Optional(Type.Array(Type.String())),
 });
 
+type AciRememberParams = Static<typeof AciRememberSchema>;
+
 export function createBrowserACIMemoryTools(): AnyAgentTool[] {
     return [
         {
@@ -37,7 +41,7 @@ export function createBrowserACIMemoryTools(): AnyAgentTool[] {
             description: "Search the Agent's procedural memory for how to perform a specific browser task. Use this BEFORE starting a complex navigation task.",
             parameters: AciRecallSchema,
             execute: async (_id, args) => {
-                const { taskDescription } = args as { taskDescription: string };
+                const { taskDescription } = args as AciRecallParams;
                 const experience = await retrieveRelevantExperience(taskDescription);
 
                 if (!experience) {
@@ -57,7 +61,7 @@ export function createBrowserACIMemoryTools(): AnyAgentTool[] {
             description: "Save a successful browser interaction sequence to memory for future use. Call this after completing a complex task successfully.",
             parameters: AciRememberSchema,
             execute: async (_id, args) => {
-                const params = args as any;
+                const params = args as AciRememberParams;
 
                 const memory: ExperienceMemory = {
                     taskId: params.taskId,

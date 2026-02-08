@@ -26,7 +26,7 @@ import { loadConfig } from "../../config/config.js";
 import { saveMediaBuffer } from "../../media/store.js";
 import { listNodes, resolveNodeIdFromList, type NodeListNode } from "./nodes-utils.js";
 import { type ACISnapshot } from "../aci/types.js";
-import { EXTRACT_SNAPSHOT_FN_SOURCE, generateACIPrompt } from "../aci/engine.js";
+import { generateACIPrompt, getBrowserInjectionScript } from "../aci/engine.js";
 import { BrowserToolSchema } from "./browser-tool.schema.js";
 import { type AnyAgentTool, imageResultFromFile, jsonResult, readStringParam } from "./common.js";
 import { callGatewayTool } from "./gateway.js";
@@ -746,32 +746,11 @@ export function createBrowserTool(opts?: {
           const profile = readStringParam(params, "profile");
           const _target = readStringParam(params, "target");
 
+
           // We construct an internal 'evaluate' request to inject the ACI logic
           // and retrieve the JSON result, then formatting it as a text prompt.
           // This avoids the need for full browser control rewiring.
-          const script = `
-            (function() {
-              ${EXTRACT_SNAPSHOT_FN_SOURCE}
-              
-              const all = Array.from(document.querySelectorAll('*'));
-              let id = 1;
-              const snapshots = [];
-              for (const el of all) {
-                // Must ensure extractElementSnapshot is defined in scope or part of this block
-                const snap = extractElementSnapshot(el, id);
-                if (snap) {
-                   snapshots.push(snap);
-                   id++;
-                }
-              }
-              return {
-                url: window.location.href,
-                title: document.title,
-                elements: snapshots,
-                timestamp: Date.now()
-              };
-            })()
-          `;
+          const script = getBrowserInjectionScript();
 
           const result = proxyRequest
             ? await proxyRequest({
