@@ -71,7 +71,7 @@ export function extractElementSnapshot(el: BrowserElement, idCounter: number): E
         el.role === "button" ||
         el.role === "link" ||
         el.role === "menuitem" ||
-        (el.className && el.className.includes("clickable"));
+        (el.className?.includes("clickable") ?? false);
 
     return {
         id: idCounter,
