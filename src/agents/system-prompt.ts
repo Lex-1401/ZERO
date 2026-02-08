@@ -146,7 +146,7 @@ function buildACISection(params: { isMinimal: boolean; availableTools: Set<strin
   if (!params.availableTools.has("aci_recall")) return [];
 
   return [
-    "## ACI & Procedural Memory (Agent-S)",
+    "## ACI & Procedural Memory",
     "Você possui um sistema avançado de memória procedural para tarefas de navegador.",
     "Siga este fluxo estrito para QUALQUER tarefa complexa de navegador (ex: login, formulários, flows multi-passo):",
     "1. **RECALL**: ANTES de tocar no navegador, chame `aci_recall(taskDescription)`. Se houver uma trajetória salva, SIGA-A.",

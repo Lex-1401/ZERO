@@ -25,7 +25,7 @@ function toolResult(result: any) {
 async function runShowcase() {
     console.clear();
     log("================================================================", "\x1b[35m");
-    log("      ZERO + AGENT-S: REAL-TIME SESSION SHOWCASE", "\x1b[35m");
+    log("      ZERO ACI: REAL-TIME SESSION SHOWCASE", "\x1b[35m");
     log("================================================================", "\x1b[35m");
 
     await delay(1000);
@@ -36,7 +36,7 @@ async function runShowcase() {
     await delay(1500);
     agentThought(
         "User wants me to login to GitHub. " +
-        "Since I am trained on Agent-S protocols, I must first check if I have a procedural memory for this task using `aci_recall`."
+        "Since I am trained on ACI protocols, I must first check if I have a procedural memory for this task using `aci_recall`."
     );
 
     await delay(1000);
@@ -114,7 +114,7 @@ async function runShowcase() {
     });
     toolResult({ success: true, message: "Experience stored." });
 
-    // SCENARIO 2: SECOND TIME (The Agent-S Way)
+    // SCENARIO 2: SECOND TIME (The ACI Way)
     log("\n\n----------------------------------------------------------------", "\x1b[35m");
     log("      ... 2 DAYS LATER ...", "\x1b[35m");
     log("----------------------------------------------------------------", "\x1b[35m");
