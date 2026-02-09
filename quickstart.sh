@@ -53,13 +53,30 @@ if ! command -v pnpm >/dev/null 2>&1; then
     npm install -g pnpm
 fi
 
-# 4. Rust (Opcional, mas recomendado para performance)
+# 4. Rust & Native Modules
 if ! command -v cargo >/dev/null 2>&1; then
-    echo -e "${YELLOW}🦀 Rust não encontrado. O sistema tentará usar binários pré-compilados ou emular via JS.${NC}"
-    echo -e "Para performance máxima, considere instalar Rust: https://rustup.rs/"
+    echo -e "${YELLOW}🦀 Rust não encontrado. Tentando instalar via rustup...${NC}"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source "$HOME/.cargo/env"
+fi
+
+echo -e "${BLUE}⚙️  Verificando módulos nativos...${NC}"
+PLATFORM_ARCH="$(node -e 'console.log(`${process.platform}-${process.arch}`)')"
+if [ "$OS_TYPE" == "Linux" ]; then
+    # Detectar libc para Linux
+    LIBC=$(ldd --version 2>&1 | grep -q "musl" && echo "musl" || echo "gnu")
+    PLATFORM_ARCH="$PLATFORM_ARCH-$LIBC"
+fi
+
+BINARY_NAME="ratchet.$PLATFORM_ARCH.node"
+if [ ! -f "rust-core/$BINARY_NAME" ] && [ ! -f "rust-core/ratchet.node" ]; then
+    echo -e "${YELLOW}⚠️  Binário nativo para $PLATFORM_ARCH não encontrado. Compilando...${NC}"
+    (cd rust-core && pnpm install && pnpm build)
+    echo -e "${GREEN}✅ Módulo nativo compilado.${NC}"
 fi
 
 # 5. Instalação e Build
+echo "------------------------------------------"
 echo -e "${BLUE}🛠️  Instalando dependências do ZERO...${NC}"
 pnpm install
 
@@ -67,10 +84,21 @@ echo -e "${BLUE}🏗️  Construindo Interface Altair e Núcleo...${NC}"
 pnpm ui:build
 pnpm build
 
-# 6. Finalização
+# 6. Configuração do Comando Global (Fix pnpm link)
+echo -e "${BLUE}🔗 Configurando comando 'zero' globalmente...${NC}"
+if ! pnpm link --global >/dev/null 2>&1; then
+    echo -e "${YELLOW}⚠️  Aviso: Falha ao linkar globalmente. Tentando 'pnpm setup'...${NC}"
+    pnpm setup || true
+    # Tentar novamente após o setup (pode precisar de um novo shell, mas tentamos o binário local como fallback)
+    pnpm link --global || echo -e "${YELLOW}💡 Nota: Se 'zero onboard' falhar, use 'pnpm zero onboard'${NC}"
+fi
+
+# 7. Finalização
 echo "------------------------------------------"
 echo -e "${GREEN}🎉 ZERO está pronto para iniciar!${NC}"
-echo -e "Use o comando abaixo para iniciar o assistente de configuração:"
+echo -e "Agora você pode usar o comando abaixo diretamente:"
+echo -e "${BLUE}zero onboard --install-daemon${NC}"
+echo -e "Ou, se o comando acima não for encontrado:"
 echo -e "${BLUE}pnpm zero onboard --install-daemon${NC}"
 
 # Tentar abrir o dashboard se o gateway já estiver configurado

@@ -28,20 +28,29 @@ function loadNativeModule() {
     const candidates = [
         platformSpecific[platformArch],
         platformSpecific[`${platformArch}-gnu`],
+        platformSpecific[`${platformArch}-musl`],
         platformSpecific[`${platformArch}-msvc`],
         `ratchet.${platform}-${arch}.node`,
+        `ratchet.${platform}-${arch}-gnu.node`,
+        `ratchet.node`
     ].filter(Boolean);
 
     for (const candidate of candidates) {
         const modulePath = path.join(__dirname, candidate);
         if (fs.existsSync(modulePath)) {
-            return require(modulePath);
+            try {
+                return require(modulePath);
+            } catch (e) {
+                console.error(`[rust-core] Error loading ${candidate}:`, e.message);
+                continue;
+            }
         }
     }
 
     throw new Error(
-        `Failed to load native module for platform ${platform}-${arch}. ` +
-        `Expected one of: ${candidates.join(', ')}`
+        `Failed to load native module for platform ${platform}-${arch}.\n` +
+        `Tried: ${candidates.join(', ')}\n\n` +
+        `💡 To fix this, please run: cd rust-core && pnpm install && pnpm build`
     );
 }
 

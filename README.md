@@ -92,16 +92,17 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh
 
 1. **Compilação de Subsistemas**:
 
-   ```bash
-   pnpm ui:build    # Compila a Interface Altair (Glassmorphism Control UI)
-   pnpm build       # Compila o Núcleo TypeScript e Native Core
-   ```
+    ```bash
+    pnpm build:full  # Compila Subsistemas (Rust), UI e Núcleo TS
+    ```
 
 2. **Orquestração Inicial**:
 
-   ```bash
-   pnpm zero onboard --install-daemon
-   ```
+    ```bash
+    pnpm zero onboard --install-daemon
+    ```
+
+    *💡 Se o comando acima falhar com "command not found", certifique-se de que o pnpm está configurado corretamente (`pnpm setup`) ou prefira usar `pnpm zero onboard`.*
 
    *Isso iniciará o mago de configuração que preparará sua "Origem" (diretório Home), chaves de API e canais de mensageria.*
 
