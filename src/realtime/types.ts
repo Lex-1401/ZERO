@@ -1,11 +1,10 @@
-import type { AnyAgentTool } from "../agents/pi-tools.types.js";
-
 export interface MultimodalConfig {
   apiKey: string;
   model: string;
   systemInstruction?: string;
   voiceName?: string;
   responseModalities?: ("AUDIO" | "TEXT")[];
+  tools?: any[]; // TODO: Define strict tool type from Gemini API schema
 }
 
 export interface RealtimeSessionEvents {

@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import WebSocket from "ws";
-import type { MultimodalConfig, RealtimeSessionEvents, ToolCall, ToolResult } from "./types.js";
+import type { MultimodalConfig, RealtimeSessionEvents, ToolResult } from "./types.js";
 
 const DEFAULT_MODEL = "models/gemini-2.0-flash-exp";
 const WS_URL_BASE =

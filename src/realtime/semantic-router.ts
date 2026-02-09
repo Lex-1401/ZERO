@@ -1,10 +1,5 @@
 import type { AnyAgentTool } from "../agents/pi-tools.types.js";
 
-interface ToolMatch {
-  tool: AnyAgentTool;
-  score: number;
-}
-
 export class SemanticRouter {
   private tools: Map<string, AnyAgentTool>;
 
@@ -39,7 +34,7 @@ export class SemanticRouter {
     const taskLower = task.toLowerCase();
 
     // Heuristic 1: Check if task starts with a tool name
-    for (const [name, tool] of this.tools) {
+    for (const [name] of this.tools) {
       if (taskLower.includes(name.toLowerCase())) {
         return { toolName: name, args: { /* Stub: extracting args is complex */ query: task } };
       }
