@@ -2781,7 +2781,7 @@ Padrões:
 - evaluateEnabled: `true` (defina como `false` para desativar `act:evaluate` e `wait --fn`)
 - serviço de controle: apenas loopback (porta derivada de `gateway.port`, padrão `18791`)
 - URL CDP: `http://127.0.0.1:18792` (serviço de controle + 1, legado perfil único)
-- cor do perfil: `#FF4500` (laranja-lagosta)
+- cor do perfil: `#FF4500` (laranja-zero)
 - Nota: o servidor de controle é iniciado pelo gateway em execução (barra de menus do ZERO.app ou `zero gateway`).
 - Ordem de detecção automática: navegador padrão, se for baseado em Chromium; caso contrário, Chrome → Brave → Edge → Chromium → Chrome Canary.
 

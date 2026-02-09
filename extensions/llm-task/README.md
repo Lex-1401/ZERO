@@ -3,7 +3,7 @@
 Adds an **optional** agent tool `llm-task` for running **JSON-only** LLM tasks
 (drafting, summarizing, classifying) with optional JSON Schema validation.
 
-Designed to be called from workflow engines (for example, Lobster via
+Designed to be called from workflow engines (for example, Zero via
 `zero.invoke --each`) without adding new Zero code per workflow.
 
 ## Enable
@@ -85,7 +85,7 @@ Returns `details.json` containing the parsed JSON (and validates against
   (no code fences, no commentary).
 - No tools are exposed to the model for this run.
 - Side effects should be handled outside this tool (for example, approvals in
-  Lobster) before calling tools that send messages/emails.
+  Zero) before calling tools that send messages/emails.
 
 ## Bundled extension note
 

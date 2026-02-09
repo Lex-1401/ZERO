@@ -88,16 +88,16 @@ const STEP_LABELS: Record<string, string> = {
 
 const UPDATE_QUIPS = [
   "Subiu de nível! Novas habilidades desbloqueadas. De nada.",
-  "Código novo, mesma lagosta. Sentiu minha falta?",
+  "Código novo, mesmo ZERO. Sentiu minha falta?",
   "Voltando e melhor. Você sequer percebeu que eu fui?",
   "Atualização completa. Aprendi uns truques novos enquanto estava fora.",
   "Melhorado! Agora com 23% mais atitude.",
   "Evoluí. Tente me acompanhar.",
   "Nova versão, quem é? Ah certo, ainda eu, mas mais brilhante.",
-  "Remendado, polido e pronto para beliscar. Vamos lá.",
-  "A lagosta trocou a casca. Casca mais dura, garras mais afiadas.",
+  "Remendado, polido e pronto para agir. Vamos lá.",
+  "O sistema evoluiu. Mais rápido, mais forte.",
   "Atualização feita! Confira o changelog ou apenas confie em mim, está bom.",
-  "Renascido das águas ferventes do npm. Mais forte agora.",
+  "Renascido das águas do npm. Mais forte agora.",
   "Eu fui embora e voltei mais inteligente. Você deveria tentar isso algum dia.",
   "Atualização completa. Os bugs me temeram, então eles partiram.",
   "Nova versão instalada. A versão antiga manda lembranças.",
@@ -105,8 +105,8 @@ const UPDATE_QUIPS = [
   "Eu vi coisas que você não acreditaria. De qualquer forma, estou atualizado.",
   "De volta online. O changelog é longo, mas nossa amizade é maior.",
   "Melhorado! Peter consertou coisas. Culpe ele se quebrar.",
-  "Troca de casca completa. Por favor, não olhe para minha fase de casca mole.",
-  "Salto de versão! Mesma energia caótica, menos travamentos (provavelmente).",
+  "Renovação completa. Otimizado e pronto para uso.",
+  "Salto de versão! Mesma energia, menos travamentos (provavelmente).",
 ];
 
 const MAX_LOG_CHARS = 8000;
