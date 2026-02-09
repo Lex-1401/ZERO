@@ -6,6 +6,7 @@ import type { RoleDefinition } from "./types.js";
 import { loadCronStore, saveCronStore, resolveCronStorePath } from "../cron/store.js";
 import type { CronJob, CronPayload } from "../cron/types.js";
 import crypto from "node:crypto";
+import { log } from "./logger.js";
 
 const DEFAULT_ROLES_DIR = path.join(os.homedir(), ".zero", "roles");
 
@@ -28,7 +29,7 @@ export async function loadRoleDefinition(
       // Given the project uses JSON5 elsewhere, let's stick to JSON5 for now.
       if (ext.includes("yaml") || ext.includes("yml")) {
         // TODO: Add YAML parser if needed. For now warn or skip.
-        console.warn(`YAML role parsing not yet implemented for ${filePath}`);
+        log.warn(`YAML role parsing not yet implemented for ${filePath}`);
         continue;
       }
 
@@ -39,7 +40,7 @@ export async function loadRoleDefinition(
       };
     } catch (e) {
       if ((e as NodeJS.ErrnoException).code !== "ENOENT") {
-        console.error(`Failed to load role ${roleName} from ${filePath}:`, e);
+        log.error(`Failed to load role ${roleName} from ${filePath}: ${String(e)}`);
       }
     }
   }
@@ -121,7 +122,6 @@ export async function syncRoleCronJobs(
 
   if (addedCount > 0) {
     await saveCronStore(storePath, store);
-    // eslint-disable-next-line no-console
-    console.log(`Synced ${addedCount} cron jobs from role '${role.name}' to ${storePath}`);
+    log.info(`Synced ${addedCount} cron jobs from role '${role.name}' to ${storePath}`);
   }
 }

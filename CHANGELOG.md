@@ -7,7 +7,7 @@ Docs: <https://docs.zero.bot>
 ### Highlights
 
 - **Motor Multimodal (VisionClaw-style)**: Novo módulo `src/realtime` com suporte a streaming de áudio/vídeo via WebSocket e latência ultrabaixa (Gemini Live), roteamento semântico de tools e abstração de hardware (HAL).
-- **Quintessência (QA/Build)**: Sanitização completa do codebase (`oxlint`/`eslint`), remoção de código morto e otimização do build de produção (0.1.0-distro).
+- **Estabilidade (QA/Build)**: Sanitização completa do codebase (`oxlint`/`eslint`), remoção de código morto e otimização do build de produção (0.1.0-distro).
 
 ### Changes
 

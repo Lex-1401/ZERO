@@ -7,7 +7,7 @@
 [![CI Status](https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge)](https://github.com/zero/zero/actions/workflows/ci.yml?branch=main)
 [![License](https://img.shields.io/badge/License-MIT-000000?style=for-the-badge)](LICENSE)
 [![QI](https://img.shields.io/badge/Engineered_by-PhD_Master_Team-000000?style=for-the-badge)](https://github.com/zero/zero)
-[![Version](https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge&label=Quintessence)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge)](CHANGELOG.md)
 
 **ZERO** is not merely an AI distribution; it is the singularity point where personal computing meets sovereign autonomy. Designed as an **Agentic Operating System (A-POS)**, ZERO transforms your machine into a fortress of local intelligence, eliminating cloud latency and corporate surveillance.
 
