@@ -1,4 +1,4 @@
-# ∅ ZERO — Agentic Personal Operating System (A-POS)
+# ∅ ZERO — Agentic Personal Operating System
 
 ![ZERO Header](README-header.png)
 
@@ -9,7 +9,7 @@
 [![QI](https://img.shields.io/badge/Engineered_by-PhD_Master_Team-000000?style=for-the-badge)](https://github.com/zero/zero)
 [![Version](https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge)](CHANGELOG.md)
 
-**ZERO** is not merely an AI distribution; it is the singularity point where personal computing meets sovereign autonomy. Designed as an **Agentic Operating System (A-POS)**, ZERO transforms your machine into a fortress of local intelligence, eliminating cloud latency and corporate surveillance.
+**ZERO** is not merely an AI distribution; it is the singularity point where personal computing meets sovereign autonomy. Designed as an **Agentic Operating System**, ZERO transforms your machine into a fortress of local intelligence, eliminating cloud latency and corporate surveillance.
 
 [🇧🇷 Versão em Português](README.md)
 
@@ -38,7 +38,7 @@ Visualize **ZERO** in operation. These are real captures of the unified control 
 | Appearance & Language Settings | System Core (Config) |
 | :--- | :--- |
 | ![Appearance Settings](assets/screenshots/real-appearance-ui.png) | ![Core Settings](assets/screenshots/real-settings-ui.png) |
-| *Total customization: Dynamic themes and native i18n support.* | *Granular control of every parameter of your A-POS.* |
+| *Total customization: Dynamic themes and native i18n support.* | *Granular control of every parameter of your OS.* |
 
 ---
 

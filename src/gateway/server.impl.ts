@@ -191,9 +191,9 @@ export type GatewayServerOptions = {
 };
 
 /**
- * Bootstraps the Zero Gateway Server, initializing the "nervous system" of the A-POS.
+ * Bootstraps the Zero Gateway Server, initializing the "nervous system" of the platform.
  *
- * [PT] Inicializa o Servidor Gateway Zero, o "sistema nervoso" do A-POS.
+ * [PT] Inicializa o Servidor Gateway Zero, o "sistema nervoso" da plataforma.
  *
  * This high-level orchestrator executes the following sequence:
  * 1.  Standardizes environment invariants (ports, paths).

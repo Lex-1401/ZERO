@@ -9,9 +9,9 @@ import {
 } from "./process/entry-utils.js";
 
 /**
- * Definitive Bootstraper for the ZERO Agentic Personal Operating System (A-POS) CLI.
+ * Definitive Bootstraper for the ZERO Agentic Personal Operating System CLI.
  *
- * [PT] Ponto de entrada definitivo para o bootstrap da CLI do A-POS ZERO.
+ * [PT] Ponto de entrada definitivo para o bootstrap da CLI do Sistema Operacional Agentico ZERO.
  *
  * This module orchestrates the cold-start sequence of the ZERO runtime, executing
  * critical environment normalization and process governance before delegating to the

@@ -121,7 +121,7 @@
 <li>CLI: add live auth probes to <code>zero models status</code> for per-profile verification.</li>
 <li>CLI: add <code>zero system</code> for system events + heartbeat controls; remove standalone <code>wake</code>.</li>
 <li>Agents: add Bedrock auto-discovery defaults + config overrides. (#1553) Thanks @fal3.</li>
-<li>Docs: add cron vs heartbeat decision guide (with Lobster workflow notes). (#1533) Thanks @JustYannicc.</li>
+<li>Docs: add cron vs heartbeat decision guide (with platform workflow notes). (#1533) Thanks @JustYannicc.</li>
 <li>Docs: clarify HEARTBEAT.md empty file skips heartbeats, missing file still runs. (#1535) Thanks @JustYannicc.</li>
 <li>Markdown: add per-channel table conversion (bullets for Signal/WhatsApp, code blocks elsewhere). (#1495) Thanks @odysseus0.</li>
 <li>Tlon: add Urbit channel plugin (DMs, group mentions, thread replies). (#1544) Thanks @wca4a.</li>

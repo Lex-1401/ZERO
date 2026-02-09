@@ -91,7 +91,7 @@ export class VoiceSession extends EventEmitter {
 
   /**
    * @Cortex_Protocol: Dispatching event-driven transcription pulse.
-   * In a production A-POS, this interfaces with Edge-TTS (Fast-Path)
+   * In a production environment, this interfaces with Edge-TTS (Fast-Path)
    * or XTTS-v2 (Deep-Path/Cloning) via the Multi-Voice Bridge.
    */
   private dispatchTranscriptionPulse() {
@@ -132,7 +132,7 @@ export function getOrCreateVoiceSession(
       send,
     );
     activeSessions.set(connId, session);
-    console.log(`[A-POS:Voice] Neural session established for ${connId}`);
+    console.log(`[CORE:Voice] Neural session established for ${connId}`);
   }
   return session;
 }
@@ -140,6 +140,6 @@ export function getOrCreateVoiceSession(
 export function closeVoiceSession(connId: string) {
   if (activeSessions.has(connId)) {
     activeSessions.delete(connId);
-    console.log(`[A-POS:Voice] Neural session terminated for ${connId}`);
+    console.log(`[CORE:Voice] Neural session terminated for ${connId}`);
   }
 }

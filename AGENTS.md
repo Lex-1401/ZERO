@@ -152,7 +152,7 @@
   - Se os diffs staged+unstaged forem apenas de formatação, resolva automaticamente sem perguntar.
   - Se commit/push já foi solicitado, faça o auto-stage e inclua as continuações de apenas formatação no mesmo commit (ou em um commit de continuação minúsculo se necessário), sem confirmação extra.
   - Pergunte apenas quando as alterações forem semânticas (lógica/dados/comportamento).
-- Costura de lagosta: use a paleta compartilhada da CLI em `src/terminal/palette.ts` (sem cores fixas); aplique a paleta aos avisos de onboarding/configuração e outras saídas de interface TTY conforme necessário.
+- Refino de Interface / Paleta: use a paleta compartilhada da CLI em `src/terminal/palette.ts` (sem cores fixas); aplique a paleta aos avisos de onboarding/configuração e outras saídas de interface TTY conforme necessário.
 - **Segurança multi-agente:** foque os relatórios em suas edições; evite isenções de responsabilidade de guardrail, a menos que esteja realmente bloqueado; quando múltiplos agentes tocarem no mesmo arquivo, continue se for seguro; termine com uma breve nota “outros arquivos presentes” apenas se for relevante.
 - Investigações de bugs: leia o código-fonte das dependências npm relevantes e todo o código local relacionado antes de concluir; busque a causa raiz com alta confiança.
 - Estilo de código: adicione comentários breves para lógicas complexas; mantenha os arquivos abaixo de ~500 linhas quando viável (divida/refatore conforme necessário).

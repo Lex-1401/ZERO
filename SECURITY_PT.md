@@ -2,7 +2,7 @@
 
 ## Segurança por Design
 
-O ZERO é construído sobre a filosofia de **Segurança por Design** e **Arquitetura Zero Trust**. Acreditamos que a segurança não é uma funcionalidade, mas um requisito fundamental para qualquer Sistema Operacional de Agente Pessoal (A-POS).
+O ZERO é construído sobre a filosofia de **Segurança por Design** e **Arquitetura Zero Trust**. Acreditamos que a segurança não é uma funcionalidade, mas um requisito fundamental para qualquer Sistema Operacional de Agente Pessoal.
 
 ### Pilares Fundamentais
 

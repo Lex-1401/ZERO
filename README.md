@@ -1,4 +1,4 @@
-# ∅ ZERO — Sistema Operacional Pessoal Agêntico (A-POS)
+# ∅ ZERO — Sistema Operacional Pessoal Agêntico
 
 ![ZERO Header](README-header.png)
 
@@ -9,7 +9,7 @@
 [![QI](https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge)](https://github.com/zero/zero)
 [![Version](https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge)](CHANGELOG.md)
 
-**ZERO** não é apenas uma distribuição de IA; é o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Projetado como um **Sistema Operacional de Agente (A-POS)**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
+**ZERO** não é apenas uma distribuição de IA; é o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
 
 [🇺🇸 English Version](README_EN.md)
 
@@ -38,7 +38,7 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
 | Configurações de Aparência e Idioma | Núcleo do Sistema (Config) |
 | :--- | :--- |
 | ![Appearance Settings](assets/screenshots/real-appearance-ui.png) | ![Core Settings](assets/screenshots/real-settings-ui.png) |
-| *Customização total: Temas dinâmicos e localização PT-BR nativa.* | *Controle granular de cada parâmetro do seu A-POS.* |
+| *Customização total: Temas dinâmicos e localização PT-BR nativa.* | *Controle granular de cada parâmetro do seu Sistema.* |
 
 ---
 

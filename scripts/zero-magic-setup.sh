@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ZERO Magic Setup - Distro Brasileira de IA Pessoal
-# O caminho mais rápido e seguro para o seu A-POS.
+# O caminho mais rápido e seguro para o seu Sistema Operacional Agêntico.
 
 set -euo pipefail
 

@@ -69,7 +69,7 @@ pnpm build
 
 # 6. Finalização
 echo "------------------------------------------"
-echo -e "${GREEN}🎉 ZERO está pronto para 'chocar'!${NC}"
+echo -e "${GREEN}🎉 ZERO está pronto para iniciar!${NC}"
 echo -e "Use o comando abaixo para iniciar o assistente de configuração:"
 echo -e "${BLUE}pnpm zero onboard --install-daemon${NC}"
 

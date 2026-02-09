@@ -152,7 +152,7 @@
   - If staged+unstaged diffs are only formatting, auto-resolve without asking.
   - If commit/push already requested, auto-stage and bundle formatting-only continuations into the same commit (or a tiny continuation commit if needed) without extra confirmation.
   - Ask only when changes are semantic (logic/data/behavior).
-- Lobster Stitching: Use the shared CLI palette in `src/terminal/palette.ts` (no hardcoded colors); apply palette to onboarding/config warnings and other TTY UI outputs as needed.
+- Interface Refinement / Palette: Use the shared CLI palette in `src/terminal/palette.ts` (no hardcoded colors); apply palette to onboarding/config warnings and other TTY UI outputs as needed.
 - **Multi-Agent Safety:** Focus reports on your edits; avoid guardrail disclaimers unless actually blocked; when multiple agents touch the same file, proceed if safe; conclude with a brief "other files present" note only if relevant.
 - Bug Investigations: Read source code of relevant npm dependencies and all related local code before concluding; seek root cause with high confidence.
 - Code Style: Add brief comments for complex logic; keep files below ~500 lines when feasible (split/refactor as needed).

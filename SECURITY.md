@@ -2,7 +2,7 @@
 
 ## Security by Design
 
-ZERO is built on the philosophy of **Security by Design** and **Zero Trust Architecture**. We believe security is not a feature but a foundational requirement for any Personal Agent Operating System (A-POS).
+ZERO is built on the philosophy of **Security by Design** and **Zero Trust Architecture**. We believe security is not a feature but a foundational requirement for any Agentic Personal Operating System.
 
 ### Core Pillars
 
