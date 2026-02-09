@@ -1,6 +1,6 @@
 # Contribuindo com o Zero
 
-Bem-vindo ao tanque de lagostas! ∅
+Bem-vindo ao projeto ZERO! ∅
 
 ## Links Rápidos
 

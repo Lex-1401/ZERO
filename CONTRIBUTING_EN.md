@@ -1,6 +1,6 @@
 # Contributing to Zero
 
-Welcome to the lobster tank! ∅
+Welcome to the ZERO project! ∅
 
 ## Quick Links
 
