@@ -5,7 +5,7 @@
 
 ## Project Structure and Module Organization
 
-- Source Code: `src/` (CLI wiring in `src/cli`, commands in `src/commands`, web provider in `src/provider-web.ts`, infra in `src/infra`, media pipeline in `src/media`).
+- Source Code: `src/` (CLI wiring in `src/cli`, commands in `src/commands`, web provider in `src/provider-web.ts`, infra in `src/infra`, media pipeline in `src/media`, multimodal engine in `src/realtime`).
 - Tests: `*.test.ts` located adjacent to the code.
 - Docs: `docs/` (images, queue, Pi configuration). Compilation output resides in `dist/`.
 - Plugins/Extensions: Reside in `extensions/*` (workspace packages). Keep plugin-exclusive dependencies in the extension's `package.json`; do not add them to the root `package.json` unless the core utilizes them.

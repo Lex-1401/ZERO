@@ -5,7 +5,7 @@
 
 ## Estrutura do Projeto e Organização de Módulos
 
-- Código-fonte: `src/` (fiação da CLI em `src/cli`, comandos em `src/commands`, provedor web em `src/provider-web.ts`, infra em `src/infra`, pipeline de mídia em `src/media`).
+- Código-fonte: `src/` (fiação da CLI em `src/cli`, comandos em `src/commands`, provedor web em `src/provider-web.ts`, infra em `src/infra`, pipeline de mídia em `src/media`, motor multimodal em `src/realtime`).
 - Testes: `*.test.ts` localizados junto ao código.
 - Docs: `docs/` (imagens, fila, configuração Pi). A saída da compilação vive em `dist/`.
 - Plugins/extensões: vivem em `extensions/*` (pacotes do workspace). Mantenha dependências exclusivas de plugins no `package.json` da extensão; não as adicione ao `package.json` raiz, a menos que o núcleo as utilize.

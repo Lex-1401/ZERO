@@ -116,6 +116,7 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh
 | `src/channels/` | **Sentidos**: Adaptadores para WhatsApp, Telegram, Discord, Slack, iMessage. |
 | `ui/` | **Plano de Controle**: Interface Altair desenvolvida com estética premium. |
 | `skills/` | **Habilidades**: Extensões isoladas que expandem as capacidades cognitivas do sistema. |
+| `src/realtime/` | **Percepção**: Motor multimodal de baixa latência (WebSocket) para streaming de áudio/vídeo e roteamento semântico. |
 
 ---
 
