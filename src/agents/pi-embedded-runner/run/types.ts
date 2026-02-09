@@ -82,6 +82,8 @@ export type EmbeddedRunAttemptParams = {
   streamParams?: AgentStreamParams;
   ownerNumbers?: string[];
   enforceFinalTag?: boolean;
+  /** Role name (e.g. "analyst") or definition override. */
+  role?: string;
 };
 
 export type EmbeddedRunAttemptResult = {

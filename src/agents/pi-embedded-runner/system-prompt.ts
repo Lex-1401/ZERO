@@ -4,6 +4,7 @@ import type { EmbeddedContextFile } from "../pi-embedded-helpers.js";
 import { buildAgentSystemPrompt, type PromptMode } from "../system-prompt.js";
 import { buildToolSummaryMap } from "../tool-summaries.js";
 import type { EmbeddedSandboxInfo } from "./types.js";
+import type { RoleDefinition } from "../../roles/types.js";
 import type { ReasoningLevel, ThinkLevel } from "./utils.js";
 
 export function buildEmbeddedSystemPrompt(params: {
@@ -44,7 +45,9 @@ export function buildEmbeddedSystemPrompt(params: {
   userTimezone: string;
   userTime?: string;
   userTimeFormat?: ResolvedTimeFormat;
+
   contextFiles?: EmbeddedContextFile[];
+  role?: RoleDefinition | null;
 }): string {
   return buildAgentSystemPrompt({
     workspaceDir: params.workspaceDir,
@@ -70,6 +73,7 @@ export function buildEmbeddedSystemPrompt(params: {
     userTime: params.userTime,
     userTimeFormat: params.userTimeFormat,
     contextFiles: params.contextFiles,
+    role: params.role ?? undefined,
   });
 }
 

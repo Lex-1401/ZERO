@@ -183,6 +183,7 @@ Exemplo:
   - [Configuração](/gateway/configuration)
   - [Exemplos de Configuração](/gateway/configuration-examples)
   - [Comandos Slash](/tools/slash-commands)
+  - [Papéis Digitais (Roles)](/concepts/roles)
   - [Roteamento Multi-agente](/concepts/multi-agent)
   - [Atualização / Rollback](/install/updating)
   - [Pareamento (DM + nós)](/start/pairing)

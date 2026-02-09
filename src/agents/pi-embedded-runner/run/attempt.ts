@@ -89,6 +89,7 @@ import type { EmbeddedRunAttemptParams, EmbeddedRunAttemptResult } from "./types
 import { detectAndLoadPromptImages } from "./images.js";
 import { SecurityGuard } from "../../../security/guard.js";
 import { MemoryIndexManager } from "../../../memory/manager.js";
+import { loadRoleDefinition, syncRoleCronJobs } from "../../../roles/manager.js";
 
 export function injectHistoryImagesIntoMessages(
   messages: AgentMessage[],
@@ -385,6 +386,16 @@ export async function runEmbeddedAttempt(
       }
     }
 
+    const roleDef = params.role ? await loadRoleDefinition(params.role) : null;
+    if (params.role && !roleDef) {
+      log.warn(`Role definition not found for: ${params.role}`);
+    }
+
+    if (roleDef) {
+      // Ensure the role's background tasks are scheduled
+      await syncRoleCronJobs(roleDef);
+    }
+
     const appendPrompt = buildEmbeddedSystemPrompt({
       workspaceDir: effectiveWorkspace,
       defaultThinkLevel: params.thinkLevel,
@@ -412,7 +423,9 @@ export async function runEmbeddedAttempt(
       userTimezone,
       userTime,
       userTimeFormat,
+
       contextFiles,
+      role: roleDef,
     });
     const systemPromptReport = buildSystemPromptReport({
       source: "run",

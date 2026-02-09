@@ -2,6 +2,7 @@ import type { ReasoningLevel, ThinkLevel } from "../auto-reply/thinking.js";
 import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
 import { listDeliverableMessageChannels } from "../utils/message-channel.js";
 import type { ResolvedTimeFormat } from "./date-time.js";
+import type { RoleDefinition } from "../roles/types.js";
 import type { EmbeddedContextFile } from "./pi-embedded-helpers.js";
 
 /**
@@ -252,6 +253,7 @@ export function buildAgentSystemPrompt(params: {
     level: "minimal" | "extensive";
     channel: string;
   };
+  role?: RoleDefinition;
 }) {
   const coreToolSummaries: Record<string, string> = {
     read: "Lê o conteúdo de arquivos",
@@ -269,7 +271,11 @@ export function buildAgentSystemPrompt(params: {
     browser: "Controla o navegador web",
     canvas: "Apresenta/avalia/tira snapshot do Canvas",
     nodes: "Lista/descreve/notifica/câmera/tela em nós pareados",
-    cron: "Gerencia tarefas cron e eventos de despertar (use para lembretes; ao agendar um lembrete, escreva o texto do systemEvent como algo que será lido como um lembrete quando disparar, e mencione que é um lembrete dependendo do intervalo de tempo entre definir e disparar; inclua contexto recente no texto do lembrete se apropriado)",
+    cron: `Gerencia tarefas cron e eventos de despertar (use para lembretes; ao agendar um lembrete, escreva o texto do systemEvent como algo que será lido como um lembrete quando disparar, e mencione que é um lembrete dependendo do intervalo de tempo entre definir e disparar; inclua contexto recente no texto do lembrete se apropriado)${
+      params.role?.cronJobs?.length
+        ? "; NOTA: Este cargo tem tarefas cron pré-configuradas rodando em segundo plano. Verifique-as se necessário."
+        : ""
+    }`,
     message: "Envia mensagens e ações de canal",
     gateway: "Reinicia, aplica a configuração ou executa atualizações no processo ZERO em execução",
     agents_list: "Lista ids de agentes permitidos para sessions_spawn",
@@ -579,6 +585,35 @@ export function buildAgentSystemPrompt(params: {
   }
   if (reasoningHint) {
     lines.push("## Formato de Raciocínio", reasoningHint, "");
+  }
+
+  if (params.role) {
+    lines.push(`## Cargo: ${params.role.name}`);
+    if (params.role.description) {
+      lines.push(params.role.description);
+    }
+    if (params.role.systemPrompt) {
+      lines.push("", "### Instruções do Cargo", params.role.systemPrompt);
+    }
+    if (params.role.skills && params.role.skills.length > 0) {
+      lines.push(
+        "",
+        "### Habilidades do Cargo",
+        "As seguintes habilidades são sugeridas para este cargo:",
+        ...params.role.skills.map((s) => `- ${s}`),
+      );
+    }
+    if (params.role.cronJobs && params.role.cronJobs.length > 0) {
+      lines.push(
+        "",
+        "### Tarefas Agendadas (Background)",
+        "Este cargo define as seguintes tarefas periódicas:",
+        ...params.role.cronJobs.map(
+          (j) => `- ${j.schedule}: ${j.description || j.message || "Tarefa indefinida"}`,
+        ),
+      );
+    }
+    lines.push("");
   }
 
   const contextFiles = params.contextFiles ?? [];
