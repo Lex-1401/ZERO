@@ -6,17 +6,15 @@ read_when:
 
 # ZERO ∅ (Brazilian Distro)
 
-> *"EXFOLIATE! EXFOLIATE!"* — A space lobster, probably
-
 <p align="center">
   <img src="whatsapp-zero.jpg" alt="ZERO" width="420" />
 </p>
 
-**ZERO** is the first Agentic Personal Operating System (A-POS) focused on local sovereignty and high-performance multi-channel interactivity. Imagine a transparent intelligence layer that resides in your local hardware, orchestrating workflows across devices and messaging platforms with ultra-low latency.
+**ZERO** is the first Agentic Personal Operating System focused on local sovereignty and high-performance multi-channel interactivity. Imagine a transparent intelligence layer that resides in your local hardware, orchestrating workflows across devices and messaging platforms with ultra-low latency.
 
 **ZERO** is a Brazilian distribution created by **Leandro Azevedo**, based on the excellent work of **Peter Steinberger & community** (via the [Moltbot](https://molt.bot) project).
 
-While Moltbot provides the solid foundation and "Spatial Lobster" architecture, ZERO adapts and expands this experience for the Brazilian and international market, focusing on localization, data sovereignty, **Zero Trust Security**, and active defense.
+While Moltbot provides the solid foundation and modular architecture, ZERO adapts and expands this experience for the Brazilian and international market, focusing on localization, data sovereignty, **Zero Trust Security**, and active defense.
 
 <p align="center">
   <a href="https://github.com/zero/zero">GitHub</a> ·

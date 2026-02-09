@@ -5,17 +5,15 @@ read_when:
 ---
 # ZERO ∅ (Distro Brasileira)
 
-> *"EXFOLIAR! EXFOLIAR!"* — Uma lagosta espacial, provavelmente
-
 <p align="center">
   <img src="whatsapp-zero.jpg" alt="ZERO" width="420" />
 </p>
 
-O **ZERO** é o primeiro Sistema Operacional Pessoal Agêntico (A-POS) focado em soberania local e interatividade multicanal de alto desempenho. Imagine uma camada de inteligência transparente que reside em seu hardware local, orquestrando fluxos de trabalho entre dispositivos e plataformas de mensageria com latência ultra-baixa.
+O **ZERO** é o primeiro Sistema Operacional Pessoal Agêntico focado em soberania local e interatividade multicanal de alto desempenho. Imagine uma camada de inteligência transparente que reside em seu hardware local, orquestrando fluxos de trabalho entre dispositivos e plataformas de mensageria com latência ultra-baixa.
 
 O **ZERO** é uma distribuição brasileira criada por **Leandro Azevdo**, baseada no excelente trabalho de **Peter Steinberger & community** (através do projeto [Moltbot](https://molt.bot)).
 
-Enquanto o Moltbot provê a base sólida e a arquitetura de "Spatial Lobster", o ZERO adapta e expande essa experiência para o mercado brasileiro, focando em localização, soberania de dados, **Segurança Zero Trust** e defesa ativa.
+Enquanto o Moltbot provê a base sólida e a arquitetura modular, o ZERO adapta e expande essa experiência para o mercado brasileiro, focando em localização, soberania de dados, **Segurança Zero Trust** e defesa ativa.
 
 <p align="center">
   <a href="https://github.com/zero/zero">GitHub</a> ·
