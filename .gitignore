@@ -75,3 +75,4 @@ apps/ios/*.mobileprovision
 .build-info.json
 dist/
 src/agents/aci/browser-memory.json
+rust-core/target/
