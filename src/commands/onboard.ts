@@ -20,7 +20,7 @@ export async function onboardCommand(opts: OnboardOptions, runtime: RuntimeEnv =
     runtime.error(
       [
         "O onboarding não interativo requer reconhecimento explícito de risco.",
-        "Leia: https://docs.zero.local/security",
+        "Leia: https://github.com/Lex-1401/ZERO/tree/main/docs/security",
         `Execute novamente com: ${formatCliCommand("zero onboard --non-interactive --accept-risk ...")}`,
       ].join("\n"),
     );

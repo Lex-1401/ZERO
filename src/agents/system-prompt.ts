@@ -133,7 +133,7 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
   return [
     "## Documentação",
     `ZERO docs: ${docsPath}`,
-    "Mirror: https://docs.zero.local",
+    "Mirror: https://github.com/Lex-1401/ZERO/tree/main/docs",
     "Source: https://github.com/zero/zero",
     "Community: https://discord.com/invite/zero",
     "Find new skills: https://zerohub.com",

@@ -30,7 +30,7 @@ type SandboxExplainOptions = {
   json: boolean;
 };
 
-const SANDBOX_DOCS_URL = "https://docs.zero.local/sandbox";
+const SANDBOX_DOCS_URL = "https://github.com/Lex-1401/ZERO/tree/main/docs/sandbox";
 
 function normalizeExplainSessionKey(params: {
   cfg: ZEROConfig;

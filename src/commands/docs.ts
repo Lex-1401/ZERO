@@ -148,12 +148,12 @@ async function renderMarkdown(markdown: string, runtime: RuntimeEnv) {
 export async function docsSearchCommand(queryParts: string[], runtime: RuntimeEnv) {
   const query = queryParts.join(" ").trim();
   if (!query) {
-    const docs = formatDocsLink("/", "docs.zero.local");
+    const docs = formatDocsLink("/", "docs");
     if (isRich()) {
       runtime.log(`${theme.muted("Docs:")} ${docs}`);
       runtime.log(`${theme.muted("Search:")} ${formatCliCommand('zero docs "your query"')}`);
     } else {
-      runtime.log("Docs: https://docs.zero.local/");
+      runtime.log("Docs: https://github.com/Lex-1401/ZERO/tree/main/docs");
       runtime.log(`Search: ${formatCliCommand('zero docs "your query"')}`);
     }
     return;

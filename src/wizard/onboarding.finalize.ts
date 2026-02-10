@@ -219,8 +219,8 @@ export async function finalizeOnboardingWizard(options: FinalizeOnboardingOption
       await prompter.note(
         [
           "Docs:",
-          "https://docs.zero.local/gateway/health",
-          "https://docs.zero.local/gateway/troubleshooting",
+          "https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/health",
+          "https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/troubleshooting",
         ].join("\n"),
         "Ajuda na verificação de saúde",
       );
@@ -282,7 +282,7 @@ export async function finalizeOnboardingWizard(options: FinalizeOnboardingOption
       tokenParam ? `UI Web (com token): ${authedUrl}` : undefined,
       `Gateway WS: ${links.wsUrl}`,
       gatewayStatusLine,
-      "Docs: https://docs.zero.local/web/control-ui",
+      "Docs: https://github.com/Lex-1401/ZERO/tree/main/docs/web/control-ui",
     ]
       .filter(Boolean)
       .join("\n"),
@@ -390,13 +390,13 @@ export async function finalizeOnboardingWizard(options: FinalizeOnboardingOption
   await prompter.note(
     [
       "Faça backup do seu workspace do agente.",
-      "Docs: https://docs.zero.local/concepts/agent-workspace",
+      "Docs: https://github.com/Lex-1401/ZERO/tree/main/docs/concepts/agent-workspace",
     ].join("\n"),
     "Backup do Workspace",
   );
 
   await prompter.note(
-    "Executar agentes no seu computador é arriscado — fortaleça sua segurança: https://docs.zero.local/security",
+    "Executar agentes no seu computador é arriscado — fortaleça sua segurança: https://github.com/Lex-1401/ZERO/tree/main/docs/security",
     "Segurança",
   );
 
@@ -449,7 +449,7 @@ export async function finalizeOnboardingWizard(options: FinalizeOnboardingOption
           webSearchKey
             ? "Chave API: armazenada na configuração (tools.web.search.apiKey)."
             : "Chave API: fornecida via variável de ambiente BRAVE_API_KEY (Gateway).",
-          "Docs: https://docs.zero.local/tools/web",
+          "Docs: https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
         ].join("\n")
       : [
           "Se você deseja que seu agente possa pesquisar na web, precisará de uma chave de API.",
@@ -461,7 +461,7 @@ export async function finalizeOnboardingWizard(options: FinalizeOnboardingOption
           "- Habilite o web_search e cole sua chave de API do Brave Search",
           "",
           "Alternativa: defina BRAVE_API_KEY no ambiente do Gateway (sem mudanças na config).",
-          "Docs: https://docs.zero.local/tools/web",
+          "Docs: https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
         ].join("\n"),
     "Busca na web (opcional)",
   );

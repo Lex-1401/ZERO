@@ -1,6 +1,6 @@
 import { formatTerminalLink } from "../utils.js";
 
-export const DOCS_ROOT = "https://docs.zero.local";
+export const DOCS_ROOT = "https://github.com/Lex-1401/ZERO/tree/main/docs";
 
 export function formatDocsLink(
   path: string,

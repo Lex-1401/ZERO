@@ -330,7 +330,7 @@ export async function agentsAddCommand(
         await prompter.note(
           [
             "Encaminhamento inalterado. Adicione vínculos quando estiver pronto.",
-            "Docs: https://docs.zero.local/concepts/multi-agent",
+            "Docs: https://github.com/Lex-1401/ZERO/tree/main/docs/concepts/multi-agent",
           ].join("\n"),
           "Encaminhamento",
         );

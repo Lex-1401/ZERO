@@ -125,7 +125,7 @@ export async function runNonInteractiveOnboardingLocal(params: {
 
   if (!opts.json) {
     runtime.log(
-      `Dica: execute \`${formatCliCommand("zero configure --section web")}\` para armazenar sua chave de API do Brave para o web_search. Documentação: https://docs.zero.local/tools/web`,
+      `Dica: execute \`${formatCliCommand("zero configure --section web")}\` para armazenar sua chave de API do Brave para o web_search. Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web`,
     );
   }
 }

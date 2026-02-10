@@ -53,7 +53,7 @@ zero browser --browser-profile trabalho tabs
 
 ```bash
 zero browser tabs
-zero browser open https://docs.zero.local
+zero browser open https://github.com/Lex-1401/ZERO/tree/main/docs
 zero browser focus <targetId>
 zero browser close <targetId>
 ```

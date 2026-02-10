@@ -330,5 +330,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
   }
 
   defaultRuntime.log(`${label("Problemas?")} execute ${formatCliCommand("zero status")}`);
-  defaultRuntime.log(`${label("Solução de problemas:")} https://docs.zero.local/troubleshooting`);
+  defaultRuntime.log(
+    `${label("Solução de problemas:")} https://github.com/Lex-1401/ZERO/tree/main/docs/troubleshooting`,
+  );
 }

@@ -156,7 +156,7 @@ export async function setupSkills(
         runtime.log(
           `Dica: execute \`${formatCliCommand("zero doctor")}\` para revisar habilidades + requisitos.`,
         );
-        runtime.log("Documentação: https://docs.zero.local/skills");
+        runtime.log("Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/skills");
       }
     }
   }

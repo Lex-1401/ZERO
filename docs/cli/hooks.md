@@ -89,7 +89,7 @@ Details:
   Source: zero-bundled
   Path: /path/to/zero/hooks/bundled/session-memory/HOOK.md
   Handler: /path/to/zero/hooks/bundled/session-memory/handler.ts
-  Homepage: https://docs.zero.local/hooks#session-memory
+  Homepage: https://github.com/Lex-1401/ZERO/tree/main/docs/hooks#session-memory
   Events: command:new
 
 Requirements:

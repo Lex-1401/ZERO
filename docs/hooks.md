@@ -125,7 +125,7 @@ O arquivo `HOOK.md` contém metadados em frontmatter YAML, além de documentaç�
 ---
 name: meu-hook
 description: "Descrição curta do que este hook faz"
-homepage: https://docs.zero.local/hooks#meu-hook
+homepage: https://github.com/Lex-1401/ZERO/tree/main/docs/hooks#meu-hook
 metadata: {"zero":{"emoji":"🔗","events":["command:new"],"requires":{"bins":["node"]}}}
 ---
 

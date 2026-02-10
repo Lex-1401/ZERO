@@ -187,7 +187,7 @@ export async function handleBashChatCommand(params: {
 }): Promise<ReplyPayload> {
   if (params.cfg.commands?.bash !== true) {
     return {
-      text: "⚠️ bash is disabled. Set commands.bash=true to enable. Docs: https://docs.zero.local/tools/slash-commands#config",
+      text: "⚠️ bash is disabled. Set commands.bash=true to enable. Docs: https://github.com/Lex-1401/ZERO/tree/main/docs/tools/slash-commands#config",
     };
   }
 

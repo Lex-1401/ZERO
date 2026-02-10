@@ -43,7 +43,7 @@ export async function promptRemoteGatewayConfig(
     await prompter.note(
       [
         "A descoberta por Bonjour requer dns-sd (macOS) ou avahi-browse (Linux).",
-        "Documentação: https://docs.zero.local/gateway/discovery",
+        "Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/discovery",
       ].join("\n"),
       "Descoberta",
     );
@@ -100,7 +100,7 @@ export async function promptRemoteGatewayConfig(
             `ssh -N -L 18789:127.0.0.1:18789 <user>@${host}${
               selectedBeacon.sshPort ? ` -p ${selectedBeacon.sshPort}` : ""
             }`,
-            "Documentação: https://docs.zero.local/gateway/remote",
+            "Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/remote",
           ].join("\n"),
           "Túnel SSH",
         );

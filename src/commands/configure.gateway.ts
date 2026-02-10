@@ -144,9 +144,11 @@ export async function promptGatewayConfig(
   let tailscaleResetOnExit = false;
   if (tailscaleMode !== "off") {
     note(
-      ["Docs:", "https://docs.zero.local/gateway/tailscale", "https://docs.zero.local/web"].join(
-        "\n",
-      ),
+      [
+        "Docs:",
+        "https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/tailscale",
+        "https://github.com/Lex-1401/ZERO/tree/main/docs/web",
+      ].join("\n"),
       "Tailscale",
     );
     tailscaleResetOnExit = Boolean(

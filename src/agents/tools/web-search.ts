@@ -129,13 +129,13 @@ function missingSearchKeyPayload(provider: (typeof SEARCH_PROVIDERS)[number]) {
       error: "missing_perplexity_api_key",
       message:
         "web_search (perplexity) needs an API key. Set PERPLEXITY_API_KEY or OPENROUTER_API_KEY in the Gateway environment, or configure tools.web.search.perplexity.apiKey.",
-      docs: "https://docs.zero.local/tools/web",
+      docs: "https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
     };
   }
   return {
     error: "missing_brave_api_key",
     message: `web_search needs a Brave Search API key. Run \`${formatCliCommand("zero configure --section web")}\` to store it, or set BRAVE_API_KEY in the Gateway environment.`,
-    docs: "https://docs.zero.local/tools/web",
+    docs: "https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
   };
 }
 
@@ -475,7 +475,7 @@ export function createWebSearchTool(options?: {
         return jsonResult({
           error: "unsupported_freshness",
           message: "freshness is only supported by the Brave web_search provider.",
-          docs: "https://docs.zero.local/tools/web",
+          docs: "https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
         });
       }
       const freshness = rawFreshness ? normalizeFreshness(rawFreshness) : undefined;
@@ -484,7 +484,7 @@ export function createWebSearchTool(options?: {
           error: "invalid_freshness",
           message:
             "freshness must be one of pd, pw, pm, py, or a range like YYYY-MM-DDtoYYYY-MM-DD.",
-          docs: "https://docs.zero.local/tools/web",
+          docs: "https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
         });
       }
       const result = await runWebSearch({

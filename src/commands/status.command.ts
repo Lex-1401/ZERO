@@ -560,8 +560,8 @@ export async function statusCommand(
   }
 
   runtime.log("");
-  runtime.log("FAQ: https://docs.zero.local/faq");
-  runtime.log("Troubleshooting: https://docs.zero.local/troubleshooting");
+  runtime.log("FAQ: https://github.com/Lex-1401/ZERO/tree/main/docs/faq");
+  runtime.log("Troubleshooting: https://github.com/Lex-1401/ZERO/tree/main/docs/troubleshooting");
   runtime.log("");
   const updateHint = formatUpdateAvailableHint(update);
   if (updateHint) {

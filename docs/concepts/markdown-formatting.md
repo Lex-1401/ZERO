@@ -34,7 +34,7 @@ O ZERO formata o Markdown de saída convertendo-o em uma representação interme
 Markdown de entrada:
 
 ```markdown
-Olá **mundo** — veja as [docs](https://docs.zero.local).
+Olá **mundo** — veja as [docs](https://github.com/Lex-1401/ZERO/tree/main/docs).
 ```
 
 IR (esquemático):
@@ -46,7 +46,7 @@ IR (esquemático):
     { "start": 4, "end": 9, "style": "bold" }
   ],
   "links": [
-    { "start": 19, "end": 23, "href": "https://docs.zero.local" }
+    { "start": 19, "end": 23, "href": "https://github.com/Lex-1401/ZERO/tree/main/docs" }
   ]
 }
 ```

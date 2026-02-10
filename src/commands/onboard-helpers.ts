@@ -178,8 +178,8 @@ export function formatControlUiSshHint(params: {
     localUrl,
     authedUrl,
     "Docs:",
-    "https://github.com/zero-sh/zero/tree/main/docs",
-    "https://github.com/zero-sh/zero/tree/main/docs/web/control-ui",
+    "https://github.com/Lex-1401/ZERO/tree/main/docs",
+    "https://github.com/Lex-1401/ZERO/tree/main/docs/web/control-ui",
   ]
     .filter(Boolean)
     .join("\n");

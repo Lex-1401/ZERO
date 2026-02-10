@@ -233,7 +233,7 @@ describe("resolveZEROMetadata", () => {
     const content = `---
 name: session-memory
 description: "Save session context to memory when /new command is issued"
-homepage: https://docs.zero.local/hooks#session-memory
+homepage: https://github.com/Lex-1401/ZERO/tree/main/docs/hooks#session-memory
 metadata:
   {
     "zero":

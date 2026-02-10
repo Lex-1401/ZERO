@@ -100,7 +100,7 @@ async function promptWebToolsConfig(
     [
       "A busca na web permite que seu agente pesquise coisas online usando a ferramenta `web_search`.",
       "Requer uma chave de API do Brave Search (você pode armazená-la na configuração ou definir BRAVE_API_KEY no ambiente do Gateway).",
-      "Documentação: https://docs.zero.local/tools/web",
+      "Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
     ].join("\n"),
     "Busca na web",
   );
@@ -136,7 +136,7 @@ async function promptWebToolsConfig(
         [
           "Nenhuma chave armazenada ainda, portanto, web_search permanecerá indisponível.",
           "Armazene uma chave aqui ou defina BRAVE_API_KEY no ambiente do Gateway.",
-          "Documentação: https://docs.zero.local/tools/web",
+          "Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/tools/web",
         ].join("\n"),
         "Busca na web",
       );
@@ -189,7 +189,7 @@ export async function runConfigureWizard(
           [
             ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
             "",
-            "Documentação: https://docs.zero.local/gateway/configuration",
+            "Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/configuration",
           ].join("\n"),
           "Problemas na configuração",
         );
@@ -392,8 +392,8 @@ export async function runConfigureWizard(
           note(
             [
               "Documentação:",
-              "https://docs.zero.local/gateway/health",
-              "https://docs.zero.local/gateway/troubleshooting",
+              "https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/health",
+              "https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/troubleshooting",
             ].join("\n"),
             "Ajuda da verificação de saúde",
           );
@@ -517,8 +517,8 @@ export async function runConfigureWizard(
             note(
               [
                 "Documentação:",
-                "https://docs.zero.local/gateway/health",
-                "https://docs.zero.local/gateway/troubleshooting",
+                "https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/health",
+                "https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/troubleshooting",
               ].join("\n"),
               "Ajuda da verificação de saúde",
             );
@@ -576,7 +576,7 @@ export async function runConfigureWizard(
         `Interface Web: ${links.httpUrl}`,
         `Gateway WS: ${links.wsUrl}`,
         gatewayStatusLine,
-        "Documentação: https://docs.zero.local/web/control-ui",
+        "Documentação: https://github.com/Lex-1401/ZERO/tree/main/docs/web/control-ui",
       ].join("\n"),
       "Interface de Controle (Control UI)",
     );

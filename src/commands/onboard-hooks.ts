@@ -15,7 +15,7 @@ export async function setupInternalHooks(
       "Os Hooks permitem automatizar ações quando comandos do agente são emitidos.",
       "Exemplo: Salvar o contexto da sessão na memória quando você usa /new.",
       "",
-      "Saiba mais: https://docs.zero.local/hooks",
+      "Saiba mais: https://github.com/Lex-1401/ZERO/tree/main/docs/hooks",
     ].join("\n"),
     "Hooks",
   );

@@ -139,7 +139,7 @@ export async function applyAuthChoiceOpenAI(
       spin.stop("OAuth da OpenAI falhou");
       params.runtime.error(String(err));
       await params.prompter.note(
-        "Problemas com o OAuth? Veja https://docs.zero.local/start/faq",
+        "Problemas com o OAuth? Veja https://github.com/Lex-1401/ZERO/tree/main/docs/start/faq",
         "Ajuda do OAuth",
       );
     }

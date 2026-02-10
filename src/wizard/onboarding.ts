@@ -53,12 +53,12 @@ async function requireRiskAcknowledgement(params: {
 
   await params.prompter.note(
     [
-      "Por favor, leia: https://docs.zero.local/security",
+      "Por favor, leia: https://github.com/Lex-1401/ZERO/tree/main/docs/security",
       "",
       "Os agentes ZERO podem executar comandos, ler/escrever arquivos e agir através de quaisquer ferramentas que você habilitar. Eles só podem enviar mensagens nos canais que você configurar (por exemplo, uma conta que você logar nesta máquina, ou uma conta de bot como Slack/Discord).",
       "",
       "Se você é novo nisso, comece com o sandbox e o menor privilégio. Isso ajuda a limitar o que um agente pode fazer se for enganado ou cometer um erro.",
-      "Saiba mais: https://docs.zero.local/sandboxing",
+      "Saiba mais: https://github.com/Lex-1401/ZERO/tree/main/docs/sandboxing",
     ].join("\n"),
     "Segurança",
   );
@@ -108,7 +108,7 @@ export async function runOnboardingWizard(
         [
           ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
           "",
-          "Docs: https://docs.zero.local/gateway/configuration",
+          "Docs: https://github.com/Lex-1401/ZERO/tree/main/docs/gateway/configuration",
         ].join("\n"),
         "Problemas na configuração",
       );

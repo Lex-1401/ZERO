@@ -234,6 +234,6 @@ export async function appendStatusAllDiagnosis(params: {
 
   lines.push("");
   lines.push(muted("Pasteable debug report. Auth tokens redacted."));
-  lines.push("Troubleshooting: https://docs.zero.local/troubleshooting");
+  lines.push("Troubleshooting: https://github.com/Lex-1401/ZERO/tree/main/docs/troubleshooting");
   lines.push("");
 }
