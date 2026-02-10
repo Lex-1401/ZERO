@@ -131,30 +131,44 @@ install_and_build() {
 setup_global() {
     log_info "Configurando comando 'zero' globalmente..."
 
-    # Garantir que o pnpm tenha um diretório global configurado
-    if [ -z "$(pnpm config get global-bin-dir 2>/dev/null)" ] || [ "$(pnpm config get global-bin-dir)" = "undefined" ]; then
-        log_warn "Diretório global do pnpm não configurado. Configurando para ~/.pnpm-global..."
-        mkdir -p "$HOME/.pnpm-global"
-        pnpm config set global-bin-dir "$HOME/.pnpm-global"
-        
-        # Adicionar ao PATH para a sessão atual (best effort)
-        export PATH="$HOME/.pnpm-global:$PATH"
-    fi
+    # Tenta obter o diretório global atual
+    PNPM_GLOBAL_BIN=$(pnpm config get global-bin-dir 2>/dev/null)
 
-    # Tentar linkar
-    if ! pnpm link --global >/dev/null 2>&1; then
-        log_warn "Tentativa inicial de link falhou. Executando 'pnpm setup' e forçando configuração..."
+    # Se não estiver configurado ou for undefined, define um padrão seguro
+    if [ -z "$PNPM_GLOBAL_BIN" ] || [ "$PNPM_GLOBAL_BIN" = "undefined" ]; then
+        log_warn "Diretório global do pnpm não configurado."
+        # Tenta rodar o setup primeiro
         pnpm setup >/dev/null 2>&1 || true
         
-        # Forçar configuração novamente caso o setup falhe em definir
-        pnpm config set global-bin-dir "$HOME/Library/pnpm" 2>/dev/null || pnpm config set global-bin-dir "$HOME/.local/share/pnpm"
+        # Recarrega a configuração
+        PNPM_GLOBAL_BIN=$(pnpm config get global-bin-dir 2>/dev/null)
         
-        # Tentar novamente com force
+        # Se ainda falhar, força um local manual
+        if [ -z "$PNPM_GLOBAL_BIN" ] || [ "$PNPM_GLOBAL_BIN" = "undefined" ]; then
+             mkdir -p "$HOME/.pnpm-global"
+             pnpm config set global-bin-dir "$HOME/.pnpm-global"
+             PNPM_GLOBAL_BIN="$HOME/.pnpm-global"
+        fi
+    fi
+
+    # ADICIONA AO PATH DA SESSÃO ATUAL (CRÍTICO)
+    export PATH="$PNPM_GLOBAL_BIN:$PATH"
+    log_info "Usando diretório global: $PNPM_GLOBAL_BIN"
+
+    # Tentativa de Link
+    if ! pnpm link --global; then
+        log_warn "Link falhou. Tentando forçar configuração..."
+        
+        # Força configuração para um local padrão do sistema se o anterior falhou
+        pnpm config set global-bin-dir "$HOME/Library/pnpm" 2>/dev/null || pnpm config set global-bin-dir "$HOME/.local/share/pnpm"
+        PNPM_GLOBAL_BIN=$(pnpm config get global-bin-dir)
+        export PATH="$PNPM_GLOBAL_BIN:$PATH"
+
         if pnpm link --global; then
-            log_success "Link global realizado com sucesso na segunda tentativa."
+             log_success "Link global realizado com sucesso (recovery mode)."
         else
-            log_error "Falha crítica ao linkar o comando 'zero'."
-            log_warn "Alternativa: Use './node_modules/.bin/zero' ou 'pnpm exec zero'."
+             log_error "Falha crítica ao linkar o comando 'zero'."
+             log_warn "Certifique-se de que $PNPM_GLOBAL_BIN está no seu PATH."
         fi
     else
         log_success "Comando 'zero' linkado globalmente."
