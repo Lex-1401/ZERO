@@ -16,15 +16,18 @@ detects existing installs, upgrades in place, and runs `zero doctor` when
 needed.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
 Notes:
+
 - Add `--no-onboard` if you don’t want the onboarding wizard to run again.
 - For **source installs**, use:
+
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git --no-onboard
+  curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash -s -- --install-method git --no-onboard
   ```
+
   The installer will `git pull --rebase` **only** if the repo is clean.
 - For **global installs**, the script uses `npm install -g zero@latest` under the hood.
 
@@ -48,6 +51,7 @@ npm i -g zero@latest
 ```bash
 pnpm add -g zero@latest
 ```
+
 We do **not** recommend Bun for the Gateway runtime (WhatsApp/Telegram bugs).
 
 To switch update channels (git + npm installs):
@@ -73,6 +77,7 @@ zero health
 ```
 
 Notes:
+
 - If your Gateway runs as a service, `zero gateway restart` is preferred over killing PIDs.
 - If you’re pinned to a specific version, see “Rollback / pinning” below.
 
@@ -85,6 +90,7 @@ zero update
 ```
 
 It runs a safe-ish update flow:
+
 - Requires a clean worktree.
 - Switches to the selected channel (tag or branch).
 - Fetches + rebases against the configured upstream (dev channel).
@@ -96,6 +102,7 @@ If you installed via **npm/pnpm** (no git metadata), `zero update` will try to u
 ## Update (Control UI / RPC)
 
 The Control UI has **Update & Restart** (RPC: `update.run`). It:
+
 1) Runs the same source-update flow as `zero update` (git checkout only).
 2) Writes a restart sentinel with a structured report (stdout/stderr tail).
 3) Restarts the gateway and pings the last active session with the report.
@@ -124,6 +131,7 @@ zero health
 ```
 
 Notes:
+
 - `pnpm build` matters when you run the packaged `zero` binary ([`dist/entry.js`](https://github.com/zero/zero/blob/main/dist/entry.js)) or use Node to run `dist/`.
 - If you run from a repo checkout without a global install, use `pnpm zero ...` for CLI commands.
 - If you run directly from TypeScript (`pnpm zero ...`), a rebuild is usually unnecessary, but **config migrations still apply** → run doctor.
@@ -136,6 +144,7 @@ Doctor is the “safe update” command. It’s intentionally boring: repair + m
 Note: if you’re on a **source install** (git checkout), `zero doctor` will offer to run `zero update` first.
 
 Typical things it does:
+
 - Migrate deprecated config keys / legacy config file locations.
 - Audit DM policies and warn on risky “open” settings.
 - Check Gateway health and can offer to restart.
@@ -157,6 +166,7 @@ zero logs --follow
 ```
 
 If you’re supervised:
+
 - macOS launchd (app-bundled LaunchAgent): `launchctl kickstart -k gui/$UID/com.zero.gateway` (use `com.zero.<profile>` if set)
 - Linux systemd user service: `systemctl --user restart zero-gateway[-<profile>].service`
 - Windows (WSL2): `systemctl --user restart zero-gateway[-<profile>].service`
@@ -215,4 +225,4 @@ git pull
 
 - Run `zero doctor` again and read the output carefully (it often tells you the fix).
 - Check: [Troubleshooting](/gateway/troubleshooting)
-- Ask in Discord: https://channels.discord.gg/zero
+- Ask in Discord: <https://channels.discord.gg/zero>

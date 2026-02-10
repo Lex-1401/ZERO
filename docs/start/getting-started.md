@@ -50,10 +50,6 @@ Windows: use **WSL2** (Ubuntu recomendado). O WSL2 é fortemente recomendado; o 
 
 ## 1) Instale a CLI (recomendado)
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
-```
-
 Opções do instalador (método de instalação, não interativo, a partir do GitHub): [Instalação](/install).
 
 Windows (PowerShell):
@@ -63,6 +59,16 @@ iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex
 ```
 
 Alternativa (instalação global):
+
+```bash
+npm install -g zero@latest
+```
+
+## 1) Instale a CLI (Start Rápido)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
+```
 
 ```bash
 npm install -g zero@latest

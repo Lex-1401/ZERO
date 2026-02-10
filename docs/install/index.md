@@ -12,7 +12,7 @@ Use the installer unless you have a reason not to. It sets up the CLI and runs o
 ## Quick install (recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
 Windows (PowerShell):
@@ -49,13 +49,13 @@ zero onboard --install-daemon
 Installs `zero` globally via npm and runs onboarding.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
 Installer flags:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --help
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash -s -- --help
 ```
 
 Details: [Installer internals](/install/installer).
@@ -63,7 +63,7 @@ Details: [Installer internals](/install/installer).
 Non-interactive (skip onboarding):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --no-onboard
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash -s -- --no-onboard
 ```
 
 ### 2) Global install (manual)
@@ -132,10 +132,10 @@ The installer supports two methods:
 
 ```bash
 # Explicit npm
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method npm
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash -s -- --install-method npm
 
 # Install from GitHub (source checkout)
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash -s -- --install-method git
 ```
 
 Common flags:

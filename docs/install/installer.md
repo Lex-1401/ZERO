@@ -1,7 +1,7 @@
 ---
 summary: "How the installer scripts work (install.sh + install-cli.sh), flags, and automation"
 read_when:
-  - You want to understand `zero.local/install.sh`
+  - You want to understand `zero.local/quickstart.sh`
   - You want to automate installs (CI / headless)
   - You want to install from a GitHub checkout
 ---
@@ -10,14 +10,14 @@ read_when:
 
 ZERO ships two installer scripts (served from `zero.local`):
 
-- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh` — “recommended” installer (global npm install by default; can also install from a GitHub checkout)
+- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh` — “recommended” installer (global npm install by default; can also install from a GitHub checkout)
 - `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install-cli.sh` — non-root-friendly CLI installer (installs into a prefix with its own Node)
- - `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1` — Windows PowerShell installer (npm by default; optional git install)
+- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1` — Windows PowerShell installer (npm by default; optional git install)
 
 To see the current flags/behavior, run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --help
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash -s -- --help
 ```
 
 Windows (PowerShell) help:
@@ -28,7 +28,7 @@ Windows (PowerShell) help:
 
 If the installer completes but `zero` is not found in a new terminal, it’s usually a Node/npm PATH issue. See: [Install](/install#nodejs--npm-path-sanity).
 
-## install.sh (recommended)
+## quickstart.sh (recommended)
 
 What it does (high level):
 
@@ -45,7 +45,7 @@ What it does (high level):
 If you *want* `sharp` to link against a globally-installed libvips (or you’re debugging), set:
 
 ```bash
-SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash
+SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
 ### Discoverability / “git install” prompt
@@ -67,7 +67,7 @@ For `npm` installs, Git is *usually* not required, but some environments still e
 
 On some Linux setups (especially after installing Node via the system package manager or NodeSource), npm’s global prefix points at a root-owned location. Then `npm install -g ...` fails with `EACCES` / `mkdir` permission errors.
 
-`install.sh` mitigates this by switching the prefix to:
+`quickstart.sh` mitigates this by switching the prefix to:
 
 - `~/.npm-global` (and adding it to `PATH` in `~/.bashrc` / `~/.zshrc` when present)
 
