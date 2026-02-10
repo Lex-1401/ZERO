@@ -1,81 +1,81 @@
 ---
-summary: "How the installer scripts work (install.sh + install-cli.sh), flags, and automation"
+summary: "Como funcionam os scripts de instalação (quickstart.sh + install-cli.sh), flags e automação"
 read_when:
-  - You want to understand `zero.local/quickstart.sh`
-  - You want to automate installs (CI / headless)
-  - You want to install from a GitHub checkout
+  - Você quer entender o `zero.local/quickstart.sh`
+  - Você quer automatizar instalações (CI / headless)
+  - Você quer instalar a partir de um checkout do GitHub
 ---
 
-# Installer internals
+# Detalhes do Instalador
 
-ZERO ships two installer scripts (served from `zero.local`):
+O ZERO fornece scripts de instalação principais:
 
-- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh` — “recommended” installer (global npm install by default; can also install from a GitHub checkout)
-- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install-cli.sh` — non-root-friendly CLI installer (installs into a prefix with its own Node)
-- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1` — Windows PowerShell installer (npm by default; optional git install)
+- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh` — instalador "recomendado" (instalação global npm por padrão; também pode instalar a partir de um checkout do GitHub)
+- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install-cli.sh` — instalador CLI amigável para não-root (instala em um prefixo com seu próprio Node)
+- `https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1` — instalador Windows PowerShell (npm por padrão; instalação git opcional)
 
-To see the current flags/behavior, run:
+Para ver as flags/comportamentos atuais, execute:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash -s -- --help
 ```
 
-Windows (PowerShell) help:
+Ajuda para Windows (PowerShell):
 
 ```powershell
 & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1))) -?
 ```
 
-If the installer completes but `zero` is not found in a new terminal, it’s usually a Node/npm PATH issue. See: [Install](/install#nodejs--npm-path-sanity).
+Se o instalador for concluído, mas o comando `zero` não for encontrado em um novo terminal, geralmente é um problema de PATH do Node/npm. Veja: [Instalação](/install#nodejs--npm-path-sanity).
 
-## quickstart.sh (recommended)
+## quickstart.sh (recomendado)
 
-What it does (high level):
+O que ele faz (alto nível):
 
-- Detect OS (macOS / Linux / WSL).
-- Ensure Node.js **22+** (macOS via Homebrew; Linux via NodeSource).
-- Choose install method:
-  - `npm` (default): `npm install -g zero@latest`
-  - `git`: clone/build a source checkout and install a wrapper script
-- On Linux: avoid global npm permission errors by switching npm’s prefix to `~/.npm-global` when needed.
-- If upgrading an existing install: runs `zero doctor --non-interactive` (best effort).
-- For git installs: runs `zero doctor --non-interactive` after install/update (best effort).
-- Mitigates `sharp` native install gotchas by defaulting `SHARP_IGNORE_GLOBAL_LIBVIPS=1` (avoids building against system libvips).
+- Detecta o SO (macOS / Linux / WSL).
+- Garante Node.js **22+** (macOS via Homebrew; Linux via NodeSource).
+- Escolhe o método de instalação:
+  - `npm` (padrão): `npm install -g zero@latest`
+  - `git`: clona/compila um checkout de código-fonte e instala um script wrapper
+- No Linux: evita erros de permissão global do npm alterando o prefixo do npm para `~/.npm-global` quando necessário.
+- Se estiver atualizando uma instalação existente: executa `zero doctor --non-interactive` (melhor esforço).
+- Para instalações git: executa `zero doctor --non-interactive` após instalação/atualização (melhor esforço).
+- Mitiga problemas de instalação nativa do `sharp` definindo `SHARP_IGNORE_GLOBAL_LIBVIPS=1` por padrão (evita compilar contra libvips do sistema).
 
-If you *want* `sharp` to link against a globally-installed libvips (or you’re debugging), set:
+Se você *quer* que o `sharp` vincule a um libvips instalado globalmente (ou está depurando), defina:
 
 ```bash
 SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
-### Discoverability / “git install” prompt
+### Descoberta / prompt de "instalação git"
 
-If you run the installer while **already inside a ZERO source checkout** (detected via `package.json` + `pnpm-workspace.yaml`), it prompts:
+Se você executar o instalador enquanto **já estiver dentro de um checkout de código-fonte ZERO** (detectado via `package.json` + `pnpm-workspace.yaml`), ele pergunta:
 
-- update and use this checkout (`git`)
-- or migrate to the global npm install (`npm`)
+- atualizar e usar este checkout (`git`)
+- ou migrar para a instalação global npm (`npm`)
 
-In non-interactive contexts (no TTY / `--no-prompt`), you must pass `--install-method git|npm` (or set `ZERO_INSTALL_METHOD`), otherwise the script exits with code `2`.
+Em contextos não interativos (sem TTY / `--no-prompt`), você deve passar `--install-method git|npm` (ou definir `ZERO_INSTALL_METHOD`), caso contrário o script sai com código `2`.
 
-### Why Git is needed
+### Por que o Git é necessário
 
-Git is required for the `--install-method git` path (clone / pull).
+Git é necessário para o caminho `--install-method git` (clone / pull).
 
-For `npm` installs, Git is *usually* not required, but some environments still end up needing it (e.g. when a package or dependency is fetched via a git URL). The installer currently ensures Git is present to avoid `spawn git ENOENT` surprises on fresh distros.
+Para instalações `npm`, o Git *geralmente* não é necessário, mas alguns ambientes ainda acabam precisando dele (por exemplo, quando um pacote ou dependência é buscado via URL git). O instalador atualmente garante que o Git esteja presente para evitar surpresas `spawn git ENOENT` em distros limpas.
 
-### Why npm hits `EACCES` on fresh Linux
+### Por que o npm encontra `EACCES` em Linux limpo
 
-On some Linux setups (especially after installing Node via the system package manager or NodeSource), npm’s global prefix points at a root-owned location. Then `npm install -g ...` fails with `EACCES` / `mkdir` permission errors.
+Em algumas configurações Linux (especialmente após instalar o Node via gerenciador de pacotes do sistema ou NodeSource), o prefixo global do npm aponta para um local de propriedade do root. Então `npm install -g ...` falha com erros de permissão `EACCES` / `mkdir`.
 
-`quickstart.sh` mitigates this by switching the prefix to:
+O `quickstart.sh` mitiga isso trocando o prefixo para:
 
-- `~/.npm-global` (and adding it to `PATH` in `~/.bashrc` / `~/.zshrc` when present)
+- `~/.npm-global` (e adicionando-o ao `PATH` em `~/.bashrc` / `~/.zshrc` quando presente)
 
-## install-cli.sh (non-root CLI installer)
+## install-cli.sh (instalador CLI não-root)
 
-This script installs `zero` into a prefix (default: `~/.zero`) and also installs a dedicated Node runtime under that prefix, so it can work on machines where you don’t want to touch the system Node/npm.
+Este script instala o `zero` em um prefixo (padrão: `~/.zero`) e também instala um runtime Node dedicado sob esse prefixo, para que possa funcionar em máquinas onde você não quer tocar no Node/npm do sistema.
 
-Help:
+Ajuda:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install-cli.sh | bash -s -- --help
@@ -83,15 +83,15 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install-cli.sh |
 
 ## install.ps1 (Windows PowerShell)
 
-What it does (high level):
+O que ele faz (alto nível):
 
-- Ensure Node.js **22+** (winget/Chocolatey/Scoop or manual).
-- Choose install method:
-  - `npm` (default): `npm install -g zero@latest`
-  - `git`: clone/build a source checkout and install a wrapper script
-- Runs `zero doctor --non-interactive` on upgrades and git installs (best effort).
+- Garante Node.js **22+** (winget/Chocolatey/Scoop ou manual).
+- Escolhe o método de instalação:
+  - `npm` (padrão): `npm install -g zero@latest`
+  - `git`: clona/compila um checkout de código-fonte e instala um script wrapper
+- Executa `zero doctor --non-interactive` em atualizações e instalações git (melhor esforço).
 
-Examples:
+Exemplos:
 
 ```powershell
 iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex
@@ -105,18 +105,16 @@ iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex
 iwr -useb https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.ps1 | iex -InstallMethod git -GitDir "C:\\zero"
 ```
 
-Environment variables:
+Variáveis de ambiente:
 
 - `ZERO_INSTALL_METHOD=git|npm`
 - `ZERO_GIT_DIR=...`
 
-Git requirement:
+Requisito Git:
 
-If you choose `-InstallMethod git` and Git is missing, the installer will print the
-Git for Windows link (`https://git-scm.com/download/win`) and exit.
+Se você escolher `-InstallMethod git` e o Git estiver faltando, o instalador imprimirá o link do Git para Windows (`https://git-scm.com/download/win`) e sairá.
 
-Common Windows issues:
+Problemas comuns no Windows:
 
-- **npm error spawn git / ENOENT**: install Git for Windows and reopen PowerShell, then rerun the installer.
-- **"zero" is not recognized**: your npm global bin folder is not on PATH. Most systems use
-  `%AppData%\\npm`. You can also run `npm config get prefix` and add `\\bin` to PATH, then reopen PowerShell.
+- **npm error spawn git / ENOENT**: instale o Git para Windows e reabra o PowerShell, depois execute o instalador novamente.
+- **"zero" is not recognized**: sua pasta bin global do npm não está no PATH. A maioria dos sistemas usa `%AppData%\\npm`. Você também pode executar `npm config get prefix` e adicionar `\\bin` ao PATH, depois reabrir o PowerShell.
