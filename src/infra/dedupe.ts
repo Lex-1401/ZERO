@@ -1,4 +1,4 @@
-import { RatchetDedupe as NativeDedupe } from "../../rust-core/index.js";
+import { RatchetDedupe as NativeDedupe } from "@zero/ratchet";
 
 export type DedupeCache = {
   check: (key: string | undefined | null, now?: number) => boolean;

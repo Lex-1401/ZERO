@@ -1,5 +1,5 @@
 import { redactSensitiveText } from "../logging/redact.js";
-import { SecurityEngine as NativeEngine } from "../../rust-core/index.js";
+import { SecurityEngine as NativeEngine } from "@zero/ratchet";
 
 let nativeSecurity: NativeEngine | null = null;
 try {
@@ -170,7 +170,7 @@ export class SecurityGuard {
       if (nativeResult) {
         return {
           type: "injection",
-          details: nativeResult,
+          details: JSON.stringify(nativeResult),
         };
       }
     }

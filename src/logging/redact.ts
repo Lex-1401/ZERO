@@ -1,6 +1,6 @@
 import { createRequire } from "node:module";
 import type { ZEROConfig } from "../config/config.js";
-import { SecurityEngine as NativeEngine } from "../../rust-core/index.js";
+import { SecurityEngine as NativeEngine } from "@zero/ratchet";
 
 const requireConfig = createRequire(import.meta.url);
 

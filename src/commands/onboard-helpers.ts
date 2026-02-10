@@ -64,13 +64,13 @@ export function randomToken(): string {
 
 export function printWizardHeader(runtime: RuntimeEnv) {
   const header = [
-    "░████░█░░░░░█████░█░░░█░███░░████░░████░░▀█▀",
-    "█░░░░░█░░░░░█░░░█░█░█░█░█░░█░█░░░█░█░░░█░░█░",
-    "█░░░░░█░░░░░█████░█░█░█░█░░█░████░░█░░░█░░█░",
-    "█░░░░░█░░░░░█░░░█░█░█░█░█░░█░█░░█░░█░░░█░░█░",
-    "░████░█████░█░░░█░░█░█░░███░░████░░░███░░░█░",
-    "              ∅ FRESCO DIARIAMENTE ∅",
-    "      (Distro do Moltbot por Peter Steinberger)",
+    "███████╗███████╗██████╗  ██████╗ ",
+    "╚══███╔╝██╔════╝██╔══██╗██╔═══██╗",
+    "  ███╔╝ █████╗  ██████╔╝██║   ██║",
+    " ███╔╝  ██╔══╝  ██╔══██╗██║   ██║",
+    "███████╗███████╗██║  ██║╚██████╔╝",
+    "╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ",
+    "          ∅ ZERO CONSCIOUSNESS ∅",
   ].join("\n");
   runtime.log(header);
 }
@@ -178,8 +178,8 @@ export function formatControlUiSshHint(params: {
     localUrl,
     authedUrl,
     "Docs:",
-    "https://docs.zero.local/gateway/remote",
-    "https://docs.zero.local/web/control-ui",
+    "https://github.com/zero-sh/zero/tree/main/docs",
+    "https://github.com/zero-sh/zero/tree/main/docs/web/control-ui",
   ]
     .filter(Boolean)
     .join("\n");

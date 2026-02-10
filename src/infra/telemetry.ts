@@ -1,4 +1,4 @@
-import { MetricsEngine } from "../../rust-core/index.js";
+import { MetricsEngine } from "@zero/ratchet";
 
 const engine = new MetricsEngine();
 

@@ -287,7 +287,15 @@ export function createGatewayHttpServer(opts: {
     const config = loadConfig();
 
     // Blindagem Control UI: Autenticação Obrigatória
-    const token = getBearerToken(ctx.req);
+    let token = getBearerToken(ctx.req);
+
+    // UX: Permitir token na URL (query string) para links de 'Login Mágico'
+    if (!token) {
+      const url = new URL(ctx.req.url ?? "/", `http://${ctx.req.headers.host}`);
+      const queryToken = url.searchParams.get("token");
+      if (queryToken) token = queryToken;
+    }
+
     const trustedProxies = config.gateway?.trustedProxies ?? [];
     const authResult = await authorizeGatewayConnect({
       auth: resolvedAuth,

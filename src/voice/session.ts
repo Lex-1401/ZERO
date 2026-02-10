@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { EventEmitter } from "node:events";
-import { VadEngine } from "../../rust-core/index.js";
+import { VadEngine } from "@zero/ratchet";
 
 export type AudioConfig = {
   sampleRate: number;

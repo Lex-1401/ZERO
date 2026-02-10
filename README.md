@@ -140,7 +140,18 @@ Estamos construindo a infraestrutura do amanhã. Contribuições são bem-vindas
 - **Padrões de Docstrings**: Seguimos o padrão JSDoc rigoroso para documentação técnica.
 - **Pilha Moderna**: TS (Node 22), Rust (napi-rs), Vitest, Playwright.
 
-Este repositório é um fork de <https://openclaw.ai/> adaptado por **Leandro Azevedo** para Brasileiros, incluindo funcionalidades e segurança.
+Este repositório é uma evolução do Clawdbot, adaptado e re-arquitetado como **ZERO** por **Leandro Azevedo** para soberania brasileira, incluindo segurança avançada e suporte nativo a hardware local.
+
+### 🛠️ Solução de Problemas Comuns
+
+- **Erro `command not found` após instalação**:
+  Reinicie seu terminal ou rode `source ~/.bashrc` (ou `.zshrc`). Se persistir, use o caminho completo: `pnpm zero`.
+
+- **Acesso Externo (VPS/LAN)**:
+  Por segurança, o ZERO ouve apenas em `localhost`. Para acessar externamente:
+  1. Use um túnel SSH (Recomendado): `ssh -L 18789:localhost:18789 user@vps_ip`
+  2. Ou altere a config `~/.zero/zero.json` para `"bind": "lan"` (Use com cautela!).
+
 
 ---
 

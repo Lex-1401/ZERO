@@ -107,11 +107,46 @@ build_native_modules() {
     fi
 }
 
+    fi
+}
+
+# 4.5 Correção Preventiva do Workspace
+fix_workspace_config() {
+    log_info "Verificando integridade do workspace..."
+    
+    # 1. Garantir pnpm-workspace.yaml correto
+    cat > pnpm-workspace.yaml <<EOF
+packages:
+  - .
+  - ui
+  - rust-core
+  - channels
+  - extensions/*
+EOF
+    log_success "Workspace configurado (rust-core incluído)."
+
+    # 2. Limpar scripts do rust-core para evitar sobrescrita de tipos
+    if [ -f "rust-core/package.json" ]; then
+        node -e '
+        try {
+            const fs = require("fs"); 
+            const p = "rust-core/package.json"; 
+            const j = JSON.parse(fs.readFileSync(p, "utf8")); 
+            j.scripts = {}; 
+            fs.writeFileSync(p, JSON.stringify(j, null, 2));
+            console.log("cleaned");
+        } catch (e) { console.error(e); process.exit(1); }
+        ' >/dev/null 2>&1
+        log_success "Scripts nativos isolados."
+    fi
+}
+
 # 5. Instalação e Build
 install_and_build() {
+    fix_workspace_config
     echo "------------------------------------------"
     log_info "Instalando dependências do ZERO..."
-    if ! pnpm install; then
+    if ! pnpm install --no-frozen-lockfile; then
         log_error "Falha na instalação das dependências."
         exit 1
     fi

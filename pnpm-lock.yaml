@@ -276,6 +276,9 @@ importers:
       '@napi-rs/canvas':
         specifier: ^0.1.88
         version: 0.1.88
+      '@zero/ratchet':
+        specifier: workspace:*
+        version: link:rust-core
       node-llama-cpp:
         specifier: 3.15.0
         version: 3.15.0(typescript@5.9.3)
@@ -473,6 +476,12 @@ importers:
       zero:
         specifier: workspace:*
         version: link:../..
+
+  rust-core:
+    devDependencies:
+      '@napi-rs/cli':
+        specifier: ^3.5.1
+        version: 3.5.1(@emnapi/runtime@1.8.1)(@types/node@25.0.10)(node-addon-api@8.5.0)
 
   ui:
     dependencies:
@@ -9308,6 +9317,7 @@ packages:
   zero@1.1.23:
     resolution: {integrity: sha512-WHI428/eeciCTsKIhNXUTezH6ZpvDGfo6ZuVhSGtSLp8hazNMMtZLShb/RcAfzDIIm9OIsDC+adLoPvmmF4t0Q==}
     hasBin: true
+    bundledDependencies: []
 
   zod-to-json-schema@3.25.1:
     resolution: {integrity: sha512-pM/SU9d3YAggzi6MtR4h7ruuQlqKtad8e9S0fmxcMi+ueAK5Korys/aWcV9LIIHTVbj01NdzxcnXSN+O74ZIVA==}

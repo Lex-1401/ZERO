@@ -1,4 +1,4 @@
-import { triggerPanic, resetPanic, isPanicMode } from "../../rust-core/index.js";
+import { triggerPanic, resetPanic, isPanicMode } from "@zero/ratchet";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { resolveGatewayLockDir, resolveStateDir } from "../config/paths.js";
