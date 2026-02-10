@@ -130,11 +130,32 @@ install_and_build() {
 # 6. Configuração Global
 setup_global() {
     log_info "Configurando comando 'zero' globalmente..."
+
+    # Garantir que o pnpm tenha um diretório global configurado
+    if [ -z "$(pnpm config get global-bin-dir 2>/dev/null)" ] || [ "$(pnpm config get global-bin-dir)" = "undefined" ]; then
+        log_warn "Diretório global do pnpm não configurado. Configurando para ~/.pnpm-global..."
+        mkdir -p "$HOME/.pnpm-global"
+        pnpm config set global-bin-dir "$HOME/.pnpm-global"
+        
+        # Adicionar ao PATH para a sessão atual (best effort)
+        export PATH="$HOME/.pnpm-global:$PATH"
+    fi
+
+    # Tentar linkar
     if ! pnpm link --global >/dev/null 2>&1; then
-        log_warn "Aviso: Falha ao linkar globalmente. Tentando 'pnpm setup'..."
-        pnpm setup || true
-        # Tentar novamente
-        pnpm link --global || log_warn "Nota: Se 'zero onboard' falhar, use 'pnpm zero onboard'"
+        log_warn "Tentativa inicial de link falhou. Executando 'pnpm setup' e forçando configuração..."
+        pnpm setup >/dev/null 2>&1 || true
+        
+        # Forçar configuração novamente caso o setup falhe em definir
+        pnpm config set global-bin-dir "$HOME/Library/pnpm" 2>/dev/null || pnpm config set global-bin-dir "$HOME/.local/share/pnpm"
+        
+        # Tentar novamente com force
+        if pnpm link --global; then
+            log_success "Link global realizado com sucesso na segunda tentativa."
+        else
+            log_error "Falha crítica ao linkar o comando 'zero'."
+            log_warn "Alternativa: Use './node_modules/.bin/zero' ou 'pnpm exec zero'."
+        fi
     else
         log_success "Comando 'zero' linkado globalmente."
     fi
@@ -143,10 +164,15 @@ setup_global() {
 # 7. Finalização
 finish_setup() {
     echo "------------------------------------------"
-    log_success "ZERO está pronto para iniciar!"
-    echo -e "Agora você pode usar o comando abaixo diretamente:"
+    log_success "Instalação finalizada!"
+    
+    echo -e "Para usar o comando 'zero', talvez você precise reiniciar seu terminal ou rodar:"
+    echo -e "${YELLOW}source ~/.zshrc${NC} (ou equivalente)"
+    
+    echo -e "\nTeste o comando agora:"
     echo -e "${BLUE}zero onboard --install-daemon${NC}"
-    echo -e "Ou, se o comando acima não for encontrado:"
+    
+    echo -e "\nSe falhar, use o caminho local:"
     echo -e "${BLUE}pnpm zero onboard --install-daemon${NC}"
 
     # Tentar abrir o dashboard se o gateway já estiver configurado
