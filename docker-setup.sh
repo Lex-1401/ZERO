@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Garantir UTF-8 para evitar erros com caracteres especiais/emojis no Linux
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_FILE="$ROOT_DIR/docker-compose.yml"
 EXTRA_COMPOSE_FILE="$ROOT_DIR/docker-compose.extra.yml"
@@ -10,14 +14,14 @@ HOME_VOLUME_NAME="${ZERO_HOME_VOLUME:-}"
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
-    echo "Missing dependency: $1" >&2
+    echo "Dependência ausente: $1" >&2
     exit 1
   fi
 }
 
 require_cmd docker
 if ! docker compose version >/dev/null 2>&1; then
-  echo "Docker Compose not available (try: docker compose version)" >&2
+  echo "Docker Compose não disponível (tente: docker compose version)" >&2
   exit 1
 fi
 
@@ -165,7 +169,7 @@ upsert_env "$ENV_FILE" \
   ZERO_HOME_VOLUME \
   ZERO_DOCKER_APT_PACKAGES
 
-echo "==> Building Docker image: $IMAGE_NAME"
+echo "==> Construindo imagem Docker: $IMAGE_NAME"
 docker build \
   --build-arg "ZERO_DOCKER_APT_PACKAGES=${ZERO_DOCKER_APT_PACKAGES}" \
   -t "$IMAGE_NAME" \
@@ -173,8 +177,8 @@ docker build \
   "$ROOT_DIR"
 
 echo ""
-echo "==> Onboarding (interactive)"
-echo "When prompted:"
+echo "==> Onboarding (interativo)"
+echo "Quando solicitado:"
 echo "  - Gateway bind: lan"
 echo "  - Gateway auth: token"
 echo "  - Gateway token: $ZERO_GATEWAY_TOKEN"
@@ -184,7 +188,7 @@ echo ""
 docker compose "${COMPOSE_ARGS[@]}" run --rm zero-cli onboard --no-install-daemon
 
 echo ""
-echo "==> Provider setup (optional)"
+echo "==> Configuração de Provedor (opcional)"
 echo "WhatsApp (QR):"
 echo "  ${COMPOSE_HINT} run --rm zero-cli providers login"
 echo "Telegram (bot token):"
@@ -194,16 +198,16 @@ echo "  ${COMPOSE_HINT} run --rm zero-cli providers add --provider discord --tok
 echo "Docs: https://docs.zero.bot/providers"
 
 echo ""
-echo "==> Starting gateway"
+echo "==> Iniciando gateway"
 docker compose "${COMPOSE_ARGS[@]}" up -d zero-gateway
 
 echo ""
-echo "Gateway running with host port mapping."
-echo "Access from tailnet devices via the host's tailnet IP."
-echo "Config: $ZERO_CONFIG_DIR"
+echo "Gateway rodando com mapeamento de porta no host."
+echo "Acesse de dispositivos tailnet via o IP tailnet do host."
+echo "Configuração: $ZERO_CONFIG_DIR"
 echo "Workspace: $ZERO_WORKSPACE_DIR"
 echo "Token: $ZERO_GATEWAY_TOKEN"
 echo ""
-echo "Commands:"
+echo "Comandos:"
 echo "  ${COMPOSE_HINT} logs -f zero-gateway"
 echo "  ${COMPOSE_HINT} exec zero-gateway node dist/index.js health --token \"$ZERO_GATEWAY_TOKEN\""
