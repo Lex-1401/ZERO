@@ -236,17 +236,107 @@
 .sidebar-search {
   margin-bottom: 20px;
   position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-search .search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-search .search-icon svg {
+  width: 14px;
+  height: 14px;
 }
 
 .sidebar-search input {
   width: 100%;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding-left: 30px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding-left: 32px;
+  padding-right: 12px;
   color: var(--text-main);
-  font-size: 12px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  font-family: var(--font-main);
+}
+
+.sidebar-search input:focus {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(var(--accent-blue-rgb), 0.1);
+  outline: none;
+}
+
+.sidebar-search input::placeholder {
+  color: var(--text-dim);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* --- SENTINEL BADGE --- */
+.sentinel-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(16, 185, 129, 0.1);
+  /* Emerald tint */
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 20px;
+  margin-right: 8px;
+  cursor: help;
+  transition: all 0.3s ease;
+}
+
+.sentinel-badge:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+}
+
+.sentinel-badge svg {
+  width: 14px;
+  height: 14px;
+  color: #34d399;
+  /* Emerald 400 */
+  animation: sentinel-pulse 3s infinite ease-in-out;
+}
+
+.sentinel-text {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6ee7b7;
+  /* Emerald 300 */
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@keyframes sentinel-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(52, 211, 153, 0));
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.5));
+  }
+
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(52, 211, 153, 0));
+  }
 }
 
 .nav-group {

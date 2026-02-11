@@ -86,7 +86,8 @@ export function renderApp(state: AppViewState) {
         </div>
 
         <div class="sidebar-search">
-            <input type="text" placeholder="${t("common.search" as any)}" />
+            <div class="search-icon">${icons.search}</div>
+            <input type="text" placeholder="${t("common.search_placeholder" as any) || "Search your digital life..."}" />
         </div>
 
         <nav style="flex: 1; overflow-y: auto;">
@@ -115,7 +116,11 @@ export function renderApp(state: AppViewState) {
             <h1 class="page-title">${titleForTab(state.tab)}</h1>
         </div>
         <div class="topbar-status">
-            <div style="display: flex; align-items: center; gap: 8px; margin-right: 12px;">
+            <div class="sentinel-badge" title="Zero Sentinel Active: Protecting your privacy">
+                ${icons.shield}
+                <span class="sentinel-text">SENTINEL ACTIVE</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-right: 12px; border-left: 1px solid var(--border-subtle); padding-left: 12px;">
                 <div class="status-orb ${state.connected ? "success" : "danger"}"></div>
                 <span class="text-xs font-bold text-muted uppercase tracking-wider">${state.connected ? t("app.online" as any) : t("app.offline" as any)}</span>
             </div>

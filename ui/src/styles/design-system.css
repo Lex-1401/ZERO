@@ -33,6 +33,12 @@
     --color-accent-green: #34c759;
     --color-accent-yellow: #ffcc00;
 
+    /* RGB Components for Alpha Compositing */
+    --accent-blue-rgb: 0, 122, 255;
+    --accent-red-rgb: 255, 59, 48;
+    --accent-green-rgb: 52, 199, 89;
+    --accent-yellow-rgb: 255, 204, 0;
+
     /* Semantic Mappings */
     --bg-main: #161616;
     --bg-sidebar: rgba(45, 45, 45, 0.8);
