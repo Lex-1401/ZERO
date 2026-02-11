@@ -130,7 +130,7 @@ export function renderChat(props: ChatProps) {
   const renderWelcomeStack = () => html`
     <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 1; min-height: 400px; padding: 40px; padding-bottom: 180px;">
       <div class="card--welcome" style="padding: 40px; text-align: center; max-width: 420px; border-radius: var(--radius-xl);">
-          <div style="width: 64px; height: 64px; border-radius: var(--radius-xl); background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--text-main); border: 1px solid rgba(255,255,255,0.1);">
+          <div style="width: 64px; height: 64px; border-radius: var(--radius-xl); background: var(--bg-input); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--text-main); border: 1px solid var(--border-main);">
               ${icons.brain}
           </div>
           <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">${t("chat.welcome.title" as any)}</h2>

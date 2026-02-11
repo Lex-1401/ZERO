@@ -89,7 +89,7 @@ export function renderWhatsAppCard(params: {
                             ${props.whatsappBusy ? html`<span class="animate-spin">${icons.loader}</span> Aguardando...` : "Já Escaneei"}
                         </button>
                     ` : html`
-                        <div style="height: 120px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); background: rgba(255,255,255,0.03); width: 100%; border-radius: 8px; border: 1px dashed var(--border-subtle);">
+                        <div style="height: 120px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); background: var(--bg-surface); width: 100%; border-radius: 8px; border: 1px dashed var(--border-subtle);">
                             ${icons.camera}
                         </div>
                         <div style="text-align: center; margin: 12px 0;">

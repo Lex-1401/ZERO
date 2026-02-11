@@ -267,7 +267,7 @@ input:checked+.toggle-slider:before {
 
 /* --- SEGMENTED CONTROL --- */
 .segmented-control {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 2px;
@@ -296,8 +296,8 @@ input:checked+.toggle-slider:before {
 }
 
 .segmented-control__btn.active {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--bg-surface);
+  color: var(--text-main);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-weight: 600;
 }
@@ -310,16 +310,16 @@ input:checked+.toggle-slider:before {
 
 /* --- PREMIUM CARDS --- */
 .card--welcome {
-  background: rgba(20, 20, 20, 0.4) !important;
+  background: var(--bg-glass) !important;
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid var(--border-main) !important;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2) !important;
 }
 
 .btn--chip {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-subtle) !important;
   transition: all var(--duration-normal) var(--ease-premium);
 }
 
