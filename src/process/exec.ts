@@ -102,11 +102,20 @@ export async function runCommandWithTimeout(
       child.stdin.end();
     }
 
+    const MAX_BUFFER = 10 * 1024 * 1024; // 10MB limit
     child.stdout?.on("data", (d) => {
-      stdout += d.toString();
+      if (stdout.length < MAX_BUFFER) {
+        stdout += d.toString();
+      } else if (!stdout.endsWith("\n[TRUNCATED]")) {
+        stdout += "\n[TRUNCATED]";
+      }
     });
     child.stderr?.on("data", (d) => {
-      stderr += d.toString();
+      if (stderr.length < MAX_BUFFER) {
+        stderr += d.toString();
+      } else if (!stderr.endsWith("\n[TRUNCATED]")) {
+        stderr += "\n[TRUNCATED]";
+      }
     });
     child.on("error", (err) => {
       if (settled) return;

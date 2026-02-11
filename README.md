@@ -32,7 +32,7 @@ O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustent
 
 ---
 
-## ♻️ Origens e Evolução (OpenClaw - https://openclaw.ai/)
+## ♻️ Origens e Evolução (OpenClaw - <https://openclaw.ai/>)
 
 O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **OpenClaw** (anteriormente conhecido como *Clawdbot* e *Moltbot*).
 
@@ -199,12 +199,11 @@ O ZERO não é apenas uma ferramenta; é uma entidade. Você pode moldar sua per
 Para garantir estabilidade e performance:
 
 - **🖥️ Desktop Local (Mac/Windows/Linux)**:
-  - **Mínimo**: 8 GB RAM (O ZERO consome pouco, mas o OS e Browser exigem o restante).
-  - **Recomendado**: 16 GB+ RAM (Para uso fluido com VS Code + Browser + ZERO).
-- **🌐 Servidor / VPS (Cloud)**:
-  - **Mínimo**: 1 vCPU, 1 GB RAM (com Swap), 20 GB SSD.
-  - **Ideal**: 2 vCPUs, 2 GB+ RAM, 40 GB+ SSD.
-  - **Elite**: 4 vCPUs, 4 GB+ RAM (Para automação de navegador e múltiplos agentes).
+  - **OS Suportado**: macOS (Intel/M1/M2/M3), Windows (WSL2 ou Native PowerShell), Linux (**Debian, Ubuntu, Arch, Fedora, RHEL, CentOS**).
+  - **Mínimo**: 8 GB RAM.
+- **🌐 Servidor / VPS / Raspberry Pi (Cloud & Edge)**:
+  - **OS Suportado**: Debian/Ubuntu, Alpine, Raspberry Pi OS (64-bit recomendado).
+  - **Mínimo**: 1 vCPU, 1 GB RAM (com Swap).
 
 ### 📦 Instalação "One-Liner" (Simplificada)
 

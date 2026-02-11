@@ -69,18 +69,25 @@ check_environment() {
     ARCH_TYPE="$(uname -m)"
     log_info "Ambiente detectado: $OS_TYPE ($ARCH_TYPE)"
 
-    # Verificar Memória (Aproximado)
-    if [ "$OS_TYPE" == "Darwin" ]; then
-        RAM_GB=$(sysctl hw.memsize | awk '{print $2/1024/1024/1024}')
-    else
-        RAM_GB=$(free -g | awk '/^Mem:/{print $2}')
+    # Aviso de Root
+    if [ "$EUID" -eq 0 ]; then
+        log_warn "Executando como ROOT."
+        log_warn "Os arquivos de configuracao (~/.zero) pertencerao ao root."
+        log_warn "Se planeja rodar como usuario comum depois, voce tera problemas de permissao."
     fi
 
-    # Se RAM_GB estiver vazio ou inválido, definir como 0 para evitar erro no bc
-    RAM_GB=${RAM_GB:-0}
+    # Verificar Memoria (Aproximado)
+    if [ "$OS_TYPE" == "Darwin" ]; then
+        RAM_BYTES=$(sysctl hw.memsize | awk '{print $2}')
+        RAM_GB=$((RAM_BYTES / 1024 / 1024 / 1024))
+    else
+        RAM_GB=$(free -g 2>/dev/null | awk '/^Mem:/{print $2}' || echo 0)
+    fi
 
-    if (( $(echo "$RAM_GB < 1.0" | bc -l 2>/dev/null || echo 0) )); then
-        log_warn "Atenção: Menos de 1GB de RAM detectado. A compilação pode falhar sem Swap."
+    if [ "$RAM_GB" -lt 1 ]; then
+        log_warn "Atenção: Menos de 1GB de RAM detectado ($RAM_GB GB). A compilação pode falhar sem Swap."
+    else
+        log_success "Memoria: $RAM_GB GB detectados."
     fi
 }
 
@@ -95,7 +102,6 @@ check_node() {
         nvm use 22
     else
         NODE_VERSION=$(node -v | cut -d'v' -f2)
-        # Comparação simples de versão principal
         MAJOR_VER=${NODE_VERSION%%.*}
         if [ "$MAJOR_VER" -lt 22 ]; then
             log_error "Node.js versão $NODE_VERSION detectada. O ZERO requer versão 22 ou superior."
@@ -109,7 +115,7 @@ check_node() {
 check_pnpm() {
     if ! command -v pnpm >/dev/null 2>&1; then
         log_info "Instalando pnpm globalmente..."
-        npm install -g pnpm
+        npm install -g pnpm || sudo npm install -g pnpm
     else
         log_success "pnpm detectado."
     fi
@@ -126,34 +132,11 @@ check_rust() {
     fi
 }
 
-# 1. Detecção de OS e Hardware
-check_environment() {
-    OS_TYPE="$(uname)"
-    ARCH_TYPE="$(uname -m)"
-    log_info "Ambiente detectado: $OS_TYPE ($ARCH_TYPE)"
-
-    # Aviso de Root
-    if [ "$EUID" -eq 0 ]; then
-        log_warn "Executando como ROOT."
-        log_warn "Os arquivos de configuracao (~/.zero) pertencerao ao root."
-        log_warn "Se planeja rodar como usuario comum depois, voce tera problemas de permissao."
-    fi
-
-    # Verificar Memoria (Aproximado)
-    if [ "$OS_TYPE" == "Darwin" ]; then
-        RAM_GB=$(sysctl hw.memsize | awk '{print $2/1024/1024/1024}')
-    else
-        RAM_GB=$(free -g 2>/dev/null | awk '/^Mem:/{print $2}' || echo 0)
-    fi
-
-    # ... (restante do código original)
-}
-
-# 4.1 Verificar Ferramentas de Compilacao (C/C++ & Python)
+# 4.1 Verificar Ferramentas de Compilacao
 check_build_tools() {
     if [ "$(uname)" == "Linux" ]; then
         MISSING_TOOLS=()
-        if ! command -v cc >/dev/null 2>&1; then MISSING_TOOLS+=("build-essential"); fi
+        if ! command -v cc >/dev/null 2>&1; then MISSING_TOOLS+=("build-essential/gcc"); fi
         if ! command -v make >/dev/null 2>&1; then MISSING_TOOLS+=("make"); fi
         if ! command -v python3 >/dev/null 2>&1; then MISSING_TOOLS+=("python3"); fi
 
@@ -163,9 +146,11 @@ check_build_tools() {
             if command -v apt-get >/dev/null 2>&1; then
                 sudo apt-get update && sudo apt-get install -y build-essential python3
             elif command -v apk >/dev/null 2>&1; then
-                apk add build-base python3
+                sudo apk add build-base python3 || apk add build-base python3
             elif command -v yum >/dev/null 2>&1; then
-                sudo yum groupinstall "Development Tools" && sudo yum install -y python3
+                sudo yum groupinstall "Development Tools" -y && sudo yum install -y python3
+            elif command -v dnf >/dev/null 2>&1; then
+                sudo dnf groupinstall "Development Tools" -y && sudo dnf install -y python3
             fi
         else
             log_success "Ferramentas de compilacao prontas."
@@ -177,7 +162,6 @@ build_native_modules() {
     log_info "Verificando módulos nativos..."
     PLATFORM_ARCH="$(node -e 'console.log(`${process.platform}-${process.arch}`)')"
     if [ "$(uname)" == "Linux" ]; then
-        # Detectar libc para Linux
         LIBC=$(ldd --version 2>&1 | grep -q "musl" && echo "musl" || echo "gnu")
         PLATFORM_ARCH="$PLATFORM_ARCH-$LIBC"
     fi
@@ -188,18 +172,14 @@ build_native_modules() {
         (cd rust-core && pnpm install && pnpm build)
         log_success "Módulo nativo compilado."
     else
-        log_success "Módulo nativo já existe."
+        log_success "Módulo nativo pronto ($PLATFORM_ARCH)."
     fi
 }
 
-
-
-# 4.5 Correção Preventiva do Workspace
 fix_workspace_config() {
     log_info "Verificando integridade do workspace..."
-    
-    # 1. Garantir pnpm-workspace.yaml correto
-    cat > pnpm-workspace.yaml <<EOF
+    if [ ! -f "pnpm-workspace.yaml" ]; then
+        cat > pnpm-workspace.yaml <<EOF
 packages:
   - .
   - ui
@@ -207,136 +187,116 @@ packages:
   - channels
   - extensions/*
 EOF
-    log_success "Workspace configurado (rust-core incluído)."
+        log_success "pnpm-workspace.yaml criado."
+    fi
 
-    # 2. Limpar scripts do rust-core para evitar sobrescrita de tipos
     if [ -f "rust-core/package.json" ]; then
         node -e '
         try {
             const fs = require("fs"); 
             const p = "rust-core/package.json"; 
             const j = JSON.parse(fs.readFileSync(p, "utf8")); 
-            j.scripts = {}; 
-            fs.writeFileSync(p, JSON.stringify(j, null, 2));
-            console.log("cleaned");
-        } catch (e) { console.error(e); process.exit(1); }
+            if (j.scripts && Object.keys(j.scripts).length > 0) {
+                j.scripts = {}; 
+                fs.writeFileSync(p, JSON.stringify(j, null, 2));
+                console.log("cleaned");
+            }
+        } catch (e) { process.exit(0); }
         ' >/dev/null 2>&1
-        log_success "Scripts nativos isolados."
     fi
 }
 
-# 5. Instalação e Build
 install_and_build() {
     fix_workspace_config
     echo "------------------------------------------"
     log_info "Instalando dependências do ZERO..."
     if ! pnpm install --no-frozen-lockfile; then
-        log_error "Falha na instalação das dependências."
+        log_error "Falha na instalação. Limpando cache e tentando novamente..."
+        pnpm store prune
+        if ! pnpm install --no-frozen-lockfile; then
+            log_error "Falha critica na instalacao."
+            exit 1
+        fi
+    fi
+
+    log_info "Construindo Interface Altair..."
+    if ! pnpm ui:build; then
+        log_error "Falha na construção da UI. Verifique se o Vite está acessível."
         exit 1
     fi
 
-    log_info "Construindo Interface Altair e Núcleo..."
-    if ! pnpm ui:build; then
-        log_error "Falha na construção da UI."
-        exit 1
-    fi
+    log_info "Construindo Núcleo..."
     if ! pnpm build; then
          log_error "Falha na construção do projeto."
          exit 1
     fi
 }
 
-# 6. Configuração Global
 setup_global() {
     log_info "Configurando comando 'zero' globalmente..."
-
-    # Tenta obter o diretório global atual
-    PNPM_GLOBAL_BIN=$(pnpm config get global-bin-dir 2>/dev/null)
-
-    # Se não estiver configurado ou for undefined, define um padrão seguro
-    if [ -z "$PNPM_GLOBAL_BIN" ] || [ "$PNPM_GLOBAL_BIN" = "undefined" ]; then
-        log_warn "Diretório global do pnpm não configurado."
-        # Tenta rodar o setup primeiro
-        pnpm setup >/dev/null 2>&1 || true
-        
-        # Recarrega a configuração
-        PNPM_GLOBAL_BIN=$(pnpm config get global-bin-dir 2>/dev/null)
-        
-        # Se ainda falhar, força um local manual
-        if [ -z "$PNPM_GLOBAL_BIN" ] || [ "$PNPM_GLOBAL_BIN" = "undefined" ]; then
-             mkdir -p "$HOME/.pnpm-global"
-             pnpm config set global-bin-dir "$HOME/.pnpm-global"
-             PNPM_GLOBAL_BIN="$HOME/.pnpm-global"
-        fi
+    
+    # 1. Definir PNPM_HOME padrão se não existir
+    if [ -z "$PNPM_HOME" ]; then
+        export PNPM_HOME="$HOME/.local/share/pnpm"
+        mkdir -p "$PNPM_HOME"
     fi
+    
+    # 2. Configurar pnpm para usar este diretório
+    pnpm config set global-bin-dir "$PNPM_HOME" 2>/dev/null || true
+    
+    # 3. Garantir que está no PATH da sessão
+    case ":$PATH:" in
+        *":$PNPM_HOME:"*) ;;
+        *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
 
-    # ADICIONA AO PATH DA SESSÃO ATUAL (CRÍTICO)
-    export PATH="$PNPM_GLOBAL_BIN:$PATH"
-    log_info "Usando diretório global: $PNPM_GLOBAL_BIN"
+    # 4. Tentar pnpm setup (resolve shells)
+    pnpm setup >/dev/null 2>&1 || true
 
-    # Tentativa de Link
+    # 5. Linkar
+    log_info "Executando pnpm link --global..."
     if ! pnpm link --global; then
-        log_warn "Link falhou. Tentando forçar configuração..."
-        
-        # Força configuração para um local padrão do sistema se o anterior falhou
-        pnpm config set global-bin-dir "$HOME/Library/pnpm" 2>/dev/null || pnpm config set global-bin-dir "$HOME/.local/share/pnpm"
-        PNPM_GLOBAL_BIN=$(pnpm config get global-bin-dir)
-        export PATH="$PNPM_GLOBAL_BIN:$PATH"
-
-        if pnpm link --global; then
-             log_success "Link global realizado com sucesso (recovery mode)."
-        else
-             log_error "Falha crítica ao linkar o comando 'zero'."
-             log_warn "Certifique-se de que $PNPM_GLOBAL_BIN está no seu PATH."
-        fi
-    else
-        log_success "Comando 'zero' linkado globalmente."
+        log_warn "Link global falhou (possivel problema de permissao)."
+        log_info "Tentando fallback manual..."
+        # Tenta criar um alias ou link simbolico manual se possível
+        mkdir -p "$PNPM_HOME"
+        ln -sf "$(pwd)/dist/index.js" "$PNPM_HOME/zero" 2>/dev/null || true
     fi
+
+    # 6. Persistência de PATH
+    for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile"; do
+        if [ -f "$rc" ] && ! grep -q "PNPM_HOME" "$rc"; then
+            echo -e "\n# pnpm\nexport PNPM_HOME=\"$PNPM_HOME\"\nexport PATH=\"\$PNPM_HOME:\$PATH\"" >> "$rc"
+            log_info "PATH adicionado a $(basename "$rc")"
+        fi
+    done
 }
 
-# 7. Finalização
 finish_setup() {
     echo "------------------------------------------"
-    log_success "Instalação finalizada!"
+    log_success "Instalação concluída com sucesso!"
     
-    echo -e "Para usar o comando 'zero', talvez você precise reiniciar seu terminal ou rodar:"
-    echo -e "${YELLOW}source ~/.zshrc${NC} (ou equivalente)"
-    
-    # Detectar ambiente Container/Docker
+    # Detectar ambiente Docker
     IS_CONTAINER=0
-    if [ -f "/.dockerenv" ] || grep -q "docker\|lxc" /proc/1/cgroup 2>/dev/null; then
+    if [ -f "/.dockerenv" ] || grep -q "docker" /proc/1/cgroup 2>/dev/null; then
         IS_CONTAINER=1
     fi
 
-    echo -e "\nTeste o comando agora:"
+    echo -e "\nPara começar:"
     if [ "$IS_CONTAINER" -eq 1 ]; then
-        echo -e "${BLUE}zero onboard${NC} (depois rode 'zero start')"
+        echo -e "  ${BLUE}zero onboard${NC}"
     else
-        echo -e "${BLUE}zero onboard --install-daemon${NC}"
+        echo -e "  ${BLUE}zero onboard --install-daemon${NC}"
     fi
     
-    echo -e "\nSe falhar, use o caminho local:"
-    if [ "$IS_CONTAINER" -eq 1 ]; then
-        echo -e "${BLUE}pnpm zero onboard${NC}"
-        echo -e "\n${YELLOW}[AVISO] Em containers, instale o Chromium manualmente para usar automacao de browser:${NC}"
-        echo -e "  Debian/Ubuntu: apt install chromium"
-        echo -e "  Alpine: apk add chromium"
-    else
-        echo -e "${BLUE}pnpm zero onboard --install-daemon${NC}"
-    fi
-
-    # Tentar abrir o dashboard se o gateway já estiver configurado
+    echo -e "\nSe o comando 'zero' não for encontrado, execute: ${YELLOW}source ~/.$(basename $SHELL)rc${NC}"
+    
     if [ -f "$HOME/.zero/zero.json" ]; then
-        log_info "Abrindo dashboard..."
-        if [ "$(uname)" == "Darwin" ]; then
-            open http://localhost:18789/control || true
-        else
-            xdg-open http://localhost:18789/control || true
-        fi
+        log_info "Dica: Use 'zero start' para rodar o sistema."
     fi
 }
 
-# --- Execução Principal ---
+# --- Ciclo de Vida ---
 check_environment
 check_node
 check_pnpm

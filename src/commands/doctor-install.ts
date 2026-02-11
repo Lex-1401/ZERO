@@ -35,17 +35,29 @@ export function noteSourceInstallIssues(root: string | null) {
 
   // Verificar módulo nativo (RATCHET)
   const rustCoreDir = path.join(root, "rust-core");
-  const ratchetNode = path.join(rustCoreDir, "ratchet.node");
-  // Procura por qualquer binario ratchet.*.node no rust-core
-  const hasAnyRatchet =
-    fs.existsSync(rustCoreDir) &&
-    fs.readdirSync(rustCoreDir).some((f) => f.startsWith("ratchet") && f.endsWith(".node"));
+  const ratchetFiles = fs.existsSync(rustCoreDir)
+    ? fs.readdirSync(rustCoreDir).filter((f) => f.startsWith("ratchet") && f.endsWith(".node"))
+    : [];
+
+  const hasAnyRatchet = ratchetFiles.length > 0;
 
   if (fs.existsSync(rustCoreDir) && !hasAnyRatchet) {
     warnings.push(
       "- Módulo nativo (rust-core) não compilado. O sistema IRÁ falhar ao iniciar.",
       "  Execute: pnpm build:rust",
     );
+  } else if (hasAnyRatchet) {
+    // Auditoria de Arquitetura: Verifica se o binário corresponde ao ambiente
+    const currentPlatform = `${process.platform}-${process.arch}`;
+    const matchingBinary = ratchetFiles.find((f) => f.includes(currentPlatform));
+
+    if (!matchingBinary && !fs.existsSync(path.join(rustCoreDir, "ratchet.node"))) {
+      warnings.push(
+        `- Módulo nativo encontrado, mas nenhum parece corresponder à sua arquitetura (${currentPlatform}).`,
+        "  Isso ocorre frequentemente ao migrar arquivos entre computadores diferentes.",
+        "  Execute: pnpm build:rust",
+      );
+    }
   }
 
   if (warnings.length > 0) {
