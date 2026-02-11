@@ -13,7 +13,7 @@ import {
   type ResolvedMemorySearchConfig,
 } from "./manager.types.js";
 import { vectorToBlob } from "./manager.db.js";
-import { embedChunksInBatches, runWithConcurrency } from "./manager.embeddings.js";
+import { embedChunksInBatches } from "./manager.embeddings.js";
 import type {
   EmbeddingProvider,
   GeminiEmbeddingClient,
