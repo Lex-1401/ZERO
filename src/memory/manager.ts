@@ -27,13 +27,11 @@ import {
   VECTOR_LOAD_TIMEOUT_MS,
   VECTOR_TABLE,
   SESSION_DIRTY_DEBOUNCE_MS,
-  type MemoryFileEntry,
   type MemoryIndexMeta,
   type MemorySearchResult,
   type MemorySource,
   type MemorySyncProgressState,
   type MemorySyncProgressUpdate,
-  type SessionFileEntry,
   type ResolvedMemorySearchConfig,
 } from "./manager.types.js";
 import {
