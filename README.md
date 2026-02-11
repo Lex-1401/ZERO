@@ -49,18 +49,20 @@ Enquanto outros sistemas te aprisionam em assinaturas ou vendem seus dados, o ZE
 
 ---
 
-## ♻️ Origens e Evolução (OpenCaw)
+## ♻️ Origens e Evolução (OpenClaw)
 
-O ZERO não nasceu no vácuo. Ele é uma evolução direta ("Hard Ford") do **OpenCaw** (anteriormente Clawdbot).
+O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **OpenClaw** (anteriormente conhecido como *Clawdbot* e *Moltbot*).
 
-- **Fundação Original**: OpenCaw/Clawdbot, criado por engenheiros visionários como base para agentes autônomos.
-- **Arquitetura ZERO (Leandro Azevedo)**: O código foi profundamente re-arquitetado e modificado por **Leandro Azevedo** para:
-  - Introduzir o **Zero Sentinel** (Segurança Proativa).
-  - Criar a **Interface Altair** (UX Premium).
-  - Implementar o **Motor Híbrido Rust** (Performance).
-  - Focar na realidade e soberania do usuário brasileiro (LGPD-first).
+- **Fundação Original (2025-2026)**: Criado por **Peter Steinberger**, o OpenClaw estabeleceu o padrão para agentes pessoais locais em TypeScript/Swift, atingindo >100k stars no GitHub. Agradecemos à visão original de Steinberger de criar uma IA que "roda no seu dispositivo".
+  - *Repositório Original*: [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
+- **Aprendizado Contínuo (Issues & Bugs)**:
+  - Monitoramos ativamente as *Issues* do repositório upstream para antecipar problemas. O que falha lá, corrigimos aqui antes mesmo de acontecer.
+- **Divergência Tecnológica ZERO**:
+  - Enquanto o OpenClaw foca em pureza TypeScript/Swift, o **ZERO** adotou uma arquitetura híbrida **Rust + Node.js** para performance crítica.
+  - Introduzimos o **Zero Sentinel** para mitigar riscos de segurança que a versão original não cobria (Firewall de PII e Injeção).
+  - Reconstruímos a UI (Altair) focada em "Sci-Fi Premium" versus a UI utilitária original.
 
-> *Honramos o código que veio antes, enquanto construímos o futuro que precisamos agora.*
+> *Honramos o código que veio antes (Peter Steinberger & Community), enquanto construímos o futuro soberano que precisamos agora.*
 
 ---
 
@@ -264,6 +266,22 @@ O módulo **Zero Sentinel** implementa defesas ativas contra ameaças vetoriais:
 - **Sandbox Isolate**: Execução de ferramentas e navegação em ambientes isolados (Docker/Firecracker) com sanitização de caminhos de arquivos.
 - **Stealth Mode & Lockdown**: Ocultação instantânea de dados sensíveis e congelamento de emergência via `zero panic`.
 - **Local Sovereignty**: Processamento local prioritário, garantindo compliance com LGPD e GDPR por design.
+
+### 🔬 Engenharia de Privacidade (Deep Dive)
+
+*Respondendo à provocação: "Os algoritmos de detecção são realmente eficazes?"*
+
+O **Zero Sentinel** não é apenas um filtro de palavras-chave. Ele opera no nível do kernel agêntico em **Rust** para garantir latência sub-milissegundo:
+
+1. **Detecção de Alta Entropia (Shannon Entropy)**:
+    - Algoritmos tradicionais falham em detectar chaves de API novas ou incomuns. O Sentinel calcula a entropia da string em janelas deslizantes. Se um bloco de texto parece "matematicamente aleatório" (como uma chave privada `sk-abc123...`), ele é incinerado antes de tocar o log ou o prompt.
+2. **Regex Nativa (Rust `regex` crate)**:
+    - Compilação AOT (Ahead-Of-Time) de padrões complexos para CPF, CNPJ e Cartões de Crédito. O custo de sanitizar 1MB de texto é desprezível, permitindo que *tudo* seja auditado em tempo real sem "lag" na conversa.
+3. **O Trade-off Autonomia vs. Inteligência Coletiva**:
+    - O ZERO rejeita a premissa de que a inteligência exige telemetria centralizada.
+    - **Modelo Mental**: Utilizamos o "conhecimento coletivo congelado" (o LLM pré-treinado) e o especializamos com o "contexto soberano vivo" (seu RAG local). Você não precisa enviar seus dados para treinar a IA dos outros; a IA vem treinada para servir os *seus* dados.
+
+> *Segurança não é uma feature. É o estado padrão.*
 
 ---
 
