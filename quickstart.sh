@@ -52,7 +52,13 @@ setup_global() {
              log_warn "Para usar o ZERO, voce devera usar o caminho completo."
              return 1
         fi
-    fi
+    # Tenta tornar persistente (melhor esforco)
+    for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile"; do
+        if [ -f "$rc" ] && ! grep -q "$PNPM_HOME" "$rc"; then
+            echo -e "\n# ZERO - pnpm global path\nexport PNPM_HOME=\"$PNPM_HOME\"\nexport PATH=\"\$PNPM_HOME:\$PATH\"" >> "$rc"
+            log_info "PATH adicionado permanentemente a $(basename "$rc")"
+        fi
+    done
     
     log_success "Comando 'zero' linkado globalmente."
 }
@@ -117,6 +123,53 @@ check_rust() {
         source "$HOME/.cargo/env"
     else
         log_success "Rust detectado."
+    fi
+}
+
+# 1. Detecção de OS e Hardware
+check_environment() {
+    OS_TYPE="$(uname)"
+    ARCH_TYPE="$(uname -m)"
+    log_info "Ambiente detectado: $OS_TYPE ($ARCH_TYPE)"
+
+    # Aviso de Root
+    if [ "$EUID" -eq 0 ]; then
+        log_warn "Executando como ROOT."
+        log_warn "Os arquivos de configuracao (~/.zero) pertencerao ao root."
+        log_warn "Se planeja rodar como usuario comum depois, voce tera problemas de permissao."
+    fi
+
+    # Verificar Memoria (Aproximado)
+    if [ "$OS_TYPE" == "Darwin" ]; then
+        RAM_GB=$(sysctl hw.memsize | awk '{print $2/1024/1024/1024}')
+    else
+        RAM_GB=$(free -g 2>/dev/null | awk '/^Mem:/{print $2}' || echo 0)
+    fi
+
+    # ... (restante do código original)
+}
+
+# 4.1 Verificar Ferramentas de Compilacao (C/C++ & Python)
+check_build_tools() {
+    if [ "$(uname)" == "Linux" ]; then
+        MISSING_TOOLS=()
+        if ! command -v cc >/dev/null 2>&1; then MISSING_TOOLS+=("build-essential"); fi
+        if ! command -v make >/dev/null 2>&1; then MISSING_TOOLS+=("make"); fi
+        if ! command -v python3 >/dev/null 2>&1; then MISSING_TOOLS+=("python3"); fi
+
+        if [ ${#MISSING_TOOLS[@]} -ne 0 ]; then
+            log_warn "Ferramentas de compilacao ausentes: ${MISSING_TOOLS[*]}"
+            log_info "Tentando instalar dependencias de build..."
+            if command -v apt-get >/dev/null 2>&1; then
+                sudo apt-get update && sudo apt-get install -y build-essential python3
+            elif command -v apk >/dev/null 2>&1; then
+                apk add build-base python3
+            elif command -v yum >/dev/null 2>&1; then
+                sudo yum groupinstall "Development Tools" && sudo yum install -y python3
+            fi
+        else
+            log_success "Ferramentas de compilacao prontas."
+        fi
     fi
 }
 
@@ -288,6 +341,7 @@ check_environment
 check_node
 check_pnpm
 check_rust
+check_build_tools
 build_native_modules
 install_and_build
 setup_global

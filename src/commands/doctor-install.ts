@@ -33,6 +33,21 @@ export function noteSourceInstallIssues(root: string | null) {
     );
   }
 
+  // Verificar módulo nativo (RATCHET)
+  const rustCoreDir = path.join(root, "rust-core");
+  const ratchetNode = path.join(rustCoreDir, "ratchet.node");
+  // Procura por qualquer binario ratchet.*.node no rust-core
+  const hasAnyRatchet =
+    fs.existsSync(rustCoreDir) &&
+    fs.readdirSync(rustCoreDir).some((f) => f.startsWith("ratchet") && f.endsWith(".node"));
+
+  if (fs.existsSync(rustCoreDir) && !hasAnyRatchet) {
+    warnings.push(
+      "- Módulo nativo (rust-core) não compilado. O sistema IRÁ falhar ao iniciar.",
+      "  Execute: pnpm build:rust",
+    );
+  }
+
   if (warnings.length > 0) {
     note(warnings.join("\n"), "Instalação");
   }
