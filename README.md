@@ -197,14 +197,6 @@ Para garantir estabilidade e performance:
 
 Escolha o método que melhor se adapta ao seu ambiente:
 
-#### 🖥️ Local (Mac/Linux/Windows WSL)
-
-Ideal para desenvolvedores e uso diário no computador pessoal.
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
-```
-
 #### 🍎 Instalação Rápida (Mac/Linux)
 
 Ideal para uso pessoal imediato. Abra seu terminal e cole:
