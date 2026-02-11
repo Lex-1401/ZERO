@@ -207,7 +207,7 @@ export async function runOnboardingWizard(
       bindRaw === "custom" ||
       bindRaw === "tailnet"
         ? bindRaw
-        : "loopback";
+        : "lan";
 
     let authMode: GatewayAuthChoice = "token";
     if (
