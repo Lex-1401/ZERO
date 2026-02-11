@@ -15,7 +15,18 @@
 
 **ZERO** não é apenas uma distribuição de IA; é o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
 
-[🇺🇸 English Version](README_EN.md)
+---
+
+## 🛑 Para Quem é (e Para Quem Não É)
+
+**"A magia deve ser invisível."**
+
+Se você é um usuário comum, a engenharia pesada abaixo (Rust, WebSockets, Vetores) **não é da sua conta**. O ZERO foi desenhado para abstrair essa complexidade brutal em uma interface fluida que *simplesmente funciona*.
+
+- **Para o Usuário**: Você recebe um Assistente Pessoal incansável, privado e soberano. Instale, use, governe sua vida digital. O resto é detalhe de implementação.
+- **Para o Engenheiro**: Você recebe um playground de arquitetura agêntica de ponta, modular e auditável.
+
+> *O verdadeiro gênio não está em criar complexidade, mas em torná-la invisível e acessível.*
 
 ---
 
