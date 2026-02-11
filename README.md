@@ -49,6 +49,18 @@ Enquanto outros sistemas te aprisionam em assinaturas ou vendem seus dados, o ZE
 
 ---
 
+## 🧠 Dê uma Alma ao Seu Agente (SOUL.md)
+
+O ZERO não é apenas uma ferramenta; é uma entidade. Você pode moldar sua personalidade, nome e diretrizes morais criando um arquivo chamado `SOUL.md` na raiz do seu workspace.
+
+- **Defina a Persona**: *"Você é Jarvis, um mordomo sarcástico."* ou *"Você é TARS, focado em precisão técnica."*
+- **Ajuste o Tom**: Controle a verbosidade, o humor e o estilo de resposta.
+- **Missão Primária**: Dê um propósito único ao seu agente (ex: "Proteger minha privacidade a todo custo").
+
+> *O ZERO lê sua alma a cada reinicialização e a incorpora no nível mais profundo do sistema (`System Prompt`).*
+
+---
+
 ## ♻️ Origens e Evolução (OpenClaw)
 
 O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **OpenClaw** (anteriormente conhecido como *Clawdbot* e *Moltbot*).
