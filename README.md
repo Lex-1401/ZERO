@@ -193,9 +193,19 @@ Ideal para desenvolvedores e uso diário no computador pessoal.
 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
-#### 🌐 VPS / Nuvem (Docker)
+#### 🍎 Instalação Rápida (Mac/Linux)
 
-Ideal para manter o ZERO online 24/7 com isolamento total.
+Ideal para uso pessoal imediato. Abra seu terminal e cole:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
+```
+
+*(O script fará tudo: instalar dependências, configurar o Rust e iniciar o assistente de onboarding)*
+
+#### 🌐 Nuvem / Servidor (Docker)
+
+Ideal para manter seu ZERO online 24/7.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh | bash
