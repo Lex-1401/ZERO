@@ -27,6 +27,44 @@ O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados p
 
 ---
 
+## 🛸 Interface Altair: O Console de Comando
+
+A **Interface Altair** é o nome oficial do console de gerenciamento baseado em navegador (web-based) do ecossistema ZERO.
+
+Enquanto o **Gateway** opera nos bastidores (como o motor/cérebro do sistema), a **Altair** é a "cabine de comando" visual que você utiliza para interagir com ele.
+
+### 1. Centro de Orquestração (Hub)
+
+A Altair permite que você visualize e controle todos os módulos do sistema em um único lugar, sem precisar usar apenas a linha de comando (CLI). Nela você gerencia:
+
+- **Contextos (Sessões)**: Onde conversas e memórias são visualizadas e persistidas.
+- **Conexões (Canais)**: Integrações com Telegram, Discord, Slack, WhatsApp, etc.
+- **Capacidades (Skills)**: Extensões e plugins que dão novos "poderes" ao seu agente.
+- **Hardware & Presença**: Telemetria em tempo real de dispositivos conectados e instâncias ativas.
+
+### 2. Estética "Premium" e Futurista
+
+O design da Altair é inspirado em sistemas de telemetria avançada (Sci-Fi UI), utilizando uma estética de "painel de missão" ou "ponte de comando".
+
+**Por que "Interface Altair"?**
+Altair é a estrela mais brilhante da constelação de Águia (Aquila). Historicamente, é uma das estrelas usadas pelos navegadores para encontrar seu caminho. No ecossistema ZERO, a Interface Altair cumpre este papel: ela é o ponto de luz e referência que permite ao usuário "navegar" com segurança e clareza pelo vasto e complexo oceano de processos cognitivos e dados da IA.
+
+### 3. Ponte de Telemetria (Realtime)
+
+Ela funciona consumindo a API do Gateway via **WebSockets**. Isso significa que as informações que você vê (como uso de memória, status do motor de inferência e logs de eventos) são atualizadas em tempo real, permitindo diagnóstico instantâneo da saúde do sistema.
+
+### 4. Laboratório e Debug
+
+Dentro da Altair existe o **Playground (Laboratório)**, onde você pode:
+
+- Testar respostas da IA em ambiente controlado.
+- Verificar o raciocínio do agente (CoT - Chain of Thought).
+- Auditar a segurança das interações e testar ferramentas (tools).
+
+> *Se o ZERO é o sistema operacional da inteligência, a Altair é o monitor e o painel de controle que torna essa inteligência tangível e operável.*
+
+---
+
 ## 🎨 Galeria de Interface (Experiência Altair)
 
 Visualize o **ZERO** em operação. Estes são registros reais da interface de controle unificada:
