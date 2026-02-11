@@ -12,8 +12,8 @@ services:
       - ${ZERO_CONFIG_DIR}:/home/node/.zero
       - ${ZERO_WORKSPACE_DIR}:/home/node/zero
     ports:
-      - "127.0.0.1:${ZERO_GATEWAY_PORT:-18789}:18789"
-      - "127.0.0.1:${ZERO_BRIDGE_PORT:-18790}:18790"
+      - "${ZERO_GATEWAY_PORT:-18789}:18789"
+      - "${ZERO_BRIDGE_PORT:-18790}:18790"
     init: true
     restart: unless-stopped
     command:

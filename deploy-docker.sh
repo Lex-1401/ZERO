@@ -21,7 +21,7 @@ cd "$MKDIR_PATH"
 # 3. Baixar Docker Compose se não existir
 if [ ! -f "docker-compose.yml" ]; then
     echo "📥 Baixando manifesto Docker Compose..."
-    curl -sSL https://raw.githubusercontent.com/zero/zero/main/docker-compose.yml -o docker-compose.yml
+    curl -sSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/docker-compose.yml -o docker-compose.yml
 fi
 
 # 4. Configurar Ambiente (.env)
