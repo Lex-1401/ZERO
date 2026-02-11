@@ -103,8 +103,11 @@ A Altair permite que você visualize e controle todos os módulos do sistema em 
 
 O design da Altair é inspirado em sistemas de telemetria avançada (Sci-Fi UI), utilizando uma estética de "painel de missão" ou "ponte de comando".
 
+**Mas não se assuste:**
+Apesar da aparência sofisticada, a usabilidade é **familiar e intuitiva**, similar ao seu mensageiro favorito (WhatsApp/Telegram). A complexidade visual é opcional e modular; você vê apenas o que precisa ver.
+
 **Por que "Interface Altair"?**
-Altair é a estrela mais brilhante da constelação de Águia (Aquila). Historicamente, é uma das estrelas usadas pelos navegadores para encontrar seu caminho. No ecossistema ZERO, a Interface Altair cumpre este papel: ela é o ponto de luz e referência que permite ao usuário "navegar" com segurança e clareza pelo vasto e complexo oceano de processos cognitivos e dados da IA.
+Altair é a estrela mais brilhante da constelação de Águia (Aquila). Historicamente, é uma das estrelas usadas pelos navegadores para encontrar seu caminho. No ecossistema ZERO, a Interface Altair cumpre este papel: ela é o ponto de luz e referência que permite ao usuário "navegar" com segurança e clareza.
 
 ### 3. Ponte de Telemetria (Realtime)
 
