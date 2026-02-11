@@ -30,6 +30,40 @@ Se você é um usuário comum, a engenharia pesada abaixo (Rust, WebSockets, Vet
 
 ---
 
+## ⚡️ O Que o ZERO Faz Por Você?
+
+Enquanto outros sistemas te aprisionam em assinaturas ou vendem seus dados, o ZERO te liberta:
+
+1. **Soberania de Comunicação**:
+    - **Unifica** WhatsApp, Telegram, Discord e Slack em um único fluxo de consciência.
+    - *Exemplo*: *"Resuma todas as mensagens de trabalho das últimas 2 horas e me diga apenas o que exige ação imediata."*
+2. **Memória Pessoal Infinita (RAG Local)**:
+    - Indexa seus arquivos locais (PDFs, Docs, Código) sem enviá-los para a nuvem.
+    - *Exemplo*: *"Encontre aquele contrato que assinei em 2023 sobre 'prestação de serviços' e me diga a cláusula de rescisão."*
+3. **Execução de Tarefas Reais (Agentic)**:
+    - Não apenas "fala", ele **faz**. Agenda reuniões, envia e-mails, controla o terminal.
+    - *Exemplo*: *"Verifique meu calendário, cancele a reunião das 15h e avise o time por Slack que estou focado no deploy."*
+4. **Codificação Autônoma**:
+    - Atua como um Engenheiro de Software Sênior que conhece todo o seu codebase local.
+    - *Exemplo*: *"Analise os logs de erro do projeto X e proponha um fix para o vazamento de memória."*
+
+---
+
+## ♻️ Origens e Evolução (OpenCaw)
+
+O ZERO não nasceu no vácuo. Ele é uma evolução direta ("Hard Ford") do **OpenCaw** (anteriormente Clawdbot).
+
+- **Fundação Original**: OpenCaw/Clawdbot, criado por engenheiros visionários como base para agentes autônomos.
+- **Arquitetura ZERO (Leandro Azevedo)**: O código foi profundamente re-arquitetado e modificado por **Leandro Azevedo** para:
+  - Introduzir o **Zero Sentinel** (Segurança Proativa).
+  - Criar a **Interface Altair** (UX Premium).
+  - Implementar o **Motor Híbrido Rust** (Performance).
+  - Focar na realidade e soberania do usuário brasileiro (LGPD-first).
+
+> *Honramos o código que veio antes, enquanto construímos o futuro que precisamos agora.*
+
+---
+
 ## 🏛️ Filosofia e Princípios de Engenharia
 
 O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados por rigorosos padrões de arquitetura de software:
