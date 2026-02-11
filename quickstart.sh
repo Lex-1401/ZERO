@@ -25,13 +25,13 @@ log_error() { echo -e "${RED}[ERR]  $1${NC}"; }
 echo -e "${BLUE}ZERO - Iniciando Instalacao Inteligente${NC}"
 echo "------------------------------------------"
 
-# ... (Previous functions check_node, etc - updating logs)
+# ... (rest of checks)
 
 # 6. Configuração Global
 setup_global() {
     log_info "Configurando comando 'zero' globalmente..."
 
-    # Define local padrao seguro se nao existir
+    # Define local padrao seguro se nao existir (evita erro de pnpm global não encontrado)
     export PNPM_HOME="$HOME/.local/share/pnpm"
     mkdir -p "$PNPM_HOME"
     export PATH="$PNPM_HOME:$PATH"
@@ -48,7 +48,8 @@ setup_global() {
         # Tenta novamente
         if ! pnpm link --global; then
              log_error "Falha critica ao linkar o comando 'zero'."
-             log_warn "Adicione manualmente ao seu PATH: $PNPM_HOME"
+             log_warn "O link global falhou, mas a instalacao local funcionou."
+             log_warn "Para usar o ZERO, voce devera usar o caminho completo."
              return 1
         fi
     fi
