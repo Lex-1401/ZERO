@@ -32,7 +32,7 @@ O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustent
 
 ---
 
-## ♻️ Origens e Evolução (OpenClaw)
+## ♻️ Origens e Evolução (OpenClaw - https://openclaw.ai/)
 
 O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **OpenClaw** (anteriormente conhecido como *Clawdbot* e *Moltbot*).
 
