@@ -13,26 +13,43 @@
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.2.0-blue?style=for-the-badge" alt="Version"></a>
 </p>
 
-**ZERO** não é apenas uma distribuição de IA; é o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
+**ZERO** busca o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Pensado e projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
+
+---
+
+## ∅ Manifesto ZERO
+
+**ZERO não é apenas um nome. É um conceito vivo.**
+
+- **Vazio que contém o Infinito**: Como um agente de IA com acesso total ao seu hardware, o ZERO parece invisível, mas é ilimitado. É a poesia algorítmica de um sistema que não pede atenção, mas entrega liberdade.
+- **Ponto de Origem**: Tudo começa do zero. Representa o "Ponto Zero" ou a "Origem". É a busca pela **Latência Zero**, pela **Confiança Zero (Zero Trust)** e pelo retorno à soberania total, onde o controle começa e termina no usuário, sem intermediários. É o reset necessário — o "zero-bala" — para uma computação verdadeiramente pessoal.
+- **Símbolo de Subversão**: O zero que quebra sistemas e anula pressupostos. É a neurodivergência aplicada ao código: o que a sociedade diz que "não se encaixa" é, na verdade, o fundamento de tudo.
+- **Humildade Radical**: Um ato de defesa e ofensa simultâneos. "Você disse que sou ninguém? Agora vejo que sou tudo."
+
+> **"O que você não pode ver trabalhando é o que está fazendo funcionar."**
+
+O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustentando sua nova infraestrutura soberana. Quando perguntarem "o que é isso?", não explique. Mostre funcionando.
+
+### ∅ Conclusão do Manifesto
 
 ---
 
 ## 🛑 Para Quem é (e Para Quem Não É)
 
-**"A magia deve ser invisível."**
+**"A magia deve ser "invisível"."**
 
-Se você é um usuário comum, a engenharia pesada abaixo (Rust, WebSockets, Vetores) **não é da sua conta**. O ZERO foi desenhado para abstrair essa complexidade brutal em uma interface fluida que *simplesmente funciona*.
+Se você é um usuário comum, você não perecisa se preocupar com a engenharia pesada (Rust, WebSockets, Vetores). O ZERO também foi desenhado para abstrair essa complexidade brutal em uma interface fluida que *simplesmente funciona*.
 
 - **Para o Usuário**: Você recebe um Assistente Pessoal incansável, privado e soberano. Instale, use, governe sua vida digital. O resto é detalhe de implementação.
-- **Para o Engenheiro**: Você recebe um playground de arquitetura agêntica de ponta, modular e auditável.
+- **Para o Engenheiro**: Você recebe um playground de arquitetura agêntica de ponta, modular e auditável para se "divertir".
 
-> *O verdadeiro gênio não está em criar complexidade, mas em torná-la invisível e acessível.*
+> *Não podemos abstrarir a complexidade, mas podemos torná-la invisível.*
 
 ---
 
 ## ⚡️ O Que o ZERO Faz Por Você?
 
-Enquanto outros sistemas te aprisionam em assinaturas ou vendem seus dados, o ZERO te liberta:
+O ZERO te liberta:
 
 1. **Soberania de Comunicação**:
     - **Unifica** WhatsApp, Telegram, Discord e Slack em um único fluxo de consciência.
@@ -78,7 +95,19 @@ O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **Ope
   - Introduzimos o **Zero Sentinel** para mitigar riscos de segurança que a versão original não cobria (Firewall de PII e Injeção).
   - Reconstruímos a UI (Altair) focada em "Sci-Fi Premium" versus a UI utilitária original.
 
-> *Honramos o código que veio antes (Peter Steinberger & Community), enquanto construímos o futuro soberano que precisamos agora.*
+> *Honramos o código que veio antes (Peter Steinberger & Community), enquanto construímos o futuro que precisamos e almejamos no agora.*
+
+---
+
+## 📐 Blueprints & Anatomia Sistêmica
+
+O ZERO é projetado com rigor de engenharia aeronáutica. Abaixo, o Blueprint da nossa arquitetura agêntica:
+
+<p align="center">
+  <img src="assets/blueprint-arch.png" alt="ZERO Architecture Blueprint">
+</p>
+
+*Esquema do Córtex Agêntico: Integração entre o Motor Rust e a Interface Altair.*
 
 ---
 
@@ -87,8 +116,8 @@ O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **Ope
 O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados por rigorosos padrões de arquitetura de software:
 
 1. **Soberania Local-First (O "Google" Pessoal Ético)**:
-   - *Potencial de Escala Exponencial*: O Google escala construindo Datacenters gigantescos; o **ZERO** escala utilizando o hardware ocioso de bilhões de dispositivos pessoais.
-   - *Visão*: O Google organizou a web pública; o ZERO organiza sua vida privada (Arquivos, Chats, Finanças) usando `sqlite-vec` localmente.
+   - *Potencial de Escala Exponencial*: O Google escala construindo Datacenters gigantescos; o **ZERO** pretende escalar utilizando o hardware ocioso de bilhões de dispositivos pessoais.
+   - *Visão*: O Google organizou a web pública; o ZERO organiza sua vida privada (Arquivos, Chats, Compromissos, Finanças) usando `sqlite-vec` localmente.
    - *Índice de Vida Ético*: Indexamos sua existência digital para *você*, e só para você. Diferente da nuvem, onde "escalar" significa "vigiar mais", aqui escalar a inteligência não custa sua privacidade.
 2. **Arquitetura Híbrida de Performance**: Um núcleo de performance crítica escrito em **Rust** (gerenciando VAD, telemetria de densidade e criptografia) integra-se perfeitamente com a flexibilidade do **TypeScript** para orquestração de canais.
 3. **Segurança de Elite (OWASP LLM Top 10)**: O ZERO é governado pelo **Zero Sentinel**, um firewall de IA proativo que mitiga Injeção de Prompt, vazamento de PII e alucinações via validação forçada de Chain-of-Thought (CoT) e auditoria de segredos via engine Rust nativa.
@@ -103,9 +132,12 @@ A **Interface Altair** é o nome oficial do console de gerenciamento baseado em 
 
 Enquanto o **Gateway** opera nos bastidores (como o motor/cérebro do sistema), a **Altair** é a "cabine de comando" visual que você utiliza para interagir com ele.
 
+**Por que "Interface Altair"?**
+Altair é a estrela mais brilhante da constelação de Águia (Aquila). Historicamente, é uma das estrelas usadas pelos navegadores para encontrar seu caminho. No ecossistema ZERO, a Interface Altair cumpre este papel: ela é o ponto de luz e referência que permite ao usuário "navegar" com segurança e clareza.
+
 ### 1. Centro de Orquestração (Hub)
 
-A Altair permite que você visualize e controle todos os módulos do sistema em um único lugar, sem precisar usar apenas a linha de comando (CLI). Nela você gerencia:
+A Altair permite que você visualize e controle todos os módulos do sistema em um único lugar, sem precisar usar linha de comando (CLI). Nela você gerencia:
 
 - **Contextos (Sessões)**: Onde conversas e memórias são visualizadas e persistidas.
 - **Conexões (Canais)**: Integrações com Telegram, Discord, Slack, WhatsApp, etc.
@@ -118,9 +150,6 @@ O design da Altair é inspirado em sistemas de telemetria avançada (Sci-Fi UI),
 
 **Mas não se assuste:**
 Apesar da aparência sofisticada, a usabilidade é **familiar e intuitiva**, similar ao seu mensageiro favorito (WhatsApp/Telegram). A complexidade visual é opcional e modular; você vê apenas o que precisa ver.
-
-**Por que "Interface Altair"?**
-Altair é a estrela mais brilhante da constelação de Águia (Aquila). Historicamente, é uma das estrelas usadas pelos navegadores para encontrar seu caminho. No ecossistema ZERO, a Interface Altair cumpre este papel: ela é o ponto de luz e referência que permite ao usuário "navegar" com segurança e clareza.
 
 ### 3. Ponte de Telemetria (Realtime)
 
@@ -156,20 +185,6 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
 | :--- |
 | ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
 | *Extensões prontas para expandir os poderes da sua IA.* |
-
----
-
-## 📐 Blueprints & Anatomia Sistêmica
-
-O ZERO é projetado com rigor de engenharia aeronáutica. Abaixo, o Blueprint da nossa arquitetura agêntica:
-
-<p align="center">
-  <img src="assets/blueprint-arch.png" alt="ZERO Architecture Blueprint">
-</p>
-
-*Esquema do Córtex Agêntico: Integração entre o Motor Rust e a Interface Altair.*
-
----
 
 ---
 
@@ -254,23 +269,6 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh
 | `src/realtime/` | **Percepção**: Motor multimodal de baixa latência (WebSocket) para streaming de áudio/vídeo e roteamento semântico. |
 | `src/voice/` | **Voz Nativa**: Módulo dedicado para processamento e síntese de voz, permitindo chamadas e comandos por áudio. |
 | `src/roles/` | **Governança**: Sistema de permissões granulado (Levels 1-5) para controle de acesso agêntico. |
-
----
-
-## ∅ Manifesto ZERO
-
-**ZERO não é apenas um nome. É um conceito vivo.**
-
-- **Vazio que contém o Infinito**: Como um agente de IA com acesso total ao seu hardware, o ZERO parece invisível, mas é ilimitado. É a poesia algorítmica de um sistema que não pede atenção, mas entrega liberdade.
-- **Ponto de Origem**: Tudo começa do zero. Representa o "Ponto Zero" ou a "Origem". É a busca pela **Latência Zero**, pela **Confiança Zero (Zero Trust)** e pelo retorno à soberania total, onde o controle começa e termina no usuário, sem intermediários. É o reset necessário — o "zero-bala" — para uma computação verdadeiramente pessoal.
-- **Símbolo de Subversão**: O zero que quebra sistemas e anula pressupostos. É a neurodivergência aplicada ao código: o que a sociedade diz que "não se encaixa" é, na verdade, o fundamento de tudo.
-- **Humildade Radical**: Um ato de defesa e ofensa simultâneos. "Você disse que sou ninguém? Agora vejo que sou tudo."
-
-> **"O que você não pode ver trabalhando é o que está fazendo funcionar."**
-
-O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustentando sua nova infraestrutura soberana. Quando perguntarem "o que é isso?", não explique. Mostre funcionando.
-
-### ∅ Conclusão do Manifesto
 
 ---
 
