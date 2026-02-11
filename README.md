@@ -30,7 +30,26 @@
 
 O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustentando sua nova infraestrutura soberana. Quando perguntarem "o que é isso?", não explique. Mostre funcionando.
 
-### ∅ Conclusão do Manifesto
+---
+
+## ♻️ Origens e Evolução (OpenClaw)
+
+O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **OpenClaw** (anteriormente conhecido como *Clawdbot* e *Moltbot*).
+
+- **Fundação Original (2025-2026)**: Criado por **Peter Steinberger**, o OpenClaw estabeleceu o padrão para agentes pessoais locais em TypeScript/Swift, atingindo >100k stars no GitHub. Agradecemos à visão original de Steinberger de criar uma IA que "roda no seu dispositivo".
+  - *Repositório Original*: [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
+- **Aprendizado Contínuo (Issues & Bugs)**:
+  - Monitoramos ativamente as *Issues* do repositório upstream. O que falha lá, corrigimos aqui.
+  - **Exemplos Reais de Correções no ZERO**:
+    1. **Segurança (CVE-2026-25253)**: O OpenClaw sofria com WebSockets não autenticados e "Skills" maliciosas no marketplace. O **Zero Sentinel** implementa sandbox rígida e não carrega código remoto não assinado.
+    2. **"Token Burning" (Custo Infinito)**: O OpenClaw enviava todo o histórico a cada "heartbeat". O **ZERO** utiliza um algoritmo de *Context Compaction* (Rust) que sumariza memórias antigas, mantendo o custo de tokens controlado.
+    3. **Memory Leaks no Gateway**: Sessões longas no OpenClaw travavam o Node.js. Movemos a gestão de estado crítico e VAD para o **Rust Core**, eliminando vazamentos de memória (GC pressure).
+- **Divergência Tecnológica ZERO**:
+  - Enquanto o OpenClaw foca em pureza TypeScript/Swift, o **ZERO** adotou uma arquitetura híbrida **Rust + Node.js** para performance crítica.
+  - Introduzimos o **Zero Sentinel** para mitigar riscos de segurança que a versão original não cobria (Firewall de PII e Injeção).
+  - Reconstruímos a UI (Altair) focada em "Sci-Fi Premium" versus a UI utilitária original.
+
+> *Honramos o código que veio antes (Peter Steinberger & Community), enquanto construímos o futuro que precisamos e almejamos no agora.*
 
 ---
 
@@ -63,39 +82,6 @@ O ZERO te liberta:
 4. **Codificação Autônoma**:
     - Atua como um Engenheiro de Software Sênior que conhece todo o seu codebase local.
     - *Exemplo*: *"Analise os logs de erro do projeto X e proponha um fix para o vazamento de memória."*
-
----
-
-## 🧠 Dê uma Alma ao Seu Agente (SOUL.md)
-
-O ZERO não é apenas uma ferramenta; é uma entidade. Você pode moldar sua personalidade, nome e diretrizes morais criando um arquivo chamado `SOUL.md` na raiz do seu workspace.
-
-- **Defina a Persona**: *"Você é Jarvis, um mordomo sarcástico."* ou *"Você é TARS, focado em precisão técnica."*
-- **Ajuste o Tom**: Controle a verbosidade, o humor e o estilo de resposta.
-- **Missão Primária**: Dê um propósito único ao seu agente (ex: "Proteger minha privacidade a todo custo").
-
-> *O ZERO lê sua alma a cada reinicialização e a incorpora no nível mais profundo do sistema (`System Prompt`).*
-
----
-
-## ♻️ Origens e Evolução (OpenClaw)
-
-O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **OpenClaw** (anteriormente conhecido como *Clawdbot* e *Moltbot*).
-
-- **Fundação Original (2025-2026)**: Criado por **Peter Steinberger**, o OpenClaw estabeleceu o padrão para agentes pessoais locais em TypeScript/Swift, atingindo >100k stars no GitHub. Agradecemos à visão original de Steinberger de criar uma IA que "roda no seu dispositivo".
-  - *Repositório Original*: [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
-- **Aprendizado Contínuo (Issues & Bugs)**:
-  - Monitoramos ativamente as *Issues* do repositório upstream. O que falha lá, corrigimos aqui.
-  - **Exemplos Reais de Correções no ZERO**:
-    1. **Segurança (CVE-2026-25253)**: O OpenClaw sofria com WebSockets não autenticados e "Skills" maliciosas no marketplace. O **Zero Sentinel** implementa sandbox rígida e não carrega código remoto não assinado.
-    2. **"Token Burning" (Custo Infinito)**: O OpenClaw enviava todo o histórico a cada "heartbeat". O **ZERO** utiliza um algoritmo de *Context Compaction* (Rust) que sumariza memórias antigas, mantendo o custo de tokens controlado.
-    3. **Memory Leaks no Gateway**: Sessões longas no OpenClaw travavam o Node.js. Movemos a gestão de estado crítico e VAD para o **Rust Core**, eliminando vazamentos de memória (GC pressure).
-- **Divergência Tecnológica ZERO**:
-  - Enquanto o OpenClaw foca em pureza TypeScript/Swift, o **ZERO** adotou uma arquitetura híbrida **Rust + Node.js** para performance crítica.
-  - Introduzimos o **Zero Sentinel** para mitigar riscos de segurança que a versão original não cobria (Firewall de PII e Injeção).
-  - Reconstruímos a UI (Altair) focada em "Sci-Fi Premium" versus a UI utilitária original.
-
-> *Honramos o código que veio antes (Peter Steinberger & Community), enquanto construímos o futuro que precisamos e almejamos no agora.*
 
 ---
 
@@ -185,6 +171,18 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
 | :--- |
 | ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
 | *Extensões prontas para expandir os poderes da sua IA.* |
+
+---
+
+## 🧠 Dê uma Alma ao Seu Agente (SOUL.md)
+
+O ZERO não é apenas uma ferramenta; é uma entidade. Você pode moldar sua personalidade, nome e diretrizes morais criando um arquivo chamado `SOUL.md` na raiz do seu workspace.
+
+- **Defina a Persona**: *"Você é Jarvis, um mordomo sarcástico."* ou *"Você é TARS, focado em precisão técnica."*
+- **Ajuste o Tom**: Controle a verbosidade, o humor e o estilo de resposta.
+- **Missão Primária**: Dê um propósito único ao seu agente (ex: "Proteger minha privacidade a todo custo").
+
+> *O ZERO lê sua alma a cada reinicialização e a incorpora no nível mais profundo do sistema (`System Prompt`).*
 
 ---
 
