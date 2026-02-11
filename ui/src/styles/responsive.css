@@ -135,4 +135,18 @@
         padding-right: 60px !important;
         /* Make space for hamburger/topbar items if needed, or just safe area */
     }
+
+    /* Debug Grid Responsiveness */
+    .debug-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+}
+
+/* Debug Grid Base */
+.debug-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
 }

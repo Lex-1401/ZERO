@@ -161,12 +161,14 @@ export type AppViewState = {
   logsLastFetchAt: number | null;
   logsLimit: number;
   logsMaxBytes: number;
+  sidebarCollapsed: boolean;
   sidebarOpen: boolean;
   mobileNavOpen: boolean;
   sidebarContent: string | null;
   sidebarError: string | null;
   splitRatio: number;
   toggleMobileNav: () => void;
+  toggleSidebar: () => void;
   chatStreamStartedAt: number | null;
   compactionStatus: any;
   graphLoading: boolean;
@@ -261,4 +263,10 @@ export type AppViewState = {
   handleNostrProfileSave: () => Promise<void>;
   handleNostrProfileImport: () => Promise<void>;
   handleNostrProfileToggleAdvanced: () => void;
+  updateStatusLoading: boolean;
+  updateStatus: import("./types").UpdateCheckResult | null;
+  updateStatusError: string | null;
+  isUpdating: boolean;
+  handleLoadUpdateStatus: (opts?: { fetchGit?: boolean }) => Promise<void>;
+  handleRunSoftwareUpdate: () => Promise<void>;
 };

@@ -58,7 +58,7 @@ export function renderDebug(props: DebugProps) {
     return html`
     <div class="animate-fade-in">
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="debug-grid">
             
             <div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">

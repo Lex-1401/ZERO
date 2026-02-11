@@ -267,9 +267,9 @@ input:checked+.toggle-slider:before {
 
 /* --- SEGMENTED CONTROL --- */
 .segmented-control {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.15);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: 2px;
   display: inline-flex;
   gap: 2px;
@@ -296,37 +296,38 @@ input:checked+.toggle-slider:before {
 }
 
 .segmented-control__btn.active {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
 }
 
 @media (prefers-color-scheme: dark) {
   .segmented-control__btn.active {
-    background: #636366;
-    /* Simulate native selected state */
+    background: rgba(255, 255, 255, 0.15);
   }
 }
 
 /* --- PREMIUM CARDS --- */
 .card--welcome {
-  background: rgba(30, 30, 30, 0.6) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+  background: rgba(20, 20, 20, 0.4) !important;
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5) !important;
 }
 
 .btn--chip {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
   transition: all var(--duration-normal) var(--ease-premium);
 }
 
 .btn--chip:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* --- CALLOUTS --- */

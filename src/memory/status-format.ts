@@ -1,6 +1,9 @@
 export type Tone = "ok" | "warn" | "muted";
 
-export function resolveMemoryVectorState(vector: { enabled: boolean; available?: boolean }): {
+export function resolveMemoryVectorState(vector: {
+  enabled: boolean;
+  available?: boolean | null;
+}): {
   tone: Tone;
   state: "ready" | "unavailable" | "disabled" | "unknown";
 } {

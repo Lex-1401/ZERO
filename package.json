@@ -249,10 +249,21 @@
   },
   "pnpm": {
     "minimumReleaseAge": 2880,
+    "onlyBuiltDependencies": [
+      "@lydell/node-pty",
+      "@matrix-org/matrix-sdk-crypto-nodejs",
+      "@napi-rs/canvas",
+      "@whiskeysockets/baileys",
+      "authenticate-pam",
+      "esbuild",
+      "node-llama-cpp",
+      "protobufjs",
+      "sharp"
+    ],
     "overrides": {
-      "@sinclair/typebox": "0.34.47",
+      "@sinclair/typebox": "0.34.48",
       "hono": "4.11.4",
-      "tar": "7.5.4"
+      "tar": "7.5.7"
     }
   },
   "vitest": {

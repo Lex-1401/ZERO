@@ -123,4 +123,49 @@ export const updateHandlers: GatewayRequestHandlers = {
       undefined,
     );
   },
+  "update.status": async ({ respond, params }) => {
+    const timeoutMsRaw = (params as { timeoutMs?: unknown }).timeoutMs;
+    const timeoutMs =
+      typeof timeoutMsRaw === "number" && Number.isFinite(timeoutMsRaw)
+        ? Math.max(1000, Math.floor(timeoutMsRaw))
+        : 3500;
+    const fetchGit = (params as { fetchGit?: unknown }).fetchGit === true;
+
+    try {
+      const root =
+        (await resolveZEROPackageRoot({
+          moduleUrl: import.meta.url,
+          argv1: process.argv[1],
+          cwd: process.cwd(),
+        })) ?? process.cwd();
+
+      const update = await runGatewayUpdateCheckLogic({
+        root,
+        timeoutMs,
+        fetchGit,
+      });
+
+      respond(true, update, undefined);
+    } catch (err) {
+      respond(
+        false,
+        undefined,
+        errorShape(ErrorCodes.INTERNAL_ERROR, `failed to check update status: ${String(err)}`),
+      );
+    }
+  },
 };
+
+async function runGatewayUpdateCheckLogic(params: {
+  root: string;
+  timeoutMs: number;
+  fetchGit: boolean;
+}) {
+  const { checkUpdateStatus } = await import("../../infra/update-check.js");
+  return await checkUpdateStatus({
+    root: params.root,
+    timeoutMs: params.timeoutMs,
+    fetchGit: params.fetchGit,
+    includeRegistry: true,
+  });
+}

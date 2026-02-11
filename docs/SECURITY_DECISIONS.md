@@ -191,11 +191,99 @@ if (encryptionToken) {
 
 ---
 
+### 5. Sanitização de Media Paths em Message Actions (Sandbox Bypass)
+
+**Arquivo:** `src/infra/outbound/message-action-runner.ts`
+
+**Contexto:**
+As ações de envio de mensagem/anexos permitiam que caminhos de arquivo fossem passados diretamente. Sem validação, um agente em sandbox poderia solicitar o envio de arquivos sensíveis do host (ex: `/etc/passwd`) se o processo do Gateway tivesse permissão de leitura.
+
+**Risco:**
+
+- **Severidade:** 🔴 CRÍTICA
+- **Tipo:** Sandbox Escape / Path Traversal (CWE-22)
+- **Exploitabilidade:** MÉDIA (requer controle do prompt do agente)
+
+**Decisão:**
+✅ **Validar e sanitizar todos os caminhos de mídia contra o `sandboxRoot`**
+
+**Justificativa:**
+
+1. **Isolamento Total:** Garante que agentes rodando em modo sandbox (Docker/Firecracker) não acessem o filesystem do host via Gateway.
+2. **Defesa em Profundidade:** Mesmo que o sandbox falhe, o runner de mensagens bloqueia o acesso externo.
+
+**Implementação:**
+
+```typescript
+// src/infra/outbound/message-action-runner.ts
+const normalizedMediaUrls = await normalizeSandboxMediaList({
+  values: mergedMediaUrls,
+  sandboxRoot: input.sandboxRoot,
+});
+```
+
+---
+
+### 6. Infraestrutura de Segurança PNPM (onlyBuiltDependencies)
+
+**Arquivo:** `package.json`
+
+**Contexto:**
+Ataques de supply chain via scripts nativos de instalação (`preinstall`, `postinstall`) são comuns em ecossistemas NPM.
+
+**Decisão:**
+✅ **Implementar Whitelist de Dependências com Built Scripts**
+
+**Justificativa:**
+
+1. **Supply Chain Security:** Bloqueia automaticamente scripts de instalação de novas dependências a menos que sejam explicitamente aprovadas.
+2. **Controle Estrito:** Apenas módulos essenciais e auditados (como node-pty, sqlite-vec, sharp) têm permissão para rodar binários nativos.
+
+**Implementação:**
+
+```json
+"pnpm": {
+  "onlyBuiltDependencies": [
+    "@lydell/node-pty",
+    "sharp",
+    "node-llama-cpp",
+    ...
+  ]
+}
+```
+
+---
+
+### 7. Refatoração Arquitetural ClearCode (Limite de 500 Linhas)
+
+**Arquivos:** `src/memory/manager.ts`, `src/infra/outbound/message-action-runner.ts`
+
+**Contexto:**
+Arquivos excessivamente grandes (2000+ linhas) dificultam a auditoria de segurança, facilitam a inserção de side-effects maliciosos e aumentam a probabilidade de bugs de lógica.
+
+**Decisão:**
+✅ **Refatorar módulos críticos para cumprir o limite de 500 linhas**
+
+**Justificativa:**
+
+1. **Auditabilidade:** Módulos menores e focados são mais fáceis de revisar em busca de vulnerabilidades.
+2. **Separação de Preocupações:** Isola lógica de banco de dados, embeddings e orquestração, reduzindo o raio de impacto de falhas.
+3. **Rigor Técnico:** Estabelece um padrão de qualidade que impede o crescimento desordenado da base de código.
+
+**Implementação:**
+
+- ✅ Extração de tipos para `*.types.ts`
+- ✅ Deorganização de helpers para `*.helpers.ts` ou arquivos modulares específicos (ex: `manager.db.ts`, `manager.sync.ts`)
+- ✅ Redução do `MemoryIndexManager` de 2186 para **448 linhas**.
+- ✅ Redução do `MessageActionRunner` de ~1500 para **492 linhas**.
+
+---
+
 ## 🛡️ ARQUITETURA DE SEGURANÇA
 
 ### Camadas de Defesa
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  LAYER 1: INPUT VALIDATION                                  │
 │  - SecurityGuard.detectPromptInjection()                    │
@@ -281,7 +369,7 @@ if (encryptionToken) {
 | LLM02 | Insecure Output | ✅ | CoT validation, PII scan |
 | LLM03 | Training Data Poisoning | ✅ | RAG sanitization |
 | LLM04 | Model DoS | ✅ | Rate limiting, timeouts |
-| LLM05 | Supply Chain | ⚠️ | Dependências transitivas |
+| LLM05 | Supply Chain | ✅ | pnpm onlyBuiltDependencies, overrides |
 | LLM06 | Sensitive Info Disclosure | ✅ | 16 PII patterns, redaction |
 | LLM07 | Insecure Plugin Design | ✅ | Plugin SDK, sandboxing |
 | LLM08 | Excessive Agency | ✅ | Tool approval, AST validation |
@@ -367,6 +455,6 @@ if (encryptionToken) {
 
 ---
 
-**Última Atualização:** 2026-02-04 20:23:41 BRT  
+**Última Atualização:** 2026-02-10 13:40:00 BRT  
 **Responsável:** Equipe de Segurança ZERO  
 **Revisão:** Trimestral

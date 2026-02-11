@@ -115,7 +115,7 @@ Guia de execução (runbook): [acesso remoto no macOS](/platforms/mac/remote).
 Versão curta: **mantenha o Gateway apenas no loopback**, a menos que tenha certeza de que precisa de um bind.
 
 - **Loopback + SSH/Tailscale Serve** é o padrão mais seguro (sem exposição pública).
-- **Vínculos não-loopback** (`lan`/`tailnet`/`custom`, ou `auto` quando o loopback estiver indisponível) devem usar tokens/senhas de autenticação.
+- **Vínculos não-loopback** (`lan`/`tailnet`/`custom`, ou `auto` quando o loopback estiver indisponível) devem usar tokens/senhas de autenticação. O modo `"bind": "lan"` é recomendado para **Docker/VPS** onde o acesso via IP externo é necessário.
 - `gateway.remote.token` serve **apenas** para chamadas CLI remotas — ele **não** habilita a autenticação local.
 - `gateway.remote.tlsFingerprint` fixa o certificado TLS remoto ao usar `wss://`.
 - **Tailscale Serve** pode autenticar via cabeçalhos de identidade quando `gateway.auth.allowTailscale: true`. Defina como `false` se preferir o uso de tokens/senhas.

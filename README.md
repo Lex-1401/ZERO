@@ -7,7 +7,7 @@
 [![Status do CI](https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge)](https://github.com/zero/zero/actions/workflows/ci.yml?branch=main)
 [![License](https://img.shields.io/badge/License-MIT-000000?style=for-the-badge)](LICENSE)
 [![QI](https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge)](https://github.com/zero/zero)
-[![Version](https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/release-v0.2.0-blue?style=for-the-badge)](CHANGELOG.md)
 
 **ZERO** não é apenas uma distribuição de IA; é o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
 
@@ -21,8 +21,9 @@ O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados p
 
 1. **Soberania Local-First (LLMs Locais)**: Todos os vetores de dados, modelos de pensamento e logs de auditoria residem no seu diretório `~/.zero`. Com suporte nativo a **Ollama** e execução de modelos como **Llama 3.2**, o ZERO garante sua autonomia mesmo sem conexão com a nuvem.
 2. **Arquitetura Híbrida de Performance**: Um núcleo de performance crítica escrito em **Rust** (gerenciando VAD, telemetria de densidade e criptografia) integra-se perfeitamente com a flexibilidade do **TypeScript** para orquestração de canais.
-3. **Segurança Zero Trust (Cripta de Auditoria)**: Cada ação agêntica é registrada em logs permanentes e cifrados. O acesso é governado por políticas de menor privilégio (RBAC) e pareamento de dispositivos via mDNS/Bonjour.
-4. **Autonomia Agêntica Proativa**: Através do **Nudge Engine**, o sistema transcende a reatividade, antecipando necessidades baseadas em contexto e operando em loops de deliberação de alta fidelidade.
+3. **Segurança de Elite (OWASP LLM Top 10)**: O ZERO é governado pelo **Zero Sentinel**, um firewall de IA proativo que mitiga Injeção de Prompt, vazamento de PII e alucinações via validação forçada de Chain-of-Thought (CoT) e auditoria de segredos via engine Rust nativa.
+4. **Arquitetura ClearCode**: Rigor técnico com imposição de limites de complexidade (máximo de 500 linhas por arquivo). Garantimos que o sistema seja modular e auditável; recentemente refatoramos os módulos críticos `MemoryIndexManager` e `MessageActionRunner` para cumprir este rigor.
+5. **Autonomia Agêntica Proativa**: Através do **Nudge Engine**, o sistema transcende a reatividade, antecipando necessidades baseadas em contexto e operando em loops de deliberação de alta fidelidade.
 
 ---
 
@@ -30,15 +31,32 @@ O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados p
 
 Visualize o **ZERO** em operação. Estes são registros reais da interface de controle unificada:
 
-| Chat & Assistente (Interface Altair) | Catálogo de Habilidades (Marketplace) |
+| Chat & Assistente (Interface Altair) | Hub de Controle (Telemetria) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/real-chat-ui.png) | ![Skills Catalog](assets/screenshots/real-skills-catalog-ui.png) |
-| *Modo Foco com comandos proativos e sugestões inteligentes.* | *Extensões prontas para expandir os poderes da sua IA.* |
+| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
+| *Modo Foco com comandos proativos e sugestões inteligentes.* | *Visão consolidada da saúde do sistema e conexões.* |
 
-| Configurações de Aparência e Idioma | Núcleo do Sistema (Config) |
+| Núcleo do Sistema (Aparência) | Atualização de Software (Updates) |
 | :--- | :--- |
-| ![Appearance Settings](assets/screenshots/real-appearance-ui.png) | ![Core Settings](assets/screenshots/real-settings-ui.png) |
-| *Customização total: Temas dinâmicos e localização PT-BR nativa.* | *Controle granular de cada parâmetro do seu Sistema.* |
+| ![Core Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
+| *Controle granular de cada parâmetro do seu Sistema.* | *Gerenciamento proativo de versões e integridade via Git/PNPM.* |
+
+| Catálogo de Habilidades (Marketplace) |
+| :--- |
+| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
+| *Extensões prontas para expandir os poderes da sua IA.* |
+
+---
+
+## 📐 Blueprints & Anatomia Sistêmica
+
+O ZERO é projetado com rigor de engenharia aeronáutica. Abaixo, o Blueprint da nossa arquitetura agêntica:
+
+![ZERO Architecture Blueprint](assets/blueprint-arch.png)
+
+*Esquema do Córtex Agêntico: Integração entre o Motor Rust e a Interface Altair.*
+
+---
 
 ---
 
@@ -119,6 +137,25 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh
 | `ui/` | **Plano de Controle**: Interface Altair desenvolvida com estética premium. |
 | `skills/` | **Habilidades**: Extensões isoladas que expandem as capacidades cognitivas do sistema. |
 | `src/realtime/` | **Percepção**: Motor multimodal de baixa latência (WebSocket) para streaming de áudio/vídeo e roteamento semântico. |
+| `src/voice/` | **Voz Nativa**: Módulo dedicado para processamento e síntese de voz, permitindo chamadas e comandos por áudio. |
+| `src/roles/` | **Governança**: Sistema de permissões granulado (Levels 1-5) para controle de acesso agêntico. |
+
+---
+
+## ∅ Manifesto ZERO
+
+**ZERO não é apenas um nome. É um conceito vivo.**
+
+- **Vazio que contém o Infinito**: Como um agente de IA com acesso total ao seu hardware, o ZERO parece invisível, mas é ilimitado. É a poesia algorítmica de um sistema que não pede atenção, mas entrega liberdade.
+- **Ponto de Origem**: Tudo começa do zero. Representa o "Ponto Zero" ou a "Origem". É a busca pela **Latência Zero**, pela **Confiança Zero (Zero Trust)** e pelo retorno à soberania total, onde o controle começa e termina no usuário, sem intermediários. É o reset necessário — o "zero-bala" — para uma computação verdadeiramente pessoal.
+- **Símbolo de Subversão**: O zero que quebra sistemas e anula pressupostos. É a neurodivergência aplicada ao código: o que a sociedade diz que "não se encaixa" é, na verdade, o fundamento de tudo.
+- **Humildade Radical**: Um ato de defesa e ofensa simultâneos. "Você disse que sou ninguém? Agora vejo que sou tudo."
+
+> **"O que você não pode ver trabalhando é o que está fazendo funcionar."**
+
+O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustentando sua nova infraestrutura soberana. Quando perguntarem "o que é isso?", não explique. Mostre funcionando.
+
+### ∅ Conclusão do Manifesto
 
 ---
 
@@ -126,10 +163,14 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh
 
 O módulo **Zero Sentinel** implementa defesas ativas contra ameaças vetoriais:
 
-- **LLM Security Guardrails**: Detecção nativa de injeção de prompt via Chain-of-Thought (CoT).
-- **Redação de PII**: Identificação e ocultação automática de informações sensíveis em tempo real.
-- **Panic Protocol**: Interrupção imediata de todos os processos agênticos via `zero panic`.
-- **Local LLM Sovereignty**: Integração otimizada com Ollama para modelos Llama 3.x e DeepSeek.
+![Zero Sentinel Artwork](assets/sentinel-artwork.png)
+
+- **LLM Security Guardrails (OWASP Top 10)**: Mitigação ativa de Prompt Injection, Indirect Injection e Jailbreaks.
+- **Protocolo CoT com Self-Correction**: O modelo é forçado a deliberar em blocos `<think>`, garantindo lógica antes da ação.
+- **Firewall de PII & Secrets**: Escaneamento em tempo real (engine Rust) de CPFs, CNPJs, Emails e chaves de API.
+- **Sandbox Isolate**: Execução de ferramentas e navegação em ambientes isolados (Docker/Firecracker) com sanitização de caminhos de arquivos.
+- **Stealth Mode & Lockdown**: Ocultação instantânea de dados sensíveis e congelamento de emergência via `zero panic`.
+- **Local Sovereignty**: Processamento local prioritário, garantindo compliance com LGPD e GDPR por design.
 
 ---
 
@@ -150,8 +191,7 @@ Este repositório é uma evolução do Clawdbot, adaptado e re-arquitetado como 
 - **Acesso Externo (VPS/LAN)**:
   Por segurança, o ZERO ouve apenas em `localhost`. Para acessar externamente:
   1. Use um túnel SSH (Recomendado): `ssh -L 18789:localhost:18789 user@vps_ip`
-  2. Ou altere a config `~/.zero/zero.json` para `"bind": "lan"` (Use com cautela!).
-
+  2. Verifique a config `~/.zero/zero.json`. O modo `"bind": "lan"` permite conexões externas via `0.0.0.0` (Use com cautela em ambientes públicos!).
 
 ---
 

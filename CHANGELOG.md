@@ -2,6 +2,35 @@
 
 Docs: <https://docs.zero.bot>
 
+## 2026.2.11 (v0.2.0)
+
+### Highlights
+
+- **Nova Identidade Visual (Mascote & Favicon)**: Lançamento do mascote e favicon "Fluid Cyan", trazendo uma estética minimalista, premium e futurista para a Interface Altair.
+- **UX: Barra Lateral Colapsável**: Implementação do colapso inteligente da barra lateral (sidebar) com persistência de estado, otimizando o espaço de trabalho em telas menores.
+- **Acesso Remoto Facilitado**: Configuração simplificada para acessos externos (VPS/Docker) via modo `"bind": "lan"`, permitindo conexões seguras em 0.0.0.0.
+- **Branding Unificado**: Atualização de todos os ativos visuais para o novo sistema de design Altair Cyan.
+
+### Changes
+
+- UI: Adição do botão de colapso da sidebar integrado à área do mascote.
+- Gateway: Suporte documentado para bind em todas as interfaces de rede (`lan`).
+- Docs: Revisão completa do README.md e guias de acesso remoto.
+
+## 2026.2.10
+
+### Highlights
+
+- **Refatoração Majoritária ClearCode**: Re-arquitetura completa dos módulos `MemoryIndexManager` e `MessageActionRunner` para cumprir o limite estrito de 500 linhas por arquivo.
+  - `MemoryIndexManager` reduzido de **2.186** para **448** linhas.
+  - `MessageActionRunner` reduzido de **~1.500** para **492** linhas.
+  - Melhoria significativa na auditabilidade, testabilidade e separação de preocupações (Database, Sync, Search, Sessions agora em módulos dedicados).
+
+### Changes
+
+- Core: Extração da lógica de Banco de Dados, Sincronização e Busca do Memory Manager para utilitários isolados.
+- Infra: Decomposição do Message Action Runner em helpers de sanitização e validação de sandbox.
+
 ## 2026.2.9
 
 ### Highlights

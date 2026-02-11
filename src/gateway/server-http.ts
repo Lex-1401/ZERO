@@ -290,10 +290,26 @@ export function createGatewayHttpServer(opts: {
     let token = getBearerToken(ctx.req);
 
     // UX: Permitir token na URL (query string) para links de 'Login Mágico'
+    let fromQuery = false;
     if (!token) {
       const url = new URL(ctx.req.url ?? "/", `http://${ctx.req.headers.host}`);
       const queryToken = url.searchParams.get("token");
-      if (queryToken) token = queryToken;
+      if (queryToken) {
+        token = queryToken;
+        fromQuery = true;
+      }
+    }
+
+    // Fallback: Cookie de sessão (necessário para assets como .js/.css)
+    if (!token) {
+      const cookie = ctx.req.headers.cookie;
+      if (cookie) {
+        const match = cookie.match(/(?:^|; )(?:zero_token|ZERO_TOKEN)=([^;]*)/i);
+        if (match) {
+          const raw = match[1] ?? "";
+          token = raw.toLowerCase().startsWith("bearer ") ? raw.slice(7).trim() : raw.trim();
+        }
+      }
     }
 
     const trustedProxies = config.gateway?.trustedProxies ?? [];
@@ -307,6 +323,14 @@ export function createGatewayHttpServer(opts: {
     if (!authResult.ok) {
       sendUnauthorized(ctx.res);
       return true;
+    }
+
+    // Se autenticado por query string, fixamos o cookie para assets subsequentes
+    if (fromQuery && token) {
+      ctx.res.setHeader("Set-Cookie", [
+        `zero_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`,
+        `ZERO_TOKEN=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`,
+      ]);
     }
 
     if (

@@ -39,6 +39,7 @@
     --bg-surface: rgba(50, 50, 50, 0.5);
     --bg-surface-raised: rgba(60, 60, 60, 0.7);
     --bg-glass: rgba(30, 30, 30, 0.6);
+    --bg-input: rgba(255, 255, 255, 0.05);
 
     --text-main: #ffffff;
     --text-muted: #a1a1a1;
@@ -49,6 +50,7 @@
     --border-strong: rgba(255, 255, 255, 0.2);
 
     --accent-blue: var(--color-accent-blue);
+    --accent-red: var(--color-accent-red);
     --accent-main: var(--accent-blue);
     --accent-subtle: rgba(0, 122, 255, 0.15);
     --success: var(--color-accent-green);
@@ -105,6 +107,7 @@
     --bg-surface: #ffffff;
     --bg-surface-raised: #ffffff;
     --bg-glass: rgba(255, 255, 255, 0.7);
+    --bg-input: rgba(0, 0, 0, 0.05);
 
     --text-main: #000000;
     --text-muted: #86868b;

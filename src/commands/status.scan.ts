@@ -159,7 +159,7 @@ export async function scanStatus(
         } catch {}
         const status = manager.status();
         await manager.close().catch(() => {});
-        return { agentId, ...status };
+        return { ...status };
       })();
       progress.tick();
 

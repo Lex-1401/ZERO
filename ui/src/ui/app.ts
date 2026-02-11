@@ -86,6 +86,7 @@ import {
   saveConfig,
   updateConfigFormValue,
 } from "./controllers/config";
+import { loadUpdateStatus, runSoftwareUpdate } from "./controllers/update";
 import { loadSkills, updateSkillEnabled, saveSkillApiKey, installSkill, updateSkillEdit } from "./controllers/skills";
 import { translateSkillReport } from "./controllers/skill-translator";
 import { t } from "./i18n";
@@ -138,6 +139,7 @@ export class ZEROApp extends LitElement {
   @state() password = this.settings.token || "";
   @state() tab: Tab = "chat";
   @state() onboarding = resolveOnboardingMode();
+  @state() sidebarCollapsed = this.settings.navCollapsed ?? false;
   @state() connected = false;
   @state() theme: ThemeMode = this.settings.theme ?? "system";
   @state() themeResolved: ResolvedTheme = "dark";
@@ -200,6 +202,11 @@ export class ZEROApp extends LitElement {
 
   toggleMobileNav() {
     this.mobileNavOpen = !this.mobileNavOpen;
+  }
+
+  toggleSidebar() {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+    this.applySettings({ ...this.settings, navCollapsed: this.sidebarCollapsed });
   }
 
   @state() nodesLoading = false;
@@ -410,6 +417,10 @@ export class ZEROApp extends LitElement {
   @state() logsLimit = 500;
   @state() logsMaxBytes = 250_000;
   @state() logsAtBottom = true;
+  @state() updateStatusLoading = false;
+  @state() updateStatus: import("./types").UpdateCheckResult | null = null;
+  @state() updateStatusError: string | null = null;
+  @state() isUpdating = false;
 
   client: GatewayBrowserClient | null = null;
   private chatScrollFrame: number | null = null;
@@ -704,6 +715,12 @@ export class ZEROApp extends LitElement {
   handleLoadMissionControl() { return loadMissionControl(this as unknown as AppViewState); }
   handleDebugCall() { return callDebugMethod(this as unknown as AppViewState); }
   handleRunUpdate() { return runUpdate(this as unknown as AppViewState); }
+  handleLoadUpdateStatus(opts?: { fetchGit?: boolean }) {
+    return loadUpdateStatus(this as unknown as AppViewState, opts);
+  }
+  handleRunSoftwareUpdate() {
+    return runSoftwareUpdate(this as unknown as AppViewState);
+  }
   setPassword(next: string) { this.password = next; }
   setSessionKey(next: string) { this.sessionKey = next; }
   setChatMessage(next: string) { this.chatMessage = next; }

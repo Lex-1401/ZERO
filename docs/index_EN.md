@@ -81,13 +81,20 @@ Most operations flow through the **Gateway** (`zero gateway`), a single long-run
 
 ### Interface Gallery (Live UI) 📸
 
-| Main Chat | Skill Catalog |
+| Chat & Assistant (Altair Interface) | Control Hub (Telemetry) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/real-chat-ui.png) | ![Skills Catalog](assets/screenshots/real-skills-catalog-ui.png) |
+| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
+| *Focus Mode with proactive commands and smart suggestions.* | *Consolidated view of system health and connections.* |
 
-| Appearance Setup | Core (Config) |
+| System Core (Appearance) | Software Update (Updates) |
 | :--- | :--- |
-| ![Appearance Settings](assets/screenshots/real-appearance-ui.png) | ![Core Settings](assets/screenshots/real-settings-ui.png) |
+| ![Appearance Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
+| *Premium refinement of theme and language selectors.* | *System integrity and version manager.* |
+
+| Skill Catalog |
+| :--- |
+| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
+| *Extensions to expand your AI's powers.* |
 
 ---
 
@@ -95,9 +102,9 @@ Most operations flow through the **Gateway** (`zero gateway`), a single long-run
 - 🛡️ **Zero Sentinel** — *Native Security Engine*. Proactive prompt injection detection, PII redaction (CPF/CNPJ/SSN), and secret scanning.
 - 🚀 **DevOps Suite** — Native integrations with Vercel, Netlify, Supabase, Firebase, Railway.
 - 💡 **Nudge Engine** — *Proactive AI*. Suggests smart actions based on context (e.g., "Friday afternoon?").
-- 🧠 **Brain V2** — 3D memory visualization + Semantic Garbage Collector.
+- 🧠 **Brain V2** — 3D memory visualization + Semantic Garbage Collector. Recently refactored for **ClearCode Architecture** (full modularity).
 - 🦞 **Zero Mascot** — The new face of your personal AI.
-- 🕸️ **Knowledge Graph** — Persistent and navigable vector mesh.
+- 🕸 **Knowledge Graph** — Persistent and navigable vector mesh in SQLite.
 - 🛡️ **Audit Dashboard** — Real-time security logs.
 - 🎤 **Voice notes** — Optional transcription hook.
 - 🖥️ **WebChat + macOS app** — Local UI + menu bar companion.

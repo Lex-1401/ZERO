@@ -1,5 +1,5 @@
 {
-  "id": "google-cloud-auth-auth",
+  "id": "google-cloud-auth",
   "providers": [
     "google-cloud-auth"
   ],

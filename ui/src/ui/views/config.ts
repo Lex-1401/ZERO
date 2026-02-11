@@ -18,7 +18,10 @@ export type ConfigProps = {
   loading: boolean;
   saving: boolean;
   applying: boolean;
-  updating: boolean;
+  updateRunning: boolean;
+  updateStatus: import("../types").UpdateCheckResult | null;
+  updateStatusLoading: boolean;
+  updateStatusError: string | null;
   connected: boolean;
   schema: unknown | null;
   schemaLoading: boolean;
@@ -39,6 +42,8 @@ export type ConfigProps = {
   onSave: () => void;
   onApply: () => void;
   onUpdate: () => void;
+  onRefreshUpdateStatus: (opts?: { fetchGit?: boolean }) => void;
+  onRunSoftwareUpdate: () => void;
   theme: string;
   language: string;
   onThemeChange: (theme: any) => void;
@@ -206,7 +211,8 @@ export function renderConfig(props: ConfigProps) {
 
   const allSections = [
     { key: "appearance", label: t("settings.appearance") },
-    ...availableSections,
+    { key: "update", label: t("settings.update") },
+    ...availableSections.filter(s => s.key !== "update"),
     ...extraSections
   ];
 
@@ -251,10 +257,105 @@ export function renderConfig(props: ConfigProps) {
   const canApply =
     props.connected &&
     !props.applying &&
-    !props.updating &&
+    !props.updateRunning &&
     hasChanges &&
     (props.formMode === "raw" ? true : canSaveForm);
-  const canUpdate = props.connected && !props.applying && !props.updating;
+  const canUpdate = props.connected && !props.applying && !props.updateRunning;
+
+  const renderUpdate = () => {
+    const status = props.updateStatus;
+    const loading = props.updateStatusLoading;
+    const error = props.updateStatusError;
+
+    const git = status?.git;
+    const registry = status?.registry;
+    const pm = status?.packageManager;
+
+    const hasUpdate = (git?.behind ?? 0) > 0 || (registry?.latestVersion && registry.latestVersion !== "0.0.0" && registry.latestVersion !== (git?.tag ?? "0.0.0"));
+
+    return html`
+      <div class="animate-fade-in" style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="config-section-card">
+          <div class="config-section-card__header">
+            <div class="config-section-hero__icon">${sidebarIcons.update}</div>
+            <div class="group-label">
+              <div class="group-title">${t("config.update.title" as any)}</div>
+              <div class="group-desc">${t("config.update.desc" as any)}</div>
+            </div>
+            <div style="margin-left: auto;">
+                <button class="btn btn--icon" ?disabled=${loading} @click=${() => props.onRefreshUpdateStatus({ fetchGit: true })}>
+                    <div class="${loading ? "animate-spin" : ""}">${icons.loader}</div>
+                </button>
+            </div>
+          </div>
+          <div style="padding: 24px;">
+            ${loading && !status ? html`
+                <div style="text-align: center; padding: 40px;">
+                    <div class="animate-spin" style="display: inline-block; margin-bottom: 12px; opacity: 0.5;">${icons.loader}</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">${t("common.loading" as any)}...</div>
+                </div>
+            ` : nothing}
+
+            ${error ? html`
+                <div class="badge danger" style="width: 100%; margin-bottom: 16px;">${error}</div>
+            ` : nothing}
+
+            ${status ? html`
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
+                    <!-- Version Info -->
+                    <div class="info-group">
+                        <div class="info-label">${t("config.update.current" as any)}</div>
+                        <div class="info-value" style="font-family: var(--font-mono); font-size: 18px; color: var(--hdr-white);">
+                            ${git?.tag ?? git?.sha?.slice(0, 7) ?? "v0.0.0"}
+                        </div>
+                        ${git?.branch ? html`<div class="info-sub" style="font-size: 11px; opacity: 0.6;">Branch: ${git.branch}</div>` : nothing}
+                    </div>
+
+                    <!-- Upgrade Info -->
+                    <div class="info-group">
+                        <div class="info-label">${t("config.update.available" as any)}</div>
+                        <div class="info-value" style="font-family: var(--font-mono); font-size: 18px; color: ${hasUpdate ? "var(--accent-blue)" : "var(--text-muted)"};">
+                            ${registry?.latestVersion ?? "checking..."}
+                        </div>
+                        ${git?.behind ? html`<div class="info-sub" style="font-size: 11px; color: var(--accent-blue);">${git.behind} commits behind</div>` : nothing}
+                    </div>
+
+                    <!-- Package Manager -->
+                    <div class="info-group">
+                        <div class="info-label">${t("config.update.platform" as any)}</div>
+                        <div class="info-value" style="text-transform: uppercase; font-weight: 600;">
+                            ${status.installKind} / ${pm}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        ${hasUpdate ? html`
+                            <div style="color: var(--accent-blue); font-weight: 600; font-size: 14px;">${t("config.update.ready" as any)}</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">${t("config.update.ready.desc" as any)}</div>
+                        ` : html`
+                            <div style="color: var(--success); font-weight: 600; font-size: 14px;">${t("config.update.uptodate" as any)}</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">${t("config.update.uptodate.desc" as any)}</div>
+                        `}
+                    </div>
+                    <button class="btn primary" ?disabled=${!hasUpdate || props.updateRunning} @click=${() => props.onRunSoftwareUpdate()}>
+                        ${props.updateRunning ? html`<div class="animate-spin" style="margin-right: 8px;">${icons.loader}</div>` : nothing}
+                        ${props.updateRunning ? t("config.update.running" as any) : t("config.update.button" as any)}
+                    </button>
+                </div>
+            ` : nothing}
+
+            ${!status && !loading && !error ? html`
+                <div style="text-align: center; padding: 40px;">
+                    <button class="btn" @click=${() => props.onRefreshUpdateStatus()}>${t("config.update.check" as any)}</button>
+                </div>
+            ` : nothing}
+          </div>
+        </div>
+      </div>
+    `;
+  };
 
   const renderAppearance = () => html`
     <div class="animate-fade-in" style="display: flex; flex-direction: column; gap: 24px;">
@@ -275,7 +376,7 @@ export function renderConfig(props: ConfigProps) {
                         <button class="theme-picker__btn ${props.theme === "dark" ? "active" : ""}" title="${t("settings.theme.dark")}" @click=${() => props.onThemeChange("dark")}>${icons.moon}</button>
                         <div class="theme-picker__indicator"></div>
                     </div>
-                    <div style="font-size: 13px; color: var(--text-muted); font-weight: 500; opacity: 0.8;">
+                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.05em;">
                         ${props.theme === "system" ? t("settings.theme.system") : props.theme === "light" ? t("settings.theme.light") : t("settings.theme.dark")}
                     </div>
                 </div>
@@ -337,7 +438,10 @@ export function renderConfig(props: ConfigProps) {
           ${allSections.map(section => html`
             <button
               class="config-nav__item ${props.activeSection === section.key ? "active" : ""}"
-              @click=${() => props.onSectionChange(section.key)}
+              @click=${() => {
+      props.onSectionChange(section.key);
+      if (section.key === "update") props.onRefreshUpdateStatus();
+    }}
             >
               <span class="config-nav__icon">${getSectionIcon(section.key)}</span>
               <span>${section.label}</span>
@@ -423,17 +527,17 @@ export function renderConfig(props: ConfigProps) {
                         <div class="animate-spin" style="display: inline-block; margin-bottom: 12px; opacity: 0.5;">${icons.loader}</div>
                         <div style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;">${t("config.loading.defs" as any)}</div>
                     </div>
-                ` : props.activeSection === "appearance" ? renderAppearance() : renderConfigForm({
-    schema: analysis.schema,
-    uiHints: props.uiHints,
-    value: props.formValue,
-    disabled: props.loading || !props.formValue,
-    unsupportedPaths: analysis.unsupportedPaths,
-    onPatch: props.onFormPatch,
-    searchQuery: props.searchQuery,
-    activeSection: props.activeSection,
-    activeSubsection: effectiveSubsection,
-  })}
+                ` : props.activeSection === "appearance" ? renderAppearance() : props.activeSection === "update" ? renderUpdate() : renderConfigForm({
+      schema: analysis.schema,
+      uiHints: props.uiHints,
+      value: props.formValue,
+      disabled: props.loading || !props.formValue,
+      unsupportedPaths: analysis.unsupportedPaths,
+      onPatch: props.onFormPatch,
+      searchQuery: props.searchQuery,
+      activeSection: props.activeSection,
+      activeSubsection: effectiveSubsection,
+    })}
             ` : html`
                 <div class="config-section-card" style="height: calc(100% - 4px); margin: 0;">
                     <textarea class="code-block" style="width: 100%; height: 100%; border: none; resize: none; background: transparent; padding: 24px; font-size: 12px; line-height: 1.6;" .value=${props.raw} @input=${(e: Event) => props.onRawChange((e.target as HTMLTextAreaElement).value)}></textarea>

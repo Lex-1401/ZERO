@@ -19,7 +19,7 @@ export type UiSettings = {
 export function loadSettings(): UiSettings {
   const defaultUrl = (() => {
     const proto = location.protocol === "https:" ? "wss" : "ws";
-    return `${proto}://localhost:18789`;
+    return `${proto}://${location.hostname}:18789`;
   })();
 
   const defaults: UiSettings = {

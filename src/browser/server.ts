@@ -42,7 +42,7 @@ export async function startBrowserControlServerFromConfig(): Promise<BrowserServ
     serverInstance = serve({
       fetch: app.fetch,
       port,
-      hostname: "127.0.0.1",
+      hostname: resolved.controlHost,
     });
   } catch (err) {
     logServer.error(`zero browser server failed to bind 127.0.0.1:${port}: ${String(err)}`);

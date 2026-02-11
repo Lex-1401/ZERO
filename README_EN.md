@@ -30,15 +30,32 @@ The ZERO ecosystem is built upon four fundamental pillars, validated by rigorous
 
 Visualize **ZERO** in operation. These are real captures of the unified control interface:
 
-| Chat & Assistant (Altair Interface) | Skill Catalog (Marketplace) |
+| Chat & Assistant (Altair Interface) | Control Hub (Telemetry) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/real-chat-ui.png) | ![Skills Catalog](assets/screenshots/real-skills-catalog-ui.png) |
-| *Focus Mode with proactive commands and smart suggestions.* | *Ready-made extensions to expand your AI's powers.* |
+| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
+| *Focus Mode with proactive commands and smart suggestions.* | *Consolidated view of system health and connections.* |
 
-| Appearance & Language Settings | System Core (Config) |
+| System Core (Appearance) | Software Update (Updates) |
 | :--- | :--- |
-| ![Appearance Settings](assets/screenshots/real-appearance-ui.png) | ![Core Settings](assets/screenshots/real-settings-ui.png) |
-| *Total customization: Dynamic themes and native i18n support.* | *Granular control of every parameter of your OS.* |
+| ![Core Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
+| *Granular control of every parameters of your System.* | *Proactive version management and integrity via Git/PNPM.* |
+
+| Skill Catalog (Marketplace) |
+| :--- |
+| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
+| *Ready-made extensions to expand your AI's powers.* |
+
+---
+
+## 📐 Blueprints & Systemic Anatomy
+
+ZERO is designed with the rigor of aeronautical engineering. Below is the Blueprint of our agentic architecture:
+
+![ZERO Architecture Blueprint](assets/blueprint-arch.png)
+
+*Agentic Cortex Schema: Integration between the Rust Engine and the Altair Interface.*
+
+---
 
 ---
 
@@ -122,9 +139,28 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh
 
 ---
 
+## ∅ The ZERO Manifesto
+
+**ZERO is not just a name. It is a living concept.**
+
+- **The Void that Contains Infinity**: Like an AI agent with full-stack access to your hardware, ZERO appears invisible, but it is limitless. It is the algorithmic poetry of a system that does not seek attention but delivers freedom.
+- **Point of Origin**: Everything starts from zero. It represents the "Zero Point" or the "Origin." It is the pursuit of **Zero Latency**, **Zero Trust**, and a return to total sovereignty, where control begins and ends with the user, without intermediaries. It is the necessary reset for truly personal computing.
+- **Symbol of Subversion**: The zero that breaks systems and annuls assumptions. It is neurodivergence applied to code: what society says "doesn't fit" is, in fact, the foundation of everything.
+- **Radical Humility**: A simultaneous act of defense and offense. "You said I am no one? Now I see I am everything."
+
+> **"What you cannot see working is exactly what is making it work."**
+
+ZERO operates in silence. Invisible. Neglected by the giants, yet sustaining your new sovereign infrastructure. When they ask "what is this?", don't explain. Show it working.
+
+**Install ZERO. See what happens. ∅**
+
+---
+
 ## 🛡️ Security Protocol & Sentinel
 
 The **Zero Sentinel** module implements active defenses against modern vector threats:
+
+![Zero Sentinel Artwork](assets/sentinel-artwork.png)
 
 - **LLM Security Guardrails**: Native prompt injection detection via Chain-of-Thought (CoT).
 - **PII Redaction**: Automatic identification and masking of sensitive information in real-time.

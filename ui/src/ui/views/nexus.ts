@@ -185,14 +185,12 @@ export function renderNexus(props: NexusProps) {
             </div>
 
             <!-- Autopilot & Vision Module -->
-            <div style="margin-top: 24px; display: flex; gap: 8px;">
-               <button class="btn primary" style="background: var(--accent-red); width: 100%; justify-content: center;"
+            <div style="margin-top: 24px; display: flex; gap: 8px; width: 100%;">
+               <button class="btn primary" style="flex: 1; background: var(--accent-red); border-color: rgba(0,0,0,0.1); justify-content: center; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);"
                   @click=${() => alert("Iniciando Módulo de Visão...\n(Solicitando permissão de captura de tela ao navegador...)")}>
-                  🔴 ${t("nexus.autopilot" as any)}
+                  <span style="margin-right: 4px;">🔴</span> ${t("nexus.autopilot" as any)}
                </button>
-            </div>
-             <div style="margin-top: 8px; display: flex; gap: 8px;">
-               <button class="btn" style="width: 100%; justify-content: center;"
+               <button class="btn" style="flex: 1; justify-content: center;"
                   @click=${() => document.body.classList.toggle("focus-mode")}>
                   🧘 ${t("nexus.focus" as any)}
                </button>

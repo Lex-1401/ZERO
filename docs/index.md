@@ -80,13 +80,20 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 
 ### Galeria da Interface (Live UI) 📸
 
-| Chat Principal | Catálogo de Skills |
+| Chat & Assistente (Interface Altair) | Hub de Controle (Telemetria) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/real-chat-ui.png) | ![Skills Catalog](assets/screenshots/real-skills-catalog-ui.png) |
+| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
+| *Modo Foco com comandos proativos e sugestões inteligentes.* | *Visão consolidada da saúde do sistema e conexões.* |
 
-| Configuração de Aparência | Núcleo (Config) |
+| Núcleo (Aparência) | Atualização de Software (Updates) |
 | :--- | :--- |
-| ![Appearance Settings](assets/screenshots/real-appearance-ui.png) | ![Core Settings](assets/screenshots/real-settings-ui.png) |
+| ![Appearance Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
+| *Refinamento premium dos seletores de tema e idioma.* | *Gerenciador de integridade e versões do sistema.* |
+
+| Catálogo de Skills |
+| :--- |
+| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
+| *Extensões para expandir os poderes da sua IA.* |
 
 ---
 
@@ -94,9 +101,9 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 - 🛡️ **Zero Sentinel** — *Engine Nativa de Segurança*. Detecção proativa de injeção de prompt, redação de PII (CPF/CNPJ) e verificação de segredos.
 - 🚀 **DevOps Suite** — Integrações nativas com Vercel, Netlify, Supabase, Firebase, Railway.
 - 💡 **Nudge Engine** — *IA Proativa*. Sugere ações inteligentes baseadas no contexto (ex: "Sexta-feira à tarde?").
-- 🧠 **Brain V2** — Visualização 3D da memória + Garbage Collector Semântico.
+- 🧠 **Brain V2** — Visualização 3D da memória + Garbage Collector Semântico. Refatorado recentemente para **Arquitetura ClearCode** (modularidade total).
 - 🦞 **Mascote Zero** — A nova face da sua IA pessoal.
-- 🕸️ **Grafo de Conhecimento** — Malha vetorial persistente e navegável.
+- 🕸️ **Grafo de Conhecimento** — Malha vetorial persistente e navegável em SQLite.
 - 🛡️ **Painel de Auditoria** — Logs de segurança em tempo real.
 - 🎤 **Notas de voz** — Gancho de transcrição opcional.
 - 🖥️ **WebChat + app macOS** — UI local + companheiro de barra de menu.

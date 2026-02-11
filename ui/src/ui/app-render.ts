@@ -72,14 +72,16 @@ export function renderApp(state: AppViewState) {
   const isChat = state.tab === "chat";
 
   return html`
-    <div class="shell ${state.mobileNavOpen ? "mobile-nav-open" : ""}">
+    <div class="shell ${state.mobileNavOpen ? "mobile-nav-open" : ""} ${state.sidebarCollapsed ? "sidebar-collapsed" : ""}">
       <div class="mobile-nav-overlay" @click=${() => state.toggleMobileNav()}></div>
       
       <!-- Native Sidebar -->
       <aside class="nav" style="padding-top: 20px;">
-        <div style="margin-bottom: 24px; display: flex; justify-content: center;">
-            <div style="border-radius: 22px; background: #000000; border: 1px solid var(--border-subtle); display: inline-flex; align-items: center; justify-content: center; box-shadow: var(--shadow-deep); overflow: hidden;">
-                <img src="zero-logo.png" alt="Zero Mascot" style="height: 88px; width: auto; display: block;" />
+        <div class="mascot-container">
+            <div class="mascot-glow"></div>
+            <div class="mascot-container-red" @click=${() => state.setTab("chat")}>
+                <img src="logo.png?v=2" alt="Zero Mascot" class="mascot-img-red" />
+                <span class="mascot-brand">ZERO</span>
             </div>
         </div>
 
@@ -103,6 +105,9 @@ export function renderApp(state: AppViewState) {
       <header class="topbar">
         <div class="topbar-nav">
             <button class="btn-mobile-menu" @click=${() => state.toggleMobileNav()}>${icons.menu}</button>
+            <button class="btn-nav-history" @click=${() => state.toggleSidebar()} title="Alternar Menu">
+                ${icons.panelLeft}
+            </button>
             <button class="btn-nav-history">${icons.chevronLeft}</button>
             <button class="btn-nav-history">${icons.chevronRight}</button>
         </div>
@@ -388,6 +393,11 @@ export function renderApp(state: AppViewState) {
         onSave: () => saveConfig(state),
         onApply: () => state.handleConfigApply(),
         onUpdate: () => state.handleRunUpdate(),
+        updateStatus: state.updateStatus,
+        updateStatusLoading: state.updateStatusLoading,
+        updateStatusError: state.updateStatusError,
+        onRefreshUpdateStatus: (opts: any) => state.handleLoadUpdateStatus(opts),
+        onRunSoftwareUpdate: () => state.handleRunSoftwareUpdate(),
         onThemeChange: (next: ThemeMode) => state.setTheme(next),
         onLanguageChange: (next: any) => setLanguage(next as Language),
       } as any)
