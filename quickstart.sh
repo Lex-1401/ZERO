@@ -265,6 +265,9 @@ finish_setup() {
     echo -e "\nSe falhar, use o caminho local:"
     if [ "$IS_CONTAINER" -eq 1 ]; then
         echo -e "${BLUE}pnpm zero onboard${NC}"
+        echo -e "\n${YELLOW}[AVISO] Em containers, instale o Chromium manualmente para usar automacao de browser:${NC}"
+        echo -e "  Debian/Ubuntu: apt install chromium"
+        echo -e "  Alpine: apk add chromium"
     else
         echo -e "${BLUE}pnpm zero onboard --install-daemon${NC}"
     fi
