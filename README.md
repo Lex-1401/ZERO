@@ -10,7 +10,7 @@
   <a href="https://github.com/zero/zero/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge" alt="Status do CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
   <a href="https://github.com/zero/zero"><img src="https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge" alt="QI"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.2.0-blue?style=for-the-badge" alt="Version"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge" alt="Version"></a>
 </p>
 
 **ZERO** busca o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Pensado e projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
