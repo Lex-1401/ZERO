@@ -68,7 +68,9 @@ O ZERO não nasceu no vácuo. Ele é uma evolução direta ("Hard Ford") do **Op
 
 O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados por rigorosos padrões de arquitetura de software:
 
-1. **Soberania Local-First (LLMs Locais)**: Todos os vetores de dados, modelos de pensamento e logs de auditoria residem no seu diretório `~/.zero`. Com suporte nativo a **Ollama** e execução de modelos como **Llama 3.2**, o ZERO garante sua autonomia mesmo sem conexão com a nuvem.
+1. **Soberania Local-First (O "Google" Pessoal Éticoy)**:
+   - *Visão*: O Google organizou a web pública; o **ZERO** organiza a sua vida privada.
+   - *Execução*: Todos os vetores de dados, memórias e logs residem no seu diretório `~/.zero`. Diferente da nuvem, onde a escala custa privacidade, aqui a escalar a inteligência não custa sua liberdade. Indexamos sua existência digital para *você*, e só para você.
 2. **Arquitetura Híbrida de Performance**: Um núcleo de performance crítica escrito em **Rust** (gerenciando VAD, telemetria de densidade e criptografia) integra-se perfeitamente com a flexibilidade do **TypeScript** para orquestração de canais.
 3. **Segurança de Elite (OWASP LLM Top 10)**: O ZERO é governado pelo **Zero Sentinel**, um firewall de IA proativo que mitiga Injeção de Prompt, vazamento de PII e alucinações via validação forçada de Chain-of-Thought (CoT) e auditoria de segredos via engine Rust nativa.
 4. **Arquitetura ClearCode**: Rigor técnico com imposição de limites de complexidade (máximo de 500 linhas por arquivo). Garantimos que o sistema seja modular e auditável; recentemente refatoramos os módulos críticos `MemoryIndexManager` e `MessageActionRunner` para cumprir este rigor.
