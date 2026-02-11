@@ -99,10 +99,10 @@ Most operations flow through the **Gateway** (`zero gateway`), a single long-run
 ---
 
 - 🏗️ **Zero Creator** — *Autonomous Architect*. Creates Full-Stack projects (Next.js, Supabase, Vercel).
-- 🛡️ **Zero Sentinel** — *Native Security Engine*. Proactive prompt injection detection, PII redaction (CPF/CNPJ/SSN), and secret scanning.
+- 🛡️ **Zero Sentinel** — *Native Resilience & Security Engine*. Terminal error auto-correction (**Self-Healing**), **Speculative Pre-warming** of files, and proactive prompt injection mitigation. [Learn more](/concepts/sentinel)
 - 🚀 **DevOps Suite** — Native integrations with Vercel, Netlify, Supabase, Firebase, Railway.
 - 💡 **Nudge Engine** — *Proactive AI*. Suggests smart actions based on context (e.g., "Friday afternoon?").
-- 🧠 **Brain V2** — 3D memory visualization + Semantic Garbage Collector. Recently refactored for **ClearCode Architecture** (full modularity).
+- 🧠 **Brain V3** — **S-Rank Stability** Platform. Persistent memory, **ClearCode Architecture**, and proactive context orchestration.
 - 🦞 **Zero Mascot** — The new face of your personal AI.
 - 🕸 **Knowledge Graph** — Persistent and navigable vector mesh in SQLite.
 - 🛡️ **Audit Dashboard** — Real-time security logs.

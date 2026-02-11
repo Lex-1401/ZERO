@@ -7,10 +7,14 @@
 > **"Invisible infrastructure is the most resilient."** ∅
 
 <p align="center">
-  <a href="https://github.com/zero/zero/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge" alt="CI Status"></a>
+  <a href="https://github.com/Lex-1401/ZERO/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge" alt="CI Status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
-  <a href="https://github.com/zero/zero"><img src="https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge" alt="QI"></a>
+  <a href="https://github.com/Lex-1401/ZERO"><img src="https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge" alt="QI"></a>
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge" alt="Version"></a>
+</p>
+
+<p align="center">
+  <a href="README.md">Português 🇧🇷</a> | <a href="README_EN.md"><b>English 🇺🇸</b></a>
 </p>
 
 **ZERO** seeks the singularity point where personal computing meets sovereign autonomy. Conceived and designed as an **Agent Operating System**, ZERO transforms your machine into a fortress of local intelligence, eliminating cloud latency and corporate surveillance.
@@ -108,7 +112,7 @@ The ZERO ecosystem is built on four fundamental pillars, validated by rigorous s
 2. **Hybrid Performance Architecture**: A critical performance core written in **Rust** (managing VAD, density telemetry, and encryption) seamlessly integrates with the flexibility of **TypeScript** for channel orchestration.
 3. **Elite Security (OWASP LLM Top 10)**: ZERO is governed by **Zero Sentinel**, a proactive AI firewall that mitigates Prompt Injection, PII leakage, and hallucinations via forced Chain-of-Thought (CoT) validation and secret auditing via a native Rust engine.
 4. **ClearCode Architecture**: Technical rigor with enforced complexity limits (maximum 500 lines per file). We ensure the system is modular and auditable; recently, we refactored critical modules like `MemoryIndexManager` and `MessageActionRunner` to meet this rigor.
-5. **Proactive Agentic Autonomy**: Through the **Nudge Engine**, the system transcends reactivity, anticipating needs based on context and operating in high-fidelity deliberation loops.
+5. **Proactive Agentic Autonomy**: Through the **Sentinel Engine** and **Speculative Pre-warming**, the system transcends reactivity. ZERO now detects execution failures (`Self-Healing`) and anticipates the required context before your next command, operating in high-fidelity deliberation loops.
 
 ---
 
@@ -159,17 +163,17 @@ Visualize **ZERO** in operation. These are actual records of the unified control
 
 | Chat & Assistant (Altair Interface) | Control Hub (Telemetry) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
+| ![Chat UI](assets/screenshots/chat-ui-v4-en.png) | ![Hub UI](assets/screenshots/hub-ui-v4-en.png) |
 | *Focus Mode with proactive commands and smart suggestions.* | *Consolidated view of system health and connections.* |
 
 | System Core (Appearance) | Software Updates (Updates) |
 | :--- | :--- |
-| ![Core Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
+| ![Core Settings](assets/screenshots/settings-ui-v4-en.png) | ![Update UI](assets/screenshots/update-ui-v4-en.png) |
 | *Granular control over every parameter of your System.* | *Proactive version management and integrity via Git/PNPM.* |
 
 | Skills Catalog (Marketplace) |
 | :--- |
-| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
+| ![Skills Catalog](assets/screenshots/skills-ui-v4-en.png) |
 | *Ready-to-use extensions to expand your AI's powers.* |
 
 ---
@@ -278,8 +282,11 @@ The **Zero Sentinel** module implements active defenses against vector threats:
 </p>
 
 - **LLM Security Guardrails (OWASP Top 10)**: Active mitigation of Prompt Injection, Indirect Injection, and Jailbreaks.
+- **Sentinel Diagnostic (Self-Healing)**: Diagnostic mechanism that intercepts terminal errors (exit codes, permissions, dependencies) and generates automatic AI-driven remedies.
+- **IA Speculative Pre-warming**: Proactive heuristic scanning that injects relevant file context into the prompt before execution, reducing cognitive latency.
 - **CoT Protocol with Self-Correction**: The model is forced to deliberate in `<think>` blocks, ensuring logic before action.
 - **PII & Secrets Firewall**: Real-time scanning (Rust engine) for ID numbers, Tax IDs, Emails, and API keys.
+- **Scale Performance**: Data sanitization via vectorized regex in Rust/Native, ensuring high-density throughput without interface lag.
 - **Sandbox Isolate**: Tool execution and navigation in isolated environments (Docker/Firecracker) with file path sanitization.
 - **Stealth Mode & Lockdown**: Instant hiding of sensitive data and emergency freeze via `zero panic`.
 - **Local Sovereignty**: Priority local processing, ensuring compliance with LGPD and GDPR by design.

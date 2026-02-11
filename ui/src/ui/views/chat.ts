@@ -140,7 +140,7 @@ export function renderChat(props: ChatProps) {
           <div style="display: flex; flex-direction: column; gap: 8px;">
             ${starterChips.map(chip => html`
               <button 
-                class="btn btn--chip" 
+                class="btn btn--chip hover-lift active-push" 
                 style="justify-content: flex-start; padding: 12px 16px; height: auto; border-radius: var(--radius-lg);"
                 @click=${() => props.onSend(chip.prompt)}
               >

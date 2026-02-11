@@ -93,7 +93,7 @@ export function renderMessageGroup(
   });
 
   return html`
-    <div class="chat-group ${roleClass}">
+    <div class="chat-group ${roleClass} chat-entry">
       ${renderAvatar(group.role, {
     name: assistantName,
     avatar: opts.assistantAvatar ?? null,

@@ -177,7 +177,21 @@ export function renderNode(params: {
 
   // Boolean - toggle row
   if (type === "boolean") {
+    const isReadOnly = schema.readOnly || disabled || path[0] === 'wizard';
     const displayValue = typeof value === "boolean" ? value : typeof schema.default === "boolean" ? schema.default : false;
+
+    if (isReadOnly) {
+      return html`
+        <div class="cfg-field">
+            ${showLabel ? html`<label class="cfg-field__label">${label}</label>` : nothing}
+            ${help ? html`<div class="cfg-field__help">${help}</div>` : nothing}
+            <div class="cfg-input-wrap">
+                <input type="text" class="cfg-input readonly" .value=${displayValue ? 'SIM' : 'NÃO'} readonly />
+            </div>
+        </div>
+      `;
+    }
+
     return html`
       <label class="cfg-toggle-row ${disabled ? 'disabled' : ''}">
         <div class="cfg-toggle-row__content">
@@ -231,11 +245,23 @@ function renderTextInput(params: {
   const hint = hintForPath(path, hints);
   const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
   const help = hint?.help ?? schema.description;
-  const isSensitive = hint?.sensitive ?? isSensitivePath(path);
+  const isSensitive = hint?.sensitive || isSensitivePath(path);
+  const isReadOnly = schema.readOnly || disabled || path[0] === 'wizard';
   const placeholder =
     hint?.placeholder ??
     (isSensitive ? "••••" : schema.default !== undefined ? t("config.node.default" as any).replace("{value}", String(schema.default)) : "");
   const displayValue = value ?? "";
+  const fallbackText = t("common.none" as any) || "n/d";
+
+  if (isReadOnly && !isSensitive && (displayValue === "" || displayValue === null || displayValue === undefined)) {
+    return html`
+      <div class="cfg-field">
+        ${showLabel ? html`<label class="cfg-field__label">${label}</label>` : nothing}
+        ${help ? html`<div class="cfg-field__help">${help}</div>` : nothing}
+        <div class="cfg-value-none">${fallbackText}</div>
+      </div>
+    `;
+  }
 
   return html`
     <div class="cfg-field">
@@ -244,11 +270,13 @@ function renderTextInput(params: {
       <div class="cfg-input-wrap">
         <input
           type=${isSensitive ? "password" : inputType}
-          class="cfg-input"
+          class="cfg-input ${isReadOnly ? 'readonly' : ''}"
           placeholder=${placeholder}
           .value=${displayValue == null ? "" : String(displayValue)}
-          ?disabled=${disabled}
+          ?disabled=${isReadOnly}
+          ?readonly=${isReadOnly}
           @input=${(e: Event) => {
+      if (isReadOnly) return;
       const raw = (e.target as HTMLInputElement).value;
       if (inputType === "number") {
         if (raw.trim() === "") {
@@ -262,7 +290,7 @@ function renderTextInput(params: {
       onPatch(path, raw);
     }}
         />
-        ${schema.default !== undefined ? html`
+        ${schema.default !== undefined && !isReadOnly ? html`
           <button
             type="button"
             class="cfg-input__reset"
@@ -290,13 +318,29 @@ function renderNumberInput(params: {
   const hint = hintForPath(path, hints);
   const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
   const help = hint?.help ?? schema.description;
-  const displayValue = value ?? schema.default ?? "";
+  const isReadOnly = schema.readOnly || disabled || path[0] === 'wizard';
+  const displayValue = value ?? schema.default;
   const numValue = typeof displayValue === "number" ? displayValue : 0;
+
+  if (isReadOnly && (displayValue === undefined || displayValue === null)) {
+    return html`
+        <div class="cfg-field">
+            ${showLabel ? html`<label class="cfg-field__label">${label}</label>` : nothing}
+            ${help ? html`<div class="cfg-field__help">${help}</div>` : nothing}
+            <div class="cfg-value-none">${t("common.none" as any) || "n/d"}</div>
+        </div>
+      `;
+  }
 
   return html`
     <div class="cfg-field">
       ${showLabel ? html`<label class="cfg-field__label">${label}</label>` : nothing}
       ${help ? html`<div class="cfg-field__help">${help}</div>` : nothing}
+      ${isReadOnly ? html`
+        <div class="cfg-input-wrap">
+            <input type="text" class="cfg-input readonly" .value=${String(displayValue ?? "")} readonly />
+        </div>
+      ` : html`
       <div class="cfg-number">
         <button
           type="button"
@@ -308,12 +352,11 @@ function renderNumberInput(params: {
           type="number"
           class="cfg-number__input"
           .value=${displayValue == null ? "" : String(displayValue)}
-          ?disabled=${disabled}
           @input=${(e: Event) => {
-      const raw = (e.target as HTMLInputElement).value;
-      const parsed = raw === "" ? undefined : Number(raw);
-      onPatch(path, parsed);
-    }}
+        const raw = (e.target as HTMLInputElement).value;
+        const parsed = raw === "" ? undefined : Number(raw);
+        onPatch(path, parsed);
+      }}
         />
         <button
           type="button"
@@ -322,6 +365,7 @@ function renderNumberInput(params: {
           @click=${() => onPatch(path, numValue + 1)}
         >+</button>
       </div>
+      `}
     </div>
   `;
 }
@@ -341,11 +385,24 @@ function renderSelect(params: {
   const hint = hintForPath(path, hints);
   const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
   const help = hint?.help ?? schema.description;
+  const isReadOnly = schema.readOnly || disabled || path[0] === 'wizard';
   const resolvedValue = value ?? schema.default;
   const currentIndex = options.findIndex(
     (opt) => opt === resolvedValue || String(opt) === String(resolvedValue),
   );
   const unset = "__unset__";
+
+  if (isReadOnly) {
+    return html`
+        <div class="cfg-field">
+            ${showLabel ? html`<label class="cfg-field__label">${label}</label>` : nothing}
+            ${help ? html`<div class="cfg-field__help">${help}</div>` : nothing}
+            <div class="cfg-input-wrap">
+                <input type="text" class="cfg-input readonly" .value=${String(resolvedValue ?? "")} readonly />
+            </div>
+        </div>
+      `;
+  }
 
   return html`
     <div class="cfg-field">

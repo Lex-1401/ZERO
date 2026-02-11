@@ -122,13 +122,22 @@ function renderMarketplace(props: SkillsProps) {
         ${t("skills.marketplace.hint")}
     </div>
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
-        ${marketplace.map(item => html`
-            <div class="group-list" style="margin: 0; display: flex; flex-direction: column; height: 100%; border-radius: 12px; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-                <div class="group-item" style="flex: 1; flex-direction: column; align-items: start; border-bottom: none; gap: 8px; padding: 20px;">
-                    <div style="font-size: 15px; font-weight: 700; color: var(--accent-blue);">${item.name}</div>
-                    <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">${item.description}</div>
+        ${marketplace.map((item, idx) => {
+        const itemIcons = [icons.globe, icons.layout, icons.messageSquare, icons.search, icons.box, icons.penLine];
+        const itemIcon = itemIcons[idx % itemIcons.length];
+
+        return html`
+            <div class="group-list" style="margin: 0; display: flex; flex-direction: column; height: 100%; border-radius: 12px; transition: all 0.2s ease; border: 1px solid var(--border-subtle);" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--accent-blue)'; this.style.boxShadow='var(--shadow-floating)'" onmouseout="this.style.transform='none'; this.style.borderColor='var(--border-subtle)'; this.style.boxShadow='none'">
+                <div class="group-item" style="flex: 1; flex-direction: column; align-items: start; border-bottom: none; gap: 12px; padding: 24px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(var(--accent-blue-rgb), 0.1); color: var(--accent-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
+                        <span style="transform: scale(1.2)">${itemIcon}</span>
+                    </div>
+                    <div>
+                        <div style="font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">${item.name}</div>
+                        <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">${item.description}</div>
+                    </div>
                 </div>
-                <div class="group-item" style="background: rgba(255,255,255,0.03); padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <div class="group-item" style="background: rgba(255,255,255,0.02); padding: 16px 24px; border-top: 1px solid var(--border-subtle);">
                     <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
                         <button class="btn btn--sm" style="width: 100%; font-size: 10px; font-family: monospace; background: rgba(0,0,0,0.2); border: 1px dashed var(--border-subtle);" 
                             @click=${() => { navigator.clipboard.writeText((item as any).command); alert('Comando copiado! Cole no seu terminal para instalar.'); }}>
@@ -140,7 +149,7 @@ function renderMarketplace(props: SkillsProps) {
                     </div>
                 </div>
             </div>
-        `)}
+        `})}
     </div>
   `;
 }

@@ -7,10 +7,14 @@
 > **"A infraestrutura invisível é a mais resiliente."** ∅
 
 <p align="center">
-  <a href="https://github.com/zero/zero/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge" alt="Status do CI"></a>
+  <a href="https://github.com/Lex-1401/ZERO/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge" alt="Status do CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
-  <a href="https://github.com/zero/zero"><img src="https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge" alt="QI"></a>
+  <a href="https://github.com/Lex-1401/ZERO"><img src="https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge" alt="QI"></a>
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.1.0-blue?style=for-the-badge" alt="Version"></a>
+</p>
+
+<p align="center">
+  <a href="README.md"><b>Português 🇧🇷</b></a> | <a href="README_EN.md">English 🇺🇸</a>
 </p>
 
 **ZERO** busca o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Pensado e projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
@@ -108,7 +112,7 @@ O ecossistema ZERO é construído sobre quatro pilares fundamentais, validados p
 2. **Arquitetura Híbrida de Performance**: Um núcleo de performance crítica escrito em **Rust** (gerenciando VAD, telemetria de densidade e criptografia) integra-se perfeitamente com a flexibilidade do **TypeScript** para orquestração de canais.
 3. **Segurança de Elite (OWASP LLM Top 10)**: O ZERO é governado pelo **Zero Sentinel**, um firewall de IA proativo que mitiga Injeção de Prompt, vazamento de PII e alucinações via validação forçada de Chain-of-Thought (CoT) e auditoria de segredos via engine Rust nativa.
 4. **Arquitetura ClearCode**: Rigor técnico com imposição de limites de complexidade (máximo de 500 linhas por arquivo). Garantimos que o sistema seja modular e auditável; recentemente refatoramos os módulos críticos `MemoryIndexManager` e `MessageActionRunner` para cumprir este rigor.
-5. **Autonomia Agêntica Proativa**: Através do **Nudge Engine**, o sistema transcende a reatividade, antecipando necessidades baseadas em contexto e operando em loops de deliberação de alta fidelidade.
+5. **Autonomia Agêntica Proativa**: Através do **Sentinel Engine** e do **Speculative Pre-warming**, o sistema transcende a reatividade. O ZERO agora detecta falhas de execução (`Self-Healing`) e antecipa o contexto necessário antes mesmo do seu próximo comando, operando em loops de deliberação de alta fidelidade.
 
 ---
 
@@ -159,17 +163,17 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
 
 | Chat & Assistente (Interface Altair) | Hub de Controle (Telemetria) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
+| ![Chat UI](assets/screenshots/chat-ui-v4.png) | ![Hub UI](assets/screenshots/hub-ui-v4.png) |
 | *Modo Foco com comandos proativos e sugestões inteligentes.* | *Visão consolidada da saúde do sistema e conexões.* |
 
 | Núcleo do Sistema (Aparência) | Atualização de Software (Updates) |
 | :--- | :--- |
-| ![Core Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
+| ![Core Settings](assets/screenshots/settings-ui-v4.png) | ![Update UI](assets/screenshots/update-ui-v4.png) |
 | *Controle granular de cada parâmetro do seu Sistema.* | *Gerenciamento proativo de versões e integridade via Git/PNPM.* |
 
 | Catálogo de Habilidades (Marketplace) |
 | :--- |
-| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
+| ![Skills Catalog](assets/screenshots/skills-ui-v4.png) |
 | *Extensões prontas para expandir os poderes da sua IA.* |
 
 ---
@@ -278,8 +282,11 @@ O módulo **Zero Sentinel** implementa defesas ativas contra ameaças vetoriais:
 </p>
 
 - **LLM Security Guardrails (OWASP Top 10)**: Mitigação ativa de Prompt Injection, Indirect Injection e Jailbreaks.
+- **Sentinel Diagnostic (Self-Healing)**: Mecanismo de diagnóstico que intercepta erros de terminal (exit codes, permissões, dependências) e gera remediações automáticas via IA.
+- **IA Speculative Pre-warming**: Varredura heurística proativa que injeta contexto de arquivos relevantes no prompt antes da execução, reduzindo a latência cognitiva.
 - **Protocolo CoT com Self-Correction**: O modelo é forçado a deliberar em blocos `<think>`, garantindo lógica antes da ação.
 - **Firewall de PII & Secrets**: Escaneamento em tempo real (engine Rust) de CPFs, CNPJs, Emails e chaves de API.
+- **Performance de Escala**: Sanitização de dados via regex vetorizada em Rust/Native, garantindo throughput de alta densidade sem lag de interface.
 - **Sandbox Isolate**: Execução de ferramentas e navegação em ambientes isolados (Docker/Firecracker) com sanitização de caminhos de arquivos.
 - **Stealth Mode & Lockdown**: Ocultação instantânea de dados sensíveis e congelamento de emergência via `zero panic`.
 - **Local Sovereignty**: Processamento local prioritário, garantindo compliance com LGPD e GDPR por design.

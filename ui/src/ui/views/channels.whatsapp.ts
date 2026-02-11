@@ -89,17 +89,18 @@ export function renderWhatsAppCard(params: {
                             ${props.whatsappBusy ? html`<span class="animate-spin">${icons.loader}</span> Aguardando...` : "Já Escaneei"}
                         </button>
                     ` : html`
-                        <div style="height: 120px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); background: var(--bg-surface); width: 100%; border-radius: 8px; border: 1px dashed var(--border-subtle);">
-                            ${icons.camera}
+                        <div style="height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim); background: rgba(255,255,255,0.02); width: 100%; border-radius: 12px; border: 1px dashed var(--border-subtle); gap: 12px;">
+                            <div style="width: 32px; height: 32px; opacity: 0.5;">${icons.camera}</div>
+                            <div style="font-size: 11px; color: var(--text-dim);">Aguardando ação para gerar par neural</div>
                         </div>
-                        <div style="text-align: center; margin: 12px 0;">
-                            <div style="font-size: 11px; color: var(--text-dim);">Solicite um novo QR para iniciar uma sessão segura.</div>
+                        <div style="text-align: center; margin: 8px 0;">
+                            <div style="font-size: 10px; color: var(--text-muted); max-width: 200px;">Solicite um novo QR para iniciar uma sessão segura e soberana.</div>
                         </div>
-                        <div class="qr-actions">
-                             <button class="btn primary" style="height: 32px;" ?disabled=${props.whatsappBusy} @click=${() => props.onWhatsAppStart(false)}>
-                                ${props.whatsappBusy ? html`<span class="animate-spin">${icons.loader}</span>` : "Gerar QR"}
+                        <div class="qr-actions" style="display: flex; gap: 8px; width: 100%;">
+                             <button class="btn primary" style="flex: 1; height: 36px; font-size: 12px;" ?disabled=${props.whatsappBusy} @click=${() => props.onWhatsAppStart(false)}>
+                                ${props.whatsappBusy ? html`<span class="animate-spin" style="display: inline-block; width: 14px; height: 14px;">${icons.loader}</span>` : "Gerar QR"}
                              </button>
-                             <button class="btn" style="height: 32px;" title="Forçar re-vinculação se já existir sessão" ?disabled=${props.whatsappBusy} @click=${() => props.onWhatsAppStart(true)}>Forçar Link</button>
+                             <button class="btn" style="height: 36px; font-size: 12px;" title="Forçar re-vinculação" ?disabled=${props.whatsappBusy} @click=${() => props.onWhatsAppStart(true)}>Forçar</button>
                         </div>
                     `}
 

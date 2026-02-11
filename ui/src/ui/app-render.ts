@@ -10,7 +10,7 @@ import {
 import { icons } from "./icons";
 import type { ThemeMode } from "./theme";
 import type { Language } from "./i18n";
-// import { renderChat } from "./views/chat"; // Dynamic
+import { renderChat } from "./views/chat";
 import { renderConfig } from "./views/config";
 import { renderChannels } from "./views/channels";
 import { renderCron } from "./views/cron";
@@ -23,7 +23,7 @@ import { renderSessions } from "./views/sessions";
 import { renderGraph } from "./views/graph";
 import { renderMissionControl } from "./views/mission-control";
 import { renderExecApprovalPrompt } from "./views/exec-approval";
-// import { renderPlayground } from "./views/playground"; // Dynamic
+import { renderPlayground } from "./views/playground";
 import { loadDevices } from "./controllers/devices";
 import { renderSkills } from "./views/skills";
 import { renderSetup } from "./views/setup";
@@ -86,8 +86,8 @@ export function renderApp(state: AppViewState) {
         </div>
 
         <div class="sidebar-search">
-            <div class="search-icon">${icons.search}</div>
-            <input type="text" placeholder="${t("common.search_placeholder" as any) || "Search your digital life..."}" />
+            <div class="search-icon" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; color: var(--text-dim);">${icons.search}</div>
+            <input type="text" .placeholder="${t("common.search_placeholder")}" />
         </div>
 
         <nav style="flex: 1; overflow-y: auto;">
@@ -321,7 +321,7 @@ export function renderApp(state: AppViewState) {
       : nothing}
 
         ${state.tab === "chat"
-      ? until(import("./views/chat").then(m => m.renderChat({
+      ? renderChat({
         sessionKey: state.sessionKey,
         onSessionKeyChange: (next) => {
           state.sessionKey = next;
@@ -365,7 +365,7 @@ export function renderApp(state: AppViewState) {
         onSplitRatioChange: (r) => state.handleSplitRatioChange(r),
         assistantName: state.assistantName,
         assistantAvatar: state.assistantAvatar,
-      })), nothing)
+      })
       : nothing}
 
         ${state.tab === "config"
@@ -463,7 +463,7 @@ export function renderApp(state: AppViewState) {
     }
 
       ${state.tab === "playground"
-      ? until(import("./views/playground").then(m => m.renderPlayground({
+      ? renderPlayground({
         systemPrompt: state.playgroundSystemPrompt,
         userPrompt: state.playgroundUserPrompt,
         output: state.playgroundOutput,
@@ -478,7 +478,7 @@ export function renderApp(state: AppViewState) {
         onMaxTokensChange: (n) => state.handlePlaygroundUpdate({ maxTokens: n }),
         onRun: () => state.handlePlaygroundRun(),
         onClear: () => state.handlePlaygroundUpdate({ userPrompt: "", output: "" }),
-      })), nothing)
+      })
       : nothing
     }
 

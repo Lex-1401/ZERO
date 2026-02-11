@@ -57,6 +57,7 @@ import { getShellConfig, sanitizeBinaryOutput } from "./shell-utils.js";
 import { buildCursorPositionResponse, stripDsrRequests } from "./pty-dsr.js";
 import { parseAgentSessionKey, resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 import { SecurityGuard } from "../security/guard.js";
+import { Sentinel } from "./sentinel.js";
 
 const DEFAULT_MAX_OUTPUT = clampNumber(
   readEnvInt("PI_BASH_MAX_OUTPUT_CHARS"),
@@ -635,6 +636,12 @@ async function runExecProcess(opts: {
       if (settled) return;
       const aggregated = session.aggregated.trim();
       if (!isSuccess) {
+        const diagnostic = Sentinel.analyzeBashFailure(
+          opts.command,
+          code ?? -1,
+          session.aggregated,
+          "",
+        );
         const reason = timedOut
           ? `Command timed out after ${opts.timeoutSec} seconds`
           : wasSignal && exitSignal
@@ -648,9 +655,9 @@ async function runExecProcess(opts: {
           exitCode: code ?? null,
           exitSignal: exitSignal ?? null,
           durationMs,
-          aggregated,
+          aggregated: Sentinel.wrapError(message, diagnostic),
           timedOut,
-          reason: message,
+          reason: Sentinel.wrapError(message, diagnostic),
         });
         return;
       }

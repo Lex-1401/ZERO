@@ -37,14 +37,14 @@ export function renderMissionControl(props: MissionControlProps) {
 
             <!-- Stats Grid -->
             <div class="mc-stats">
-                <div class="mc-stat-card">
+                <div class="mc-stat-card hover-lift">
                     <div class="mc-stat-card__icon">${icons.zap}</div>
                     <div class="mc-stat-card__content">
                         <div class="mc-stat-card__label">Total de Tokens</div>
                         <div class="mc-stat-card__value">${summary?.totalTokens?.toLocaleString() ?? '0'}</div>
                     </div>
                 </div>
-                <div class="mc-stat-card">
+                <div class="mc-stat-card hover-lift">
                     <div class="mc-stat-card__icon">${icons.activity}</div>
                     <div class="mc-stat-card__content">
                         <div class="mc-stat-card__label">Latência Média</div>
@@ -54,12 +54,20 @@ export function renderMissionControl(props: MissionControlProps) {
             </div>
 
             <!-- Breakdown -->
-            <div class="mc-card mc-breakdown">
+            <div class="mc-card mc-breakdown" style="min-height: 180px;">
                 <div class="section-title">Distribuição por Modelo</div>
                 <div class="mc-breakdown__list">
-                    ${summary?.modelBreakdown.length === 0 ? html`
+                    ${!summary ? html`
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            ${[1, 2, 3].map(() => html`
+                                <div class="skeleton" style="height: 48px; border-radius: 12px; display: flex; align-items: center; padding: 0 16px; color: var(--text-dim); font-size: 11px; margin-bottom: 8px;">
+                                    Aguardando telemetria...
+                                </div>
+                            `)}
+                        </div>
+                    ` : summary.modelBreakdown.length === 0 ? html`
                         <div class="empty-state">Sem dados de processamento ainda.</div>
-                    ` : summary?.modelBreakdown.map(m => html`
+                    ` : summary.modelBreakdown.map(m => html`
                         <div class="mc-breakdown__item">
                             <div class="mc-model-info">
                                 <span class="mc-model-name">${m.model}</span>
@@ -197,6 +205,16 @@ export function renderMissionControl(props: MissionControlProps) {
             }
             .btn--glass:hover {
                 background: rgba(255, 255, 255, 0.1);
+            }
+            .empty-state {
+                padding: 40px;
+                text-align: center;
+                color: var(--text-dim);
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px dashed var(--border-subtle);
+                border-radius: 12px;
+                font-size: 13px;
+                margin-top: 8px;
             }
         </style>
     </div>

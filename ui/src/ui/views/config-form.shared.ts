@@ -10,10 +10,13 @@ export type JsonSchema = {
   enum?: unknown[];
   const?: unknown;
   default?: unknown;
+  readOnly?: boolean;
+  "x-order"?: number;
   anyOf?: JsonSchema[];
   oneOf?: JsonSchema[];
   allOf?: JsonSchema[];
   nullable?: boolean;
+  [key: string]: unknown;
 };
 
 export function schemaType(schema: JsonSchema): string | undefined {

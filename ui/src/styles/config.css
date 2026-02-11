@@ -403,6 +403,23 @@
   box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
 }
 
+.cfg-input.readonly {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: transparent;
+  color: var(--text-dim);
+  cursor: default;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.cfg-value-none {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  opacity: 0.5;
+  padding: 4px 0;
+}
+
 .cfg-input__reset {
   width: 32px;
   height: 36px;
