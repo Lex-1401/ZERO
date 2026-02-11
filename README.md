@@ -56,7 +56,11 @@ O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **Ope
 - **Fundação Original (2025-2026)**: Criado por **Peter Steinberger**, o OpenClaw estabeleceu o padrão para agentes pessoais locais em TypeScript/Swift, atingindo >100k stars no GitHub. Agradecemos à visão original de Steinberger de criar uma IA que "roda no seu dispositivo".
   - *Repositório Original*: [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
 - **Aprendizado Contínuo (Issues & Bugs)**:
-  - Monitoramos ativamente as *Issues* do repositório upstream para antecipar problemas. O que falha lá, corrigimos aqui antes mesmo de acontecer.
+  - Monitoramos ativamente as *Issues* do repositório upstream. O que falha lá, corrigimos aqui.
+  - **Exemplos Reais de Correções no ZERO**:
+    1. **Segurança (CVE-2026-25253)**: O OpenClaw sofria com WebSockets não autenticados e "Skills" maliciosas no marketplace. O **Zero Sentinel** implementa sandbox rígida e não carrega código remoto não assinado.
+    2. **"Token Burning" (Custo Infinito)**: O OpenClaw enviava todo o histórico a cada "heartbeat". O **ZERO** utiliza um algoritmo de *Context Compaction* (Rust) que sumariza memórias antigas, mantendo o custo de tokens controlado.
+    3. **Memory Leaks no Gateway**: Sessões longas no OpenClaw travavam o Node.js. Movemos a gestão de estado crítico e VAD para o **Rust Core**, eliminando vazamentos de memória (GC pressure).
 - **Divergência Tecnológica ZERO**:
   - Enquanto o OpenClaw foca em pureza TypeScript/Swift, o **ZERO** adotou uma arquitetura híbrida **Rust + Node.js** para performance crítica.
   - Introduzimos o **Zero Sentinel** para mitigar riscos de segurança que a versão original não cobria (Firewall de PII e Injeção).
