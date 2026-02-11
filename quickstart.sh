@@ -15,15 +15,46 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-# Funções de Log
-log_info() { echo -e "${BLUE}ℹ️  $1${NC}"; }
-log_success() { echo -e "${GREEN}✅ $1${NC}"; }
-log_warn() { echo -e "${YELLOW}⚠️  $1${NC}"; }
-log_error() { echo -e "${RED}❌ $1${NC}"; }
+# Funções de Log (ASCII Safe)
+log_info() { echo -e "${BLUE}[INFO] $1${NC}"; }
+log_success() { echo -e "${GREEN}[OK]   $1${NC}"; }
+log_warn() { echo -e "${YELLOW}[WARN] $1${NC}"; }
+log_error() { echo -e "${RED}[ERR]  $1${NC}"; }
 
 # Cabeçalho
-echo -e "${BLUE}∅ ZERO — Iniciando Instalação Inteligente${NC}"
+echo -e "${BLUE}ZERO - Iniciando Instalacao Inteligente${NC}"
 echo "------------------------------------------"
+
+# ... (Previous functions check_node, etc - updating logs)
+
+# 6. Configuração Global
+setup_global() {
+    log_info "Configurando comando 'zero' globalmente..."
+
+    # Define local padrao seguro se nao existir
+    export PNPM_HOME="$HOME/.local/share/pnpm"
+    mkdir -p "$PNPM_HOME"
+    export PATH="$PNPM_HOME:$PATH"
+
+    # Forca a configuracao do diretorio global
+    pnpm config set global-bin-dir "$PNPM_HOME"
+    
+    # Tenta linkar
+    if ! pnpm link --global; then
+        log_warn "Link falhou na primeira tentativa."
+        log_info "Tentando forcar setup do pnpm..."
+        pnpm setup
+        
+        # Tenta novamente
+        if ! pnpm link --global; then
+             log_error "Falha critica ao linkar o comando 'zero'."
+             log_warn "Adicione manualmente ao seu PATH: $PNPM_HOME"
+             return 1
+        fi
+    fi
+    
+    log_success "Comando 'zero' linkado globalmente."
+}
 
 # 1. Detecção de OS e Hardware
 check_environment() {
@@ -107,8 +138,7 @@ build_native_modules() {
     fi
 }
 
-    fi
-}
+
 
 # 4.5 Correção Preventiva do Workspace
 fix_workspace_config() {
