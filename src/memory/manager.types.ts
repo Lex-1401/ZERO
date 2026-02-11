@@ -1,11 +1,4 @@
-import type { DatabaseSync } from "node:sqlite";
-import type { ZEROConfig } from "../config/config.js";
 export type { ResolvedMemorySearchConfig } from "../agents/memory-search.js";
-import type {
-  EmbeddingProvider,
-  GeminiEmbeddingClient,
-  OpenAiEmbeddingClient,
-} from "./embeddings.js";
 
 export type MemorySource = "memory" | "sessions";
 
