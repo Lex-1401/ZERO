@@ -55,8 +55,6 @@ export async function runCli(argv: string[] = process.argv) {
   const normalizedArgv = stripWindowsNodeExec(argv);
   loadDotEnv({ quiet: true });
   normalizeEnv();
-  console.log("[debug] ZERO_CONFIG_PATH:", process.env.ZERO_CONFIG_PATH);
-  console.log("[debug] ZERO_AGENT_MODEL:", process.env.ZERO_AGENT_MODEL);
   ensureZEROCliOnPath();
 
   // Enforce the minimum supported runtime before doing any work.
