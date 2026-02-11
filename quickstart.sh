@@ -249,11 +249,25 @@ finish_setup() {
     echo -e "Para usar o comando 'zero', talvez você precise reiniciar seu terminal ou rodar:"
     echo -e "${YELLOW}source ~/.zshrc${NC} (ou equivalente)"
     
+    # Detectar ambiente Container/Docker
+    IS_CONTAINER=0
+    if [ -f "/.dockerenv" ] || grep -q "docker\|lxc" /proc/1/cgroup 2>/dev/null; then
+        IS_CONTAINER=1
+    fi
+
     echo -e "\nTeste o comando agora:"
-    echo -e "${BLUE}zero onboard --install-daemon${NC}"
+    if [ "$IS_CONTAINER" -eq 1 ]; then
+        echo -e "${BLUE}zero onboard${NC} (depois rode 'zero start')"
+    else
+        echo -e "${BLUE}zero onboard --install-daemon${NC}"
+    fi
     
     echo -e "\nSe falhar, use o caminho local:"
-    echo -e "${BLUE}pnpm zero onboard --install-daemon${NC}"
+    if [ "$IS_CONTAINER" -eq 1 ]; then
+        echo -e "${BLUE}pnpm zero onboard${NC}"
+    else
+        echo -e "${BLUE}pnpm zero onboard --install-daemon${NC}"
+    fi
 
     # Tentar abrir o dashboard se o gateway já estiver configurado
     if [ -f "$HOME/.zero/zero.json" ]; then
