@@ -1,13 +1,17 @@
 # ∅ ZERO — Sistema Operacional Pessoal Agêntico
 
-![ZERO Header](README-header.png)
+<p align="center">
+  <img src="README-header.png" alt="ZERO Header">
+</p>
 
 > **"A infraestrutura invisível é a mais resiliente."** ∅
 
-[![Status do CI](https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge)](https://github.com/zero/zero/actions/workflows/ci.yml?branch=main)
-[![License](https://img.shields.io/badge/License-MIT-000000?style=for-the-badge)](LICENSE)
-[![QI](https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge)](https://github.com/zero/zero)
-[![Version](https://img.shields.io/badge/release-v0.2.0-blue?style=for-the-badge)](CHANGELOG.md)
+<p align="center">
+  <a href="https://github.com/zero/zero/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/zero/zero/ci.yml?branch=main&style=for-the-badge" alt="Status do CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/zero/zero"><img src="https://img.shields.io/badge/Engineered_by-Master_Team-000000?style=for-the-badge" alt="QI"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.2.0-blue?style=for-the-badge" alt="Version"></a>
+</p>
 
 **ZERO** não é apenas uma distribuição de IA; é o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Projetado como um **Sistema Operacional de Agente**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
 
@@ -90,7 +94,9 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
 
 O ZERO é projetado com rigor de engenharia aeronáutica. Abaixo, o Blueprint da nossa arquitetura agêntica:
 
-![ZERO Architecture Blueprint](assets/blueprint-arch.png)
+<p align="center">
+  <img src="assets/blueprint-arch.png" alt="ZERO Architecture Blueprint">
+</p>
 
 *Esquema do Córtex Agêntico: Integração entre o Motor Rust e a Interface Altair.*
 
@@ -118,7 +124,7 @@ Para garantir estabilidade e performance:
   - **Ideal**: 2 vCPUs, 2 GB+ RAM, 40 GB+ SSD.
   - **Elite**: 4 vCPUs, 4 GB+ RAM (Para automação de navegador e múltiplos agentes).
 
-### �️ Instalação "One-Liner" (Simplificada)
+### 📦 Instalação "One-Liner" (Simplificada)
 
 Escolha o método que melhor se adapta ao seu ambiente:
 
@@ -201,7 +207,9 @@ O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustent
 
 O módulo **Zero Sentinel** implementa defesas ativas contra ameaças vetoriais:
 
-![Zero Sentinel Artwork](assets/sentinel-artwork.png)
+<p align="center">
+  <img src="assets/sentinel-artwork.png" alt="Zero Sentinel Artwork" width="500">
+</p>
 
 - **LLM Security Guardrails (OWASP Top 10)**: Mitigação ativa de Prompt Injection, Indirect Injection e Jailbreaks.
 - **Protocolo CoT com Self-Correction**: O modelo é forçado a deliberar em blocos `<think>`, garantindo lógica antes da ação.
