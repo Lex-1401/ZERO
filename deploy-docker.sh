@@ -47,6 +47,8 @@ IP_ADDR=$(curl -s ifconfig.me || echo "SEU_IP")
 echo "------------------------------------------"
 echo "✅ ZERO ONLINE no Docker."
 echo "🔗 Dashboard: http://$IP_ADDR:18789/control"
-echo "🔑 Seu Token: $(grep ZERO_GATEWAY_TOKEN .env | cut -d'=' -f2)"
+FULL_TOKEN=$(grep ZERO_GATEWAY_TOKEN .env | cut -d'=' -f2)
+MASKED_TOKEN="${FULL_TOKEN:0:4}****${FULL_TOKEN: -4}"
+echo "🔑 Seu Token: $MASKED_TOKEN (completo salvo em .env)"
 echo ""
 echo "Dica: Use 'docker compose logs -f' para acompanhar o sistema."

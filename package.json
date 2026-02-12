@@ -96,6 +96,7 @@
     "gateway:watch": "node scripts/watch-node.mjs gateway --force",
     "gateway:dev": "ZERO_SKIP_CHANNELS=1 node scripts/run-node.mjs --dev gateway",
     "gateway:dev:reset": "ZERO_SKIP_CHANNELS=1 node scripts/run-node.mjs --dev gateway --reset",
+    "gateway:bench": "node --import tsx src/gateway/stress.benchmark.ts",
     "tui": "node scripts/run-node.mjs tui",
     "tui:dev": "ZERO_PROFILE=dev node scripts/run-node.mjs tui",
     "zero:rpc": "node scripts/run-node.mjs agent --mode rpc --json",

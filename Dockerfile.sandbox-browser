@@ -4,25 +4,28 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    bash \
-    ca-certificates \
-    chromium \
-    curl \
-    fonts-liberation \
-    fonts-noto-color-emoji \
-    git \
-    jq \
-    novnc \
-    python3 \
-    socat \
-    websockify \
-    x11vnc \
-    xvfb \
+  bash \
+  ca-certificates \
+  chromium \
+  curl \
+  fonts-liberation \
+  fonts-noto-color-emoji \
+  git \
+  jq \
+  novnc \
+  python3 \
+  socat \
+  websockify \
+  x11vnc \
+  xvfb \
   && rm -rf /var/lib/apt/lists/*
 
 COPY scripts/sandbox-browser-entrypoint.sh /usr/local/bin/zero-sandbox-browser
 RUN chmod +x /usr/local/bin/zero-sandbox-browser
 
+# ⚠️ SECURITY (MEDIUM-011): Essas portas NÃO possuem autenticação.
+# Em produção, restrinja o binding a 127.0.0.1 ou use SSH tunneling.
+# Exemplo docker-compose: "127.0.0.1:9222:9222"
 EXPOSE 9222 5900 6080
 
 CMD ["zero-sandbox-browser"]

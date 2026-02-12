@@ -10,13 +10,19 @@ NC='\033[0m' # Sem cor
 echo -e "${BLUE}∅ ZERO — Iniciando Instalação Simplificada${NC}"
 echo "------------------------------------------"
 
-# 1. Verificar Node.js
+# 1. Verificar Node.js (>= 22)
 if ! command -v node >/dev/null 2>&1; then
     echo -e "${RED}❌ Node.js não encontrado!${NC}"
     echo "Por favor, instale o Node.js (versão 22 ou superior) em: https://nodejs.org/"
     exit 1
 fi
-echo -e "${GREEN}✅ Node.js detectado.${NC}"
+NODE_VERSION=$(node -v | cut -d'v' -f2)
+MAJOR_VER=${NODE_VERSION%%.*}
+if [ "$MAJOR_VER" -lt 22 ]; then
+    echo -e "${RED}❌ Node.js $NODE_VERSION detectado. O ZERO requer versão 22 ou superior.${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✅ Node.js v${NODE_VERSION} detectado.${NC}"
 
 # 2. Instalar pnpm se necessário
 if ! command -v pnpm >/dev/null 2>&1; then

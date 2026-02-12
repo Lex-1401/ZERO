@@ -2,11 +2,19 @@
 # ∅ ZERO — Instalador Rápido Inteligente
 # Este script automatiza a instalação, resolve dependências e lança o sistema.
 
-set -e
+set -euo pipefail
 
-# Garantir UTF-8 para evitar erros com caracteres especiais/emojis no Linux
+# Garantir UTF-8 e seguranca de rede
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
+export CURL_SECURE_FLAGS="-fsSL"
+
+# MEDIUM-002: Detectar se sudo é necessário (evitar CWE-250)
+if [ "${EUID:-$(id -u)}" -eq 0 ]; then
+    SUDO=""
+else
+    SUDO="sudo"
+fi
 
 # Cores para o terminal
 GREEN='\033[0;32m'
@@ -28,40 +36,8 @@ echo "------------------------------------------"
 # ... (rest of checks)
 
 # 6. Configuração Global
-setup_global() {
-    log_info "Configurando comando 'zero' globalmente..."
+# 0. Auditoria: Funcao setup_global removida daqui (redundancia eliminada).
 
-    # Define local padrao seguro se nao existir (evita erro de pnpm global não encontrado)
-    export PNPM_HOME="$HOME/.local/share/pnpm"
-    mkdir -p "$PNPM_HOME"
-    export PATH="$PNPM_HOME:$PATH"
-
-    # Forca a configuracao do diretorio global
-    pnpm config set global-bin-dir "$PNPM_HOME"
-    
-    # Tenta linkar
-    if ! pnpm link --global; then
-        log_warn "Link falhou na primeira tentativa."
-        log_info "Tentando forcar setup do pnpm..."
-        pnpm setup
-        
-        # Tenta novamente
-        if ! pnpm link --global; then
-             log_error "Falha critica ao linkar o comando 'zero'."
-             log_warn "O link global falhou, mas a instalacao local funcionou."
-             log_warn "Para usar o ZERO, voce devera usar o caminho completo."
-             return 1
-        fi
-    # Tenta tornar persistente (melhor esforco)
-    for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.bash_profile"; do
-        if [ -f "$rc" ] && ! grep -q "$PNPM_HOME" "$rc"; then
-            echo -e "\n# ZERO - pnpm global path\nexport PNPM_HOME=\"$PNPM_HOME\"\nexport PATH=\"\$PNPM_HOME:\$PATH\"" >> "$rc"
-            log_info "PATH adicionado permanentemente a $(basename "$rc")"
-        fi
-    done
-    
-    log_success "Comando 'zero' linkado globalmente."
-}
 
 # 1. Detecção de OS e Hardware
 check_environment() {
@@ -94,8 +70,17 @@ check_environment() {
 # 2. Verificar Node.js
 check_node() {
     if ! command -v node >/dev/null 2>&1; then
-        log_warn "Node.js não encontrado. Tentando instalar via NVM..."
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+        log_warn "Node.js não encontrado. Instalando via NVM (Protocolo Seguro)..."
+        NVM_VERSION="v0.40.1"
+        NVM_INSTALLER="$(mktemp)"
+        curl $CURL_SECURE_FLAGS "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" -o "$NVM_INSTALLER"
+        if [ ! -s "$NVM_INSTALLER" ]; then
+            log_error "Falha ao baixar instalador do NVM. Arquivo vazio ou corrompido."
+            rm -f "$NVM_INSTALLER"
+            exit 1
+        fi
+        bash "$NVM_INSTALLER"
+        rm -f "$NVM_INSTALLER"
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
         nvm install 22
@@ -104,18 +89,46 @@ check_node() {
         NODE_VERSION=$(node -v | cut -d'v' -f2)
         MAJOR_VER=${NODE_VERSION%%.*}
         if [ "$MAJOR_VER" -lt 22 ]; then
-            log_error "Node.js versão $NODE_VERSION detectada. O ZERO requer versão 22 ou superior."
+            log_error "Node.js versao $NODE_VERSION detectada. O ZERO requer versao 22 ou superior."
             exit 1
         fi
         log_success "Node.js $(node -v) pronto."
     fi
 }
 
+# 2.1 Verificar GIT (Essencial para Workspace)
+check_git() {
+    if ! command -v git >/dev/null 2>&1; then
+        log_warn "GIT nao encontrado. Tentando instalar..."
+        if [ "$(uname)" == "Linux" ]; then
+            if command -v apt-get >/dev/null 2>&1; then
+                $SUDO apt-get update && $SUDO apt-get install -y git || log_error "Falha ao instalar GIT via apt-get."
+            elif command -v dnf >/dev/null 2>&1; then
+                $SUDO dnf install -y git || log_error "Falha ao instalar GIT via dnf."
+            elif command -v yum >/dev/null 2>&1; then
+                $SUDO yum install -y git || log_error "Falha ao instalar GIT via yum."
+            elif command -v apk >/dev/null 2>&1; then
+                $SUDO apk add --no-cache git || log_error "Falha ao instalar GIT via apk."
+            elif command -v pacman >/dev/null 2>&1; then
+                $SUDO pacman -S --noconfirm git || log_error "Falha ao instalar GIT via pacman."
+            else
+                log_error "Nenhum gerenciador de pacotes suportado encontrado. Instale o GIT manualmente."
+                exit 1
+            fi
+        else
+            log_error "GIT ausente. Por favor, instale o GIT antes de prosseguir."
+            exit 1
+        fi
+    fi
+    log_success "GIT pronto."
+}
+
+
 # 3. Gerenciador de Pacotes (pnpm)
 check_pnpm() {
     if ! command -v pnpm >/dev/null 2>&1; then
         log_info "Instalando pnpm globalmente..."
-        npm install -g pnpm || sudo npm install -g pnpm
+        npm install -g pnpm || $SUDO npm install -g pnpm
     else
         log_success "pnpm detectado."
     fi
@@ -124,8 +137,16 @@ check_pnpm() {
 # 4. Rust & Native Modules
 check_rust() {
     if ! command -v cargo >/dev/null 2>&1; then
-        log_warn "Rust não encontrado. Tentando instalar via rustup..."
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        log_warn "Rust não encontrado. Instalando via rustup (HTTPS TLS 1.2+)..."
+        RUSTUP_INSTALLER="$(mktemp)"
+        curl --proto '=https' --tlsv1.2 $CURL_SECURE_FLAGS https://sh.rustup.rs -o "$RUSTUP_INSTALLER"
+        if [ ! -s "$RUSTUP_INSTALLER" ]; then
+            log_error "Falha ao baixar instalador do Rust. Arquivo vazio ou corrompido."
+            rm -f "$RUSTUP_INSTALLER"
+            exit 1
+        fi
+        sh "$RUSTUP_INSTALLER" -y
+        rm -f "$RUSTUP_INSTALLER"
         source "$HOME/.cargo/env"
     else
         log_success "Rust detectado."
@@ -144,13 +165,13 @@ check_build_tools() {
             log_warn "Ferramentas de compilacao ausentes: ${MISSING_TOOLS[*]}"
             log_info "Tentando instalar dependencias de build..."
             if command -v apt-get >/dev/null 2>&1; then
-                sudo apt-get update && sudo apt-get install -y build-essential python3
+                $SUDO apt-get update && $SUDO apt-get install -y build-essential python3
             elif command -v apk >/dev/null 2>&1; then
-                sudo apk add build-base python3 || apk add build-base python3
+                $SUDO apk add build-base python3 || apk add build-base python3
             elif command -v yum >/dev/null 2>&1; then
-                sudo yum groupinstall "Development Tools" -y && sudo yum install -y python3
+                $SUDO yum groupinstall "Development Tools" -y && $SUDO yum install -y python3
             elif command -v dnf >/dev/null 2>&1; then
-                sudo dnf groupinstall "Development Tools" -y && sudo dnf install -y python3
+                $SUDO dnf groupinstall "Development Tools" -y && $SUDO dnf install -y python3
             fi
         else
             log_success "Ferramentas de compilacao prontas."
@@ -298,6 +319,7 @@ finish_setup() {
 
 # --- Ciclo de Vida ---
 check_environment
+check_git
 check_node
 check_pnpm
 check_rust

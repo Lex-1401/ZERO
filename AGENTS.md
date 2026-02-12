@@ -1,7 +1,12 @@
-# Diretrizes do Repositório
+# ∅ ZERO Repository Governance & Engineering Protocols
 
-- Repositório: <https://github.com/zero/zero>
-- Issues/comentários do GitHub/comentários de PR: use strings literais de várias linhas ou `-F - <<'EOF'` (ou $'...') para quebras de linha reais; nunca incorpore "\\n".
+**Standard**: Master Tier PhD Architecture
+**Scope**: Core Engine, Subsystems, and Global Workspaces
+
+This document defines the formal engineering protocols for the ZERO ecosystem. Adherence to these guidelines is mandatory for maintaining systemic integrity and cognitive fidelity across all agentic cycles.
+
+- **Primary Repository**: <https://github.com/Lex-1401/ZERO>
+- **Communication Protocol**: For GitHub issues/PRs, utilize multi-line literals or `-F - <<'EOF'` to preserve structural integrity; never embed raw `\n` sequences.
 
 ## Estrutura do Projeto e Organização de Módulos
 

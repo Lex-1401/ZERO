@@ -1,6 +1,14 @@
 services:
   zero-gateway:
     image: ${ZERO_IMAGE:-zero:local}
+    # ⚠️ SECURITY: Session keys em env vars são visíveis via 'docker inspect'.
+    # Para produção, use Docker secrets (ver seção 'secrets' abaixo) ou env_file com permissões restritas (chmod 600).
+    #
+    # Para usar Docker secrets em produção:
+    #   1. Crie os arquivos de secret: echo "seu-token" > ./secrets/gateway_token.txt
+    #   2. Descomente a seção 'secrets:' abaixo
+    #   3. No código, leia de /run/secrets/<nome> em vez de env vars
+    #   4. Restrinja permissões: chmod 600 ./secrets/*.txt
     environment:
       HOME: /home/node
       TERM: xterm-256color
@@ -8,6 +16,9 @@ services:
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
+    # secrets:
+    #   - gateway_token
+    #   - claude_session_key
     volumes:
       - ${ZERO_CONFIG_DIR}:/home/node/.zero
       - ${ZERO_WORKSPACE_DIR}:/home/node/zero
@@ -43,3 +54,12 @@ services:
     tty: true
     init: true
     entrypoint: ["node", "dist/index.js"]
+
+# Docker Secrets (produção):
+# Descomente para usar file-based secrets em vez de environment variables.
+# secrets:
+#   gateway_token:
+#     file: ./secrets/gateway_token.txt
+#   claude_session_key:
+#     file: ./secrets/claude_session_key.txt
+
