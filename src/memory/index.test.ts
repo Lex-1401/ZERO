@@ -58,7 +58,24 @@ describe("memory index", () => {
       await manager.close();
       manager = null;
     }
-    await fs.rm(workspaceDir, { recursive: true, force: true });
+    // Windows CI stabilization: retry rm if EBUSY occurs
+    let deleted = false;
+    for (let i = 0; i < 5; i++) {
+      try {
+        await fs.rm(workspaceDir, { recursive: true, force: true });
+        deleted = true;
+        break;
+      } catch (err) {
+        if ((err as any).code === "EBUSY" && i < 4) {
+          await new Promise((r) => setTimeout(r, 100));
+          continue;
+        }
+        throw err;
+      }
+    }
+    if (!deleted) {
+      console.warn(`Warning: Failed to delete workspaceDir ${workspaceDir} after retries`);
+    }
   });
 
   it("indexes memory files and searches by vector", async () => {

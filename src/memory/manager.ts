@@ -702,6 +702,13 @@ export class MemoryIndexManager {
 
   async close() {
     this.closed = true;
+    if (this.syncing) {
+      try {
+        await this.syncing;
+      } catch {
+        // Ignore sync errors during close
+      }
+    }
     if (this.watcher) await this.watcher.close();
     if (this.intervalTimer) clearInterval(this.intervalTimer);
     if (this.sessionUnsubscribe) this.sessionUnsubscribe();

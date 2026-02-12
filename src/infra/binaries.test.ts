@@ -13,7 +13,7 @@ describe("ensureBinary", () => {
     const runtime: RuntimeEnv = {
       log: vi.fn(),
       error: vi.fn(),
-      exit: vi.fn(),
+      exit: vi.fn() as unknown as (code: number) => never,
     };
     await ensureBinary("node", exec, runtime);
     const expectedCmd = process.platform === "win32" ? "where" : "which";
@@ -23,9 +23,10 @@ describe("ensureBinary", () => {
   it("logs and exits when missing", async () => {
     const exec: typeof runExec = vi.fn().mockRejectedValue(new Error("missing"));
     const error = vi.fn();
-    const exit = vi.fn(() => {
+    const exit = vi.fn((code: number) => {
+      console.log(`Exit called with ${code}`);
       throw new Error("exit");
-    });
+    }) as unknown as (code: number) => never;
     await expect(ensureBinary("ghost", exec, { log: vi.fn(), error, exit })).rejects.toThrow(
       "exit",
     );
