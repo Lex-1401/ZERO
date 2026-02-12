@@ -37,11 +37,12 @@ export function shouldSkipDuplicateInbound(
   const key = buildInboundDedupeKey(ctx);
   if (!key) return false;
   const cache = opts?.cache ?? inboundDedupeCache;
-  const skipped = cache.check(key, opts?.now);
-  if (skipped && shouldLogVerbose()) {
+  const isUnique = cache.check(key, opts?.now);
+  const shouldSkip = !isUnique;
+  if (shouldSkip && shouldLogVerbose()) {
     logVerbose(`inbound dedupe: skipped ${key}`);
   }
-  return skipped;
+  return shouldSkip;
 }
 
 export function resetInboundDedupe(): void {

@@ -19,7 +19,8 @@ import {
 } from "../agents/sandbox.js";
 import { resolveGatewayAuth } from "../gateway/auth.js";
 import type { SandboxToolPolicy } from "../agents/sandbox/types.js";
-import { INCLUDE_KEY, MAX_INCLUDE_DEPTH } from "../config/includes.js";
+import { MAX_INCLUDE_DEPTH } from "../config/includes.js";
+import { listDirectIncludes, resolveIncludePath } from "./config-includes.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import {
   formatOctal,
@@ -141,6 +142,19 @@ export function collectSecretsInConfigFindings(cfg: ZEROConfig): SecurityAuditFi
       detail:
         "gateway.auth.password is set in the config file; prefer environment variables for secrets when possible.",
       remediation: "Prefer ZERO_GATEWAY_PASSWORD (env) and remove gateway.auth.password from disk.",
+    });
+  }
+
+  const gatewayToken =
+    typeof cfg.gateway?.auth?.token === "string" ? cfg.gateway.auth.token.trim() : "";
+  if (gatewayToken && !looksLikeEnvRef(gatewayToken)) {
+    findings.push({
+      checkId: "config.secrets.gateway_token_in_config",
+      severity: "warn",
+      title: "Gateway auth token is stored in config",
+      detail:
+        "gateway.auth.token is set in the config file; prefer environment variables for secrets when possible.",
+      remediation: "Prefer ZERO_GATEWAY_TOKEN (env) and remove gateway.auth.token from disk.",
     });
   }
 
@@ -637,37 +651,6 @@ export async function collectPluginsTrustFindings(params: {
   }
 
   return findings;
-}
-
-function resolveIncludePath(baseConfigPath: string, includePath: string): string {
-  return path.normalize(
-    path.isAbsolute(includePath)
-      ? includePath
-      : path.resolve(path.dirname(baseConfigPath), includePath),
-  );
-}
-
-function listDirectIncludes(parsed: unknown): string[] {
-  const out: string[] = [];
-  const visit = (value: unknown) => {
-    if (!value) return;
-    if (Array.isArray(value)) {
-      for (const item of value) visit(item);
-      return;
-    }
-    if (typeof value !== "object") return;
-    const rec = value as Record<string, unknown>;
-    const includeVal = rec[INCLUDE_KEY];
-    if (typeof includeVal === "string") out.push(includeVal);
-    else if (Array.isArray(includeVal)) {
-      for (const item of includeVal) {
-        if (typeof item === "string") out.push(item);
-      }
-    }
-    for (const v of Object.values(rec)) visit(v);
-  };
-  visit(parsed);
-  return out;
 }
 
 async function collectIncludePathsRecursive(params: {

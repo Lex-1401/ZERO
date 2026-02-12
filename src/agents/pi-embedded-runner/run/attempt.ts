@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import os from "node:os";
+import path from "node:path";
 
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { AssistantMessage, ImageContent } from "@mariozechner/pi-ai";
@@ -389,9 +390,7 @@ export async function runEmbeddedAttempt(
     // IA 100+: Speculative Context Pre-warming (DevSecOps PHD Tier)
     let speculativeContext = "";
     if (params.prompt && params.prompt.length > 5 && !isSubagentSessionKey(params.sessionKey)) {
-      const fileMatches = params.prompt.match(
-        /[a-zA-Z0-9_\-\.\/]+\.(ts|js|sh|md|json|css|tsx|jsx)/g,
-      );
+      const fileMatches = params.prompt.match(/[a-zA-Z0-9_\-./]+\.(ts|js|sh|md|json|css|tsx|jsx)/g);
       if (fileMatches && fileMatches.length > 0) {
         const uniqueMatches = Array.from(new Set(fileMatches));
         for (const fileRelPath of uniqueMatches.slice(0, 5)) {

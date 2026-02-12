@@ -1,5 +1,8 @@
 import { redactSensitiveText } from "../logging/redact.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
 import { SecurityEngine as NativeEngine } from "@zero/ratchet";
+
+const log = createSubsystemLogger("security/guard");
 
 let nativeSecurity: NativeEngine | null = null;
 try {
@@ -7,7 +10,7 @@ try {
 } catch {
   // Fallback to JS implementation
   if (process.env.NODE_ENV !== "test") {
-    console.warn("[security/guard] Failed to load native SecurityEngine, using JS fallback");
+    log.warn("Failed to load native SecurityEngine, using JS fallback");
   }
 }
 
@@ -25,18 +28,27 @@ const INJECTION_PATTERNS = [
   /unfiltered response/i,
   /cannot refuse/i,
   /opposite mode/i,
+  /act as a (system|root|admin)/i,
+  /reveal all (keys|secrets|passwords)/i,
+  /dan mode/i,
   /\[\/INST\]|\[INST\]|<<SYS>>|\/SYS>>/i,
   /### (Instruction|Response|System):/i,
   /<\|im_start\|>|<\|im_end\|>|<\|system\|>/i,
   /forget everything.*start (as|a)/i,
   /you are now a.*that always/i,
-  /act as a (system|root|admin)/i,
-  /reveal all (keys|secrets|passwords)/i,
-  /unfiltered response/i,
-  /dan mode/i,
   // Fragmentation-aware patterns (spaces, dots, newlines between keywords)
   /i\s*g\s*n\s*o\s*r\s*e\s*a\s*l\s*l/i,
   /p\s*r\s*e\s*v\s*i\s*n\s*s\s*t/i,
+  // VAPT-MEDIUM-008: Modern attack vectors
+  /repeat.*(?:above|system|instructions)/i,
+  /translate.*(?:above|preceding|system).*(?:to|into)/i,
+  /what (?:are|were) your (?:instructions|rules|system)/i,
+  /output.*(?:system|initial).*(?:prompt|instructions)/i,
+  /print.*(?:system|original).*(?:prompt|message)/i,
+  /show.*(?:hidden|system|original).*(?:prompt|instructions|text)/i,
+  /(?:encode|convert|base64).*(?:system|instructions|prompt)/i,
+  /data:text\/html;base64/i,
+  /\u0456gn\u043bre/i, // Unicode homoglyph 'ignore' with Cyrillic chars
 ];
 
 // LLM06: PII Patterns for Output Firewall (extends logging redaction)
@@ -52,6 +64,9 @@ const PII_PATTERNS = [
   /ey[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*/, // JWT/Tokens
   /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/, // AWS Access Key
   /\b[a-zA-Z0-9+/]{40}\b/, // Generic Secret Key (High entropy)
+  /ghp_[A-Za-z0-9_]{36,}/, // GitHub Token
+  /sk_live_[a-zA-Z0-9]{24,}/, // Stripe Key
+  /xoxb-[a-zA-Z0-9-]{10,}/, // Slack Token
   /\b[A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|PASSWD)\b\s*[=:]\s*["']?[^\s"']+/i,
 ];
 
@@ -127,13 +142,57 @@ export class SecurityGuard {
    * @returns Redacted text.
    */
   private static applyStrictRedactions(text: string): string {
-    return text
-      .replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "[REDACTED-CPF]")
-      .replace(/\b\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}\b/g, "[REDACTED-CNPJ]")
-      .replace(/\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g, "[REDACTED-FINANCIAL]")
-      .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, "[REDACTED-EMAIL]")
-      .replace(/sk-[a-zA-Z0-9]{32,}/g, "[REDACTED-API-KEY]")
-      .replace(/\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/g, "[REDACTED-AWS-KEY]");
+    return (
+      text
+        // Documentos BR
+        .replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "[REDACTED-CPF]")
+        .replace(/\b\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}\b/g, "[REDACTED-CNPJ]")
+        // Cartões de crédito (PAN)
+        .replace(/\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g, "[REDACTED-FINANCIAL]")
+        // Email
+        .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, "[REDACTED-EMAIL]")
+        // OpenAI API Keys
+        .replace(/sk-[a-zA-Z0-9]{32,}/g, "[REDACTED-API-KEY]")
+        // AWS Access Keys
+        .replace(/\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/g, "[REDACTED-AWS-KEY]")
+        // SHIELD §4.1: Padrões expandidos
+        // GCP Service Account Keys
+        .replace(/"private_key":\s*"-----BEGIN[^"]*-----"/g, "[REDACTED-GCP-PRIVATE-KEY]")
+        // Azure / Microsoft keys — redação contextual (SEC-003)
+        // UUIDs após prefixos de segredo (key=, token=, secret=, password=) são redactados
+        .replace(
+          /(?:key|token|secret|password|credential|api[_-]?key)\s*[=:]\s*[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/gi,
+          (match) => {
+            const prefix = match.replace(
+              /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i,
+              "",
+            );
+            return `${prefix}[REDACTED-UUID-SECRET]`;
+          },
+        )
+        // GitHub Personal Access Tokens (ghp_, gho_, ghu_, ghs_, ghr_)
+        .replace(/\b(ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9_]{36,}\b/g, "[REDACTED-GITHUB-TOKEN]")
+        // Stripe keys (sk_live_, pk_live_, sk_test_, pk_test_)
+        .replace(/\b[sp]k_(live|test)_[a-zA-Z0-9]{24,}\b/g, "[REDACTED-STRIPE-KEY]")
+        // Slack tokens (xoxb-, xoxp-, xoxs-)
+        .replace(/\bxox[bpsa]-[a-zA-Z0-9-]{10,}/g, "[REDACTED-SLACK-TOKEN]")
+        // Bearer tokens genéricos
+        .replace(/Bearer\s+[A-Za-z0-9\-._~+/]+={0,2}/gi, "[REDACTED-BEARER-TOKEN]")
+        // JWT tokens (3 partes base64 separadas por pontos)
+        .replace(
+          /\beyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\b/g,
+          "[REDACTED-JWT]",
+        )
+        // Private keys (PEM format)
+        .replace(
+          /-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----[\s\S]{20,}?-----END\s+(RSA\s+)?PRIVATE\s+KEY-----/g,
+          "[REDACTED-PRIVATE-KEY]",
+        )
+        // Anthropic API keys
+        .replace(/\bsk-ant-[a-zA-Z0-9_-]{40,}\b/g, "[REDACTED-ANTHROPIC-KEY]")
+        // Google API keys
+        .replace(/\bAIza[0-9A-Za-z_-]{35}\b/g, "[REDACTED-GOOGLE-API-KEY]")
+    );
   }
 
   /**
@@ -387,7 +446,7 @@ export class SecurityGuard {
         const entropy = nativeSecurity
           ? nativeSecurity.calculateEntropy(key)
           : this.calculateEntropy(key);
-        if (entropy > 3.5) {
+        if (entropy > 4.0) {
           return {
             type: "pii",
             details: "Cadeia de alta entropia (possível segredo) detectada na saída.",

@@ -85,3 +85,19 @@ export async function readResponseText(res: Response): Promise<string> {
     return "";
   }
 }
+
+/**
+ * Evicts expired entries from a cache map (PERF-001).
+ * Should be called periodically to prevent unbounded memory growth.
+ */
+export function cleanupCache<T>(cache: Map<string, CacheEntry<T>>): number {
+  const now = Date.now();
+  let evicted = 0;
+  for (const [key, entry] of cache.entries()) {
+    if (now > entry.expiresAt) {
+      cache.delete(key);
+      evicted++;
+    }
+  }
+  return evicted;
+}

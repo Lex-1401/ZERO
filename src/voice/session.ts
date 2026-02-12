@@ -1,6 +1,7 @@
 import { Buffer } from "node:buffer";
 import { EventEmitter } from "node:events";
 import { VadEngine } from "@zero/ratchet";
+import { whisperEngine } from "./whisper-engine.js";
 
 export type AudioConfig = {
   sampleRate: number;
@@ -75,7 +76,7 @@ export class VoiceSession extends EventEmitter {
 
   private handleSpeechEnd() {
     console.log(`[VoiceSession:${this.connId}] Speech ended (Native VAD Pulse)`);
-    this.dispatchTranscriptionPulse();
+    void this.dispatchTranscriptionPulse();
   }
 
   private handleSystemPanic() {
@@ -91,30 +92,30 @@ export class VoiceSession extends EventEmitter {
 
   /**
    * @Cortex_Protocol: Dispatching event-driven transcription pulse.
-   * In a production environment, this interfaces with Edge-TTS (Fast-Path)
-   * or XTTS-v2 (Deep-Path/Cloning) via the Multi-Voice Bridge.
+   * Integrating faster-whisper (Offline) for high-privacy contexts.
    */
-  private dispatchTranscriptionPulse() {
-    const texts = [
-      "Protocolo Transcendente ativo.",
-      "Nucleo de Conhecimento sincronizado.",
-      "Aguardando pulso de comando.",
-      "Soberania de dados verificada.",
-    ];
-    const text = texts[Math.floor(Math.random() * texts.length)];
+  private async dispatchTranscriptionPulse() {
+    // Concatenate bits of the rolling buffer for a coherent context
+    const fullAudio = Buffer.concat(this.buffer);
 
-    this.sendMessage({
-      type: "voice.transcription",
-      state: "final",
-      text: text,
-      ts: Date.now(),
-      metrics: {
-        engineLatency: this.engineConfig.targetLatencyMs,
-        confidence: 0.99,
-      },
+    // Clear buffer after dispatch
+    this.buffer = [];
+
+    whisperEngine.once("transcription", (result: any) => {
+      this.sendMessage({
+        type: "voice.transcription",
+        state: "final",
+        text: result.text,
+        ts: Date.now(),
+        metrics: {
+          engineLatency: this.engineConfig.targetLatencyMs,
+          confidence: result.confidence,
+        },
+      });
+      this.emit("transcription", result.text);
     });
 
-    this.emit("transcription", text);
+    void whisperEngine.transcribe(fullAudio);
   }
 }
 

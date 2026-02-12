@@ -9,6 +9,7 @@ import {
   CacheEntry,
   DEFAULT_CACHE_TTL_MINUTES,
   DEFAULT_TIMEOUT_SECONDS,
+  cleanupCache,
   normalizeCacheKey,
   readCache,
   readResponseText,
@@ -40,6 +41,12 @@ const DEFAULT_FETCH_USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
 
 const FETCH_CACHE = new Map<string, CacheEntry<Record<string, unknown>>>();
+
+// PERF-001: Eviction periódica de entradas expiradas (a cada 5 min)
+const _fetchCacheCleanupTimer = setInterval(() => cleanupCache(FETCH_CACHE), 5 * 60_000);
+if (typeof _fetchCacheCleanupTimer === "object" && "unref" in _fetchCacheCleanupTimer) {
+  _fetchCacheCleanupTimer.unref();
+}
 
 const WebFetchSchema = Type.Object({
   url: Type.String({ description: "HTTP or HTTPS URL to fetch." }),

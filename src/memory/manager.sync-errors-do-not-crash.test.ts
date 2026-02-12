@@ -4,15 +4,20 @@ import path from "node:path";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getMemorySearchManager, type MemoryIndexManager } from "./index.js";
+import { MemoryIndexManager } from "./manager.js";
+import { resolveMemorySearchConfig } from "../agents/memory-search.js";
 
 vi.mock("chokidar", () => ({
   default: {
     watch: vi.fn(() => ({
-      on: vi.fn(),
+      on: vi.fn().mockReturnThis(),
       close: vi.fn(async () => undefined),
     })),
   },
+  watch: vi.fn(() => ({
+    on: vi.fn().mockReturnThis(),
+    close: vi.fn(async () => undefined),
+  })),
 }));
 
 vi.mock("./embeddings.js", () => {
@@ -65,9 +70,9 @@ describe("memory manager sync failures", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             sync: { watch: true, watchDebounceMs: 1, onSessionStart: false, onSearch: false },
           },
         },
@@ -75,10 +80,13 @@ describe("memory manager sync failures", () => {
       },
     };
 
-    const result = await getMemorySearchManager({ cfg, agentId: "main" });
-    expect(result.manager).not.toBeNull();
-    if (!result.manager) throw new Error("manager missing");
-    manager = result.manager;
+    manager = await MemoryIndexManager.get({ cfg: cfg as any, agentId: "main" });
+    if (!manager) {
+      const settings = resolveMemorySearchConfig(cfg as any, "main");
+      console.error("MemorySearch settings:", settings);
+    }
+    expect(manager).not.toBeNull();
+    if (!manager) throw new Error("manager missing");
     const syncSpy = vi.spyOn(manager, "sync");
 
     // Call the internal scheduler directly; it uses fire-and-forget sync.

@@ -8,6 +8,7 @@ import {
   CacheEntry,
   DEFAULT_CACHE_TTL_MINUTES,
   DEFAULT_TIMEOUT_SECONDS,
+  cleanupCache,
   normalizeCacheKey,
   readCache,
   readResponseText,
@@ -30,6 +31,13 @@ const PERPLEXITY_KEY_PREFIXES = ["pplx-"];
 const OPENROUTER_KEY_PREFIXES = ["sk-or-"];
 
 const SEARCH_CACHE = new Map<string, CacheEntry<Record<string, unknown>>>();
+
+// PERF-001: Eviction periódica de entradas expiradas (a cada 5 min)
+const _searchCacheCleanupTimer = setInterval(() => cleanupCache(SEARCH_CACHE), 5 * 60_000);
+if (typeof _searchCacheCleanupTimer === "object" && "unref" in _searchCacheCleanupTimer) {
+  _searchCacheCleanupTimer.unref();
+}
+
 const BRAVE_FRESHNESS_SHORTCUTS = new Set(["pd", "pw", "pm", "py"]);
 const BRAVE_FRESHNESS_RANGE = /^(\d{4}-\d{2}-\d{2})to(\d{4}-\d{2}-\d{2})$/;
 

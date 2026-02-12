@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getMemorySearchManager, type MemoryIndexManager } from "./index.js";
 
-const embedBatch = vi.fn(async () => []);
-const embedQuery = vi.fn(async () => [0.5, 0.5, 0.5]);
+const embedBatch = vi.fn(async (_texts: string[]) => [] as number[][]);
+const embedQuery = vi.fn(async (_text: string) => [0.5, 0.5, 0.5]);
 
 vi.mock("./embeddings.js", () => ({
   createEmbeddingProvider: async () => ({
@@ -35,8 +35,8 @@ describe("memory indexing with OpenAI batches", () => {
   beforeEach(async () => {
     embedBatch.mockClear();
     embedQuery.mockClear();
-    embedBatch.mockImplementation(async (texts: string[]) =>
-      texts.map((_text, index) => [index + 1, 0, 0]),
+    embedBatch.mockImplementation(
+      async (texts: string[]) => texts.map((_text, index) => [index + 1, 0, 0]) as number[][],
     );
     const realSetTimeout = setTimeout;
     setTimeoutSpy = vi.spyOn(global, "setTimeout").mockImplementation(((
@@ -135,9 +135,9 @@ describe("memory indexing with OpenAI batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "text-embedding-3-small",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
             remote: { batch: { enabled: true, wait: true, pollIntervalMs: 1 } },
@@ -241,9 +241,9 @@ describe("memory indexing with OpenAI batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "text-embedding-3-small",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
             remote: { batch: { enabled: true, wait: true, pollIntervalMs: 1 } },
@@ -338,9 +338,9 @@ describe("memory indexing with OpenAI batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "text-embedding-3-small",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
             remote: { batch: { enabled: true, wait: true, pollIntervalMs: 1 } },
@@ -435,9 +435,9 @@ describe("memory indexing with OpenAI batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "text-embedding-3-small",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
             remote: { batch: { enabled: true, wait: true, pollIntervalMs: 1 } },

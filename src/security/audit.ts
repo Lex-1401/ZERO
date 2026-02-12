@@ -35,6 +35,9 @@ import {
 import { AuditCrypt } from "./crypt.js";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+
+const log = createSubsystemLogger("security/audit");
 
 /**
  * Represents the severity levels for security audit findings.
@@ -964,7 +967,7 @@ export async function runSecurityAudit(opts: SecurityAuditOptions): Promise<Secu
       const encrypted = AuditCrypt.encrypt(JSON.stringify(report, null, 2), token);
       await fs.writeFile(reportPath, encrypted, { mode: 0o600 });
     } catch (err) {
-      console.error("[audit] Failed to save encrypted audit report:", err);
+      log.error("Failed to save encrypted audit report", { error: String(err) });
     }
   }
 

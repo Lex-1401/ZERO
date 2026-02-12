@@ -179,7 +179,7 @@ export async function authorizeGatewayConnect(params: {
       result.reason === "token_missing" ||
       result.reason === "password_missing"
     ) {
-      authProtector.recordFailure(clientIp);
+      await authProtector.recordFailure(clientIp);
     }
   }
 

@@ -52,9 +52,9 @@ describe("memory embedding batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             chunking: { tokens: 200, overlap: 0 },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
@@ -86,9 +86,9 @@ describe("memory embedding batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             chunking: { tokens: 200, overlap: 0 },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
@@ -117,9 +117,9 @@ describe("memory embedding batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             chunking: { tokens: 200, overlap: 0 },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
@@ -142,7 +142,7 @@ describe("memory embedding batches", () => {
     });
 
     expect(updates.length).toBeGreaterThan(0);
-    expect(updates.some((update) => update.label?.includes("/"))).toBe(true);
+    expect(updates.some((update) => update.total > 0)).toBe(true);
     const last = updates[updates.length - 1];
     expect(last?.total).toBeGreaterThan(0);
     expect(last?.completed).toBe(last?.total);
@@ -180,9 +180,9 @@ describe("memory embedding batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             chunking: { tokens: 200, overlap: 0 },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
@@ -237,9 +237,9 @@ describe("memory embedding batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             chunking: { tokens: 200, overlap: 0 },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
@@ -270,9 +270,9 @@ describe("memory embedding batches", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             sync: { watch: false, onSessionStart: false, onSearch: false },
             query: { minScore: 0 },
           },

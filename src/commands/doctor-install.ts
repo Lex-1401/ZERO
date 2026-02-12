@@ -33,6 +33,15 @@ export function noteSourceInstallIssues(root: string | null) {
     );
   }
 
+  // Verificar GIT (Nova Robustez Integrada)
+  const gitDir = path.join(root, ".git");
+  if (!fs.existsSync(gitDir)) {
+    warnings.push(
+      "- Repositório GIT não inicializado ou ausente. Isso impede atualizações inteligentes e controle de versão.",
+      "  Ação Corretiva: Execute 'git init' ou clone o repositório corretamente.",
+    );
+  }
+
   // Verificar módulo nativo (RATCHET)
   const rustCoreDir = path.join(root, "rust-core");
   const ratchetFiles = fs.existsSync(rustCoreDir)
@@ -43,8 +52,8 @@ export function noteSourceInstallIssues(root: string | null) {
 
   if (fs.existsSync(rustCoreDir) && !hasAnyRatchet) {
     warnings.push(
-      "- Módulo nativo (rust-core) não compilado. O sistema IRÁ falhar ao iniciar.",
-      "  Execute: pnpm build:rust",
+      "- Núcleo Nativo (rust-core) NÃO compilado. O sistema sofrerá falha crítica de runtime.",
+      "  Ação Necessária: pnpm build:rust",
     );
   } else if (hasAnyRatchet) {
     // Auditoria de Arquitetura: Verifica se o binário corresponde ao ambiente
@@ -53,14 +62,14 @@ export function noteSourceInstallIssues(root: string | null) {
 
     if (!matchingBinary && !fs.existsSync(path.join(rustCoreDir, "ratchet.node"))) {
       warnings.push(
-        `- Módulo nativo encontrado, mas nenhum parece corresponder à sua arquitetura (${currentPlatform}).`,
-        "  Isso ocorre frequentemente ao migrar arquivos entre computadores diferentes.",
-        "  Execute: pnpm build:rust",
+        `- Inconsistência de Arquitetura: Binário nativo não compatível com (${currentPlatform}).`,
+        "  Cenário: Migração de ambiente ou build corrompido.",
+        "  Ação Necessária: pnpm build:rust",
       );
     }
   }
 
   if (warnings.length > 0) {
-    note(warnings.join("\n"), "Instalação");
+    note(warnings.join("\n"), "Shield Doctor: Diagnóstico de Instalação");
   }
 }

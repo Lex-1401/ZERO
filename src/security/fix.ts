@@ -7,7 +7,8 @@ import type { ZEROConfig } from "../config/config.js";
 import { createConfigIO } from "../config/config.js";
 import { resolveConfigPath, resolveOAuthDir, resolveStateDir } from "../config/paths.js";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { INCLUDE_KEY, MAX_INCLUDE_DEPTH } from "../config/includes.js";
+import { MAX_INCLUDE_DEPTH } from "../config/includes.js";
+import { listDirectIncludes, resolveIncludePath } from "./config-includes.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import { readChannelAllowFromStore } from "../pairing/pairing-store.js";
 
@@ -190,37 +191,6 @@ function applyConfigFixes(params: { cfg: ZEROConfig; env: NodeJS.ProcessEnv }): 
   }
 
   return { cfg: next, changes, policyFlips };
-}
-
-function listDirectIncludes(parsed: unknown): string[] {
-  const out: string[] = [];
-  const visit = (value: unknown) => {
-    if (!value) return;
-    if (Array.isArray(value)) {
-      for (const item of value) visit(item);
-      return;
-    }
-    if (typeof value !== "object") return;
-    const rec = value as Record<string, unknown>;
-    const includeVal = rec[INCLUDE_KEY];
-    if (typeof includeVal === "string") out.push(includeVal);
-    else if (Array.isArray(includeVal)) {
-      for (const item of includeVal) {
-        if (typeof item === "string") out.push(item);
-      }
-    }
-    for (const v of Object.values(rec)) visit(v);
-  };
-  visit(parsed);
-  return out;
-}
-
-function resolveIncludePath(baseConfigPath: string, includePath: string): string {
-  return path.normalize(
-    path.isAbsolute(includePath)
-      ? includePath
-      : path.resolve(path.dirname(baseConfigPath), includePath),
-  );
 }
 
 async function collectIncludePathsRecursive(params: {

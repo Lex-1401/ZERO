@@ -11,10 +11,14 @@ let shouldFail = false;
 vi.mock("chokidar", () => ({
   default: {
     watch: vi.fn(() => ({
-      on: vi.fn(),
+      on: vi.fn().mockReturnThis(),
       close: vi.fn(async () => undefined),
     })),
   },
+  watch: vi.fn(() => ({
+    on: vi.fn().mockReturnThis(),
+    close: vi.fn(async () => undefined),
+  })),
 }));
 
 vi.mock("./embeddings.js", () => {
@@ -63,9 +67,9 @@ describe("memory manager atomic reindex", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
-            store: { path: indexPath },
+            store: { path: indexPath, vector: { enabled: false } },
             cache: { enabled: false },
             sync: { watch: false, onSessionStart: false, onSearch: false },
           },

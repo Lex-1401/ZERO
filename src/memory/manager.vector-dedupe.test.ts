@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getMemorySearchManager, type MemoryIndexManager } from "./index.js";
 import { buildFileEntry } from "./internal.js";
+import { indexFile } from "./manager.sync.js";
 
 vi.mock("./embeddings.js", () => {
   return {
@@ -47,7 +48,7 @@ describe("memory vector dedupe", () => {
         defaults: {
           workspace: workspaceDir,
           memorySearch: {
-            provider: "openai",
+            provider: "openai" as const,
             model: "mock-embed",
             store: { path: indexPath, vector: { enabled: true } },
             sync: { watch: false, onSessionStart: false, onSearch: false },
@@ -63,11 +64,7 @@ describe("memory vector dedupe", () => {
     if (!result.manager) throw new Error("manager missing");
     manager = result.manager;
 
-    const db = (
-      manager as unknown as {
-        db: { exec: (sql: string) => void; prepare: (sql: string) => unknown };
-      }
-    ).db;
+    const db = (manager as any).db;
     db.exec("CREATE TABLE IF NOT EXISTS chunks_vec (id TEXT PRIMARY KEY, embedding BLOB)");
 
     const sqlSeen: string[] = [];
@@ -79,16 +76,23 @@ describe("memory vector dedupe", () => {
       return originalPrepare(sql);
     };
 
-    (
-      manager as unknown as { ensureVectorReady: (dims?: number) => Promise<boolean> }
-    ).ensureVectorReady = async () => true;
+    (manager as any).ensureVectorReady = async () => true;
 
     const entry = await buildFileEntry(path.join(workspaceDir, "MEMORY.md"), workspaceDir);
-    await (
-      manager as unknown as {
-        indexFile: (entry: unknown, options: { source: "memory" }) => Promise<void>;
-      }
-    ).indexFile(entry, { source: "memory" });
+    await indexFile({
+      db: (manager as any).db,
+      provider: (manager as any).provider,
+      providerKey: (manager as any).providerKey,
+      entry,
+      options: { source: "memory" },
+      settings: (manager as any).settings,
+      batch: (manager as any).batch,
+      openAi: (manager as any).openAi,
+      gemini: (manager as any).gemini,
+      agentId: (manager as any).agentId,
+      ensureVectorReady: (dims) => (manager as any).ensureVectorReady(dims),
+      ftsAvailable: (manager as any).fts.available,
+    });
 
     const deleteIndex = sqlSeen.findIndex((sql) =>
       sql.includes("DELETE FROM chunks_vec WHERE id = ?"),

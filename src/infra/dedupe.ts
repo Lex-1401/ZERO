@@ -70,11 +70,11 @@ function createJsDedupeCache(options: DedupeCacheOptions): DedupeCache {
       const existing = cache.get(key);
       if (existing !== undefined && (ttlMs <= 0 || now - existing < ttlMs)) {
         touch(key, now);
-        return true;
+        return false;
       }
       touch(key, now);
       prune(now);
-      return false;
+      return true;
     },
     clear: () => {
       cache.clear();

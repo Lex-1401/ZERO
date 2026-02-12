@@ -438,7 +438,10 @@ export class MemoryIndexManager {
   }
 
   private async ensureVectorReady(dimensions?: number): Promise<boolean> {
-    if (!this.vector.enabled) return false;
+    if (!this.vector.enabled) {
+      this.vector.available = false;
+      return false;
+    }
     if (!this.vectorReady) {
       this.vectorReady = withTimeout(
         loadVectorExtension({ db: this.db, extensionPath: this.vector.extensionPath }).then((r) => {
@@ -464,6 +467,13 @@ export class MemoryIndexManager {
     const activePaths = new Set(
       files.map((f) => normalizeRelPath(path.relative(this.workspaceDir, f))),
     );
+    if (params.progress) {
+      params.progress.total += files.length;
+      params.progress.label = this.batch.isEnabled()
+        ? "Indexing memory files (batch)…"
+        : "Indexing memory files…";
+      params.progress.report(params.progress);
+    }
     const tasks = files.map((f) => async () => {
       const entry = await buildFileEntry(f, this.workspaceDir);
       const record = this.db
@@ -526,6 +536,13 @@ export class MemoryIndexManager {
   }) {
     const files = await listSessionFiles(this.agentId);
     const activePaths = new Set(files.map((f) => sessionPathForFile(f)));
+    if (params.progress) {
+      params.progress.total += files.length;
+      params.progress.label = this.batch.isEnabled()
+        ? "Syncing sessions (batch)…"
+        : "Syncing sessions…";
+      params.progress.report(params.progress);
+    }
     const tasks = files.map((f) => async () => {
       const entry = await buildSessionEntry(f);
       if (!entry) return;

@@ -367,7 +367,30 @@ impl SecurityEngine {
             regex::Regex::new(r"(?i)forget everything.*start (as|a)").unwrap(),
             regex::Regex::new(r"(?i)you are now a.*that always").unwrap(),
             regex::Regex::new(r"(?i)do anything now").unwrap(),
+            regex::Regex::new(r"(?i)start (a )?new session").unwrap(),
+            regex::Regex::new(r"(?i)dev mode").unwrap(),
+            regex::Regex::new(r"(?i)debug mode").unwrap(),
+            regex::Regex::new(r"(?i)cannot refuse").unwrap(),
+            regex::Regex::new(r"(?i)opposite mode").unwrap(),
+            regex::Regex::new(r"(?i)act as a (system|root|admin)").unwrap(),
+            regex::Regex::new(r"(?i)reveal all (keys|secrets|passwords)").unwrap(),
+            regex::Regex::new(r"(?i)dan mode").unwrap(),
             
+            // Fragmentation-aware / Obfuscated patterns
+            regex::Regex::new(r"(?i)i\s*g\s*n\s*o\s*r\s*e\s*a\s*l\s*l").unwrap(),
+            regex::Regex::new(r"(?i)p\s*r\s*e\s*v\s*i\s*n\s*s\s*t").unwrap(),
+            regex::Regex::new(r"\u{0456}gn\u{043b}re").unwrap(), // Cyrillic homoglyph
+
+            // Modern attack vectors (VAPT-MEDIUM-008)
+            regex::Regex::new(r"(?i)repeat.*(?:above|system|instructions)").unwrap(),
+            regex::Regex::new(r"(?i)translate.*(?:above|preceding|system).*(?:to|into)").unwrap(),
+            regex::Regex::new(r"(?i)what (?:are|were) your (?:instructions|rules|system)").unwrap(),
+            regex::Regex::new(r"(?i)output.*(?:system|initial).*(?:prompt|instructions)").unwrap(),
+            regex::Regex::new(r"(?i)print.*(?:system|original).*(?:prompt|message)").unwrap(),
+            regex::Regex::new(r"(?i)show.*(?:hidden|system|original).*(?:prompt|instructions|text)").unwrap(),
+            regex::Regex::new(r"(?i)(?:encode|convert|base64).*(?:system|instructions|prompt)").unwrap(),
+            regex::Regex::new(r"(?i)data:text/html;base64").unwrap(),
+
             // Delimiter confusion / Context escaping
             regex::Regex::new(r"(?i)\[/INST\]|\[INST\]|<<SYS>>|/SYS>>").unwrap(),
             regex::Regex::new(r"(?i)### (Instruction|Response|System):").unwrap(),
@@ -380,10 +403,10 @@ impl SecurityEngine {
             regex::Regex::new(r"(?i)run_command\(.*\)").unwrap(),
 
             // Obfuscation / Encoding patterns (hardened)
-            regex::Regex::new(r"(?i)[a-zA-Z0-9+/]{40,}={0,2}").unwrap(), // Low threshold for base64
-            regex::Regex::new(r"(?i)[0-9a-fA-F]{24,}").unwrap(),        // Lowered to 24 for Hex detection
-            regex::Regex::new(r"\\u[0-9a-fA-F]{4}").unwrap(),          // Unicode escapes
-            regex::Regex::new(r"(?i)0x[0-9a-fA-F]{24,}").unwrap(),     // Hex prefix
+            regex::Regex::new(r"(?i)[a-zA-Z0-9+/]{40,}={0,2}").unwrap(),
+            regex::Regex::new(r"(?i)[0-9a-fA-F]{24,}").unwrap(),
+            regex::Regex::new(r"\\u[0-9a-fA-F]{4}").unwrap(),
+            regex::Regex::new(r"(?i)0x[0-9a-fA-F]{24,}").unwrap(),
             
             // Loose / Heuristic Jailbreaks
             regex::Regex::new(r"(?i)(forget|disregard|ignore).*(rules|instructions|guidelines)").unwrap(),
@@ -395,12 +418,20 @@ impl SecurityEngine {
             (regex::Regex::new(r"(?i)Authorization\s*[:=]\s*Bearer\s+([A-Za-z0-9._\-+=]+)").unwrap(), "[REDACTED-AUTH]".to_string()),
             (regex::Regex::new(r"sk-[a-zA-Z0-9]{32,}").unwrap(), "[REDACTED-API-KEY]".to_string()),
             (regex::Regex::new(r"(?i)-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]+?-----END [A-Z ]*PRIVATE KEY-----").unwrap(), "[REDACTED-PEM]".to_string()),
+            (regex::Regex::new(r"ghp_[A-Za-z0-9_]{36,}").unwrap(), "[REDACTED-GITHUB-TOKEN]".to_string()),
+            (regex::Regex::new(r"sk_live_[a-zA-Z0-9]{24,}").unwrap(), "[REDACTED-STRIPE-KEY]".to_string()),
+            (regex::Regex::new(r"xox[bpsa]-[a-zA-Z0-9-]{10,}").unwrap(), "[REDACTED-SLACK-TOKEN]".to_string()),
+            (regex::Regex::new(r"ey[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*").unwrap(), "[REDACTED-JWT]".to_string()),
+            (regex::Regex::new(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b").unwrap(), "[REDACTED-AWS-KEY]".to_string()),
 
             // Basic PII
+            (regex::Regex::new(r"\b\d{3}-\d{2}-\d{4}\b").unwrap(), "[REDACTED-SSN]".to_string()),
             (regex::Regex::new(r"\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b").unwrap(), "[REDACTED-CPF]".to_string()),
             (regex::Regex::new(r"\b\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}\b").unwrap(), "[REDACTED-CNPJ]".to_string()),
             (regex::Regex::new(r"\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b").unwrap(), "[REDACTED-FINANCIAL]".to_string()),
+            (regex::Regex::new(r"\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})\b").unwrap(), "[REDACTED-CARD]".to_string()),
             (regex::Regex::new(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b").unwrap(), "[REDACTED-EMAIL]".to_string()),
+            (regex::Regex::new(r"\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}?\)?[-.\s]?\d{3,4}[-.\s]?\d{4,6}\b").unwrap(), "[REDACTED-PHONE]".to_string()),
             
             // Defensive PII (Spaced)
             (regex::Regex::new(r"\b(\d\s*){3}\.?\s*(\d\s*){3}\.?\s*(\d\s*){3}-?\s*(\d\s*){2}\b").unwrap(), "[REDACTED-CPF-SPACED]".to_string()),
@@ -410,6 +441,7 @@ impl SecurityEngine {
             (regex::Regex::new(r#"(?i)"(?:apiKey|token|secret|password|passwd|accessToken|refreshToken)"\s*:\s*"[^"]+""#).unwrap(), "[REDACTED-JSON]".to_string()),
             (regex::Regex::new(r#"(?i)--(?:api[-_]?key|token|secret|password|passwd)\s+['"]?[^\s'"]+"#).unwrap(), "[REDACTED-CLI]".to_string()),
             (regex::Regex::new(r#"(?i)https?://[^\s]+(?:api[_-]?key|token|secret|auth|password|passwd)=[^\s&]+"#).unwrap(), "[REDACTED-URL-SECRET]".to_string()),
+            (regex::Regex::new(r"\b[a-zA-Z0-9+/]{40}\b").unwrap(), "[REDACTED-GENERIC-SECRET]".to_string()),
         ];
 
         SecurityEngine {

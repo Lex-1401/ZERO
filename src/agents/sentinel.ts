@@ -1,6 +1,8 @@
 import { createSubsystemLogger } from "../logging/subsystem.js";
+import { SecurityGuard } from "../security/guard.js";
+import type { ZEROConfig } from "../config/config.js";
 
-const log = createSubsystemLogger("sentinel");
+const _log = createSubsystemLogger("sentinel");
 
 export type ToolFailureDiagnostic = {
   rootCause: string;
@@ -107,5 +109,43 @@ export class Sentinel {
       `--- ORIGINAL OUTPUT ---`,
       originalError,
     ].join("\n");
+  }
+}
+
+/**
+ * SentinelAgent: Contextual content summarization and security sanitization agent.
+ *
+ * Used by web-fetch and web-search tools to sanitize and optionally summarize
+ * retrieved web content before it enters the agent context.
+ *
+ * [PT] Agente Sentinel: Sanitização e sumarização contextual de conteúdo web.
+ */
+export class SentinelAgent {
+  private readonly _config: ZEROConfig;
+
+  constructor(options: { config: ZEROConfig }) {
+    this._config = options.config;
+  }
+
+  /**
+   * Sanitizes and summarizes web content for safe injection into agent context.
+   * Applies SecurityGuard RAG sanitization (LLM03) to neutralize data poisoning.
+   *
+   * @param text - The raw web content to process.
+   * @param source - Description of the content source (for logging/tracing).
+   * @returns Sanitized (and optionally summarized) text.
+   */
+  async summarize(text: string, source: string): Promise<string> {
+    if (!text) return text;
+    _log.debug(`SentinelAgent: Sanitizing content from ${source} (${text.length} chars)`);
+
+    // Apply LLM03 RAG content sanitization
+    const sanitized = SecurityGuard.sanitizeRagContent(text);
+
+    _log.debug(
+      `SentinelAgent: Sanitized content from ${source}: ${text.length} → ${sanitized.length} chars`,
+    );
+
+    return sanitized;
   }
 }

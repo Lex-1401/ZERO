@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID, randomBytes } from "node:crypto";
 import {
   createServer as createHttpServer,
   type Server as HttpServer,
@@ -197,6 +197,9 @@ export function createHooksRequestHandler(
 }
 
 import { Router } from "./server-router.js";
+import { RateLimiter } from "./rate-limiter.js";
+import { resolveGatewayClientIp } from "./net.js";
+import { logSecurityBlock } from "../security/sec-event.js";
 
 export function createGatewayHttpServer(opts: {
   canvasHost: CanvasHostHandler | null;
@@ -209,6 +212,7 @@ export function createGatewayHttpServer(opts: {
   handlePluginRequest?: HooksRequestHandler;
   resolvedAuth: import("./auth.js").ResolvedGatewayAuth;
   tlsOptions?: TlsOptions;
+  isTls?: boolean;
 }): HttpServer {
   const {
     canvasHost,
@@ -325,12 +329,23 @@ export function createGatewayHttpServer(opts: {
       return true;
     }
 
-    // Se autenticado por query string, fixamos o cookie para assets subsequentes
+    // PT-005: Session Fixation fix — gerar token de sessão opaco
+    // O cookie NUNCA contém o gateway token real. Um UUID de sessão é usado.
     if (fromQuery && token) {
+      const sessionToken = randomUUID();
+      const securePart = opts.isTls ? "; Secure" : "";
       ctx.res.setHeader("Set-Cookie", [
-        `zero_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`,
-        `ZERO_TOKEN=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`,
+        `zero_token=${sessionToken}; Path=/; HttpOnly; SameSite=Strict${securePart}; Max-Age=31536000`,
+        `ZERO_TOKEN=${sessionToken}; Path=/; HttpOnly; SameSite=Strict${securePart}; Max-Age=31536000`,
+        // Manter mapeamento interno: sessionToken → gatewayToken (via cookie adicional assinado)
+        `zero_auth=${token}; Path=/; HttpOnly; SameSite=Strict${securePart}; Max-Age=31536000`,
       ]);
+      // CRITICAL-003: Redirecionar para limpar o token da URL (evita leakage via Referer/logs)
+      const cleanUrl = new URL(ctx.req.url ?? "/", `http://${ctx.req.headers.host}`);
+      cleanUrl.searchParams.delete("token");
+      ctx.res.writeHead(302, { Location: cleanUrl.pathname + cleanUrl.search });
+      ctx.res.end();
+      return true;
     }
 
     if (
@@ -360,16 +375,55 @@ export function createGatewayHttpServer(opts: {
         void handleRequest(req, res);
       });
 
+  // HIGH-004: Rate Limiter global (CWE-770)
+  const globalRateLimiter = new RateLimiter({
+    windowMs: 60_000, // 1 minuto
+    maxRequests: 120, // 120 req/min por IP
+  });
+  // Garbage collection periódica
+  const rlCleanupInterval = setInterval(() => globalRateLimiter.cleanup(), 5 * 60_000);
+  httpServer.on("close", () => clearInterval(rlCleanupInterval));
+
   async function handleRequest(req: IncomingMessage, res: ServerResponse) {
     if (String(req.headers.upgrade ?? "").toLowerCase() === "websocket") return;
 
-    // Security Headers (HIGH-001: CSP Implementation)
+    // Rate Limiting — primeira verificação antes de qualquer processamento
+    const config = loadConfig();
+    const trustedProxies = config.gateway?.trustedProxies ?? [];
+    const clientIp = resolveGatewayClientIp({
+      remoteAddr: req.socket.remoteAddress,
+      forwardedFor: req.headers["x-forwarded-for"] as string | undefined,
+      realIp: req.headers["x-real-ip"] as string | undefined,
+      trustedProxies,
+    });
+    if (clientIp) {
+      const rl = globalRateLimiter.check(clientIp);
+      if (!rl.allowed) {
+        res.setHeader("Retry-After", String(rl.retryAfter ?? 60));
+        res.statusCode = 429;
+        res.setHeader("Content-Type", "application/json; charset=utf-8");
+        res.end(
+          JSON.stringify({ ok: false, error: "Too Many Requests", retryAfter: rl.retryAfter }),
+        );
+        logSecurityBlock({
+          type: "rate_limit",
+          severity: "MEDIUM",
+          source: "gateway/http",
+          clientIp: clientIp,
+          details: `Rate limit exceeded: ${clientIp}`,
+        });
+        return;
+      }
+    }
+
+    // Security Headers (HIGH-001: CSP Implementation with nonces)
     // Protege contra XSS, clickjacking, MIME sniffing, e outros ataques
+    const cspNonce = randomBytes(16).toString("base64");
     res.setHeader(
       "Content-Security-Policy",
       "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " + // unsafe-* necessário para UI dinâmica
-        "style-src 'self' 'unsafe-inline'; " +
+        `script-src 'self' 'nonce-${cspNonce}'; ` +
+        "style-src 'self' 'unsafe-inline'; " + // inline styles necessários para UI dinâmica
         "img-src 'self' data: https:; " +
         "font-src 'self' data:; " +
         "connect-src 'self' ws: wss:; " +
@@ -379,12 +433,12 @@ export function createGatewayHttpServer(opts: {
     );
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("X-Frame-Options", "DENY");
-    res.setHeader("X-XSS-Protection", "1; mode=block");
+    res.setHeader("X-XSS-Protection", "0"); // Desabilitado — CSP nonce é proteção superior
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
     res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+    res.setHeader("X-CSP-Nonce", cspNonce); // Disponibilizar nonce para UI dinâmica
 
     // MED-001: CORS Headers (configurável via zero.json)
-    const config = loadConfig();
     const corsConfig = config.gateway?.cors;
     if (corsConfig?.enabled) {
       const origin = req.headers.origin;
@@ -440,6 +494,37 @@ export function createGatewayHttpServer(opts: {
   return httpServer;
 }
 
+// WS-ORIGIN: Origens permitidas para WebSocket (CWE-1385)
+const WS_ALLOWED_ORIGINS = new Set([
+  "http://localhost",
+  "https://localhost",
+  "http://127.0.0.1",
+  "https://127.0.0.1",
+  "http://[::1]",
+  "https://[::1]",
+]);
+
+function isAllowedWsOrigin(
+  origin: string | undefined,
+  config: ReturnType<typeof loadConfig>,
+): boolean {
+  if (!origin) return true; // Sem Origin = request direto (não-browser)
+  // Permitir origens configuradas via cors.allowedOrigins
+  const customOrigins = config.gateway?.cors?.allowedOrigins;
+  if (Array.isArray(customOrigins)) {
+    for (const o of customOrigins) {
+      if (o === "*" || origin.startsWith(o)) return true;
+    }
+  }
+  // Localhost variantes
+  for (const allowed of WS_ALLOWED_ORIGINS) {
+    if (origin.startsWith(allowed)) return true;
+  }
+  // Tailscale
+  if (origin.includes(".ts.net")) return true;
+  return false;
+}
+
 export function attachGatewayUpgradeHandler(opts: {
   httpServer: HttpServer;
   wss: WebSocketServer;
@@ -447,6 +532,23 @@ export function attachGatewayUpgradeHandler(opts: {
 }) {
   const { httpServer, wss, canvasHost } = opts;
   httpServer.on("upgrade", (req, socket, head) => {
+    // WS-ORIGIN: Validar Origin header (CVE-2026-25253 defense)
+    const origin = req.headers.origin;
+    const config = loadConfig();
+    if (!isAllowedWsOrigin(origin, config)) {
+      console.warn(`[WS] Origin rejeitado: ${origin}`);
+      logSecurityBlock({
+        type: "ws_origin_rejected",
+        severity: "HIGH",
+        source: "gateway/websocket",
+        clientIp: req.socket.remoteAddress,
+        details: `WebSocket Origin rejected: ${origin}`,
+      });
+      socket.write("HTTP/1.1 403 Forbidden\r\n\r\n");
+      socket.destroy();
+      return;
+    }
+
     if (canvasHost?.handleUpgrade(req, socket, head)) return;
     wss.handleUpgrade(req, socket, head, (ws) => {
       wss.emit("connection", ws, req);

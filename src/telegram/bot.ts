@@ -156,11 +156,13 @@ export function createTelegramBot(opts: TelegramBotOptions) {
       if (updateId <= lastUpdateId) return true;
     }
     const key = buildTelegramUpdateKey(ctx);
-    const skipped = recentUpdates.check(key);
-    if (skipped && key && shouldLogVerbose()) {
+    if (!key) return false;
+    const isUnique = recentUpdates.check(key);
+    const shouldSkip = !isUnique;
+    if (shouldSkip && shouldLogVerbose()) {
       logVerbose(`telegram dedupe: skipped ${key}`);
     }
-    return skipped;
+    return shouldSkip;
   };
 
   const rawUpdateLogger = createSubsystemLogger("gateway/channels/telegram/raw-update");

@@ -74,8 +74,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock("../memory/manager.js", () => ({
   MemoryIndexManager: {
     get: vi.fn(async ({ agentId }: { agentId: string }) => ({
-      probeVectorAvailability: vi.fn(async () => true),
+      probeVectorAvailability: vi.fn(async () => ({ available: true })),
       status: () => ({
+        agentId,
         files: 2,
         chunks: 3,
         dirty: false,
@@ -90,8 +91,9 @@ vi.mock("../memory/manager.js", () => ({
         fts: { enabled: true, available: true },
         vector: { enabled: true, available: true, extensionPath: "/opt/vec0.dylib", dims: 1024 },
       }),
+      embedBatch: vi.fn(async (_texts: string[]) => [] as number[][]),
+      embedQuery: vi.fn(async (_text: string) => [0.5, 0.5, 0.5]),
       close: vi.fn(async () => {}),
-      __agentId: agentId,
     })),
   },
 }));
@@ -272,7 +274,7 @@ const runtime = {
 describe("statusCommand", () => {
   it("prints JSON when requested", async () => {
     await statusCommand({ json: true }, runtime as never);
-    const payload = JSON.parse((runtime.log as vi.Mock).mock.calls[0][0]);
+    const payload = JSON.parse((runtime.log as any as any).mock.calls[0][0]);
     expect(payload.linkChannel.linked).toBe(true);
     expect(payload.memory.agentId).toBe("main");
     expect(payload.memoryPlugin.enabled).toBe(true);
@@ -292,27 +294,27 @@ describe("statusCommand", () => {
   });
 
   it("prints formatted lines otherwise", async () => {
-    (runtime.log as vi.Mock).mockClear();
+    (runtime.log as any).mockClear();
     await statusCommand({}, runtime as never);
-    const logs = (runtime.log as vi.Mock).mock.calls.map((c) => String(c[0]));
-    expect(logs.some((l) => l.includes("ZERO status"))).toBe(true);
-    expect(logs.some((l) => l.includes("Overview"))).toBe(true);
-    expect(logs.some((l) => l.includes("Security audit"))).toBe(true);
-    expect(logs.some((l) => l.includes("Summary:"))).toBe(true);
-    expect(logs.some((l) => l.includes("CRITICAL"))).toBe(true);
-    expect(logs.some((l) => l.includes("Dashboard"))).toBe(true);
-    expect(logs.some((l) => l.includes("macos 14.0 (arm64)"))).toBe(true);
-    expect(logs.some((l) => l.includes("Memory"))).toBe(true);
-    expect(logs.some((l) => l.includes("Channels"))).toBe(true);
-    expect(logs.some((l) => l.includes("WhatsApp"))).toBe(true);
-    expect(logs.some((l) => l.includes("Sessions"))).toBe(true);
-    expect(logs.some((l) => l.includes("+1000"))).toBe(true);
-    expect(logs.some((l) => l.includes("50%"))).toBe(true);
-    expect(logs.some((l) => l.includes("LaunchAgent"))).toBe(true);
-    expect(logs.some((l) => l.includes("FAQ:"))).toBe(true);
-    expect(logs.some((l) => l.includes("Troubleshooting:"))).toBe(true);
-    expect(logs.some((l) => l.includes("Next steps:"))).toBe(true);
-    expect(logs.some((l) => l.includes("zero status --all"))).toBe(true);
+    const logs = (runtime.log as any as any).mock.calls.map((c: any) => String(c[0]));
+    expect(logs.some((l: any) => l.includes("ZERO status"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Overview"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Security audit"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Summary:"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("CRITICAL"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Dashboard"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("macos 14.0 (arm64)"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Memory"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Channels"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("WhatsApp"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Sessions"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("+1000"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("50%"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("LaunchAgent"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("FAQ:"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Troubleshooting:"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("Next steps:"))).toBe(true);
+    expect(logs.some((l: any) => l.includes("zero status --all"))).toBe(true);
   });
 
   it("shows gateway auth when reachable", async () => {
@@ -330,10 +332,10 @@ describe("statusCommand", () => {
         presence: [],
         configSnapshot: null,
       });
-      (runtime.log as vi.Mock).mockClear();
+      (runtime.log as any).mockClear();
       await statusCommand({}, runtime as never);
-      const logs = (runtime.log as vi.Mock).mock.calls.map((c) => String(c[0]));
-      expect(logs.some((l) => l.includes("auth token"))).toBe(true);
+      const logs = (runtime.log as any as any).mock.calls.map((c: any) => String(c[0]));
+      expect(logs.some((l: any) => l.includes("auth token"))).toBe(true);
     } finally {
       if (prevToken === undefined) delete process.env.ZERO_GATEWAY_TOKEN;
       else process.env.ZERO_GATEWAY_TOKEN = prevToken;
@@ -375,9 +377,9 @@ describe("statusCommand", () => {
       },
     });
 
-    (runtime.log as vi.Mock).mockClear();
+    (runtime.log as any).mockClear();
     await statusCommand({}, runtime as never);
-    const logs = (runtime.log as vi.Mock).mock.calls.map((c) => String(c[0]));
+    const logs = (runtime.log as any as any).mock.calls.map((c: any) => String(c[0]));
     expect(logs.join("\n")).toMatch(/Signal/i);
     expect(logs.join("\n")).toMatch(/iMessage/i);
     expect(logs.join("\n")).toMatch(/gateway:/i);
@@ -429,7 +431,7 @@ describe("statusCommand", () => {
     });
 
     await statusCommand({ json: true }, runtime as never);
-    const payload = JSON.parse((runtime.log as vi.Mock).mock.calls.at(-1)?.[0]);
+    const payload = JSON.parse((runtime.log as any as any).mock.calls.at(-1)?.[0]);
     expect(payload.sessions.count).toBe(2);
     expect(payload.sessions.paths.length).toBe(2);
     expect(

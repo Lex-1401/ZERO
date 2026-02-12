@@ -170,7 +170,7 @@ export function createSlackMonitorContext(params: {
 
   const markMessageSeen = (channelId: string | undefined, ts?: string) => {
     if (!channelId || !ts) return false;
-    return seenMessages.check(`${channelId}:${ts}`);
+    return !seenMessages.check(`${channelId}:${ts}`);
   };
 
   const resolveSlackSystemEventSessionKey = (p: {

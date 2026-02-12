@@ -1,5 +1,8 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+
+const log = createSubsystemLogger("security/crypt");
 
 const ALGORITHM = "aes-256-gcm";
 const IV_LENGTH = 12;
@@ -85,7 +88,7 @@ export class AuditCrypt {
         return { path: tempPath, isTemp: true };
       }
     } catch (err) {
-      console.error("[AuditCrypt] Erro ao preparar arquivo de sessão:", err);
+      log.error("Erro ao preparar arquivo de sessão", { error: String(err) });
     }
     return { path: filePath, isTemp: false };
   }
@@ -111,7 +114,7 @@ export class AuditCrypt {
         }
       }
     } catch (err) {
-      console.error("[AuditCrypt] Erro ao finalizar arquivo de sessão:", err);
+      log.error("Erro ao finalizar arquivo de sessão", { error: String(err) });
     } finally {
       if (tempPath !== targetPath) {
         await fs.unlink(tempPath).catch(() => null);
