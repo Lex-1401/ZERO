@@ -953,6 +953,10 @@ export async function runSecurityAudit(opts: SecurityAuditOptions): Promise<Secu
   if (stateDir) {
     try {
       const reportsDir = path.join(stateDir, "audit-reports");
+
+      // [SECURITY] Audit reports are roadmaps for attackers.
+      // Ensure they are NEVER saved inside the project repository.
+      // The .gitignore should catch this, but we prefer stateDir to be external (~/.zero).
       await fs.mkdir(reportsDir, { recursive: true });
       const filename = `audit-${report.ts}.json.enc`;
       const reportPath = path.join(reportsDir, filename);

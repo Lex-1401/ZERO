@@ -55,6 +55,7 @@ ZERO is designed to be compliant with global privacy standards (**GDPR, LGPD**) 
 
 - **Reporting**: Security vulnerabilities should be reported to `security@zero.local`.
 - **Audit Tooling**: Developers must utilize the `zero security audit --deep` command to verify the integrity of their local installation.
+- **Audit Hygiene**: To prevent "confirmation bias" and accidental exposure of attack surfaces, audit reports (`.json.enc`) are stored exclusively in the local `STATE_DIR` (default `~/.zero/audit-reports`) and are explicitly excluded from version control systems. Storing reports in the repository is strictly prohibited.
 
 ---
 *“Vazio que contém o Infinito. Soberania que define o Futuro.”* ∅

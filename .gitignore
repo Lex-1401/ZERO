@@ -76,3 +76,12 @@ apps/ios/*.mobileprovision
 dist/
 src/agents/aci/browser-memory.json
 rust-core/target/
+
+# Security Audit Reports & Local State
+.zero/
+audit-reports/
+*.json.enc
+*.audit.json
+lint_output.txt
+test_output*.txt
+test_results.txt
