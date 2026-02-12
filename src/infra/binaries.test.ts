@@ -16,7 +16,8 @@ describe("ensureBinary", () => {
       exit: vi.fn(),
     };
     await ensureBinary("node", exec, runtime);
-    expect(exec).toHaveBeenCalledWith("which", ["node"]);
+    const expectedCmd = process.platform === "win32" ? "where" : "which";
+    expect(exec).toHaveBeenCalledWith(expectedCmd, ["node"]);
   });
 
   it("logs and exits when missing", async () => {
