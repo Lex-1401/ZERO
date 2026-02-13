@@ -722,7 +722,7 @@ export class MemoryIndexManager {
       try {
         this.db.close();
       } catch (err) {
-        log.warn("Error closing database in MemoryIndexManager.close()", { error: err });
+        log.warn("Error closing database in MemoryIndexManager.close()", { error: err as any });
       }
     }
   }

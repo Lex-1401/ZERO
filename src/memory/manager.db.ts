@@ -123,13 +123,23 @@ export async function swapIndexFiles(targetPath: string, tempPath: string): Prom
 
 export async function moveIndexFiles(sourceBase: string, targetBase: string): Promise<void> {
   const suffixes = ["", "-wal", "-shm"];
+  const maxRetries = 5;
+
   for (const suffix of suffixes) {
     const source = `${sourceBase}${suffix}`;
     const target = `${targetBase}${suffix}`;
-    try {
-      await fs.rename(source, target);
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== "ENOENT") {
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        await fs.rename(source, target);
+        break;
+      } catch (err) {
+        const code = (err as NodeJS.ErrnoException).code;
+        if (code === "ENOENT") break;
+        if (code === "EBUSY" && attempt < maxRetries) {
+          await new Promise((r) => setTimeout(r, attempt * 100));
+          continue;
+        }
         throw err;
       }
     }
@@ -138,7 +148,30 @@ export async function moveIndexFiles(sourceBase: string, targetBase: string): Pr
 
 export async function removeIndexFiles(basePath: string): Promise<void> {
   const suffixes = ["", "-wal", "-shm"];
-  await Promise.all(suffixes.map((suffix) => fs.rm(`${basePath}${suffix}`, { force: true })));
+  const maxRetries = 5;
+
+  await Promise.all(
+    suffixes.map(async (suffix) => {
+      const fullPath = `${basePath}${suffix}`;
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          await fs.rm(fullPath, { force: true });
+          break;
+        } catch (err) {
+          const code = (err as NodeJS.ErrnoException).code;
+          if (code === "EBUSY" && attempt < maxRetries) {
+            await new Promise((r) => setTimeout(r, attempt * 100));
+            continue;
+          }
+          // On Windows, rm can fail with EPERM if the file is locked
+          if (code === "EPERM" && attempt < maxRetries) {
+            await new Promise((r) => setTimeout(r, attempt * 100));
+            continue;
+          }
+        }
+      }
+    }),
+  );
 }
 
 export function ensureSchema(params: { db: DatabaseSync; ftsEnabled: boolean }): {
