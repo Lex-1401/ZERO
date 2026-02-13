@@ -463,12 +463,7 @@ class GatewayDiscovery(
   private fun txtValue(records: List<TXTRecord>, key: String): String? {
     val prefix = "$key="
     for (r in records) {
-      val strings: List<String> =
-        try {
-          r.strings.mapNotNull { it as? String }
-        } catch (_: Throwable) {
-          emptyList()
-        }
+      val strings = r.strings
       for (s in strings) {
         val trimmed = decodeDnsTxtString(s).trim()
         if (trimmed.startsWith(prefix)) {

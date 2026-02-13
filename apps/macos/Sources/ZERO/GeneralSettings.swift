@@ -59,7 +59,8 @@ struct GeneralSettings: View {
 
                     SettingsToggleRow(
                         title: "Ativar Peekaboo Bridge",
-                        subtitle: "Permitir que ferramentas assinadas (ex: peekaboo) realizem automação de interface via PeekabooBridge.",
+                        subtitle: "Permitir que ferramentas assinadas (ex: peekaboo) realizem " +
+                            "automação de interface via PeekabooBridge.",
                         binding: self.$state.peekabooBridgeEnabled)
 
                     SettingsToggleRow(

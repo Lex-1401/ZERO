@@ -350,6 +350,9 @@ jobs:
           pnpm -v
           pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true || pnpm install --frozen-lockfile --ignore-scripts=false --config.engine-strict=false --config.enable-pre-post-scripts=true
 
+      - name: Build native core (Rust)
+        run: cd rust-core && pnpm install && pnpm build && cd .. && git checkout rust-core/index.d.ts
+
       - name: Run ${{ matrix.task }}
         run: ${{ matrix.command }}
 

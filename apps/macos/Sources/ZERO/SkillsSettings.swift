@@ -39,7 +39,8 @@ struct SkillsSettings: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Habilidades")
                     .font(.headline)
-                Text("As habilidades são ativadas quando os requisitos são atendidos (binários, ambiente, configuração).")
+                Text("As habilidades são ativadas quando os requisitos são atendidos " +
+                    "(binários, ambiente, configuração).")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
