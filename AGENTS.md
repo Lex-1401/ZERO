@@ -1,6 +1,6 @@
 # ∅ ZERO Repository Governance & Engineering Protocols
 
-**Standard**: Master Tier PhD Architecture
+**Standard**: Industrial-Grade Engineering Protocols
 **Scope**: Core Engine, Subsystems, and Global Workspaces
 
 This document defines the formal engineering protocols for the ZERO ecosystem. Adherence to these guidelines is mandatory for maintaining systemic integrity and cognitive fidelity across all agentic cycles.

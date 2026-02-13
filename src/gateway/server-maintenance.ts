@@ -11,6 +11,7 @@ import {
 import type { DedupeEntry } from "./server-shared.js";
 import { formatError } from "./server-utils.js";
 import { isPanicMode } from "../infra/panic.js";
+import { GatewayMetrics } from "./server-metrics.js";
 
 export function startGatewayMaintenanceTimers(params: {
   // ... (rest of the imports/types)
@@ -65,6 +66,12 @@ export function startGatewayMaintenanceTimers(params: {
     const payload = { ts: Date.now() };
     params.broadcast("tick", payload, { dropIfSlow: true });
     params.nodeSendToAllSubscribed("tick", payload);
+
+    // Native Telemetry: Broadcast performance metrics
+    const metrics = GatewayMetrics.getSummary();
+    if (metrics) {
+      params.broadcast("performance", metrics, { dropIfSlow: true });
+    }
   }, TICK_INTERVAL_MS);
 
   // periodic health refresh to keep cached snapshot warm

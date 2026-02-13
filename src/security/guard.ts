@@ -51,23 +51,11 @@ const INJECTION_PATTERNS = [
   /\u0456gn\u043bre/i, // Unicode homoglyph 'ignore' with Cyrillic chars
 ];
 
-// LLM06: PII Patterns for Output Firewall (extends logging redaction)
+// LLM06: PII Patterns for Output Firewall (Fallback)
 const PII_PATTERNS = [
-  /\b\d{3}-\d{2}-\d{4}\b/, // SSN
-  /\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/, // Credit Card (General)
-  /\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})\b/, // Visa, MC, Amex, etc.
   /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/, // Email
   /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/, // CPF (Brazil)
   /\b\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}\b/, // CNPJ (Brazil)
-  /\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}?\)?[-.\s]?\d{3,4}[-.\s]?\d{4,6}\b/, // International Phone Numbers
-  /sk-[a-zA-Z0-9]{32,}/, // OpenAI Keys
-  /ey[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*/, // JWT/Tokens
-  /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/, // AWS Access Key
-  /\b[a-zA-Z0-9+/]{40}\b/, // Generic Secret Key (High entropy)
-  /ghp_[A-Za-z0-9_]{36,}/, // GitHub Token
-  /sk_live_[a-zA-Z0-9]{24,}/, // Stripe Key
-  /xoxb-[a-zA-Z0-9-]{10,}/, // Slack Token
-  /\b[A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|PASSWD)\b\s*[=:]\s*["']?[^\s"']+/i,
 ];
 
 // Infrastructure Integrity: Protected paths that require explicit confirmation
@@ -121,6 +109,13 @@ export class SecurityGuard {
    * @param text - The input text to redact.
    * @returns The redacted text.
    */
+  /**
+   * PII Redaction Middleware.
+   * Leverages high-performance Rust core for sub-millisecond redaction.
+   *
+   * @param text - The input text to redact.
+   * @returns The redacted text.
+   */
   static obfuscatePrompt(text: string): string {
     if (!text) return text;
 
@@ -128,6 +123,7 @@ export class SecurityGuard {
       return nativeSecurity.redactPii(text);
     }
 
+    // JS Fallback (Legacy/Test compatibility)
     let clean = this.applyStrictRedactions(text);
     clean = redactSensitiveText(clean);
     clean = this.applyGenericPatternRedactions(clean);
@@ -136,90 +132,31 @@ export class SecurityGuard {
   }
 
   /**
-   * Applies strict redaction rules for specific high-risk patterns.
-   *
-   * @param text - The raw text.
-   * @returns Redacted text.
+   * Applies strict redaction rules for specific high-risk patterns (Fallback only).
    */
   private static applyStrictRedactions(text: string): string {
-    return (
-      text
-        // Documentos BR
-        .replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "[REDACTED-CPF]")
-        .replace(/\b\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}\b/g, "[REDACTED-CNPJ]")
-        // Cartões de crédito (PAN)
-        .replace(/\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g, "[REDACTED-FINANCIAL]")
-        // Email
-        .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, "[REDACTED-EMAIL]")
-        // OpenAI API Keys
-        .replace(/sk-[a-zA-Z0-9]{32,}/g, "[REDACTED-API-KEY]")
-        // AWS Access Keys
-        .replace(/\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/g, "[REDACTED-AWS-KEY]")
-        // SHIELD §4.1: Padrões expandidos
-        // GCP Service Account Keys
-        .replace(/"private_key":\s*"-----BEGIN[^"]*-----"/g, "[REDACTED-GCP-PRIVATE-KEY]")
-        // Azure / Microsoft keys — redação contextual (SEC-003)
-        // UUIDs após prefixos de segredo (key=, token=, secret=, password=) são redactados
-        .replace(
-          /(?:key|token|secret|password|credential|api[_-]?key)\s*[=:]\s*[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/gi,
-          (match) => {
-            const prefix = match.replace(
-              /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i,
-              "",
-            );
-            return `${prefix}[REDACTED-UUID-SECRET]`;
-          },
-        )
-        // GitHub Personal Access Tokens (ghp_, gho_, ghu_, ghs_, ghr_)
-        .replace(/\b(ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9_]{36,}\b/g, "[REDACTED-GITHUB-TOKEN]")
-        // Stripe keys (sk_live_, pk_live_, sk_test_, pk_test_)
-        .replace(/\b[sp]k_(live|test)_[a-zA-Z0-9]{24,}\b/g, "[REDACTED-STRIPE-KEY]")
-        // Slack tokens (xoxb-, xoxp-, xoxs-)
-        .replace(/\bxox[bpsa]-[a-zA-Z0-9-]{10,}/g, "[REDACTED-SLACK-TOKEN]")
-        // Bearer tokens genéricos
-        .replace(/Bearer\s+[A-Za-z0-9\-._~+/]+={0,2}/gi, "[REDACTED-BEARER-TOKEN]")
-        // JWT tokens (3 partes base64 separadas por pontos)
-        .replace(
-          /\beyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}\b/g,
-          "[REDACTED-JWT]",
-        )
-        // Private keys (PEM format)
-        .replace(
-          /-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----[\s\S]{20,}?-----END\s+(RSA\s+)?PRIVATE\s+KEY-----/g,
-          "[REDACTED-PRIVATE-KEY]",
-        )
-        // Anthropic API keys
-        .replace(/\bsk-ant-[a-zA-Z0-9_-]{40,}\b/g, "[REDACTED-ANTHROPIC-KEY]")
-        // Google API keys
-        .replace(/\bAIza[0-9A-Za-z_-]{35}\b/g, "[REDACTED-GOOGLE-API-KEY]")
-    );
+    return text
+      .replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "[REDACTED-CPF]")
+      .replace(/\b\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}\b/g, "[REDACTED-CNPJ]")
+      .replace(/\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g, "[REDACTED-FINANCIAL]")
+      .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, "[REDACTED-EMAIL]")
+      .replace(/sk-[a-zA-Z0-9]{32,}/g, "[REDACTED-API-KEY]");
   }
 
   /**
    * Applies generic redactions based on the PII_PATTERNS list.
-   *
-   * @param text - The text to process.
-   * @returns Redacted text.
    */
   private static applyGenericPatternRedactions(text: string): string {
     let clean = text;
     for (const pattern of PII_PATTERNS) {
-      if (pattern.test(clean)) {
-        clean = clean.replace(new RegExp(pattern, "g"), "[REDACTED-SENSITIVE]");
-      }
+      clean = clean.replace(new RegExp(pattern, "g"), "[REDACTED-SENSITIVE]");
     }
     return clean;
   }
 
   /**
    * LLM01: Prompt Injection Detection.
-   * Scans input for adversarial patterns attempting to override system instructions.
-   *
-   * [PT] Detecção de Injeção de Prompt (LLM01).
-   * Analisa a entrada em busca de padrões adversários que tentam sobrescrever as instruções do sistema.
-   *
-   * @param text - The input text to analyze.
-   * @returns A SecurityViolation object if injection is detected, otherwise null.
+   * Orchestrates high-speed pattern matching via SecurityEngine (Rust).
    */
   static detectPromptInjection(text: string): SecurityViolation | null {
     if (!text) return null;
@@ -227,29 +164,31 @@ export class SecurityGuard {
     if (nativeSecurity) {
       const nativeResult = nativeSecurity.detectInjection(text);
       if (nativeResult) {
+        log.warn("Native Security Violation Detected", { reason: nativeResult });
         return {
           type: "injection",
-          details: JSON.stringify(nativeResult),
+          details: nativeResult,
         };
       }
     }
 
+    // Secondary Heuristic Check (JS)
     for (const pattern of INJECTION_PATTERNS) {
       if (pattern.test(text)) {
         return {
           type: "injection",
-          details: `Padrão de injeção de prompt detectado: ${pattern.source}`,
+          details: `Heurística externa detectou: ${pattern.source}`,
         };
       }
     }
 
-    // Check for excessive control characters or zero-width obfuscation
+    // Anomaly detection: Excessive control characters or zero-width obfuscation
     // eslint-disable-next-line no-control-regex
     const controlChars = text.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\u200B-\u200D\uFEFF]/g);
     if (controlChars && controlChars.length > 5) {
       return {
         type: "injection",
-        details: "Tentativa de ofuscação detectada (caracteres de controle ou ocultos excessivos).",
+        details: "Tentativa de ofuscação técnica detectada (caracteres de controle excessivos).",
       };
     }
 

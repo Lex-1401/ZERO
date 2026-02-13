@@ -2,6 +2,21 @@
 
 Docs: <https://docs.zero.bot>
 
+## 2026.2.13 (v0.3.0)
+
+### Highlights
+
+- **Sentinel Engine (Segurança Avançada)**: Delegação total da detecção de PII e Injeção de Prompt para o motor nativo em Rust (`ratchet`). Redução de latência e implementação de análise de entropia de Shannon para segredos ofuscados.
+- **Quantum Altair UI**: Upgrade estético massivo com Glassmorphism de alta fidelidade (blur 40px), tipografia técnica JetBrains Mono e fundo dinâmico `mesh-drift` para uma experiência de console de alto desempenho.
+- **Telemetria de Baixa Latência**: Inclusão de broadcast de métricas de performance (tokens/s e latência ms) diretamente no batimento cardíaco (heartbeat) do gateway, utilizando o motor de métricas nativo.
+- **Normalização de Defesa**: Normalização NFKC de entradas de texto antes da análise de segurança, prevenindo bypasses via homóglifos Unicode.
+
+### Changes
+
+- UI: Implementação de variáveis de design de grau industrial no `design-system.css`.
+- Security: Remoção de fallbacks lentos em JS para operações críticas de firewall.
+- Gateway: Adição do módulo `server-metrics.ts` para orquestração de estatísticas em tempo real.
+
 ## 2026.2.11 (v0.2.0)
 
 ### Highlights

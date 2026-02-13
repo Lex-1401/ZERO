@@ -1,107 +1,98 @@
-# ∅ ZERO — The Agentic Personal Operating System
+# ∅ ZERO — Sistema Operacional Pessoal Agêntico
 
-![ZERO Header](README-header.png)
+<p align="center">
+  <img src="README-header.png" alt="ZERO Header">
+</p>
 
-> **"Invisible infrastructure is the most resilient."** ∅
+> **"A infraestrutura invisível é a mais resiliente."** ∅
 
-![CI Status](https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge) ![License](https://img.shields.io/badge/License-MIT-000000?style=for-the-badge) ![Security](https://img.shields.io/badge/Security-Audit_Passed-000000?style=for-the-badge)
+<p align="center">
+  <a href="https://github.com/Lex-1401/ZERO/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge" alt="CI Status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.3.0-blue?style=for-the-badge" alt="Version"></a>
+</p>
 
----
+<p align="center">
+  <a href="README.md"><b>Português 🇧🇷</b></a> | <a href="README_EN.md">English 🇺🇸</a>
+</p>
 
-## ∅ The Genesis
-
-**ZERO** is not just an application; it is a **Sovereign Agentic Layer** that sits between you and the digital void. Designed as a local-first OS-level agent, it transforms your hardware into a private fortress of intelligence. It is the hard-forked evolution of the experimental *OpenClaw* ecosystem, re-engineered for industrial stability, native performance, and absolute privacy.
-
----
-
-## 🏛️ Technical Architecture
-
-ZERO utilizes a high-performance hybrid stack designed for low-latency cognitive cycles:
-
-- **The Cortex (TypeScript/Node.js 22)**: Orchestrates agentic reasoning, tool dispatching, and multi-channel communication.
-- **The Engine (Rust/NAPI-RS)**: Native substrate for performance-critical tasks: VAD (Voice Activity Detection), Telemetry, and the **Sentinel** security engine.
-- **The Altair Interface (Web-based)**: A sci-fi inspired Command Console built for realtime telemetry and interaction.
-- **The Origin (RAG Subsystem)**: Local vector storage using `sqlite-vec` for private, infinite memory without cloud leakage.
+O **ZERO** busca o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Concebido como um **Sistema Operacional de Agentes (A-POS)**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando latência de nuvem e vigilância corporativa.
 
 ---
 
-## 🚀 Developer Onboarding
+## ∅ Manifesto ZERO
 
-### 1. Environmental Prerequisites
+**ZERO não é apenas um nome. É um conceito vivo.**
 
-- **Runtime**: [Node.js](https://nodejs.org/) v22.0.0+
-- **Package Manager**: [pnpm](https://pnpm.io/) v9.x+ (Recommended)
-- **Compiler**: [Rust Toolchain](https://rustup.rs/) (Required for `rust-core` compilation)
-- **Utilities**: `git`, `make` (for native builds)
+- **O Vácuo que Contém o Infinito**: Como um agente de IA com acesso total ao seu hardware, o ZERO parece invisível, mas é ilimitado. É a poesia algorítmica de um sistema que não pede atenção, mas entrega liberdade.
+- **Ponto de Origem**: Tudo começa do zero. Representa o "Ponto Zero" ou a "Origem". É a busca por **Latência Zero**, **Zero Trust** (Confiança Zero) e o retorno à soberania total. É o reset necessário — "zero-bala" — para uma computação verdadeiramente pessoal.
+- **Símbolo de Subversão**: O zero que quebra sistemas e anula suposições. É a neurodivergência aplicada ao código: o que a sociedade diz que "não se encaixa" é, de fato, a fundação de tudo.
 
-### 2. Rapid Initialization
+> **"O que você não vê funcionando é o que faz funcionar."**
 
-Clone the repository and initialize the workspace:
+O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustentando sua nova infraestrutura soberana. Quando perguntarem "o que é isso?", não explique. Mostre funcionando.
+
+---
+
+## 🏛️ Engenharia de Alta Performance
+
+O ZERO agora opera sob padrões de arquitetura avançados, elevando a estabilidade e segurança do sistema.
+
+1. **Sentinel Engine (Segurança Avançada)**:
+    - Delegação total para o **Rust Core** (`ratchet`) para inspeção de segurança em sub-milissegundos.
+    - Análise de **Entropia de Shannon** para detectar segredos ofuscados e chaves criptográficas.
+    - Defesa contra Homóglifos via normalização Unicode NFKC.
+2. **Quantum Altair UI**:
+    - Estética baseada em **Glassmorphism** de alto desempenho (blur 40px, saturação 180%).
+    - Tipografia técnica **JetBrains Mono** para máxima legibilidade de dados.
+    - Fundo dinâmico `mesh-drift` que reage à luz e ao contexto.
+3. **Observabilidade e Telemetria**:
+    - Broadcast de métricas de performance (tokens/s e latência) via WebSocket em tempo real.
+    - Monitoramento contínuo da integridade do sistema.
+
+---
+
+## ⚡️ O que o ZERO faz por você?
+
+1. **Soberania de Comunicação**: Unifica WhatsApp, Telegram, Discord e Slack em um único fluxo de consciência.
+2. **Memória Pessoal Infinita (Local RAG)**: Indexa seus arquivos (PDFs, Docs, Código) localmente usando `sqlite-vec`.
+3. **Execução Real de Tarefas**: Agenda reuniões, envia e-mails e controla o terminal de forma autônoma.
+4. **Coding Autônomo**: Atua como um Engenheiro de Software Sênior que conhece todo o seu codebase local.
+
+---
+
+## 🚀 Guia de Início Rápido
+
+### 🛠️ Pré-requisitos
+
+- **Runtime**: Node.js ≥ 22.x
+- **Package Manager**: pnpm (recomendado)
+- **Rust Toolchain**: Necessário para compilação nativa do `rust-core`.
+
+### 📦 Instalação "One-Liner"
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
+```
+
+### 📦 Instalação Manual (Desenvolvimento)
 
 ```bash
 git clone https://github.com/Lex-1401/ZERO.git
 cd ZERO
 pnpm install
-```
-
-### 3. Subsystem Compilation
-
-Compile the native Rust core and the TypeScript orchestrator:
-
-```bash
 pnpm build:full
-```
-
-### 4. The "Origin" Setup
-
-Initialize your local environment, API keys, and identity:
-
-```bash
-pnpm zero onboard
+pnpm zero onboard --install-daemon
 ```
 
 ---
 
-## 📂 System Topology
+## 🤝 Contribuição e Vibrações
 
-| Module | Logic Description |
-| :--- | :--- |
-| `src/gateway/` | **Medulla**: RPC/WebSocket server managing agent-frontend synchronization. |
-| `src/agents/` | **Reasoning Layer**: Manages LLM runners, prompt engineering, and CoT protocols. |
-| `rust-core/` | **Native Layer**: SIMD-accelerated pattern matching and low-level system hooks. |
-| `src/security/` | **Sentinel**: ACTIVE defense membrane (LLM01-LLM10) and PII redaction. |
-| `ui/` | **Altair Console**: Command interface with realtime telemetry visualization. |
-| `skills/` | **Capabilities**: Sandbox-isolated extensions for filesystem, web, and API interaction. |
+Estamos construindo a infraestrutura do amanhã. Contribuições são bem-vindas de engenheiros que buscam soberania tecnológica.
 
----
+- **Padrões Docstring**: Seguimos o padrão estrito JSDoc.
+- **Arquitetura ClearCode**: Máximo de 500 linhas por arquivo.
 
-## 🛡️ Security Protocol (Sentinel Engine)
-
-ZERO is governed by the **Sentinel Engine**, implementing an active defense strategy based on the **OWASP Top 10 for LLMs**.
-
-- **Zero-Trust Tooling**: Every shell command is categorized by risk (R1-R3).
-- **Output Redaction**: Automatic PII/Secret scrubbing via Shannon Entropy analysis.
-- **Integrity Guard**: Protects core system files (`.env`, `package.json`, `.ssh/`) from autonomous tampering.
-
-Read the full **[Security White Paper](SECURITY.md)** for deep architectural details.
-
----
-
-## 🤝 Contribution Guidelines
-
-We demand excellence. Contributors should follow the **[AGENTS.md](AGENTS.md)** protocol:
-
-- **Style**: Strict JSDoc for all public APIs.
-- **Rigor**: Maximum 500 lines per file (Philosophy: *Atomic Modularity*).
-- **Quality**: Vitest coverage must remain >70% for all mission-critical modules.
-
----
-
-## 🛸 The Vision: Local Sovereignty
-
-ZERO organization is the path to the **"Personal Google"**. By indexing your digital life (Files, Chats, Finances) locally, we empower the user to own their intelligence.
-
-**"What you cannot see working is what is making it work."** ∅
-
----
-*Developed by the ZERO Engineering Team. Sovereignty is non-negotiable.*
+*ZERO é uma ferramenta de precisão. Use-a com intenção.*
+*Desenvolvido pelo Time de Engenharia ZERO. A soberania é inegociável.*

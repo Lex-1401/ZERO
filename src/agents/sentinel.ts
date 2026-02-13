@@ -12,13 +12,11 @@ export type ToolFailureDiagnostic = {
 };
 
 /**
- * Sentinel: Advanced DevSecOps Diagnostic Engine (224 Q.I. Tier)
- *
- * [PT] Sentinel: Mecanismo de Diagnóstico Avançado DevSecOps.
+ * Sentinel: Advanced DevOps Diagnostic Engine
  */
 export class Sentinel {
   /**
-   * Analyzes a tool failure (e.g., bash exit code != 0) and generates a PhD-level diagnostic.
+   * Analyzes a tool failure (e.g., bash exit code != 0) and generates an advanced diagnostic.
    */
   static analyzeBashFailure(
     command: string,

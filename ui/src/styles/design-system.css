@@ -23,88 +23,97 @@
     --s-24: 96px;
 
     /* 
-       Native-Inspired Palette (macOS Dark)
+       Advanced Palette - Depth & Vibration
     */
-    --color-bg-dark: #1e1e1e;
-    --color-sidebar-dark: #2c2c2c;
-    --color-surface-dark: #323232;
-    --color-accent-blue: #007aff;
-    --color-accent-red: #ff3b30;
-    --color-accent-green: #34c759;
-    --color-accent-yellow: #ffcc00;
+    --color-bg-dark: #0a0a0b;
+    --color-sidebar-dark: #111113;
+    --color-surface-dark: #18181b;
+    --color-accent-blue: #3b82f6;
+    /* Azure Blue */
+    --color-accent-red: #ef4444;
+    /* Crimson */
+    --color-accent-green: #10b981;
+    /* Emerald */
+    --color-accent-yellow: #f59e0b;
+    /* Amber */
+    --color-accent-purple: #8b5cf6;
+    /* Royal Purple */
 
-    /* RGB Components for Alpha Compositing */
-    --accent-blue-rgb: 0, 122, 255;
-    --accent-red-rgb: 255, 59, 48;
-    --accent-green-rgb: 52, 199, 89;
-    --accent-yellow-rgb: 255, 204, 0;
+    /* RGB Components for Spectral Compositing */
+    --accent-blue-rgb: 59, 130, 246;
+    --accent-red-rgb: 239, 68, 68;
+    --accent-green-rgb: 16, 185, 129;
+    --accent-yellow-rgb: 245, 158, 11;
+    --accent-purple-rgb: 139, 92, 246;
 
     /* Semantic Mappings */
-    --bg-main: #161616;
-    --bg-sidebar: rgba(45, 45, 45, 0.8);
-    --bg-surface: rgba(50, 50, 50, 0.5);
-    --bg-surface-raised: rgba(60, 60, 60, 0.7);
-    --bg-glass: rgba(30, 30, 30, 0.6);
-    --bg-input: rgba(255, 255, 255, 0.05);
+    --bg-main: #050505;
+    --bg-sidebar: rgba(10, 10, 12, 0.75);
+    --bg-surface: rgba(20, 20, 23, 0.6);
+    --bg-surface-raised: rgba(30, 30, 35, 0.8);
+    --bg-glass: rgba(10, 10, 12, 0.45);
+    --bg-input: rgba(255, 255, 255, 0.03);
 
-    --text-main: #ffffff;
-    --text-muted: #a1a1a1;
-    --text-dim: #707070;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #475569;
 
-    --border-subtle: rgba(255, 255, 255, 0.05);
-    --border-main: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.2);
+    --border-subtle: rgba(255, 255, 255, 0.04);
+    --border-main: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.15);
 
     --accent-blue: var(--color-accent-blue);
     --accent-red: var(--color-accent-red);
     --accent-main: var(--accent-blue);
-    --accent-subtle: rgba(0, 122, 255, 0.15);
+    --accent-subtle: rgba(var(--accent-blue-rgb), 0.12);
     --success: var(--color-accent-green);
     --warning: var(--color-accent-yellow);
     --danger: var(--color-accent-red);
 
     /* 
-       Altair Shadows & Glass
+       Elite Shadows & Optical Effects
     */
-    --glass-blur: blur(30px);
-    --shadow-vision: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-floating: 0 12px 32px rgba(0, 0, 0, 0.6);
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --glass-blur: blur(40px) saturate(180%);
+    --shadow-vision: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --shadow-floating: 0 20px 50px rgba(0, 0, 0, 0.8);
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --glow-blue: 0 0 20px rgba(var(--accent-blue-rgb), 0.3);
+    --glow-red: 0 0 20px rgba(var(--accent-red-rgb), 0.3);
 
     /* 
-       Typography Native Scale (SF-Like)
+       Advanced Typography System
     */
-    --font-size-xs: 11px;
-    --font-size-sm: 13px;
-    --font-size-base: 14px;
-    --font-size-md: 16px;
-    --font-size-lg: 18px;
-    --font-size-xl: 22px;
-    --font-size-2xl: 32px;
+    --font-size-xs: 12px;
+    --font-size-sm: 13.5px;
+    --font-size-base: 15px;
+    --font-size-md: 17px;
+    --font-size-lg: 19px;
+    --font-size-xl: 24px;
+    --font-size-2xl: 36px;
 
     --font-weight-thin: 300;
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
-    --font-weight-black: 800;
+    --font-weight-black: 900;
 
-    --radius-sm: 5px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
     --radius-full: 9999px;
 
     /* Interface Heights */
-    --btn-h-sm: 28px;
-    --btn-h-md: 36px;
-    --btn-h-lg: 48px;
+    --btn-h-sm: 30px;
+    --btn-h-md: 40px;
+    --btn-h-lg: 52px;
 
-    --duration-fast: 120ms;
-    --duration-normal: 200ms;
-    --duration-slow: 400ms;
-    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
-    --ease-premium: cubic-bezier(0.2, 0, 0, 1);
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 500ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-premium: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 :root[data-theme="light"] {
@@ -130,48 +139,59 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+@keyframes mesh-drift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 body {
     margin: 0;
     background-color: var(--bg-main);
+    background-image:
+        radial-gradient(at 0% 0%, rgba(var(--accent-blue-rgb), 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(var(--accent-purple-rgb), 0.05) 0px, transparent 50%);
+    background-size: 200% 200%;
+    animation: mesh-drift 20s ease-infinite;
     color: var(--text-main);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-family: 'Inter', -apple-system, sans-serif;
     font-size: var(--font-size-base);
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
 }
 
-/* Native Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+code,
+pre,
+.mono,
+.tokens,
+.kb-shortcut,
+.status-text {
+    font-family: 'JetBrains Mono', monospace !important;
+    letter-spacing: -0.02em;
 }
 
-::-webkit-scrollbar-track {
-    background: transparent;
+/* Glass Card Layer */
+.glass-card {
+    background: var(--bg-surface);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-main);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-vision);
+    transition: all var(--duration-normal) var(--ease-premium);
 }
 
-::-webkit-scrollbar-thumb {
-    background: rgba(120, 120, 120, 0.3);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(120, 120, 120, 0.5);
-    background-clip: padding-box;
-}
-
-@keyframes animate-fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.glass-card:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-surface-raised);
+    transform: translateY(-2px);
 }
 
 .animate-fade-in {
@@ -211,9 +231,15 @@ body {
         opacity: 0.4;
     }
 }
+
 @keyframes skeleton-shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 .skeleton {
@@ -247,6 +273,7 @@ body {
         opacity: 0;
         transform: translateY(10px) scale(0.98);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
