@@ -1,7 +1,7 @@
 # ∅ ZERO Agentic Protocols: Cognitive Loops & Self-Healing
 
 **Version**: 1.0.0
-**Author**: ZERO Master Engineering Team
+**Author**: ZERO Core Engineering Team
 **Keywords**: Chain-of-Thought (CoT), Self-Correction, Heuristic Pre-warming, Recursive Recovery.
 
 ---
