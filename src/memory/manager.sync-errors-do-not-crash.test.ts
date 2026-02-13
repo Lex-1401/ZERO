@@ -52,26 +52,34 @@ describe("memory manager sync failures", () => {
   afterEach(async () => {
     vi.useRealTimers();
     if (manager) {
-      await manager.close();
+      try {
+        await manager.close();
+      } catch (err) {
+        console.error("Failed to close manager in afterEach", err);
+      }
       manager = null;
     }
-    // Windows CI stabilization: retry rm if EBUSY occurs
+    // Windows CI stabilization: small delay to let handles settle
+    if (process.platform === "win32") {
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    // Retry rm if EBUSY occurs
     let deleted = false;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       try {
         await fs.rm(workspaceDir, { recursive: true, force: true });
         deleted = true;
         break;
       } catch (err) {
-        if ((err as any).code === "EBUSY" && i < 4) {
-          await new Promise((r) => setTimeout(r, 100));
+        if ((err as any).code === "EBUSY" && i < 9) {
+          await new Promise((r) => setTimeout(r, 200));
           continue;
         }
-        throw err;
+        console.warn(`Attempt ${i + 1} to delete ${workspaceDir} failed: ${String(err)}`);
       }
     }
     if (!deleted) {
-      console.warn(`Warning: Failed to delete workspaceDir ${workspaceDir} after retries`);
+      console.error(`CRITICAL: Failed to delete workspaceDir ${workspaceDir} after 10 retries.`);
     }
   });
 
