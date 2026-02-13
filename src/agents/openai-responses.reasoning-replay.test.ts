@@ -30,7 +30,7 @@ function installFailingFetchCapture() {
       if (rawBody instanceof Uint8Array) return Buffer.from(rawBody).toString("utf8");
       if (rawBody instanceof ArrayBuffer)
         return Buffer.from(new Uint8Array(rawBody)).toString("utf8");
-      return String(rawBody);
+      return String(rawBody as any);
     })();
     lastBody = bodyText ? (JSON.parse(bodyText) as unknown) : undefined;
     throw new Error("intentional fetch abort (test)");

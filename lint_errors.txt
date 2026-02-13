@@ -1,0 +1,62 @@
+
+> zero@0.1.0-distro lint /Users/lex/Downloads/Arquivos/ZERO
+> oxlint --type-aware src test
+
+
+  x typescript-eslint(no-base-to-string): 'input' may use Object's default stringification format ('[object Object]') when stringified.
+    ,-[src/commands/chutes-oauth.test.ts:30:26]
+ 29 |     const fetchFn: typeof fetch = async (input, init) => {
+ 30 |       const url = String(input);
+    :                          ^^^^^
+ 31 |       if (url === CHUTES_TOKEN_ENDPOINT) {
+    `----
+  help: Consider picking a property (e.g. `user.name`), using a formatter (or `JSON.stringify`), or implementing a custom `toString()`/`toLocaleString()` on the type.
+
+  x typescript-eslint(no-base-to-string): 'input' may use Object's default stringification format ('[object Object]') when stringified.
+    ,-[src/commands/chutes-oauth.test.ts:73:26]
+ 72 |     const fetchFn: typeof fetch = async (input) => {
+ 73 |       const url = String(input);
+    :                          ^^^^^
+ 74 |       if (url === CHUTES_TOKEN_ENDPOINT) {
+    `----
+  help: Consider picking a property (e.g. `user.name`), using a formatter (or `JSON.stringify`), or implementing a custom `toString()`/`toLocaleString()` on the type.
+
+  x typescript-eslint(no-base-to-string): 'input' may use Object's default stringification format ('[object Object]') when stringified.
+     ,-[src/commands/chutes-oauth.test.ts:112:26]
+ 111 |     const fetchFn: typeof fetch = async (input) => {
+ 112 |       const url = String(input);
+     :                          ^^^^^
+ 113 |       if (url === CHUTES_TOKEN_ENDPOINT) {
+     `----
+  help: Consider picking a property (e.g. `user.name`), using a formatter (or `JSON.stringify`), or implementing a custom `toString()`/`toLocaleString()` on the type.
+
+  x typescript-eslint(no-base-to-string): 'input' may use Object's default stringification format ('[object Object]') when stringified.
+    ,-[src/agents/chutes-oauth.test.ts:13:26]
+ 12 |     const fetchFn: typeof fetch = async (input, init) => {
+ 13 |       const url = String(input);
+    :                          ^^^^^
+ 14 |       if (url === CHUTES_TOKEN_ENDPOINT) {
+    `----
+  help: Consider picking a property (e.g. `user.name`), using a formatter (or `JSON.stringify`), or implementing a custom `toString()`/`toLocaleString()` on the type.
+
+  x typescript-eslint(no-base-to-string): 'input' may use Object's default stringification format ('[object Object]') when stringified.
+    ,-[src/agents/chutes-oauth.test.ts:63:26]
+ 62 |     const fetchFn: typeof fetch = async (input, init) => {
+ 63 |       const url = String(input);
+    :                          ^^^^^
+ 64 |       if (url !== CHUTES_TOKEN_ENDPOINT) return new Response("not found", { status: 404 });
+    `----
+  help: Consider picking a property (e.g. `user.name`), using a formatter (or `JSON.stringify`), or implementing a custom `toString()`/`toLocaleString()` on the type.
+
+  x typescript-eslint(no-base-to-string): 'rawBody' may use Object's default stringification format ('[object Object]') when stringified.
+    ,-[src/agents/openai-responses.reasoning-replay.test.ts:33:21]
+ 32 |         return Buffer.from(new Uint8Array(rawBody)).toString("utf8");
+ 33 |       return String(rawBody);
+    :                     ^^^^^^^
+ 34 |     })();
+    `----
+  help: Consider picking a property (e.g. `user.name`), using a formatter (or `JSON.stringify`), or implementing a custom `toString()`/`toLocaleString()` on the type.
+
+Found 0 warnings and 6 errors.
+Finished in 1.8s on 2553 files with 107 rules using 10 threads.
+ ELIFECYCLE  Command failed with exit code 1.
