@@ -85,3 +85,4 @@ audit-reports/
 lint_output.txt
 test_output*.txt
 test_results.txt
+testsprite_tests/
