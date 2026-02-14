@@ -2,16 +2,10 @@
 # https://docs.zizmor.sh/configuration/
 
 rules:
-  # Disable unpinned-uses - pinning to SHA hashes is a significant change
-  # that should be done deliberately, not enforced by pre-commit
+  # Enable unpinned-uses - ensures all actions use SHA hashes for security
   unpinned-uses:
-    disable: true
+    disable: false
 
-  # Disable excessive-permissions for now - adding explicit permissions
-  # blocks requires careful review of each workflow's needs
+  # Enable excessive-permissions - ensures workflows use the least privilege needed
   excessive-permissions:
-    disable: true
-
-  # Disable artipacked (persist-credentials) - low confidence finding
-  artipacked:
-    disable: true
+    disable: false

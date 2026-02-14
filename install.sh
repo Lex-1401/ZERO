@@ -36,6 +36,7 @@ pnpm install
 
 # 4. Compilação
 echo -e "${BLUE}🏗️  Construindo a interface e o núcleo...${NC}"
+pnpm build:rust
 pnpm ui:build
 pnpm build
 

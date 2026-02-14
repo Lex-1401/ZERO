@@ -210,21 +210,6 @@ packages:
 EOF
         log_success "pnpm-workspace.yaml criado."
     fi
-
-    if [ -f "rust-core/package.json" ]; then
-        node -e '
-        try {
-            const fs = require("fs"); 
-            const p = "rust-core/package.json"; 
-            const j = JSON.parse(fs.readFileSync(p, "utf8")); 
-            if (j.scripts && Object.keys(j.scripts).length > 0) {
-                j.scripts = {}; 
-                fs.writeFileSync(p, JSON.stringify(j, null, 2));
-                console.log("cleaned");
-            }
-        } catch (e) { process.exit(0); }
-        ' >/dev/null 2>&1
-    fi
 }
 
 install_and_build() {

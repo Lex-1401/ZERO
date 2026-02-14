@@ -80,9 +80,19 @@ rust-core/target/
 # Security Audit Reports & Local State
 .zero/
 audit-reports/
+*.audit.json
+*.audit.md
+*_REPORT.md
+*.report.md
+SECURITY_AUDIT.md
+BETA_TEST_REPORT.md
 *.json.enc
 *.audit.json
 lint_output.txt
 test_output*.txt
 test_results.txt
 testsprite_tests/
+lint_report.txt
+loc_report.txt
+*_report.txt
+*.log

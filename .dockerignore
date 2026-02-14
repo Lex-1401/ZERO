@@ -46,3 +46,9 @@ Swabble/
 Core/
 Users/
 vendor/
+
+# Rust/Native artifacts
+**/target
+**/*.node
+**/*.node.bak
+
