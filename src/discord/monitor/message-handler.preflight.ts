@@ -27,7 +27,6 @@ import { resolveControlCommandGate } from "../../channels/command-gating.js";
 import { logInboundDrop } from "../../channels/logging.js";
 import {
   allowListMatches,
-  isDiscordGroupAllowedByPolicy,
   normalizeDiscordAllowList,
   normalizeDiscordSlug,
   resolveDiscordAllowListMatch,
@@ -35,7 +34,6 @@ import {
   resolveDiscordGuildEntry,
   resolveDiscordShouldRequireMention,
   resolveDiscordUserAllowed,
-  resolveGroupDmAllow,
 } from "./allow-list.js";
 import {
   formatDiscordUserTag,
@@ -49,6 +47,7 @@ import type {
 import { resolveDiscordChannelInfo, resolveDiscordMessageText } from "./message-utils.js";
 import { resolveDiscordSystemEvent } from "./system-events.js";
 import { resolveDiscordThreadChannel, resolveDiscordThreadParentInfo } from "./threading.js";
+import { evaluateDiscordAccess } from "./logic.js";
 
 export type {
   DiscordMessagePreflightContext,
@@ -78,79 +77,133 @@ export async function preflightDiscordMessage(
   const isDirectMessage = channelInfo?.type === ChannelType.DM;
   const isGroupDm = channelInfo?.type === ChannelType.GroupDM;
 
-  if (isGroupDm && !params.groupDmEnabled) {
-    logVerbose("discord: drop group dm (group dms disabled)");
-    return null;
-  }
-  if (isDirectMessage && !params.dmEnabled) {
-    logVerbose("discord: drop dm (dms disabled)");
-    return null;
-  }
-
   const dmPolicy = params.discordConfig?.dm?.policy ?? "pairing";
   let commandAuthorized = true;
-  if (isDirectMessage) {
-    if (dmPolicy === "disabled") {
-      logVerbose("discord: drop dm (dmPolicy: disabled)");
-      return null;
-    }
-    if (dmPolicy !== "open") {
+
+  const guildInfo = isGuildMessage
+    ? resolveDiscordGuildEntry({
+        guild: params.data.guild ?? undefined,
+        guildEntries: params.guildEntries,
+      })
+    : null;
+
+  const channelName =
+    channelInfo?.name ??
+    ((isGuildMessage || isGroupDm) && message.channel && "name" in message.channel
+      ? message.channel.name
+      : undefined);
+  const threadChannel = resolveDiscordThreadChannel({
+    isGuildMessage,
+    message,
+    channelInfo,
+  });
+  let threadParentId: string | undefined;
+  let threadParentName: string | undefined;
+  let threadParentType: ChannelType | undefined;
+  if (threadChannel) {
+    const parentInfo = await resolveDiscordThreadParentInfo({
+      client: params.client,
+      threadChannel,
+      channelInfo,
+    });
+    threadParentId = parentInfo.id;
+    threadParentName = parentInfo.name;
+    threadParentType = parentInfo.type;
+  }
+  const threadName = threadChannel?.name;
+  const configChannelName = threadParentName ?? channelName;
+  const configChannelSlug = configChannelName ? normalizeDiscordSlug(configChannelName) : "";
+  const displayChannelName = threadName ?? channelName;
+  const displayChannelSlug = displayChannelName ? normalizeDiscordSlug(displayChannelName) : "";
+  const guildSlug =
+    guildInfo?.slug ||
+    (params.data.guild?.name ? normalizeDiscordSlug(params.data.guild.name) : "");
+
+  const threadChannelSlug = channelName ? normalizeDiscordSlug(channelName) : "";
+  const threadParentSlug = threadParentName ? normalizeDiscordSlug(threadParentName) : "";
+
+  const channelConfig = isGuildMessage
+    ? resolveDiscordChannelConfigWithFallback({
+        guildInfo,
+        channelId: message.channelId,
+        channelName,
+        channelSlug: threadChannelSlug,
+        parentId: threadParentId ?? undefined,
+        parentName: threadParentName ?? undefined,
+        parentSlug: threadParentSlug,
+        scope: threadChannel ? "thread" : "channel",
+      })
+    : null;
+  const channelAllowlistConfigured =
+    Boolean(guildInfo?.channels) && Object.keys(guildInfo?.channels ?? {}).length > 0;
+  const channelAllowed = channelConfig?.allowed !== false;
+
+  const accessParams = {
+    dmEnabled: params.dmEnabled,
+    groupDmEnabled: params.groupDmEnabled,
+    dmPolicy: dmPolicy as any,
+    groupPolicy: params.groupPolicy as any,
+    guildInfo,
+    guildEntriesCount: Object.keys(params.guildEntries ?? {}).length,
+    channelConfig,
+    channelAllowlistConfigured,
+    channelAllowed,
+  };
+
+  const access = evaluateDiscordAccess(
+    {
+      author,
+      channelInfo,
+      guildId: params.data.guild_id ?? undefined,
+      isGroupDm,
+      isDirectMessage,
+    },
+    accessParams,
+  );
+
+  if (!access.allowed) {
+    if (isDirectMessage && dmPolicy === "pairing" && access.reason !== "dms-disabled") {
       const storeAllowFrom = await readChannelAllowFromStore("discord").catch(() => []);
       const effectiveAllowFrom = [...(params.allowFrom ?? []), ...storeAllowFrom];
       const allowList = normalizeDiscordAllowList(effectiveAllowFrom, ["discord:", "user:"]);
       const allowMatch = allowList
         ? resolveDiscordAllowListMatch({
             allowList,
-            candidate: {
-              id: author.id,
-              name: author.username,
-              tag: formatDiscordUserTag(author),
-            },
+            candidate: { id: author.id, name: author.username, tag: formatDiscordUserTag(author) },
           })
         : { allowed: false };
-      const allowMatchMeta = formatAllowlistMatchMeta(allowMatch);
-      const permitted = allowMatch.allowed;
-      if (!permitted) {
+
+      if (!allowMatch.allowed) {
         commandAuthorized = false;
-        if (dmPolicy === "pairing") {
-          const { code, created } = await upsertChannelPairingRequest({
-            channel: "discord",
-            id: author.id,
-            meta: {
-              tag: formatDiscordUserTag(author),
-              name: author.username ?? undefined,
-            },
-          });
-          if (created) {
-            logVerbose(
-              `discord pairing request sender=${author.id} tag=${formatDiscordUserTag(author)} (${allowMatchMeta})`,
-            );
-            try {
-              await sendMessageDiscord(
-                `user:${author.id}`,
-                buildPairingReply({
-                  channel: "discord",
-                  idLine: `Your Discord user id: ${author.id}`,
-                  code,
-                }),
-                {
-                  token: params.token,
-                  rest: params.client.rest,
-                  accountId: params.accountId,
-                },
-              );
-            } catch (err) {
-              logVerbose(`discord pairing reply failed for ${author.id}: ${String(err)}`);
-            }
-          }
-        } else {
+        const { code, created } = await upsertChannelPairingRequest({
+          channel: "discord",
+          id: author.id,
+          meta: { tag: formatDiscordUserTag(author), name: author.username ?? undefined },
+        });
+        if (created) {
           logVerbose(
-            `Blocked unauthorized discord sender ${author.id} (dmPolicy=${dmPolicy}, ${allowMatchMeta})`,
+            `discord pairing request sender=${author.id} tag=${formatDiscordUserTag(author)}`,
           );
+          try {
+            await sendMessageDiscord(
+              `user:${author.id}`,
+              buildPairingReply({
+                channel: "discord",
+                idLine: `Your Discord user id: ${author.id}`,
+                code,
+              }),
+              { token: params.token, rest: params.client.rest, accountId: params.accountId },
+            );
+          } catch (err) {
+            logVerbose(`discord pairing reply failed: ${String(err)}`);
+          }
         }
         return null;
       }
       commandAuthorized = true;
+    } else {
+      logVerbose(`discord: drop message reason=${access.reason}`);
+      return null;
     }
   }
 
@@ -218,123 +271,15 @@ export async function preflightDiscordMessage(
     return null;
   }
 
-  const guildInfo = isGuildMessage
-    ? resolveDiscordGuildEntry({
-        guild: params.data.guild ?? undefined,
-        guildEntries: params.guildEntries,
-      })
-    : null;
-  if (
-    isGuildMessage &&
-    params.guildEntries &&
-    Object.keys(params.guildEntries).length > 0 &&
-    !guildInfo
-  ) {
-    logVerbose(
-      `Blocked discord guild ${params.data.guild_id ?? "unknown"} (not in discord.guilds)`,
-    );
-    return null;
-  }
-
-  const channelName =
-    channelInfo?.name ??
-    ((isGuildMessage || isGroupDm) && message.channel && "name" in message.channel
-      ? message.channel.name
-      : undefined);
-  const threadChannel = resolveDiscordThreadChannel({
-    isGuildMessage,
-    message,
-    channelInfo,
-  });
-  let threadParentId: string | undefined;
-  let threadParentName: string | undefined;
-  let threadParentType: ChannelType | undefined;
-  if (threadChannel) {
-    const parentInfo = await resolveDiscordThreadParentInfo({
-      client: params.client,
-      threadChannel,
-      channelInfo,
-    });
-    threadParentId = parentInfo.id;
-    threadParentName = parentInfo.name;
-    threadParentType = parentInfo.type;
-  }
-  const threadName = threadChannel?.name;
-  const configChannelName = threadParentName ?? channelName;
-  const configChannelSlug = configChannelName ? normalizeDiscordSlug(configChannelName) : "";
-  const displayChannelName = threadName ?? channelName;
-  const displayChannelSlug = displayChannelName ? normalizeDiscordSlug(displayChannelName) : "";
-  const guildSlug =
-    guildInfo?.slug ||
-    (params.data.guild?.name ? normalizeDiscordSlug(params.data.guild.name) : "");
-
-  const threadChannelSlug = channelName ? normalizeDiscordSlug(channelName) : "";
-  const threadParentSlug = threadParentName ? normalizeDiscordSlug(threadParentName) : "";
-
-  const baseSessionKey = route.sessionKey;
-  const channelConfig = isGuildMessage
-    ? resolveDiscordChannelConfigWithFallback({
-        guildInfo,
-        channelId: message.channelId,
-        channelName,
-        channelSlug: threadChannelSlug,
-        parentId: threadParentId ?? undefined,
-        parentName: threadParentName ?? undefined,
-        parentSlug: threadParentSlug,
-        scope: threadChannel ? "thread" : "channel",
-      })
-    : null;
-  const channelMatchMeta = formatAllowlistMatchMeta(channelConfig);
-  if (isGuildMessage && channelConfig?.enabled === false) {
-    logVerbose(
-      `Blocked discord channel ${message.channelId} (channel disabled, ${channelMatchMeta})`,
-    );
-    return null;
-  }
-
-  const groupDmAllowed =
-    isGroupDm &&
-    resolveGroupDmAllow({
-      channels: params.groupDmChannels,
-      channelId: message.channelId,
-      channelName: displayChannelName,
-      channelSlug: displayChannelSlug,
-    });
-  if (isGroupDm && !groupDmAllowed) return null;
-
-  const channelAllowlistConfigured =
-    Boolean(guildInfo?.channels) && Object.keys(guildInfo?.channels ?? {}).length > 0;
-  const channelAllowed = channelConfig?.allowed !== false;
-  if (
-    isGuildMessage &&
-    !isDiscordGroupAllowedByPolicy({
-      groupPolicy: params.groupPolicy,
-      guildAllowlisted: Boolean(guildInfo),
-      channelAllowlistConfigured,
-      channelAllowed,
-    })
-  ) {
-    if (params.groupPolicy === "disabled") {
-      logVerbose(`discord: drop guild message (groupPolicy: disabled, ${channelMatchMeta})`);
-    } else if (!channelAllowlistConfigured) {
-      logVerbose(
-        `discord: drop guild message (groupPolicy: allowlist, no channel allowlist, ${channelMatchMeta})`,
-      );
-    } else {
-      logVerbose(
-        `Blocked discord channel ${message.channelId} not in guild channel allowlist (groupPolicy: allowlist, ${channelMatchMeta})`,
-      );
-    }
-    return null;
-  }
-
   if (isGuildMessage && channelConfig?.allowed === false) {
+    const channelMatchMeta = formatAllowlistMatchMeta(channelConfig);
     logVerbose(
       `Blocked discord channel ${message.channelId} not in guild channel allowlist (${channelMatchMeta})`,
     );
     return null;
   }
   if (isGuildMessage) {
+    const channelMatchMeta = formatAllowlistMatchMeta(channelConfig);
     logVerbose(`discord: allow channel ${message.channelId} (${channelMatchMeta})`);
   }
 
@@ -517,7 +462,7 @@ export async function preflightDiscordMessage(
     configChannelSlug,
     displayChannelName,
     displayChannelSlug,
-    baseSessionKey,
+    baseSessionKey: route.sessionKey,
     channelConfig,
     channelAllowlistConfigured,
     channelAllowed,
