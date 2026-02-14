@@ -55,6 +55,7 @@ O ZERO é projetado para ser compatível com padrões globais de privacidade (**
 
 - **Relatórios**: Vulnerabilidades devem ser relatadas para `security@zero.local`.
 - **Auditoria Local**: Utilize `zero security audit --deep` para verificar a integridade da sua instalação.
+- **Higiene de Auditoria**: Para evitar o "viés de confirmação" e a exposição acidental de superfícies de ataque, os relatórios de auditoria (`.json.enc`) são armazenados exclusivamente no diretório local `STATE_DIR` (padrão `~/.zero/audit-reports`) e são explicitamente excluídos dos sistemas de controle de versão. É estritamente proibido armazenar relatórios de auditoria no repositório.
 
 ---
 *“Vazio que contém o Infinito. Soberania que define o Futuro.”* ∅
