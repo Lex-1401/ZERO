@@ -88,6 +88,7 @@ export default defineConfig({
         "src/wizard/**",
         // Channel surfaces are largely integration-tested (or manually validated).
         "src/discord/**",
+        "!src/discord/**/*.logic.ts",
         "src/imessage/**",
         "src/signal/**",
         "src/slack/**",
@@ -97,6 +98,7 @@ export default defineConfig({
         "src/telegram/proxy.ts",
         "src/telegram/webhook-set.ts",
         "src/telegram/**",
+        "!src/telegram/**/*.logic.ts",
         "src/webchat/**",
         "src/gateway/server.ts",
         "src/gateway/client.ts",

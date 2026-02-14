@@ -414,6 +414,12 @@ export function createGatewayHttpServer(opts: {
         });
         return;
       }
+    } else {
+      // HIGH-005: Bloquear requisições com IP desconhecido (previne bypass)
+      res.statusCode = 403;
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.end(JSON.stringify({ ok: false, error: "Forbidden: Unknown IP source" }));
+      return;
     }
 
     // Security Headers (HIGH-001: CSP Implementation with nonces)
