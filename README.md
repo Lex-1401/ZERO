@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://github.com/Lex-1401/ZERO/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge" alt="CI Status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.3.0-blue?style=for-the-badge" alt="Version"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.3.1-blue?style=for-the-badge" alt="Version"></a>
 </p>
 
 <p align="center">

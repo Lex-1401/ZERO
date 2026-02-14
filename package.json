@@ -1,6 +1,6 @@
 {
   "name": "zero",
-  "version": "0.1.0-distro",
+  "version": "0.1.1-distro",
   "description": "ZERO — Núcleo de Controle de Consciência Local-first",
   "type": "module",
   "main": "dist/index.js",

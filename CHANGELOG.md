@@ -2,6 +2,30 @@
 
 Docs: <https://docs.zero.bot>
 
+## 2026.2.14 (v0.3.1)
+
+### Highlights
+
+- **Integridade Sistêmica (QA/QC Premium)**: Auditoria completa e saneamento do núcleo. Corrigida a lógica de reparo de sessões corrompidas e o suporte a flags no comando `doctor --fix`.
+- **Rust Core Stability**: Resolução de dependências críticas (`once_cell`) e restauração das definições de tipo (`index.d.ts`), garantindo builds nativos determinísticos.
+- **Soberania de Documentação**: Restauração total da paridade entre `README.md` (BR) e `README_EN.md`. Upgrade massivo da galeria visual para capturas de tela v4 nativas em Português-BR.
+- **Higiene de Auditoria (Security)**: Implementação de protocolos rigorosos de segurança que proíbem o armazenamento de relatórios de auditoria no repositório, mitigando riscos de exposição de superfície de ataque.
+- **Stress & Performance**: Inclusão de suítes de benchmark de carga para o Gateway (`stress.benchmark.ts`) e otimização de middlewares HTTP.
+
+### Changes
+
+- CLI: Refatoração do processamento de argumentos em `register.maintenance.ts`.
+- Core: Sincronização de binários nativos e headers de desenvolvimento.
+- Infra: Atualização de `.dockerignore`, `.gitignore` e suítes de CI para suportar fluxos de trabalho locais-primeiro.
+- Channels: Refatoração modular de handlers do Telegram e inclusão de monitors proativos para Discord.
+- Agents: Atualização profunda do prompt de sistema e gestão de sessões de voz.
+
+### Fixes
+
+- CLI: Correção do loop de reparo infinito no `doctor` quando encontrava sessões sem metadados.
+- Docs: Substituição de placeholders em Inglês por ativos visuais brasileiros de alta fidelidade.
+- Security: Bloqueio de subida de arquivos `.json.enc` de auditoria via `.gitignore` reforçado.
+
 ## 2026.2.13 (v0.3.0)
 
 ### Highlights
