@@ -14,6 +14,8 @@ function loadNativeModule() {
         'darwin-x64': 'ratchet.darwin-x64.node',
         'linux-x64-gnu': 'ratchet.linux-x64-gnu.node',
         'linux-arm64-gnu': 'ratchet.linux-arm64-gnu.node',
+        'linux-x64-musl': 'ratchet.linux-x64-musl.node',
+        'linux-arm64-musl': 'ratchet.linux-arm64-musl.node',
         'win32-x64-msvc': 'ratchet.win32-x64-msvc.node',
     };
 

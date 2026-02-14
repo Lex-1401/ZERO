@@ -169,6 +169,7 @@ dependencies = [
  "napi",
  "napi-build",
  "napi-derive",
+ "once_cell",
  "regex",
  "unicode-normalization",
 ]
