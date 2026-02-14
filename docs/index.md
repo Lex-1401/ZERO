@@ -82,17 +82,17 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 
 | Chat & Assistente (Interface Altair) | Hub de Controle (Telemetria) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
+| ![Chat UI](assets/screenshots/chat-ui-v4.png) | ![Hub UI](assets/screenshots/hub-ui-v4.png) |
 | *Modo Foco com comandos proativos e sugestões inteligentes.* | *Visão consolidada da saúde do sistema e conexões.* |
 
 | Núcleo (Aparência) | Atualização de Software (Updates) |
 | :--- | :--- |
-| ![Appearance Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
+| ![Appearance Settings](assets/screenshots/settings-ui-v4.png) | ![Update UI](assets/screenshots/update-ui-v4.png) |
 | *Refinamento premium dos seletores de tema e idioma.* | *Gerenciador de integridade e versões do sistema.* |
 
 | Catálogo de Skills |
 | :--- |
-| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
+| ![Skills Catalog](assets/screenshots/skills-ui-v4.png) |
 | *Extensões para expandir os poderes da sua IA.* |
 
 ---

@@ -180,17 +180,17 @@ Visualize o **ZERO** em operação. Estes são registros reais da interface de c
 
 | Chat & Assistente (Interface Altair) | Hub de Controle (Telemetria) |
 | :--- | :--- |
-| ![Chat UI](assets/screenshots/chat-ui-v4-en.png) | ![Hub UI](assets/screenshots/hub-ui-v4-en.png) |
+| ![Chat UI](assets/screenshots/chat-ui-v4.png) | ![Hub UI](assets/screenshots/hub-ui-v4.png) |
 | *Modo foco com comandos proativos e sugestões inteligentes.* | *Visão consolidada da saúde do sistema e conexões.* |
 
 | Núcleo do Sistema (Aparência) | Atualizações de Software (Updates) |
 | :--- | :--- |
-| ![Core Settings](assets/screenshots/settings-ui-v4-en.png) | ![Update UI](assets/screenshots/update-ui-v4-en.png) |
+| ![Core Settings](assets/screenshots/settings-ui-v4.png) | ![Update UI](assets/screenshots/update-ui-v4.png) |
 | *Controle granular sobre cada parâmetro do seu Sistema.* | *Gestão proativa de versões e integridade via Git/PNPM.* |
 
 | Catálogo de Skills (Marketplace) |
 | :--- |
-| ![Skills Catalog](assets/screenshots/skills-ui-v4-en.png) |
+| ![Skills Catalog](assets/screenshots/skills-ui-v4.png) |
 | *Extensões prontas para uso para expandir os poderes da sua IA.* |
 
 ---
