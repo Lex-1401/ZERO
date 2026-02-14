@@ -76,7 +76,9 @@ export class VoiceSession extends EventEmitter {
 
   private handleSpeechEnd() {
     console.log(`[VoiceSession:${this.connId}] Speech ended (Native VAD Pulse)`);
-    void this.dispatchTranscriptionPulse();
+    this.dispatchTranscriptionPulse().catch((err) => {
+      console.error(`[VoiceSession:${this.connId}] Transcription pulse failed:`, err);
+    });
   }
 
   private handleSystemPanic() {
@@ -115,7 +117,9 @@ export class VoiceSession extends EventEmitter {
       this.emit("transcription", result.text);
     });
 
-    void whisperEngine.transcribe(fullAudio);
+    whisperEngine.transcribe(fullAudio).catch((err) => {
+      console.error(`[VoiceSession:${this.connId}] Whisper transcription failed:`, err);
+    });
   }
 }
 
