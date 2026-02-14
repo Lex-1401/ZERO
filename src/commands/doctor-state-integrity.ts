@@ -136,7 +136,7 @@ export async function noteStateIntegrity(
   const displayOauthDir = shortenHomePath(oauthDir);
   const displaySessionsDir = shortenHomePath(sessionsDir);
   const displayStoreDir = shortenHomePath(storeDir);
-  const displayConfigPath = configPath ? shortenHomePath(configPath) : undefined;
+  const displayConfigPath = configPath ? shortenHomePath(configPath as string) : undefined;
 
   let stateDirExists = existsDir(stateDir);
   if (!stateDirExists) {
@@ -203,25 +203,27 @@ export async function noteStateIntegrity(
     }
   }
 
-  if (configPath && existsFile(configPath) && process.platform !== "win32") {
+  if (configPath && existsFile(configPath as string) && process.platform !== "win32") {
     try {
-      const stat = fs.statSync(configPath);
+      const stat = fs.statSync(configPath as string);
       if ((stat.mode & 0o077) !== 0) {
         warnings.push(
           `- O arquivo de configuração pode ser lido pelo grupo/mundo (${displayConfigPath ?? configPath}). Recomendado chmod 600.`,
         );
         const tighten = await prompter.confirmSkipInNonInteractive({
-          message: `Restringir permissões em ${displayConfigPath ?? configPath} para 600?`,
+          message: `Restringir permissões em ${displayConfigPath ?? (configPath as string)} para 600?`,
           initialValue: true,
         });
         if (tighten) {
-          fs.chmodSync(configPath, 0o600);
-          changes.push(`- Permissões restringidas em ${displayConfigPath ?? configPath} para 600`);
+          fs.chmodSync(configPath as string, 0o600);
+          changes.push(
+            `- Permissões restringidas em ${displayConfigPath ?? (configPath as string)} para 600`,
+          );
         }
       }
     } catch (err) {
       warnings.push(
-        `- Falha ao ler permissões da configuração (${displayConfigPath ?? configPath}): ${String(err)}`,
+        `- Falha ao ler permissões da configuração (${displayConfigPath ?? (configPath as string)}): ${String(err)}`,
       );
     }
   }
@@ -318,6 +320,31 @@ export async function noteStateIntegrity(
       warnings.push(
         `- ${missing.length}/${recent.length} sessões recentes estão sem transcrições. Verifique se há arquivos de sessão excluídos ou diretórios de estado divididos.`,
       );
+
+      const shouldRepair = await prompter.confirmSkipInNonInteractive({
+        message: "Remover registros de sessões corrompidas (arquivos ausentes)?",
+        initialValue: true,
+      });
+
+      if (shouldRepair) {
+        let repairedCount = 0;
+        for (const [key] of missing) {
+          if (store[key]) {
+            delete store[key];
+            repairedCount++;
+          }
+        }
+        if (repairedCount > 0) {
+          try {
+            fs.writeFileSync(storePath, JSON.stringify(store, null, 2), "utf-8");
+            changes.push(
+              `- Removidos ${repairedCount} registros de sessão inválidos (sem transcrição).`,
+            );
+          } catch (err) {
+            warnings.push(`- Falha ao salvar reparos no store de sessão: ${String(err)}`);
+          }
+        }
+      }
     }
 
     const mainKey = resolveMainSessionKey(cfg);

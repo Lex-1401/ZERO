@@ -514,51 +514,67 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
 // NOTE: These wrappers intentionally do *not* cache the resolved config path at
 // module scope. `ZERO_CONFIG_PATH` (and friends) are expected to work even
 // when set after the module has been imported (tests, one-off scripts, etc.).
-const DEFAULT_CONFIG_CACHE_MS = 200;
 let configCache: {
   configPath: string;
-  expiresAt: number;
   config: ZEROConfig;
 } | null = null;
-
-function resolveConfigCacheMs(env: NodeJS.ProcessEnv): number {
-  const raw = env.ZERO_CONFIG_CACHE_MS?.trim();
-  if (raw === "" || raw === "0") return 0;
-  if (!raw) return DEFAULT_CONFIG_CACHE_MS;
-  const parsed = Number.parseInt(raw, 10);
-  if (!Number.isFinite(parsed)) return DEFAULT_CONFIG_CACHE_MS;
-  return Math.max(0, parsed);
-}
-
-function shouldUseConfigCache(env: NodeJS.ProcessEnv): boolean {
-  if (env.ZERO_DISABLE_CONFIG_CACHE?.trim()) return false;
-  return resolveConfigCacheMs(env) > 0;
-}
+let configWatcher: fs.FSWatcher | null = null;
 
 function clearConfigCache(): void {
   configCache = null;
+  if (configWatcher) {
+    configWatcher.close();
+    configWatcher = null;
+  }
 }
 
 export function loadConfig(): ZEROConfig {
   const configPath = resolveConfigPath();
-  const now = Date.now();
-  if (shouldUseConfigCache(process.env)) {
-    const cached = configCache;
-    if (cached && cached.configPath === configPath && cached.expiresAt > now) {
-      return cached.config;
-    }
+
+  // 1. Fast path: return cached config if path matches
+  if (configCache && configCache.configPath === configPath) {
+    return configCache.config;
   }
+
+  // 2. Slow path: clear old watcher if path changed
+  if (configWatcher && configCache?.configPath !== configPath) {
+    clearConfigCache();
+  }
+
+  // 3. Load fresh config
   const config = createConfigIO({ configPath }).loadConfig();
-  if (shouldUseConfigCache(process.env)) {
-    const cacheMs = resolveConfigCacheMs(process.env);
-    if (cacheMs > 0) {
-      configCache = {
-        configPath,
-        expiresAt: now + cacheMs,
-        config,
-      };
+
+  // 4. Setup new watcher if file exists (Event-Driven Hot Reload)
+  // We only watch if the file exists to avoid watching parent directories.
+  if (!configWatcher && fs.existsSync(configPath)) {
+    try {
+      // persistent: false ensures the watcher doesn't block process exit
+      // We watch for any event (change/rename). On atomic writes (rename),
+      // the watcher usually fires and might stop working on the old inode,
+      // so we eagerly clear the cache AND the watcher to force a re-setup next time.
+      const watcher = fs.watch(configPath, { persistent: false }, (_event) => {
+        configCache = null;
+        if (configWatcher) {
+          configWatcher.close();
+          configWatcher = null;
+        }
+      });
+      // Safety: unref again if the options shim didn't work in some environments,
+      // though persistent: false should handle it.
+      watcher.unref();
+      configWatcher = watcher;
+    } catch {
+      // If watching fails (e.g. permission issues), we just don't cache/watch.
+      // System falls back to reading every time if cache is null.
     }
   }
+
+  // 5. Update cache (Indefinite lifetime until invalidated by watcher)
+  configCache = {
+    configPath,
+    config,
+  };
+
   return config;
 }
 

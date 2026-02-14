@@ -1,26 +1,46 @@
 {
-    "agents": {
-        "defaults": {
-            "model": {
-                "primary": "ollama/llama3.2:latest"
-            },
-            "thinkingDefault": "medium"
-        }
-    },
-    "gateway": {
-        "mode": "local",
-        "bind": "lan",
-        "auth": {
-            "mode": "token",
-            "token": "${ZERO_GATEWAY_TOKEN}"
-        },
-        "port": 19001,
-        "http": {
-            "endpoints": {
-                "chatCompletions": {
-                    "enabled": true
-                }
-            }
-        }
+  "meta": {
+    "lastTouchedVersion": "0.1.0-distro",
+    "lastTouchedAt": "2026-02-14T13:30:28.950Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-14T13:30:28.941Z",
+    "lastRunVersion": "0.1.0-distro",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/llama3.2:latest"
+      },
+      "thinkingDefault": "medium",
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
     }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "gateway": {
+    "port": 19001,
+    "mode": "local",
+    "bind": "lan",
+    "auth": {
+      "mode": "token"
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
+    }
+  }
 }

@@ -11,6 +11,7 @@ import { runCommandWithRuntime } from "../cli-utils.js";
 export function registerMaintenanceCommands(program: Command) {
   program
     .command("doctor")
+    .argument("[args...]", "Argumentos opcionais para compatibilidade")
     .description("Verificações de saúde + correções rápidas para gateway e canais")
     .addHelpText(
       "after",
@@ -33,14 +34,20 @@ export function registerMaintenanceCommands(program: Command) {
     .option("--non-interactive", "Rodar sem prompts (apenas migrações seguras)", false)
     .option("--generate-gateway-token", "Gerar e configurar um token de gateway", false)
     .option("--deep", "Scanear serviços do sistema por instalações extras do gateway", false)
-    .action(async (opts) => {
+    .action(async (_args: string[], opts) => {
+      // Workaround: Commander sometimes treats flags as positional args if mixed interactions occur
+      const hasFixArg = _args.includes("--fix") || _args.includes("--repair");
+      const hasYesArg = _args.includes("--yes");
+      const hasForceArg = _args.includes("--force");
+      const hasNonInteractiveArg = _args.includes("--non-interactive");
+
       await runCommandWithRuntime(defaultRuntime, async () => {
         await doctorCommand(defaultRuntime, {
           workspaceSuggestions: opts.workspaceSuggestions,
-          yes: Boolean(opts.yes),
-          repair: Boolean(opts.repair) || Boolean(opts.fix),
-          force: Boolean(opts.force),
-          nonInteractive: Boolean(opts.nonInteractive),
+          yes: Boolean(opts.yes) || hasYesArg,
+          repair: Boolean(opts.repair) || Boolean(opts.fix) || hasFixArg,
+          force: Boolean(opts.force) || hasForceArg,
+          nonInteractive: Boolean(opts.nonInteractive) || hasNonInteractiveArg,
           generateGatewayToken: Boolean(opts.generateGatewayToken),
           deep: Boolean(opts.deep),
         });
