@@ -13,8 +13,6 @@ const AUTH_FAILURE_DELAY_MS = 1500; // Atraso base para mitigar timing attacks
 const PERSIST_PATH = path.join(os.homedir(), ".zero", "security", "brute-force-state.json");
 const CLEANUP_INTERVAL_MS = 10 * 60 * 1000; // Limpar entradas expiradas a cada 10 min
 
-const banning_log = createSubsystemLogger("gateway/auth-defense");
-
 function isLoopbackAddress(ip: string | undefined): boolean {
   if (!ip) return false;
   if (ip === "127.0.0.1") return true;
