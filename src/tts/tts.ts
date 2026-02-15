@@ -495,7 +495,11 @@ function isValidVoiceId(voiceId: string): boolean {
 function normalizeElevenLabsBaseUrl(baseUrl: string): string {
   const trimmed = baseUrl.trim();
   if (!trimmed) return DEFAULT_ELEVENLABS_BASE_URL;
-  return trimmed.replace(/\/+$/, "");
+  let clean = trimmed;
+  while (clean.endsWith("/")) {
+    clean = clean.slice(0, -1);
+  }
+  return clean;
 }
 
 function requireInRange(value: number, min: number, max: number, label: string): void {
