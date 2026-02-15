@@ -1,6 +1,6 @@
 import { redactSensitiveText } from "../logging/redact.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
-import { SecurityEngine as NativeEngine } from "@zero/ratchet";
+import { SecurityEngine as NativeEngine, isPanicMode } from "@zero/ratchet";
 
 const log = createSubsystemLogger("security/guard");
 
@@ -120,6 +120,9 @@ export class SecurityGuard {
    * @returns The redacted text.
    */
   static obfuscatePrompt(text: string): string {
+    if (isPanicMode()) {
+      return "[PANIC: REDACTED]";
+    }
     if (!text) return text;
 
     if (nativeSecurity) {
@@ -162,6 +165,12 @@ export class SecurityGuard {
    * Orchestrates high-speed pattern matching via SecurityEngine (Rust).
    */
   static detectPromptInjection(text: string): SecurityViolation | null {
+    if (isPanicMode()) {
+      return {
+        type: "policy",
+        details: "PANIC: System is in emergency lockdown. All inputs blocked.",
+      };
+    }
     if (!text) return null;
 
     if (nativeSecurity) {
@@ -180,7 +189,7 @@ export class SecurityGuard {
       if (pattern.test(text)) {
         return {
           type: "injection",
-          details: `Heurística externa detectou: ${pattern.source}`,
+          details: `Injeção detectada (Heurística): ${pattern.source}`,
         };
       }
     }
