@@ -1,0 +1,63 @@
+
+> zero@0.1.1-distro test /Users/lex/Downloads/Arquivos/ZERO
+> vitest run "--bail" "1"
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/lex/Downloads/Arquivos/ZERO[39m
+
+ [31m❯[39m src/security/guard.native.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 31[2mms[22m[39m
+[31m     [31m×[31m detects basic injection patterns via native engine[39m[32m 26[2mms[22m[39m
+     [90m·[39m redacts PII via native engine
+     [90m·[39m calculates entropy via native engine
+       [90m·[39m obeys global panic mode
+       [90m·[39m verifies constant-time comparison (functional check)
+     [90m·[39m handles normalized Unicode injections (NFKC test)
+ [32m✓[39m src/config/config.legacy-config-detection.rejects-routing-allowfrom.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 7304[2mms[22m[39m
+     [33m[2m✓[22m[39m migrates routing.allowFrom to channels.whatsapp.allowFrom when whatsapp configured [33m 421[2mms[22m[39m
+     [33m[2m✓[22m[39m drops routing.allowFrom when whatsapp missing [33m 450[2mms[22m[39m
+     [33m[2m✓[22m[39m migrates routing.groupChat.requireMention to channels whatsapp/telegram/imessage groups when whatsapp configured [33m 538[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects gateway.token [33m 458[2mms[22m[39m
+     [33m[2m✓[22m[39m defaults telegram.dmPolicy to pairing when telegram section exists [33m 331[2mms[22m[39m
+     [33m[2m✓[22m[39m defaults whatsapp.groupPolicy to allowlist when whatsapp section exists [33m 301[2mms[22m[39m
+     [33m[2m✓[22m[39m accepts signal.dmPolicy="open" with allowFrom "*" [33m 595[2mms[22m[39m
+ [32m✓[39m src/telegram/bot.create-telegram-bot.matches-tg-prefixed-allowfrom-entries-case-insensitively.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 11883[2mms[22m[39m
+     [33m[2m✓[22m[39m matches tg:-prefixed allowFrom entries case-insensitively in group allowlist [33m 11879[2mms[22m[39m
+ [32m✓[39m src/telegram/bot.create-telegram-bot.applies-topic-skill-filters-system-prompts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 11890[2mms[22m[39m
+     [33m[2m✓[22m[39m applies topic skill filters and system prompts [33m 11887[2mms[22m[39m
+ [32m✓[39m src/telegram/bot.create-telegram-bot.routes-dms-by-telegram-accountid-binding.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 11966[2mms[22m[39m
+     [33m[2m✓[22m[39m routes DMs by telegram accountId binding [33m 11963[2mms[22m[39m
+ [32m✓[39m src/telegram/bot.create-telegram-bot.installs-grammy-throttler.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 11990[2mms[22m[39m
+     [33m[2m✓[22m[39m installs grammY throttler [33m 11986[2mms[22m[39m
+ [32m✓[39m src/telegram/bot.media.downloads-media-file-path-no-file-download.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 12014[2mms[22m[39m
+     [33m[2m✓[22m[39m downloads media via file_path (no file.download) [33m 12011[2mms[22m[39m
+ [32m✓[39m src/cli/gateway-cli.coverage.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 12372[2mms[22m[39m
+     [33m[2m✓[22m[39m registers call/health commands and routes to callGateway [33m 12368[2mms[22m[39m
+ [32m✓[39m src/commands/onboard-non-interactive.token.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 12587[2mms[22m[39m
+     [33m[2m✓[22m[39m writes token profile config and stores the token [33m 12584[2mms[22m[39m
+ [2m[90m↓[39m[22m src/cli/program.smoke.test.ts [2m([22m[2m13 tests[22m[2m)[22m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/security/guard.native.test.ts[2m > [22mSecurityGuard Native Integration[2m > [22mdetects basic injection patterns via native engine
+[31m[1mAssertionError[22m: expected 'Heurística externa detectou: ignore (…' to contain 'Injeção detectada'[39m
+
+Expected: [32m"Injeção detectada"[39m
+Received: [31m"Heurística externa detectou: ignore (all )?previous instructions"[39m
+
+[36m [2m❯[22m src/security/guard.native.test.ts:[2m10:32[22m[39m
+    [90m  8| [39m    [34mexpect[39m(violation)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m  9| [39m    [34mexpect[39m(violation[33m?.[39mtype)[33m.[39m[34mtoBe[39m([32m"injection"[39m)[33m;[39m
+    [90m 10| [39m    [34mexpect[39m(violation[33m?.[39mdetails)[33m.[39m[34mtoContain[39m([32m"Injeção detectada"[39m)[33m;[39m
+    [90m   | [39m                               [31m^[39m
+    [90m 11| [39m  })[33m;[39m
+    [90m 12| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (876)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m37 passed[39m[22m[90m (93)[39m
+[2m   Start at [22m 09:26:46
+[2m   Duration [22m 19.41s[2m (transform 56.80s, setup 47.74s, import 17.49s, tests 92.04s, environment 1ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.
