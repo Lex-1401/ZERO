@@ -308,10 +308,16 @@ export function createGatewayHttpServer(opts: {
     if (!token) {
       const cookie = ctx.req.headers.cookie;
       if (cookie) {
-        const match = cookie.match(/(?:^|; )(?:zero_token|ZERO_TOKEN)=([^;]*)/i);
-        if (match) {
-          const raw = match[1] ?? "";
-          token = raw.toLowerCase().startsWith("bearer ") ? raw.slice(7).trim() : raw.trim();
+        // [PT] Priorizar zero_auth que contém o gateway token real no modo A-POS
+        const authMatch = cookie.match(/(?:^|; )zero_auth=([^;]*)/i);
+        if (authMatch) {
+          token = authMatch[1].trim();
+        } else {
+          const match = cookie.match(/(?:^|; )(?:zero_token|ZERO_TOKEN)=([^;]*)/i);
+          if (match) {
+            const raw = match[1] ?? "";
+            token = raw.toLowerCase().startsWith("bearer ") ? raw.slice(7).trim() : raw.trim();
+          }
         }
       }
     }

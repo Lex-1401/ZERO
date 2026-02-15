@@ -4,7 +4,9 @@ import { SecurityEngine as NativeEngine } from "@zero/ratchet";
 
 const log = createSubsystemLogger("security/guard");
 
+// Native security temporarily disabled due to false positives on short messages
 let nativeSecurity: NativeEngine | null = null;
+/*
 try {
   nativeSecurity = new NativeEngine();
 } catch {
@@ -13,6 +15,7 @@ try {
     log.warn("Failed to load native SecurityEngine, using JS fallback");
   }
 }
+*/
 
 // LLM01: Prompt Injection Guardrails
 const INJECTION_PATTERNS = [

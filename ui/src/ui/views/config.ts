@@ -288,7 +288,7 @@ export function renderConfig(props: ConfigProps) {
                 </button>
             </div>
           </div>
-          <div style="padding: 24px;">
+          <div style="padding: 24px 24px 40px 24px;">
             ${loading && !status ? html`
                 <div style="text-align: center; padding: 40px;">
                     <div class="animate-spin" style="display: inline-block; margin-bottom: 12px; opacity: 0.5;">${icons.loader}</div>

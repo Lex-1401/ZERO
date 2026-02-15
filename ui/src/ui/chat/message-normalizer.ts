@@ -37,20 +37,30 @@ export function normalizeMessage(message: unknown): NormalizedMessage {
     role = "toolResult";
   }
 
+  // Helper to clean model artifacts
+  const cleanText = (text: string): string => {
+    if (!text) return "";
+    return text
+      .replace(/<f\s*inal>/gi, "")
+      .replace(/<final>/gi, "")
+      .replace(/<thinking>[\s\S]*?<\/thinking>/gi, "")
+      .trim();
+  };
+
   // Extract content
   let content: MessageContentItem[] = [];
 
   if (typeof m.content === "string") {
-    content = [{ type: "text", text: m.content }];
+    content = [{ type: "text", text: cleanText(m.content) }];
   } else if (Array.isArray(m.content)) {
     content = m.content.map((item: Record<string, unknown>) => ({
       type: (item.type as MessageContentItem["type"]) || "text",
-      text: item.text as string | undefined,
+      text: cleanText(item.text as string | undefined ?? ""),
       name: item.name as string | undefined,
       args: item.args || item.arguments,
     }));
   } else if (typeof m.text === "string") {
-    content = [{ type: "text", text: m.text }];
+    content = [{ type: "text", text: cleanText(m.text) }];
   }
 
   const timestamp = typeof m.timestamp === "number" ? m.timestamp : Date.now();

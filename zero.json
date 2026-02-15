@@ -12,12 +12,23 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "ollama/llama3.2:latest"
+        "primary": "ollama:kimi-k2.5:cloud"
       },
       "thinkingDefault": "medium",
       "maxConcurrent": 4,
       "subagents": {
         "maxConcurrent": 8
+      }
+    }
+  },
+  "models": {
+    "providers": {
+      "ollama": {
+        "api": "ollama",
+        "baseUrl": "http://127.0.0.1:11434",
+        "models": [
+          "kimi-k2.5:cloud"
+        ]
       }
     }
   },
@@ -29,7 +40,7 @@
     "nativeSkills": "auto"
   },
   "gateway": {
-    "port": 19001,
+    "port": 18789,
     "mode": "local",
     "bind": "lan",
     "auth": {

@@ -6,11 +6,11 @@ Docs: <https://docs.zero.bot>
 
 ### Highlights
 
-- **Integridade Sistêmica (QA/QC Premium)**: Auditoria completa e saneamento do núcleo. Corrigida a lógica de reparo de sessões corrompidas e o suporte a flags no comando `doctor --fix`.
-- **Rust Core Stability**: Resolução de dependências críticas (`once_cell`) e restauração das definições de tipo (`index.d.ts`), garantindo builds nativos determinísticos.
-- **Soberania de Documentação**: Restauração total da paridade entre `README.md` (BR) e `README_EN.md`. Upgrade massivo da galeria visual para capturas de tela v4 nativas em Português-BR.
-- **Higiene de Auditoria (Security)**: Implementação de protocolos rigorosos de segurança que proíbem o armazenamento de relatórios de auditoria no repositório, mitigando riscos de exposição de superfície de ataque.
-- **Stress & Performance**: Inclusão de suítes de benchmark de carga para o Gateway (`stress.benchmark.ts`) e otimização de middlewares HTTP.
+- **Estabilização Sistêmica (QA/QC Premium)**: Saneamento do núcleo e refinamento da lógica de reparo de sessões. Suporte a flags aprimorado no comando `doctor --fix`.
+- **Rust Core Stability**: Resolução de dependências críticas (`once_cell`) e restauração total das definições de tipo (`index.d.ts`), garantindo builds nativos estáveis.
+- **Soberania de Documentação**: Paridade total entre `README.md` (BR) e `README_EN.md` com upgrade da galeria visual v4.
+- **Protocolos de Segurança**: Implementação de fluxos rigorosos de segurança para gestão de artefatos temporários, mitigando riscos de exposição de superfície de ataque.
+- **Performance & Middlewares**: Otimização de middlewares HTTP e melhoria na latência do Gateway.
 
 ### Changes
 

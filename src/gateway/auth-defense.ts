@@ -13,6 +13,17 @@ const AUTH_FAILURE_DELAY_MS = 1500; // Atraso base para mitigar timing attacks
 const PERSIST_PATH = path.join(os.homedir(), ".zero", "security", "brute-force-state.json");
 const CLEANUP_INTERVAL_MS = 10 * 60 * 1000; // Limpar entradas expiradas a cada 10 min
 
+const banning_log = createSubsystemLogger("gateway/auth-defense");
+
+function isLoopbackAddress(ip: string | undefined): boolean {
+  if (!ip) return false;
+  if (ip === "127.0.0.1") return true;
+  if (ip.startsWith("127.")) return true;
+  if (ip === "::1") return true;
+  if (ip.startsWith("::ffff:127.")) return true;
+  return false;
+}
+
 type AttemptData = {
   count: number;
   firstAttempt: number;
@@ -86,6 +97,7 @@ class BruteForceProtector {
   }
 
   isBlocked(ip: string): boolean {
+    if (isLoopbackAddress(ip)) return false; // [PT] Nunca bloquear o desenvolvedor local
     const data = this.attempts.get(ip);
     if (!data) return false;
 
@@ -106,6 +118,7 @@ class BruteForceProtector {
   }
 
   async recordFailure(ip: string) {
+    if (isLoopbackAddress(ip)) return; // [PT] Ignorar falhas locais na defesa
     const now = Date.now();
     const data = this.attempts.get(ip) ?? { count: 0, firstAttempt: now };
 

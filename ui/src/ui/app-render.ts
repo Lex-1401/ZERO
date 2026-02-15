@@ -118,7 +118,7 @@ export function renderApp(state: AppViewState) {
         <div class="topbar-status">
             <div class="sentinel-badge" title="Zero Sentinel Active: Protecting your privacy">
                 ${icons.shield}
-                <span class="sentinel-text">SENTINEL ACTIVE</span>
+                <span class="sentinel-text">${t("app.sentinel" as any)}</span>
             </div>
             <div style="display: flex; align-items: center; gap: 8px; margin-right: 12px; border-left: 1px solid var(--border-subtle); padding-left: 12px;">
                 <div class="status-orb ${state.connected ? "success" : "danger"}"></div>

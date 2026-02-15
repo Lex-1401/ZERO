@@ -49,9 +49,14 @@ export function renderNode(params: {
   const { schema, value, path, hints, unsupported, disabled, onPatch } = params;
   const showLabel = params.showLabel ?? true;
   const type = schemaType(schema);
+  const propKey = String(path.at(-1));
   const hint = hintForPath(path, hints);
-  const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
-  const help = hint?.help ?? schema.description;
+  const label = hint?.label ?? schema.title ?? t(`config.field.${propKey}` as any) !== `config.field.${propKey}` ? t(`config.field.${propKey}` as any) : humanize(propKey);
+
+  const helpKey = `config.description.${propKey}`;
+  const helpTranslation = t(helpKey as any);
+  // Prioritize translation over hint.help if translation exists
+  const help = helpTranslation !== helpKey ? helpTranslation : (hint?.help ?? schema.description);
   const key = pathKey(path);
 
   if (unsupported.has(key)) {
@@ -243,8 +248,12 @@ function renderTextInput(params: {
   const { schema, value, path, hints, disabled, onPatch, inputType } = params;
   const showLabel = params.showLabel ?? true;
   const hint = hintForPath(path, hints);
-  const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
-  const help = hint?.help ?? schema.description;
+  const propKey = String(path.at(-1));
+  const label = hint?.label ?? schema.title ?? humanize(propKey);
+
+  const helpKey = `config.description.${propKey}`;
+  const helpTranslation = t(helpKey as any);
+  const help = hint?.help ?? (helpTranslation !== helpKey ? helpTranslation : schema.description);
   const isSensitive = hint?.sensitive || isSensitivePath(path);
   const isReadOnly = schema.readOnly || disabled || path[0] === 'wizard';
   const placeholder =
@@ -316,8 +325,12 @@ function renderNumberInput(params: {
   const { schema, value, path, hints, disabled, onPatch } = params;
   const showLabel = params.showLabel ?? true;
   const hint = hintForPath(path, hints);
-  const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
-  const help = hint?.help ?? schema.description;
+  const propKey = String(path.at(-1));
+  const label = hint?.label ?? schema.title ?? humanize(propKey);
+
+  const helpKey = `config.description.${propKey}`;
+  const helpTranslation = t(helpKey as any);
+  const help = hint?.help ?? (helpTranslation !== helpKey ? helpTranslation : schema.description);
   const isReadOnly = schema.readOnly || disabled || path[0] === 'wizard';
   const displayValue = value ?? schema.default;
   const numValue = typeof displayValue === "number" ? displayValue : 0;
@@ -383,8 +396,12 @@ function renderSelect(params: {
   const { schema, value, path, hints, disabled, options, onPatch } = params;
   const showLabel = params.showLabel ?? true;
   const hint = hintForPath(path, hints);
-  const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
-  const help = hint?.help ?? schema.description;
+  const propKey = String(path.at(-1));
+  const label = hint?.label ?? schema.title ?? humanize(propKey);
+
+  const helpKey = `config.description.${propKey}`;
+  const helpTranslation = t(helpKey as any);
+  const help = hint?.help ?? (helpTranslation !== helpKey ? helpTranslation : schema.description);
   const isReadOnly = schema.readOnly || disabled || path[0] === 'wizard';
   const resolvedValue = value ?? schema.default;
   const currentIndex = options.findIndex(
@@ -439,8 +456,12 @@ function renderObject(params: {
   const { schema, value, path, hints, unsupported, disabled, onPatch } = params;
   const showLabel = params.showLabel ?? true;
   const hint = hintForPath(path, hints);
-  const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
-  const help = hint?.help ?? schema.description;
+  const propKey = String(path.at(-1));
+  const label = hint?.label ?? schema.title ?? humanize(propKey);
+
+  const helpKey = `config.description.${propKey}`;
+  const helpTranslation = t(helpKey as any);
+  const help = hint?.help ?? (helpTranslation !== helpKey ? helpTranslation : schema.description);
 
   const fallback = value ?? schema.default;
   const obj = fallback && typeof fallback === "object" && !Array.isArray(fallback)
@@ -538,8 +559,12 @@ function renderArray(params: {
   const { schema, value, path, hints, unsupported, disabled, onPatch } = params;
   const showLabel = params.showLabel ?? true;
   const hint = hintForPath(path, hints);
-  const label = hint?.label ?? schema.title ?? humanize(String(path.at(-1)));
-  const help = hint?.help ?? schema.description;
+  const propKey = String(path.at(-1));
+  const label = hint?.label ?? schema.title ?? humanize(propKey);
+
+  const helpKey = `config.description.${propKey}`;
+  const helpTranslation = t(helpKey as any);
+  const help = hint?.help ?? (helpTranslation !== helpKey ? helpTranslation : schema.description);
 
   const itemsSchema = Array.isArray(schema.items) ? schema.items[0] : schema.items;
   if (!itemsSchema) {
