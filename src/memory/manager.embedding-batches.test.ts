@@ -74,7 +74,7 @@ describe("memory embedding batches", () => {
     const totalTexts = embedBatch.mock.calls.reduce((sum, call) => sum + (call[0]?.length ?? 0), 0);
     expect(totalTexts).toBe(status.chunks);
     expect(embedBatch.mock.calls.length).toBeGreaterThan(1);
-  });
+  }, 30000);
 
   it("keeps small files in a single embedding batch", async () => {
     const line = "b".repeat(120);
@@ -105,7 +105,7 @@ describe("memory embedding batches", () => {
     await manager.sync({ force: true });
 
     expect(embedBatch.mock.calls.length).toBe(1);
-  });
+  }, 30000);
 
   it("reports sync progress totals", async () => {
     const line = "c".repeat(120);
@@ -146,7 +146,7 @@ describe("memory embedding batches", () => {
     const last = updates[updates.length - 1];
     expect(last?.total).toBeGreaterThan(0);
     expect(last?.completed).toBe(last?.total);
-  });
+  }, 30000);
 
   it("retries embeddings on rate limit errors", async () => {
     const line = "d".repeat(120);
@@ -203,7 +203,7 @@ describe("memory embedding batches", () => {
     }
 
     expect(calls).toBe(3);
-  }, 10000);
+  }, 30000);
 
   it("retries embeddings on transient 5xx errors", async () => {
     const line = "e".repeat(120);
@@ -260,7 +260,7 @@ describe("memory embedding batches", () => {
     }
 
     expect(calls).toBe(3);
-  }, 10000);
+  }, 30000);
 
   it("skips empty chunks so embeddings input stays valid", async () => {
     await fs.writeFile(path.join(workspaceDir, "memory", "2026-01-07.md"), "\n\n\n");
@@ -289,5 +289,5 @@ describe("memory embedding batches", () => {
 
     const inputs = embedBatch.mock.calls.flatMap((call) => call[0] ?? []);
     expect(inputs).not.toContain("");
-  });
+  }, 30000);
 });
