@@ -12,7 +12,7 @@ RUN apt-get update && \
   && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
-  
+
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 WORKDIR /app
@@ -34,7 +34,16 @@ COPY scripts ./scripts
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN pnpm build:rust
+RUN pnpm build:rust && \
+  echo 'export function triggerPanic(secret: string): void' > rust-core/index.d.ts && \
+  echo 'export function resetPanic(): void' >> rust-core/index.d.ts && \
+  echo 'export function isPanicMode(): boolean' >> rust-core/index.d.ts && \
+  echo 'export class VadEngine { constructor(threshold: number, silenceTimeoutMs: number); processChunk(chunk: Buffer | number[]): string; }' >> rust-core/index.d.ts && \
+  echo 'export interface ModelMetric { model: string; count: number; }' >> rust-core/index.d.ts && \
+  echo 'export interface MetricsSummary { totalTokens: number; modelBreakdown: Array<ModelMetric>; avgLatencyMs: number; }' >> rust-core/index.d.ts && \
+  echo 'export class MetricsEngine { constructor(); recordTokens(model: string, count: number): void; recordLatency(ms: number): void; summarize(): MetricsSummary; }' >> rust-core/index.d.ts && \
+  echo 'export class RatchetDedupe { constructor(ttlMs: number, maxSize: number); check(key: string, timestampMs?: number | undefined | null): boolean; clear(): void; size(): number; }' >> rust-core/index.d.ts && \
+  echo 'export class SecurityEngine { constructor(); detectInjection(text: string): string | null; redactPii(text: string): string; calculateEntropy(text: string): number; }' >> rust-core/index.d.ts
 RUN pnpm build
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
 ENV ZERO_PREFER_PNPM=1
