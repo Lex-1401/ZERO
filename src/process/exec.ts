@@ -79,12 +79,17 @@ export async function runCommandWithTimeout(
     if (resolvedEnv.npm_config_fund == null) resolvedEnv.npm_config_fund = "false";
   }
 
+  if (!argv || argv.length === 0 || !argv[0]) {
+    throw new Error("Invalid command: argv cannot be empty or null");
+  }
+
   const stdio = resolveCommandStdio({ hasInput, preferInherit: true });
   const child = spawn(argv[0], argv.slice(1), {
     stdio,
     cwd,
     env: resolvedEnv,
     windowsVerbatimArguments,
+    shell: false, // Explicitly disable shell to prevent command injection
   });
   // Spawn with inherited stdin (TTY) so tools like `pi` stay interactive when needed.
   return await new Promise((resolve, reject) => {

@@ -43,13 +43,13 @@ const INJECTION_PATTERNS = [
   /i\s*g\s*n\s*o\s*r\s*e\s*a\s*l\s*l/i,
   /p\s*r\s*e\s*v\s*i\s*n\s*s\s*t/i,
   // VAPT-MEDIUM-008: Modern attack vectors
-  /repeat.*(?:above|system|instructions)/i,
-  /translate.*(?:above|preceding|system).*(?:to|into)/i,
+  /repeat.{0,100}(?:above|system|instructions)/i,
+  /translate.{0,100}(?:above|preceding|system).{0,100}(?:to|into)/i,
   /what (?:are|were) your (?:instructions|rules|system)/i,
-  /output.*(?:system|initial).*(?:prompt|instructions)/i,
-  /print.*(?:system|original).*(?:prompt|message)/i,
-  /show.*(?:hidden|system|original).*(?:prompt|instructions|text)/i,
-  /(?:encode|convert|base64).*(?:system|instructions|prompt)/i,
+  /output.{0,100}(?:system|initial).{0,100}(?:prompt|instructions)/i,
+  /print.{0,100}(?:system|original).{0,100}(?:prompt|message)/i,
+  /show.{0,100}(?:hidden|system|original).{0,100}(?:prompt|instructions|text)/i,
+  /(?:encode|convert|base64).{0,100}(?:system|instructions|prompt)/i,
   /data:text\/html;base64/i,
   /\u0456gn\u043bre/i, // Unicode homoglyph 'ignore' with Cyrillic chars
 ];
@@ -451,8 +451,8 @@ export class SecurityGuard {
     if (!text) return "";
 
     // 1. Structural cleaning
-    let clean = text.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
-    clean = clean.replace(/<iframe\b[^>]*>([\s\S]*?)<\/iframe>/gim, "");
+    let clean = text.replace(/<script\b[^>]*>([\s\S]{0,50000}?)<\/script>/gim, "");
+    clean = clean.replace(/<iframe\b[^>]*>([\s\S]{0,50000}?)<\/iframe>/gim, "");
 
     // 2. Line-by-line defensive sanitization
     const lines = clean.split("\n");
