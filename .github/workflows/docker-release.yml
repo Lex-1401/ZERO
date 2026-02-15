@@ -54,8 +54,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          # Define plataformas alvo (multi-arch)
-          platforms: linux/amd64,linux/arm64
+          # Define plataformas alvo (ARM64 removido temporariamente por instabilidade no QEMU/falta de runner)
+          platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
