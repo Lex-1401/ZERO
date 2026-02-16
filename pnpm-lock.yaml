@@ -7,7 +7,7 @@ settings:
 overrides:
   '@sinclair/typebox': 0.34.48
   hono: 4.11.9
-  tar: 7.5.7
+  tar: 7.5.8
   mongodb: 3.7.4
   redis: 3.1.2
   postcss: 8.4.31
@@ -28,6 +28,9 @@ overrides:
   qs: 6.14.2
   babel-traverse: npm:@babel/traverse
   jsdom: 24.0.0
+  lodash.template: 4.5.0
+  request: 2.88.2
+  elliptic: 6.6.1
 
 importers:
 
@@ -178,8 +181,8 @@ importers:
         specifier: 0.1.7-alpha.2
         version: 0.1.7-alpha.2
       tar:
-        specifier: 7.5.7
-        version: 7.5.7
+        specifier: 7.5.8
+        version: 7.5.8
       tslog:
         specifier: ^4.10.2
         version: 4.10.2
@@ -7807,14 +7810,14 @@ packages:
     resolution: {integrity: sha512-TTbAfBBRdWD7aNNOoVOBH4pN/KigV6LyapYNNlAPA8JwbovRti1E88m3sYAwsLi5ryhPKsE9APwnjFTgdUjTpw==}
     engines: {node: '>=0.10.0'}
     peerDependencies:
-      request: ^2.34
+      request: 2.88.2
 
   request-promise@4.2.6:
     resolution: {integrity: sha512-HCHI3DJJUakkOr8fNoCc73E5nU5bqITjOYFMDrKHYOXWXrgD/SBaC7LjwuPymUprRyuF06UK7hd/lMHkmUXglQ==}
     engines: {node: '>=0.10.0'}
     deprecated: request-promise has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     peerDependencies:
-      request: ^2.34
+      request: 2.88.2
 
   request@2.88.2:
     resolution: {integrity: sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==}
@@ -8342,8 +8345,8 @@ packages:
   tailwindcss@4.1.17:
     resolution: {integrity: sha512-j9Ee2YjuQqYT9bbRTfTZht9W/ytp5H+jJpZKiYdP/bpnXARAuELt9ofP0lPnmHjbga7SNQIxdTAXCmtKVYjN+Q==}
 
-  tar@7.5.7:
-    resolution: {integrity: sha512-fov56fJiRuThVFXD6o6/Q354S7pnWMJIVlDBYijsTNx6jKSE4pvrDTs6lUnmGvNyfJwFQQwWy3owKz1ucIhveQ==}
+  tar@7.5.8:
+    resolution: {integrity: sha512-SYkBtK99u0yXa+IWL0JRzzcl7RxNpvX/U08Z+8DKnysfno7M+uExnTZH8K+VGgShf2qFPKtbNr9QBl8n7WBP6Q==}
     engines: {node: '>=18'}
 
   terser@4.8.1:
@@ -13821,7 +13824,7 @@ snapshots:
       npmlog: 6.0.2
       rc: 1.2.8
       semver: 7.7.4
-      tar: 7.5.7
+      tar: 7.5.8
       url-join: 4.0.1
       which: 2.0.2
       yargs: 17.7.2
@@ -18288,7 +18291,7 @@ snapshots:
 
   tailwindcss@4.1.17: {}
 
-  tar@7.5.7:
+  tar@7.5.8:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
