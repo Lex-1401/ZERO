@@ -450,9 +450,17 @@ export class SecurityGuard {
   static sanitizeRagContent(text: string): string {
     if (!text) return "";
 
-    // 1. Structural cleaning
-    let clean = text.replace(/<script\b[^>]*>([\s\S]{0,50000}?)<\/script>/gim, "");
-    clean = clean.replace(/<iframe\b[^>]*>([\s\S]{0,50000}?)<\/iframe>/gim, "");
+    // 1. Structural cleaning (Iterative removal to handle nested tags/bypasses)
+    let clean = text;
+    let oldClean = "";
+    // Loop until stability to handle nested tags like <scr<script>ipt>
+    while (clean !== oldClean) {
+      oldClean = clean;
+      clean = clean.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
+      clean = clean.replace(/<iframe\b[^>]*>([\s\S]*?)<\/iframe>/gim, "");
+      clean = clean.replace(/<script\b[^>]*>/gim, ""); // Remove orphaned open tags
+      clean = clean.replace(/<\/script>/gim, ""); // Remove orphaned close tags
+    }
 
     // 2. Line-by-line defensive sanitization
     const lines = clean.split("\n");

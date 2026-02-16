@@ -83,6 +83,13 @@ export async function runCommandWithTimeout(
     throw new Error("Invalid command: argv cannot be empty or null");
   }
 
+  // Sanitize command to prevent execution of arbitrary paths if not intended.
+  // We allow absolute paths or simple command names, but block relative paths or dangerous characters unless they look like legitimate paths.
+  const commandName = argv[0];
+  if (commandName.includes("..") || commandName.includes("\0")) {
+    throw new Error(`Invalid command path detected: ${commandName}`);
+  }
+
   const stdio = resolveCommandStdio({ hasInput, preferInherit: true });
   const child = spawn(argv[0], argv.slice(1), {
     stdio,
