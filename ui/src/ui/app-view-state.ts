@@ -162,6 +162,7 @@ export type AppViewState = {
   logsLimit: number;
   logsMaxBytes: number;
   sidebarCollapsed: boolean;
+  zenMode: boolean;
   sidebarOpen: boolean;
   mobileNavOpen: boolean;
   sidebarContent: string | null;
@@ -169,6 +170,7 @@ export type AppViewState = {
   splitRatio: number;
   toggleMobileNav: () => void;
   toggleSidebar: () => void;
+  toggleZenMode: (value?: boolean) => void;
   chatStreamStartedAt: number | null;
   compactionStatus: any;
   graphLoading: boolean;

@@ -140,6 +140,7 @@ export class ZEROApp extends LitElement {
   @state() tab: Tab = "chat";
   @state() onboarding = resolveOnboardingMode();
   @state() sidebarCollapsed = this.settings.navCollapsed ?? false;
+  @state() zenMode = this.settings.zenMode ?? true;
   @state() connected = false;
   @state() theme: ThemeMode = this.settings.theme ?? "system";
   @state() themeResolved: ResolvedTheme = "dark";
@@ -207,6 +208,11 @@ export class ZEROApp extends LitElement {
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
     this.applySettings({ ...this.settings, navCollapsed: this.sidebarCollapsed });
+  }
+
+  toggleZenMode(value?: boolean) {
+    this.zenMode = value ?? !this.zenMode;
+    this.applySettings({ ...this.settings, zenMode: this.zenMode });
   }
 
   @state() nodesLoading = false;

@@ -14,6 +14,7 @@ export type UiSettings = {
   navCollapsed: boolean; // Collapsible sidebar state
   navGroupsCollapsed: Record<string, boolean>; // Which nav groups are collapsed
   autopilot: boolean; // Automatic mode for tool execution
+  zenMode: boolean; // Zen mode state
 };
 
 export function loadSettings(): UiSettings {
@@ -34,6 +35,7 @@ export function loadSettings(): UiSettings {
     navCollapsed: false,
     navGroupsCollapsed: {},
     autopilot: false,
+    zenMode: true,
   };
 
   try {
@@ -90,6 +92,10 @@ export function loadSettings(): UiSettings {
         typeof parsed.autopilot === "boolean"
           ? parsed.autopilot
           : defaults.autopilot,
+      zenMode:
+        typeof parsed.zenMode === "boolean"
+          ? parsed.zenMode
+          : defaults.zenMode,
     };
   } catch {
     return defaults;

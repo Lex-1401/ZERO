@@ -56,6 +56,8 @@ import { loadCronRuns, toggleCronJob, runCronJob, removeCronJob, addCronJob } fr
 import { loadDebug, callDebugMethod } from "./controllers/debug";
 import { loadLogs } from "./controllers/logs";
 
+import "./zen/zen-mode";
+
 export function renderApp(state: AppViewState) {
   /* Setup / Onboarding Flow */
   if (state.onboarding) {
@@ -67,6 +69,11 @@ export function renderApp(state: AppViewState) {
       onSkip: () => state.handleSetupSkip(),
       onPersonaSelect: (id) => state.handlePersonaSelect(id),
     });
+  }
+
+  /* Zen Mode */
+  if (state.zenMode) {
+    return html`<zero-zen-mode .app=${state}></zero-zen-mode>`;
   }
 
   const isChat = state.tab === "chat";
@@ -108,6 +115,9 @@ export function renderApp(state: AppViewState) {
             <button class="btn-mobile-menu" @click=${() => state.toggleMobileNav()}>${icons.menu}</button>
             <button class="btn-nav-history" @click=${() => state.toggleSidebar()} title="Alternar Menu">
                 ${icons.panelLeft}
+            </button>
+            <button class="btn-nav-history" @click=${() => state.toggleZenMode()} title="Modo Zen">
+                ${icons.maximize}
             </button>
             <button class="btn-nav-history">${icons.chevronLeft}</button>
             <button class="btn-nav-history">${icons.chevronRight}</button>
