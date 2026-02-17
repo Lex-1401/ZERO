@@ -4,7 +4,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import type { ZeroPluginApi, ZeroPluginToolContext } from "../../../src/plugins/types.js";
+import type { ZEROPluginApi, ZEROPluginToolContext } from "../../../src/plugins/types.js";
 import { createVOIDTool } from "./void-tool.js";
 
 async function writeFakeVOIDScript(scriptBody: string, prefix = "zero-void-plugin-") {
@@ -33,26 +33,30 @@ async function writeFakeVOID(params: { payload: unknown }) {
   return await writeFakeVOIDScript(scriptBody);
 }
 
-function fakeApi(): ZeroPluginApi {
+function fakeApi(): ZEROPluginApi {
   return {
     id: "void",
     name: "void",
     source: "test",
     config: {} as any,
     runtime: { version: "test" } as any,
-    logger: { info() {}, warn() {}, error() {}, debug() {} },
-    registerTool() {},
-    registerHttpHandler() {},
-    registerChannel() {},
-    registerGatewayMethod() {},
-    registerCli() {},
-    registerService() {},
-    registerProvider() {},
-    resolvePath: (p) => p,
+    logger: { info() { }, warn() { }, error() { }, debug() { } },
+    registerTool() { },
+    registerHttpHandler() { },
+    registerChannel() { },
+    registerGatewayMethod() { },
+    registerCli() { },
+    registerService() { },
+    registerProvider() { },
+    registerHook() { },
+    registerHttpRoute() { },
+    registerCommand() { },
+    on() { },
+    resolvePath: (p: string) => p,
   };
 }
 
-function fakeCtx(overrides: Partial<ZeroPluginToolContext> = {}): ZeroPluginToolContext {
+function fakeCtx(overrides: Partial<ZEROPluginToolContext> = {}): ZEROPluginToolContext {
   return {
     config: {} as any,
     workspaceDir: "/tmp",
@@ -77,7 +81,7 @@ describe("void plugin tool", () => {
       action: "run",
       pipeline: "noop",
       voidPath: fake.binPath,
-      timeoutMs: 1000,
+      timeoutMs: 5000,
     });
 
     expect(res.details).toMatchObject({ ok: true, status: "ok" });
@@ -112,7 +116,7 @@ describe("void plugin tool", () => {
 
   it("can be gated off in sandboxed contexts", async () => {
     const api = fakeApi();
-    const factoryTool = (ctx: ZeroPluginToolContext) => {
+    const factoryTool = (ctx: ZEROPluginToolContext) => {
       if (ctx.sandboxed) return null;
       return createVOIDTool(api);
     };

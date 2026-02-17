@@ -366,11 +366,10 @@ export function attachGatewayWsMessageHandler(params: {
         const hasTokenAuth = Boolean(connectParams.auth?.token);
         const hasPasswordAuth = Boolean(connectParams.auth?.password);
         const hasSharedAuth = hasTokenAuth || hasPasswordAuth;
-        if (true) {
-          console.log(
-            `[debug-ws] FULL Connect params for ${connId}: ${JSON.stringify(connectParams)}`,
-          );
-        }
+
+        console.log(
+          `[debug-ws] FULL Connect params for ${connId}: ${JSON.stringify(connectParams)}`,
+        );
 
         const isControlUi = connectParams.client.id === GATEWAY_CLIENT_IDS.CONTROL_UI;
         const allowInsecureControlUi =
