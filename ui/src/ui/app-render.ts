@@ -117,7 +117,7 @@ export function renderApp(state: AppViewState) {
   const isChat = state.tab === "chat";
 
   return html`
-    <div class="shell ${state.mobileNavOpen ? "mobile-nav-open" : ""} ${state.sidebarCollapsed ? "sidebar-collapsed" : ""} ${isZen ? "zen-mode" : ""}">
+    <div class="shell ${state.mobileNavOpen ? "mobile-nav-open" : ""} ${state.sidebarCollapsed ? "sidebar-collapsed" : ""} ${isZen ? "zen-mode focus-mode" : ""}">
       <div class="mobile-nav-overlay" @click=${() => state.toggleMobileNav()}></div>
       
       <!-- Native Sidebar -->

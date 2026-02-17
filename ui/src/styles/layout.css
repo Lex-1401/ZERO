@@ -478,14 +478,41 @@
 
 /* --- FOCUS MODE (Deep Work) --- */
 body.focus-mode .shell {
-  grid-template-columns: 0 1fr;
+  grid-template-columns: 0px 1fr;
   grid-template-areas: "content content";
 }
 
-body.focus-mode .nav,
+body.focus-mode .nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 260px;
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  transition: all 0.4s var(--ease-premium);
+}
+
+body.focus-mode .shell:hover .nav,
+body.focus-mode .nav:hover {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+  box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+}
+
 body.focus-mode .topbar,
 body.focus-mode .window-controls {
-  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+body.focus-mode .topbar:hover {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 body.focus-mode .content {
