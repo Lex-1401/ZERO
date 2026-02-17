@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "pm2 show zero-gateway | grep 'script path'\r"
+expect "#"
+send "which pnpm || echo 'pnpm not found'\r"
+expect "#"
+send "pnpm -v || echo 'pnpm -v failed'\r"
+expect "#"
+send "ls -la /opt/zero/.git\r"
+expect "#"
+send "exit\r"
+expect eof

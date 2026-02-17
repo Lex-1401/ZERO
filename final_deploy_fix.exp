@@ -1,0 +1,36 @@
+#!/usr/bin/expect -f
+set timeout 1800
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+send "git config --global --add safe.directory /opt/zero\r"
+expect "#"
+send "git fetch origin main\r"
+expect "#"
+send "git checkout -f main\r"
+expect "#"
+send "git reset --hard origin/main\r"
+expect "#"
+
+# Verificação crítica do conteúdo do arquivo na VPS antes do build
+send "grep -n 'docs' ui/src/ui/navigation.ts\r"
+expect "#"
+send "grep -n 'dropdown' ui/src/ui/app-render.ts\r"
+expect "#"
+
+send "pnpm install\r"
+expect "#"
+send "pnpm build:full\r"
+expect "#"
+send "pm2 restart zero-gateway\r"
+expect "#"
+
+# Verificação do bundle gerado
+send "ls -l dist/control-ui/assets/index*.js\r"
+expect "#"
+
+send "exit\r"
+expect eof

@@ -1,0 +1,47 @@
+#!/usr/bin/expect -f
+set timeout 1800
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+
+# Limpeza profunda da config git
+send "rm -rf .git\r"
+expect "#"
+send "git init\r"
+expect "#"
+send "git config --global --add safe.directory /opt/zero\r"
+expect "#"
+send "git remote add origin https://github.com/Lex-1401/ZERO.git\r"
+expect "#"
+send "git fetch origin main\r"
+expect "#"
+send "git checkout -f main\r"
+expect "#"
+send "git reset --hard origin/main\r"
+expect "#"
+
+# VERIFICAÇÃO REAL (O que o usuário vê)
+send "grep 'docs' ui/src/ui/navigation.ts\r"
+expect "#"
+send "grep 'dropdown' ui/src/ui/app-render.ts\r"
+expect "#"
+
+# Build
+send "pnpm install\r"
+expect "#"
+send "pnpm build:full\r"
+expect "#"
+
+# Restart
+send "pm2 restart zero-gateway\r"
+expect "#"
+
+# Confirmação final dos assets
+send "ls -l dist/control-ui/assets/index*.js\r"
+expect "#"
+
+send "exit\r"
+expect eof

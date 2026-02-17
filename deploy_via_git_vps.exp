@@ -1,0 +1,26 @@
+#!/usr/bin/expect -f
+set timeout 60
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "ls -F /opt/zero/skills/\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+send "git init\r"
+expect "#"
+send "git remote add origin https://github.com/Lex-1401/ZERO.git\r"
+expect "#"
+send "git fetch origin main\r"
+expect "#"
+send "git checkout -f main\r"
+expect "#"
+send "pnpm install\r"
+expect "#"
+send "pnpm build:full\r"
+expect "#"
+send "pm2 restart zero-gateway\r"
+expect "#"
+send "exit\r"
+expect eof

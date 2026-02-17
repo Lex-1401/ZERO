@@ -1,0 +1,14 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "df -h\r"
+expect "#"
+send "free -m\r"
+expect "#"
+send "ls -lh /opt/zero/dist/index.js 2>/dev/null || echo 'server not built'\r"
+expect "#"
+send "exit\r"
+expect eof

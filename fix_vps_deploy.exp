@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+set timeout 1200
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "git config --global --add safe.directory /opt/zero\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+send "git fetch origin main\r"
+expect "#"
+send "git reset --hard origin/main\r"
+expect "#"
+send "pnpm install\r"
+expect "#"
+send "pnpm build:full\r"
+expect "#"
+send "pm2 restart zero-gateway\r"
+expect "#"
+send "exit\r"
+expect eof

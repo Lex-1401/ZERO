@@ -1,0 +1,14 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "find / -type d -name 'ZERO' -maxdepth 4 2>/dev/null\r"
+expect "#"
+send "find / -type d -name 'zero' -maxdepth 4 2>/dev/null\r"
+expect "#"
+send "pm2 list\r"
+expect "#"
+send "exit\r"
+expect eof

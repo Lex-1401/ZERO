@@ -1,0 +1,13 @@
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+7SIiZRHvPD
+df -h
+root@74.1.20.119's password: 
+Permission denied, please try again.
+root@74.1.20.119's password: 
+Permission denied, please try again.
+root@74.1.20.119's password: 
+Connection closed by 74.1.20.119 port 22
+send: spawn id exp7 not open
+    while executing
+"send "exit\r""
+    (file "/Users/lex/Downloads/Arquivos/ZERO/robust_health_check.exp" line 16)
