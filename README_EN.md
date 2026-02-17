@@ -21,22 +21,23 @@
 
 ---
 
-## 🏛️ High-Performance Engineering
+## ⛩️ A-POS Architecture (Agentic Operating System)
 
-ZERO now operates under advanced architecture standards, enhancing system stability and security.
+ZERO operates under the **Agentic Operating System** concept, an architecture where the system doesn't just obey commands but interacts with the environment and evolves autonomously.
 
-1. **Sentinel Engine (Advanced Security)**:
+1. **Sovereign Self-Evolution**: The system's ability to self-heal and self-recode locally. See the [Self-Evolution Manifesto](docs/SELF_EVOLUTION_EN.md).
+2. **Sentinel Engine (Advanced Security)**:
     * Total delegation to the **Rust Core** (`ratchet`) for sub-millisecond security inspection.
     * **Shannon Entropy Analysis** to detect obfuscated secrets and cryptographic keys.
     * Defense against Homoglyphs via Unicode NFKC normalization.
-2. **Quantum Altair UI**:
+3. **Quantum Altair UI**:
     * High-fidelity **Glassmorphism** aesthetic (40px blur, 180% saturation).
     * **JetBrains Mono** technical typography for maximum data legibility.
     * `mesh-drift` dynamic background that reacts to light and context.
-3. **Observability & Telemetry**:
+4. **Observability & Telemetry**:
     * Real-time performance metrics (tokens/s and latency) broadcast via WebSocket.
     * Continuous monitoring of system integrity.
-4. **Onboarding & Diagnostics**:
+5. **Onboarding & Diagnostics**:
     * **Guided Welcome Tour**: An interactive welcome flow that introduces the ZERO cockpit to new users.
     * **Grouping & Diagnostics**: Automatic organization of Skills by compatibility with real-time dependency diagnostics (OS, Binaries, Env).
 

@@ -20,6 +20,12 @@ O **ZERO** busca o ponto de singularidade onde a computação pessoal encontra a
 
 ---
 
+## ⛩️ Arquitetura A-POS (Agentic Operating System)
+
+O ZERO opera sob o conceito de **Agentic Operating System**, uma arquitetura onde o sistema não apenas obedece comandos, mas interage com o ambiente e evolui autonomamente.
+
+1. **Auto-Evolução Soberana**: Capacidade do sistema se auto-consertar e se auto-codificar localmente. Veja o [Manifesto de Auto-Evolução](docs/SELF_EVOLUTION.md).
+
 ## 🏛️ Engenharia de Alta Performance
 
 O ZERO agora opera sob padrões de arquitetura avançados, elevando a estabilidade e a segurança do sistema.
