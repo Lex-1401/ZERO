@@ -27,6 +27,8 @@ import { renderPlayground } from "./views/playground";
 import { loadDevices } from "./controllers/devices";
 import { renderSkills } from "./views/skills";
 import { renderSetup } from "./views/setup";
+import { renderDocs } from "./views/docs";
+import { loadDocsList, loadDocContent } from "./controllers/docs";
 import { renderGuidedTour, type TourStep } from "./views/guided-tour";
 import { renderNotFound } from "./views/not-found";
 import {
@@ -582,6 +584,15 @@ export function renderApp(state: AppViewState) {
       })
       : nothing
     }
+    
+    ${state.tab === "docs"
+      ? renderDocs({
+        state,
+        onSelect: (id) => void loadDocContent(state, id),
+        onRefresh: () => void loadDocsList(state),
+      })
+      : nothing
+    }
 
       ${state.tab === "playground"
       ? renderPlayground({
@@ -603,7 +614,7 @@ export function renderApp(state: AppViewState) {
       : nothing
     }
 
-      ${!["overview", "chat", "channels", "skills", "cron", "logs", "config", "debug", "nodes", "graph", "sessions", "instances", "playground", "mission-control"].includes(state.tab)
+      ${!["overview", "chat", "channels", "skills", "cron", "logs", "config", "debug", "nodes", "graph", "sessions", "instances", "playground", "mission-control", "docs"].includes(state.tab)
       ? renderNotFound((route) => state.setTab(route as any))
       : nothing
     }

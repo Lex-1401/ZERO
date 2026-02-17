@@ -12,6 +12,7 @@ import { loadSkills } from "./controllers/skills";
 import { loadGraph } from "./controllers/graph";
 import { inferBasePathFromPathname, normalizeBasePath, normalizePath, pathForTab, tabFromPath, type Tab } from "./navigation";
 import { loadMissionControl } from "./controllers/telemetry";
+import { loadDocsList } from "./controllers/docs";
 import { saveSettings, type UiSettings } from "./storage";
 import { resolveTheme, type ResolvedTheme, type ThemeMode } from "./theme";
 import { startThemeTransition, type ThemeTransitionContext } from "./theme-transition";
@@ -162,6 +163,9 @@ export async function refreshActiveTab(host: SettingsHost) {
     await loadDevices(host as unknown as ZEROApp);
     await loadConfig(host as unknown as ZEROApp);
     await loadExecApprovals(host as unknown as ZEROApp);
+  }
+  if (host.tab === "docs") {
+    await loadDocsList(host as unknown as ZEROApp);
   }
 
   // ...

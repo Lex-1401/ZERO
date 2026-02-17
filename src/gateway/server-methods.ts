@@ -26,6 +26,7 @@ import { webHandlers } from "./server-methods/web.js";
 import { wizardHandlers } from "./server-methods/wizard.js";
 import { memoryHandlers } from "./server-methods/memory-search.js";
 import { telemetryHandlers } from "./server-methods/telemetry.js";
+import { docsHandlers } from "./server-methods/docs.js";
 
 const ADMIN_SCOPE = "operator.admin";
 const READ_SCOPE = "operator.read";
@@ -76,6 +77,8 @@ const READ_METHODS = new Set([
   "chat.history",
   "memory.search",
   "system.smartScan",
+  "docs.list",
+  "docs.get",
 ]);
 const WRITE_METHODS = new Set([
   "send",
@@ -198,6 +201,7 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
   ...agentsHandlers,
   ...memoryHandlers,
   ...telemetryHandlers,
+  ...docsHandlers,
 };
 
 /**

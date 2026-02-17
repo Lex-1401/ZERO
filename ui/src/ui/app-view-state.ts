@@ -140,6 +140,11 @@ export type AppViewState = {
   skillsLoading: boolean;
   skillsReport: SkillStatusReport | null;
   skillsError: string | null;
+  docsLoading: boolean;
+  docsList: any[];
+  docsSelectedId: string | null;
+  docsContent: string | null;
+  docsError: string | null;
   skillsFilter: string;
   skillEdits: Record<string, string>;
   skillMessages: Record<string, SkillMessage>;

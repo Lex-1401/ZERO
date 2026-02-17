@@ -7,7 +7,7 @@ export const TAB_GROUPS = [
     label: t("group.Controle" as any),
     tabs: ["mission-control", "overview", "channels", "instances", "sessions", "cron"],
   },
-  { label: t("group.Agente" as any), tabs: ["skills", "nodes", "graph", "playground"] },
+  { label: t("group.Agente" as any), tabs: ["skills", "nodes", "graph", "playground", "docs"] },
   { label: t("group.Ajustes" as any), tabs: ["config", "debug", "logs"] },
 ] as const;
 
@@ -26,6 +26,7 @@ export type Tab =
   | "config"
   | "debug"
   | "logs"
+  | "docs"
   | "not-found";
 
 const TAB_PATHS: Record<Tab, string> = {
@@ -43,6 +44,7 @@ const TAB_PATHS: Record<Tab, string> = {
   config: "/config",
   debug: "/debug",
   logs: "/logs",
+  docs: "/docs",
   "not-found": "/404",
 };
 
@@ -110,6 +112,8 @@ export function iconForTab(tab: Tab): IconName {
       return "activity";
     case "logs":
       return "scrollText";
+    case "docs":
+      return "book";
     default:
       return "folder";
   }

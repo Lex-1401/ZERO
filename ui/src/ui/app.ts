@@ -102,6 +102,7 @@ import {
   runCronJob,
   toggleCronJob,
 } from "./controllers/cron";
+import { loadDocsList, loadDocContent } from "./controllers/docs";
 import { deleteSession, loadSessions, patchSession } from "./controllers/sessions";
 import { loadNodes } from "./controllers/nodes";
 import { loadPresence } from "./controllers/presence";
@@ -248,6 +249,11 @@ export class ZEROApp extends LitElement {
   }
 
   @state() nodesLoading = false;
+  @state() docsLoading = false;
+  @state() docsList: any[] = [];
+  @state() docsSelectedId: string | null = null;
+  @state() docsContent: string | null = null;
+  @state() docsError: string | null = null;
   @state() nodes: Array<Record<string, unknown>> = [];
   @state() devicesLoading = false;
   @state() devicesError: string | null = null;
