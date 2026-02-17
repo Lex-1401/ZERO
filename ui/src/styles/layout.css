@@ -495,12 +495,23 @@ body.focus-mode .nav {
   transition: all 0.4s var(--ease-premium);
 }
 
-body.focus-mode .shell:hover .nav,
+/* Gatilho invisível de 20px na borda esquerda */
+body.focus-mode::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  z-index: 999;
+}
+
+body.focus-mode:hover::before+.shell .nav,
 body.focus-mode .nav:hover {
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
-  box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.8);
 }
 
 body.focus-mode .topbar,
