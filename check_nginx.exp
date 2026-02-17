@@ -1,0 +1,14 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+# Check nginx sites-enabled
+send "ls -l /etc/nginx/sites-enabled/\r"
+expect "#"
+send "cat /etc/nginx/sites-enabled/default\r"
+expect "#"
+send "cat /etc/nginx/nginx.conf\r"
+expect "#"
+send "exit\r"

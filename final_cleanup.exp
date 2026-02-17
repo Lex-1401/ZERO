@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+# Check 9493
+send "ps -p 9493\r"
+expect "#"
+# Kill it
+send "kill -9 9493\r"
+expect "#"
+# Check if any other node process exists
+send "ps aux | grep node | grep -v 'pm2'\r"
+expect "#"
+# Restart PM2
+send "pm2 restart zero-gateway\r"
+expect "#"
+sleep 5
+send "pm2 logs zero-gateway --lines 20 --nostream\r"
+expect "#"
+send "exit\r"

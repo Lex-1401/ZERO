@@ -19,6 +19,7 @@ type ChatHost = {
   basePath: string;
   hello: GatewayHelloOk | null;
   chatAvatarUrl: string | null;
+  chatAttachments?: File[];
 };
 
 export function isChatBusy(host: ChatHost) {
@@ -61,12 +62,18 @@ function enqueueChatMessage(host: ChatHost, text: string) {
 async function sendChatMessageNow(
   host: ChatHost,
   message: string,
-  opts?: { previousDraft?: string; restoreDraft?: boolean },
+  opts?: { previousDraft?: string; restoreDraft?: boolean, attachments?: File[] },
 ) {
   resetToolStream(host as unknown as Parameters<typeof resetToolStream>[0]);
-  const ok = await sendChatMessage(host as unknown as ZEROApp, message);
+  const ok = await sendChatMessage(host as unknown as ZEROApp, message, opts?.attachments);
   if (!ok && opts?.previousDraft != null) {
     host.chatMessage = opts.previousDraft;
+    // Restore attachments if failed? 
+    // Usually host.chatAttachments is already cleared. 
+    // If we want to restore, we need to pass them back or store them in opts.
+    if (opts.attachments) {
+      host.chatAttachments = opts.attachments;
+    }
   }
   if (ok) {
     setLastActiveSessionKey(host as unknown as Parameters<typeof setLastActiveSessionKey>[0], host.sessionKey);
@@ -104,7 +111,9 @@ export async function handleSendChat(
   if (!host.connected) return;
   const previousDraft = host.chatMessage;
   const message = (messageOverride ?? host.chatMessage).trim();
-  if (!message) return;
+  const attachments = host.chatAttachments ? [...host.chatAttachments] : undefined;
+
+  if (!message && (!attachments || attachments.length === 0)) return;
 
   if (isChatStopCommand(message)) {
     await handleAbortChat(host);
@@ -113,9 +122,15 @@ export async function handleSendChat(
 
   if (messageOverride == null) {
     host.chatMessage = "";
+    host.chatAttachments = [];
   }
 
   if (isChatBusy(host)) {
+    // If we have attachments, we can't easily queue them yet
+    if (attachments && attachments.length > 0) {
+      // TODO: Support attachment queuing or show busy state
+      return;
+    }
     enqueueChatMessage(host, message);
     return;
   }
@@ -123,6 +138,7 @@ export async function handleSendChat(
   await sendChatMessageNow(host, message, {
     previousDraft: messageOverride == null ? previousDraft : undefined,
     restoreDraft: Boolean(messageOverride && opts?.restoreDraft),
+    attachments
   });
 }
 

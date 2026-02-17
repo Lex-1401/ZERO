@@ -366,9 +366,22 @@ export function attachGatewayWsMessageHandler(params: {
         const hasTokenAuth = Boolean(connectParams.auth?.token);
         const hasPasswordAuth = Boolean(connectParams.auth?.password);
         const hasSharedAuth = hasTokenAuth || hasPasswordAuth;
+        if (true) {
+          console.log(
+            `[debug-ws] FULL Connect params for ${connId}: ${JSON.stringify(connectParams)}`,
+          );
+        }
+
         const isControlUi = connectParams.client.id === GATEWAY_CLIENT_IDS.CONTROL_UI;
         const allowInsecureControlUi =
           isControlUi && configSnapshot.gateway?.controlUi?.allowInsecureAuth === true;
+
+        if (isControlUi) {
+          console.log(
+            `[debug-ws] ControlUI connect: auth=${Boolean(connectParams.auth)} hasToken=${Boolean(connectParams.auth?.token)} hasPwd=${Boolean(connectParams.auth?.password)} device=${Boolean(device)} insecure=${allowInsecureControlUi}`,
+          );
+        }
+
         if (hasUntrustedProxyHeaders && resolvedAuth.mode === "none") {
           setHandshakeState("failed");
           setCloseCause("proxy-auth-required", {

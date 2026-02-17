@@ -1,6 +1,6 @@
 ---
 name: Vercel Tool
-description: Deploy web projects and manage deployments on Vercel
+description: Implante projetos web e gerencie implantações na Vercel.
 ---
 
 # Vercel Tool

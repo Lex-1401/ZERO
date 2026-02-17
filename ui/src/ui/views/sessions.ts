@@ -156,20 +156,18 @@ function renderRow(row: GatewaySessionRow, basePath: string, onPatch: SessionsPr
         <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">${row.kind} • ${row.modelProvider || "local"}</div>
       </div>
       
-      <div class="session-meta-row" style="display: contents;">
-          <div class="col-updated">${updated}</div>
-          <div class="col-tokens">${formatSessionTokens(row)}</div>
+      <div class="col-label">
+        <input class="input-native" style="width: 100%; height: 24px;" .value=${row.label ?? ""} placeholder="---" @change=${(e: Event) => onPatch(row.key, { label: (e.target as HTMLInputElement).value || null })} />
       </div>
 
-      <div class="col-label">
-        <input class="input-native" style="width: 90%; height: 24px;" .value=${row.label ?? ""} placeholder="---" @change=${(e: Event) => onPatch(row.key, { label: (e.target as HTMLInputElement).value || null })} />
-      </div>
+      <div class="col-updated">${updated}</div>
+      <div class="col-tokens">${formatSessionTokens(row)}</div>
 
       <div class="col-actions">
-        <select class="select-native" style="width: 60px; height: 24px; font-size: 10px;" .value=${thinking} @change=${(e: Event) => onPatch(row.key, { thinkingLevel: resolveThinkLevelPatchValue((e.target as HTMLSelectElement).value, isBinaryThinking) })}>
+        <select class="select-native" style="width: 80px; height: 24px; font-size: 10px; min-width: 0;" .value=${thinking} @change=${(e: Event) => onPatch(row.key, { thinkingLevel: resolveThinkLevelPatchValue((e.target as HTMLSelectElement).value, isBinaryThinking) })}>
             ${thinkLevels.map(l => html`<option value=${l}>${l || "---"}</option>`)}
         </select>
-        <select class="select-native" style="width: 60px; height: 24px; font-size: 10px;" .value=${verbose} @change=${(e: Event) => onPatch(row.key, { verboseLevel: (e.target as HTMLSelectElement).value || null })}>
+        <select class="select-native" style="width: 80px; height: 24px; font-size: 10px; min-width: 0;" .value=${verbose} @change=${(e: Event) => onPatch(row.key, { verboseLevel: (e.target as HTMLSelectElement).value || null })}>
             ${VERBOSE_LEVELS.map(l => html`<option value=${l.value}>${l.label}</option>`)}
         </select>
         <button class="btn btn--icon btn--sm danger btn-delete-mobile" @click=${() => onDelete(row.key)}>${icons.trash}</button>

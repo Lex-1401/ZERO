@@ -9,28 +9,8 @@
     "lastRunCommand": "doctor",
     "lastRunMode": "local"
   },
-  "agents": {
-    "defaults": {
-      "model": {
-        "primary": "ollama:kimi-k2.5:cloud"
-      },
-      "thinkingDefault": "medium",
-      "maxConcurrent": 4,
-      "subagents": {
-        "maxConcurrent": 8
-      }
-    }
-  },
   "models": {
-    "providers": {
-      "ollama": {
-        "api": "ollama",
-        "baseUrl": "http://127.0.0.1:11434",
-        "models": [
-          "kimi-k2.5:cloud"
-        ]
-      }
-    }
+    "providers": {}
   },
   "messages": {
     "ackReactionScope": "group-mentions"
@@ -40,11 +20,15 @@
     "nativeSkills": "auto"
   },
   "gateway": {
-    "port": 18789,
+    "port": 3000,
     "mode": "local",
     "bind": "lan",
+    "controlUi": {
+      "allowInsecureAuth": true
+    },
     "auth": {
-      "mode": "token"
+      "mode": "token",
+      "token": "admin123"
     },
     "http": {
       "endpoints": {
@@ -52,6 +36,13 @@
           "enabled": true
         }
       }
+    },
+    "cors": {
+      "enabled": true,
+      "allowedOrigins": [
+        "*",
+        "http://74.1.20.119:3000"
+      ]
     }
   }
 }

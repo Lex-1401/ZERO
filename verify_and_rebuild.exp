@@ -1,0 +1,19 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+# Check content of storage.ts
+send "cat /opt/zero/ui/src/ui/storage.ts\r"
+expect "#"
+# Force clean build
+send "cd /opt/zero/ui && rm -rf dist node_modules/.vite\r"
+expect "#"
+# Re-run build from UI directory directly to be sure
+send "cd /opt/zero && pnpm ui:build\r"
+expect "#"
+# Check grep again
+send "grep -r 'zero.control.settings.v2' /opt/zero/dist/control-ui/assets/\r"
+expect "#"
+send "exit\r"

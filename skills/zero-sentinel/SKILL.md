@@ -1,6 +1,6 @@
 ---
 name: Zero Sentinel
-description: Proactive Code Reviewer and Security Guardian. Analyzes staged changes for bugs, security flaws, and architectural violations before commit.
+description: Revisor de Código Proativo e Guardião de Segurança. Analisa mudanças para detectar bugs, falhas de segurança e violações arquiteturais.
 ---
 
 # Zero Sentinel

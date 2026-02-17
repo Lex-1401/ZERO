@@ -1,6 +1,6 @@
 ---
 name: Firebase Tool
-description: Deploy to Firebase and manage Firebase resources
+description: Faça deploy no Firebase e gerencie recursos do Firebase
 ---
 
 # Firebase Tool

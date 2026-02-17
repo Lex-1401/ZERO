@@ -178,16 +178,25 @@ export function renderCron(props: CronProps) {
                 <div class="section-title">${t("cron.list.title" as any)}</div>
                 <div class="group-list">
                     ${props.jobs.length === 0 ? html`
-                        <div class="group-item" style="padding: 40px; justify-content: center; color: var(--text-dim);">${t("cron.list.empty" as any)}</div>
+                        <div class="empty-state" style="padding: 40px;">
+                            <div class="empty-state__icon">${icons.clock}</div>
+                            <div class="empty-state__text">${t("cron.list.empty" as any)}</div>
+                        </div>
                     ` : props.jobs.map(job => renderJob(job, props))}
                 </div>
 
                 <div class="section-title">${t("cron.history.title" as any)}</div>
                 <div class="group-list">
                     ${props.runsJobId == null ? html`
-                        <div class="group-item" style="padding: 40px; justify-content: center; color: var(--text-dim);">${t("cron.history.select" as any)}</div>
+                        <div class="empty-state" style="padding: 40px;">
+                            <div class="empty-state__icon" style="opacity: 0.1;">${icons.playCircle}</div>
+                            <div class="empty-state__text">${t("cron.history.select" as any)}</div>
+                        </div>
                     ` : props.runs.length === 0 ? html`
-                        <div class="group-item" style="padding: 40px; justify-content: center; color: var(--text-dim);">${t("cron.history.none" as any)}</div>
+                        <div class="empty-state" style="padding: 40px;">
+                            <div class="empty-state__icon">${icons.info}</div>
+                            <div class="empty-state__text">${t("cron.history.none" as any)}</div>
+                        </div>
                     ` : props.runs.map(entry => renderRun(entry))}
                 </div>
             </div>

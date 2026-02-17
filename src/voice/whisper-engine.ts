@@ -45,6 +45,8 @@ export class WhisperEngine extends EventEmitter {
             console.log("[WhisperEngine] Hybrid Neural Model loaded and ready (Offline Mode).");
           } else if (msg.type === "transcription") {
             this.emit("transcription", msg as WhisperResult);
+          } else if (msg.type === "end_of_audio") {
+            this.emit("end_of_audio");
           } else if (msg.error) {
             console.error(`[WhisperEngine] Worker Error: ${msg.error}`);
           }

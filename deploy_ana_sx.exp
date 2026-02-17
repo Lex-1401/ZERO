@@ -1,0 +1,19 @@
+#!/usr/bin/expect -f
+set timeout 300
+set password "7SIiZRHvPD"
+set host "74.1.20.119"
+
+puts "--- Iniciando Deploy da Skill ANA - SX (CEO Estratégica) ---"
+
+# Criar diretório skills/ana-sx se não existir
+spawn ssh -o StrictHostKeyChecking=no root@$host "mkdir -p /opt/zero/skills/ana-sx/examples"
+expect "password:" { send "$password\r" }
+expect eof
+
+# Copiar pasta skills/ana-sx
+spawn scp -o StrictHostKeyChecking=no -r skills/ana-sx root@$host:/opt/zero/skills/
+expect "password:" { send "$password\r" }
+expect eof
+
+puts "--- Deploy da Skill ANA - SX concluído ---"
+puts "A Skill ANA (CEO Estratégica) agora está disponível em /opt/zero/skills/ana-sx na VPS."

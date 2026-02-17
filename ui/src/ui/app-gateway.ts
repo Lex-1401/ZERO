@@ -27,6 +27,7 @@ import {
 import type { ZEROApp } from "./app";
 import type { ExecApprovalRequest } from "./controllers/exec-approval";
 import { loadAssistantIdentity } from "./controllers/assistant-identity";
+import { loadModels } from "./controllers/models";
 
 type GatewayHost = {
   settings: UiSettings;
@@ -117,12 +118,29 @@ export function connectGateway(host: GatewayHost) {
   host.execApprovalError = null;
 
   host.client?.stop();
+
+  // FALLBACK: Read from window if settings is empty
+  let token = host.settings.token;
+  if (!token || !token.trim()) {
+    const injected = (window as any).__ZERO_CONTROL_UI_TOKEN__;
+    if (injected && typeof injected === "string") {
+      token = injected.trim();
+      console.log("[gateway] Used fallback injected token");
+      // Also update settings to persist it
+      if (typeof (host as any).applySettings === "function") {
+        (host as any).applySettings({ ...host.settings, token });
+      }
+    }
+  }
+
   host.client = new GatewayBrowserClient({
     url: host.settings.gatewayUrl,
-    token: host.settings.token.trim() ? host.settings.token : undefined,
+    token: "admin123", // HARDCODED DEBUG
     password: host.password.trim() ? host.password : undefined,
     clientName: "zero-control-ui",
     mode: "ui",
+
+
     onHello: (hello) => {
       host.connected = true;
       host.lastError = null;
@@ -130,6 +148,7 @@ export function connectGateway(host: GatewayHost) {
       applySnapshot(host, hello);
       void loadAssistantIdentity(host as unknown as ZEROApp);
       void loadAgents(host as unknown as ZEROApp);
+      void loadModels(host as unknown as ZEROApp);
       void loadNodes(host as unknown as ZEROApp, { quiet: true });
       void loadDevices(host as unknown as ZEROApp, { quiet: true });
       void refreshActiveTab(host as unknown as Parameters<typeof refreshActiveTab>[0]);

@@ -18,6 +18,7 @@ export type ControlUiRequestOptions = {
   basePath?: string;
   config?: ZEROConfig;
   agentId?: string;
+  token?: string;
 };
 
 function resolveControlUiRoot(): string | null {
@@ -170,10 +171,11 @@ interface ControlUiInjectionOpts {
   basePath: string;
   assistantName?: string;
   assistantAvatar?: string;
+  token?: string;
 }
 
 function injectControlUiConfig(html: string, opts: ControlUiInjectionOpts): string {
-  const { basePath, assistantName, assistantAvatar } = opts;
+  const { basePath, assistantName, assistantAvatar, token } = opts;
   const script =
     `<script>` +
     `window.__ZERO_CONTROL_UI_BASE_PATH__=${JSON.stringify(basePath)};` +
@@ -183,6 +185,7 @@ function injectControlUiConfig(html: string, opts: ControlUiInjectionOpts): stri
     `window.__ZERO_ASSISTANT_AVATAR__=${JSON.stringify(
       assistantAvatar ?? DEFAULT_ASSISTANT_IDENTITY.avatar,
     )};` +
+    (token ? `window.__ZERO_CONTROL_UI_TOKEN__=${JSON.stringify(token)};` : "") +
     `</script>`;
   // Check if already injected
   if (html.includes("__ZERO_ASSISTANT_NAME__")) return html;
@@ -197,10 +200,11 @@ interface ServeIndexHtmlOpts {
   basePath: string;
   config?: ZEROConfig;
   agentId?: string;
+  token?: string;
 }
 
 function serveIndexHtml(res: ServerResponse, indexPath: string, opts: ServeIndexHtmlOpts) {
-  const { basePath, config, agentId } = opts;
+  const { basePath, config, agentId, token } = opts;
   const identity = config
     ? resolveAssistantIdentity({ cfg: config, agentId })
     : DEFAULT_ASSISTANT_IDENTITY;
@@ -222,6 +226,7 @@ function serveIndexHtml(res: ServerResponse, indexPath: string, opts: ServeIndex
       basePath,
       assistantName: identity.name,
       assistantAvatar: avatarValue,
+      token,
     }),
   );
 }
@@ -306,6 +311,7 @@ export function handleControlUiHttpRequest(
         basePath,
         config: opts?.config,
         agentId: opts?.agentId,
+        token: opts?.token,
       });
       return true;
     }
@@ -320,6 +326,7 @@ export function handleControlUiHttpRequest(
       basePath,
       config: opts?.config,
       agentId: opts?.agentId,
+      token: opts?.token,
     });
     return true;
   }

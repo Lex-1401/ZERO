@@ -1,6 +1,6 @@
 ---
 name: github
-description: "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."
+description: "Interaja com o GitHub usando a CLI `gh`. Use `gh issue`, `gh pr`, `gh run` e `gh api` para problemas, PRs, execuções de CI e consultas avançadas."
 ---
 
 # GitHub Skill
@@ -10,21 +10,25 @@ Use the `gh` CLI to interact with GitHub. Always specify `--repo owner/repo` whe
 ## Pull Requests
 
 Check CI status on a PR:
+
 ```bash
 gh pr checks 55 --repo owner/repo
 ```
 
 List recent workflow runs:
+
 ```bash
 gh run list --repo owner/repo --limit 10
 ```
 
 View a run and see which steps failed:
+
 ```bash
 gh run view <run-id> --repo owner/repo
 ```
 
 View logs for failed steps only:
+
 ```bash
 gh run view <run-id> --repo owner/repo --log-failed
 ```
@@ -34,6 +38,7 @@ gh run view <run-id> --repo owner/repo --log-failed
 The `gh api` command is useful for accessing data not available through other subcommands.
 
 Get PR with specific fields:
+
 ```bash
 gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
 ```

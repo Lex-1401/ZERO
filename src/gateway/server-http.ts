@@ -35,6 +35,7 @@ import { handleOpenAiHttpRequest } from "./openai-http.js";
 import { handleOpenResponsesHttpRequest } from "./openresponses-http.js";
 import { handleToolsInvokeHttpRequest } from "./tools-invoke-http.js";
 import { handleMemoryGraphHttpRequest } from "./memory-graph-http.js";
+import { handleAudioTranscribeHttpRequest } from "./audio-transcribe-http.js";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 
@@ -277,6 +278,15 @@ export function createGatewayHttpServer(opts: {
     });
   });
 
+  router.post("/api/audio/transcribe", async (ctx) => {
+    const config = loadConfig();
+    const trustedProxies = config.gateway?.trustedProxies ?? [];
+    return await handleAudioTranscribeHttpRequest(ctx.req, ctx.res, {
+      auth: resolvedAuth,
+      trustedProxies,
+    });
+  });
+
   router.all("*", async (ctx) => {
     if (canvasHost) {
       if (await handleA2uiHttpRequest(ctx.req, ctx.res)) return true;
@@ -288,6 +298,8 @@ export function createGatewayHttpServer(opts: {
   // 5. Control UI (Dashboard)
   router.all("*", async (ctx) => {
     if (!controlUiEnabled) return false;
+    console.log(`[debug-ui] request: ${ctx.req.method} ${ctx.req.url}`);
+
     const config = loadConfig();
 
     // Blindagem Control UI: Autenticação Obrigatória
@@ -331,6 +343,9 @@ export function createGatewayHttpServer(opts: {
     });
 
     if (!authResult.ok) {
+      console.log(
+        `[debug-auth] auth failed: ok=${authResult.ok} reason=${authResult.reason} token_len=${token?.length ?? 0} expected_len=${resolvedAuth.token?.length ?? 0}`,
+      );
       sendUnauthorized(ctx.res);
       return true;
     }
@@ -366,6 +381,7 @@ export function createGatewayHttpServer(opts: {
       handleControlUiHttpRequest(ctx.req, ctx.res, {
         basePath: controlUiBasePath,
         config: config,
+        token: token,
       })
     )
       return true;
@@ -434,7 +450,7 @@ export function createGatewayHttpServer(opts: {
     res.setHeader(
       "Content-Security-Policy",
       "default-src 'self'; " +
-        `script-src 'self' 'nonce-${cspNonce}'; ` +
+        `script-src 'self' 'unsafe-inline' 'nonce-${cspNonce}'; ` +
         "style-src 'self' 'unsafe-inline'; " + // inline styles necessários para UI dinâmica
         "img-src 'self' data: https:; " +
         "font-src 'self' data:; " +
@@ -455,16 +471,17 @@ export function createGatewayHttpServer(opts: {
     if (corsConfig?.enabled) {
       const origin = req.headers.origin;
       const allowedOrigins = corsConfig.allowedOrigins ?? ["http://localhost:3000"];
+      const isWildcard = allowedOrigins.includes("*");
 
-      if (origin && allowedOrigins.includes(origin)) {
-        res.setHeader("Access-Control-Allow-Origin", origin);
+      if (origin && (isWildcard || allowedOrigins.includes(origin))) {
+        res.setHeader("Access-Control-Allow-Origin", isWildcard ? "*" : origin);
         res.setHeader(
           "Access-Control-Allow-Methods",
           corsConfig.allowedMethods?.join(", ") ?? "GET, POST, OPTIONS",
         );
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-        if (corsConfig.allowCredentials) {
+        if (corsConfig.allowCredentials && !isWildcard) {
           res.setHeader("Access-Control-Allow-Credentials", "true");
         }
       }

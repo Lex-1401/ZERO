@@ -1,0 +1,6 @@
+#!/usr/bin/expect -f
+set timeout 120
+spawn scp -o StrictHostKeyChecking=no zen-mode-update.zip root@74.1.20.119:/tmp/zen-mode-update.zip
+expect "password:"
+send "7SIiZRHvPD\r"
+expect eof

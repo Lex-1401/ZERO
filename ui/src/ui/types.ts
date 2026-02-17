@@ -560,3 +560,10 @@ export type UpdateCheckResult = {
   deps?: UpdateDepsStatus;
   registry?: UpdateRegistryStatus;
 };
+
+export type GatewayModel = {
+  id: string;
+  provider: string;
+  name: string;
+  contextWindow?: number;
+};

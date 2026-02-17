@@ -48,6 +48,7 @@ export type ConfigProps = {
   language: string;
   onThemeChange: (theme: any) => void;
   onLanguageChange: (lang: any) => void;
+  onStartTour: () => void;
 };
 
 // SVG Icons for sidebar (Lucide-style)
@@ -409,6 +410,22 @@ export function renderConfig(props: ConfigProps) {
                         </div>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Seção de Ajuda e Tour -->
+        <div class="config-section-card">
+            <div class="config-section-card__header">
+                <div class="config-section-hero__icon" style="color: var(--accent-blue);">${icons.sparkles}</div>
+                <div class="group-label">
+                    <div class="group-title">${t("onboarding.tour.welcome.title" as any)}</div>
+                    <div class="group-desc">${t("onboarding.tour.welcome.desc" as any)}</div>
+                </div>
+            </div>
+            <div style="padding: 16px;">
+                <button class="btn primary" style="width: 100%; border-radius: 12px; height: 44px; font-weight: 700;" @click=${props.onStartTour}>
+                    ${icons.playCircle} Repetir Tour do Sistema
+                </button>
             </div>
         </div>
     </div>

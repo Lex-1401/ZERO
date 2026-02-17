@@ -60,7 +60,13 @@ export type AppViewState = {
   chatRunId: string | null;
   chatAvatarUrl: string | null;
   chatThinkingLevel: string | null;
+  chatRecording: boolean;
+  chatRecordingStartTime: number | null;
   chatQueue: ChatQueueItem[];
+  chatAttachments: File[];
+  chatModel: string | null;
+  models: any[];
+  modelsLoading: boolean;
   nodesLoading: boolean;
   nodes: Array<Record<string, unknown>>;
   devicesLoading: boolean;
@@ -235,6 +241,8 @@ export type AppViewState = {
   setChatMessage: (next: string) => void;
   handleSendChat: (messageOverride?: string, opts?: any) => Promise<void>;
   handleAbortChat: () => Promise<void>;
+  handleToggleRecording: () => void;
+  handleCancelRecording: () => void;
   removeQueuedMessage: (id: string) => void;
   requestUpdate?: () => void;
   resetToolStream: () => void;
@@ -271,4 +279,11 @@ export type AppViewState = {
   isUpdating: boolean;
   handleLoadUpdateStatus: (opts?: { fetchGit?: boolean }) => Promise<void>;
   handleRunSoftwareUpdate: () => Promise<void>;
+  tourActive: boolean;
+  tourStep: number;
+  handleTourNext: () => void;
+  handleTourPrev: () => void;
+  handleTourFinish: () => void;
+  handleTourSkip: () => void;
+  handleStartTour: () => void;
 };

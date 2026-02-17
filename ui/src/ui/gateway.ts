@@ -192,6 +192,7 @@ export class GatewayBrowserClient {
         nonce,
       };
     }
+
     const params = {
       minProtocol: 3,
       maxProtocol: 3,
@@ -210,6 +211,7 @@ export class GatewayBrowserClient {
       userAgent: navigator.userAgent,
       locale: navigator.language,
     };
+    console.log("[gateway] sending connect params:", { ...params, auth: params.auth ? { ...params.auth, token: params.auth.token ? "***" : null } : null });
 
     void this.request<GatewayHelloOk>("connect", params)
       .then((hello) => {

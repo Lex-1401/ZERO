@@ -1,0 +1,13 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+# Read index.html content
+send "cat /opt/zero/dist/control-ui/index.html\r"
+expect "#"
+# List all files in assets to see if we have duplicates/old versions
+send "ls -l /opt/zero/dist/control-ui/assets\r"
+expect "#"
+send "exit\r"

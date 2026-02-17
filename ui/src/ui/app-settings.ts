@@ -11,6 +11,7 @@ import { loadSessions } from "./controllers/sessions";
 import { loadSkills } from "./controllers/skills";
 import { loadGraph } from "./controllers/graph";
 import { inferBasePathFromPathname, normalizeBasePath, normalizePath, pathForTab, tabFromPath, type Tab } from "./navigation";
+import { loadMissionControl } from "./controllers/telemetry";
 import { saveSettings, type UiSettings } from "./storage";
 import { resolveTheme, type ResolvedTheme, type ThemeMode } from "./theme";
 import { startThemeTransition, type ThemeTransitionContext } from "./theme-transition";
@@ -116,6 +117,16 @@ export function applySettingsFromUrl(host: SettingsHost) {
   window.history.replaceState({}, "", url.toString());
 }
 
+export function applySettingsFromInjectedConfig(host: SettingsHost) {
+  const token = (window as any).__ZERO_CONTROL_UI_TOKEN__;
+  if (token && typeof token === "string") {
+    const trimmed = token.trim();
+    if (trimmed && trimmed !== host.settings.token) {
+      applySettings(host, { ...host.settings, token: trimmed });
+    }
+  }
+}
+
 export function setTab(host: SettingsHost, next: Tab) {
   if (host.tab !== next) host.tab = next;
   if (next === "chat") host.chatHasAutoScrolled = false;
@@ -152,9 +163,14 @@ export async function refreshActiveTab(host: SettingsHost) {
     await loadConfig(host as unknown as ZEROApp);
     await loadExecApprovals(host as unknown as ZEROApp);
   }
+
+  // ...
+
   if (host.tab === "chat") {
     resetChatState(host as unknown as any);
     await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
+    // Load usage data for model selector
+    await loadMissionControl(host as unknown as ZEROApp);
     scheduleChatScroll(
       host as unknown as Parameters<typeof scheduleChatScroll>[0],
       !host.chatHasAutoScrolled,

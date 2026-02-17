@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://github.com/Lex-1401/ZERO/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge" alt="CI Status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.3.1-blue?style=for-the-badge" alt="Version"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v0.3.2-blue?style=for-the-badge" alt="Version"></a>
 
 </p>
 
@@ -36,6 +36,9 @@ ZERO now operates under advanced architecture standards, enhancing system stabil
 3. **Observability & Telemetry**:
     * Real-time performance metrics (tokens/s and latency) broadcast via WebSocket.
     * Continuous monitoring of system integrity.
+4. **Onboarding & Diagnostics**:
+    * **Guided Welcome Tour**: An interactive welcome flow that introduces the ZERO cockpit to new users.
+    * **Grouping & Diagnostics**: Automatic organization of Skills by compatibility with real-time dependency diagnostics (OS, Binaries, Env).
 
 ---
 
@@ -192,7 +195,7 @@ Visualize **ZERO** in operation. These are actual records of the unified control
 | Skills Catalog (Marketplace) |
 | :--- |
 | ![Skills Catalog](assets/screenshots/skills-ui-v4-en.png) |
-| *Ready-to-use extensions to expand your AI's powers.* |
+| *Smart extensions grouped by compatibility, featuring automatic dependency diagnosis.* |
 
 ---
 

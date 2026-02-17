@@ -20,6 +20,10 @@ export class ChatStore implements ReactiveController {
     avatarUrl: string | null = null;
     thinkingLevel: string | null = null;
     queue: ChatQueueItem[] = [];
+    attachments: File[] = [];
+    model: string | null = null;
+    recording = false;
+    recordingStartTime: number | null = null;
 
     constructor(host: ReactiveControllerHost) {
         this.host = host;

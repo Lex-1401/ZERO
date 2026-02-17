@@ -1,0 +1,9 @@
+#!/usr/bin/expect -f
+set timeout 60
+set password "7SIiZRHvPD"
+set host "74.1.20.119"
+
+# Run the test script using bun
+spawn ssh root@$host "cd /opt/zero && bun test_skills.ts"
+expect "password:" { send "$password\r" }
+expect eof

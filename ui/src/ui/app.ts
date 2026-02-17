@@ -71,6 +71,11 @@ import {
   handleWhatsAppStart as handleWhatsAppStartInternal,
   handleWhatsAppWait as handleWhatsAppWaitInternal,
 } from "./app-channels";
+import {
+  startRecording,
+  stopRecording,
+  cancelRecording,
+} from "./app-recording";
 
 import { loadAssistantIdentity as loadAssistantIdentityInternal } from "./controllers/assistant-identity";
 import { loadGraph } from "./controllers/graph";
@@ -107,6 +112,7 @@ import { loadMissionControl } from "./controllers/telemetry";
 declare global {
   interface Window {
     __ZERO_CONTROL_UI_BASE_PATH__?: string;
+    __ZERO_CONTROL_UI_TOKEN__?: string;
   }
 }
 
@@ -150,6 +156,8 @@ export class ZEROApp extends LitElement {
   @state() setupRecommendations: any[] = [];
   @state() setupStep: "scan" | "persona" = "scan";
   @state() eventLog: EventLogEntry[] = [];
+  @state() tourActive = false;
+  @state() tourStep = 0;
   private eventLogBuffer: EventLogEntry[] = [];
   private toolStreamSyncTimer: number | null = null;
   private sidebarCloseTimer: number | null = null;
@@ -194,6 +202,18 @@ export class ZEROApp extends LitElement {
 
   get chatQueue() { return this.chatStore.queue; }
   set chatQueue(v: ChatQueueItem[]) { this.chatStore.queue = v; this.chatStore.requestUpdate(); }
+
+  get chatAttachments() { return this.chatStore.attachments; }
+  set chatAttachments(v: File[]) { this.chatStore.attachments = v; this.chatStore.requestUpdate(); }
+
+  get chatModel() { return this.chatStore.model; }
+  set chatModel(v: string | null) { this.chatStore.model = v; this.chatStore.requestUpdate(); }
+
+  get chatRecording() { return this.chatStore.recording; }
+  set chatRecording(v: boolean) { this.chatStore.recording = v; this.chatStore.requestUpdate(); }
+
+  get chatRecordingStartTime() { return this.chatStore.recordingStartTime; }
+  set chatRecordingStartTime(v: number | null) { this.chatStore.recordingStartTime = v; this.chatStore.requestUpdate(); }
   // Sidebar state for tool output viewing
   @state() sidebarOpen = false;
   @state() mobileNavOpen = false;
@@ -213,6 +233,18 @@ export class ZEROApp extends LitElement {
   toggleZenMode(value?: boolean) {
     this.zenMode = value ?? !this.zenMode;
     this.applySettings({ ...this.settings, zenMode: this.zenMode });
+  }
+
+  handleToggleRecording() {
+    if (this.chatRecording) {
+      stopRecording(this);
+    } else {
+      void startRecording(this);
+    }
+  }
+
+  handleCancelRecording() {
+    cancelRecording(this);
   }
 
   @state() nodesLoading = false;
@@ -428,6 +460,9 @@ export class ZEROApp extends LitElement {
   @state() updateStatusError: string | null = null;
   @state() isUpdating = false;
 
+  @state() modelsLoading = false;
+  @state() models: any[] = [];
+
   client: GatewayBrowserClient | null = null;
   private chatScrollFrame: number | null = null;
   private chatScrollTimeout: number | null = null;
@@ -589,6 +624,34 @@ export class ZEROApp extends LitElement {
       await this.client.request("system.applyPersona", { personaId });
     }
     this.handleSetupSkip();
+
+    // After setup, if not onboarded, start the tour
+    if (!this.settings.onboarded) {
+      this.handleStartTour();
+    }
+  }
+
+  handleStartTour() {
+    this.tourActive = true;
+    this.tourStep = 0;
+  }
+
+  handleTourNext() {
+    this.tourStep++;
+  }
+
+  handleTourPrev() {
+    this.tourStep = Math.max(0, this.tourStep - 1);
+  }
+
+  handleTourFinish() {
+    this.tourActive = false;
+    this.applySettings({ ...this.settings, onboarded: true });
+  }
+
+  handleTourSkip() {
+    this.tourActive = false;
+    this.applySettings({ ...this.settings, onboarded: true });
   }
 
   async handleWhatsAppStart(force: boolean) {

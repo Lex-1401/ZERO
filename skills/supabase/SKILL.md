@@ -1,6 +1,6 @@
 ---
 name: Supabase Tool
-description: Manage Supabase projects and database migrations
+description: Gerencie projetos Supabase e migrações de banco de dados.
 ---
 
 # Supabase Tool

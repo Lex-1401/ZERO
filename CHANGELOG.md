@@ -2,6 +2,26 @@
 
 Docs: <https://docs.zero.bot>
 
+## 2026.2.16 (v0.3.2)
+
+### Highlights
+
+- **onboarding interativo (Guided Tour)**: Implementação de um cockpit de boas-vindas interativo que guia o usuário pelas funcionalidades críticas do sistema (Chat, Skills, Canais, Segurança).
+- **Inteligência de Skills (Diagnostics)**: Organização automática de habilidades por compatibilidade, com detalhamento técnico de dependências (binários nativos, suporte de SO e variáveis de ambiente).
+- **Experiência Premium**: Refinamento visual da Interface Altair com novas micro-animações, estados de loading coerentes e transições entre abas durante o tour.
+
+### Changes
+
+- UI: Lançamento do componente `renderGuidedTour` com suporte a navegação por estados.
+- UI: Refatoração de `skills.ts` com separação visual entre itens compatíveis e incompatíveis.
+- Core: Adição da flag `onboarded` à persistência de configurações de usuário.
+- App: Integração do start do tour após a seleção de persona no setup inicial.
+
+### Fixes
+
+- I18n: Suporte integral a Português-BR (🇧🇷) e Inglês (🇺🇸) para todo o fluxo de onboarding e mensagens de diagnóstico.
+- Lifecycle: Garantia de que o tour só é ativado em contextos apropriados, respeitando o estado global da aplicação.
+
 ## 2026.2.14 (v0.3.1)
 
 ### Highlights

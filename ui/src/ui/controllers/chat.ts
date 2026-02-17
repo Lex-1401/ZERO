@@ -54,17 +54,64 @@ export function resetChatState(state: ChatState) {
   state.chatStreamStartedAt = null;
 }
 
-export async function sendChatMessage(state: ChatState, message: string): Promise<boolean> {
+export async function sendChatMessage(
+  state: ChatState,
+  message: string,
+  attachments?: File[]
+): Promise<boolean> {
   if (!state.client || !state.connected) return false;
   const msg = message.trim();
-  if (!msg) return false;
+  const hasAttachments = attachments && attachments.length > 0;
+  if (!msg && !hasAttachments) return false;
 
   const now = Date.now();
+  const content: unknown[] = [];
+  if (msg) content.push({ type: "text", text: msg });
+
+  const attachmentPayloads: Array<{
+    type?: string;
+    mimeType: string;
+    fileName: string;
+    content: string;
+  }> = [];
+
+  if (hasAttachments) {
+    for (const file of attachments!) {
+      content.push({
+        type: "file",
+        name: file.name,
+        size: file.size,
+        mimeType: file.type,
+      });
+      try {
+        const buffer = await file.arrayBuffer();
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        const base64 = btoa(binary);
+
+        attachmentPayloads.push({
+          type: "file",
+          mimeType: file.type || "application/octet-stream",
+          fileName: file.name,
+          content: base64,
+        });
+      } catch (err) {
+        console.error("Failed to read attachment", file.name, err);
+        state.lastError = `Failed to read ${file.name}`;
+        return false;
+      }
+    }
+  }
+
   state.chatMessages = [
     ...state.chatMessages,
     {
       role: "user",
-      content: [{ type: "text", text: msg }],
+      content,
       timestamp: now,
     },
   ];
@@ -78,9 +125,10 @@ export async function sendChatMessage(state: ChatState, message: string): Promis
   try {
     await state.client.request("chat.send", {
       sessionKey: state.sessionKey,
-      message: msg,
+      message: msg || " ", // Ensure non-empty string for backend validation if strictly required, though protocol says message: string
       deliver: false,
       idempotencyKey: runId,
+      attachments: attachmentPayloads.length > 0 ? attachmentPayloads : undefined,
     });
     return true;
   } catch (err) {

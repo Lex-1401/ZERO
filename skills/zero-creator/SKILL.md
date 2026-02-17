@@ -1,6 +1,6 @@
 ---
 name: Zero Creator
-description: Autonomous Project Scaffolder tailored by a PhD Architect. Orchestrates Vercel, Supabase, and Frameworks to build production-ready apps from scratch.
+description: Gerador de Projetos Autônomo projetado por um Arquiteto PhD. Orquestra Vercel, Supabase e Frameworks para criar aplicações fullstack prontas para produção.
 ---
 
 # Zero Creator

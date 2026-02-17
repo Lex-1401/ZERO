@@ -1,6 +1,6 @@
 ---
 name: discord
-description: Use when you need to control Discord from Zero via the discord tool: send messages, react, post or upload stickers, upload emojis, run polls, manage threads/pins/search, create/edit/delete channels and categories, fetch permissions or member/role/channel info, or handle moderation actions in Discord DMs or channels.
+description: Use quando precisar controlar o Discord a partir do Zero via ferramenta discord: enviar mensagens, reagir, postar ou fazer upload de stickers, emojis, enquetes, gerenciar threads/pins/buscas, criar/editar/excluir canais e categorias, buscar informações de permissões ou membros/cargos/canais, ou lidar com ações de moderação.
 ---
 
 # Discord Actions
@@ -130,6 +130,7 @@ Message context lines include `discord message id` and `channel` fields you can 
 ## Action gating
 
 Use `discord.actions.*` to disable action groups:
+
 - `reactions` (react + reactions list + emojiList)
 - `stickers`, `polls`, `permissions`, `messages`, `threads`, `pins`, `search`
 - `emojiUploads`, `stickerUploads`
@@ -137,6 +138,7 @@ Use `discord.actions.*` to disable action groups:
 - `roles` (role add/remove, default `false`)
 - `channels` (channel/category create/edit/delete/move, default `false`)
 - `moderation` (timeout/kick/ban, default `false`)
+
 ### Read recent messages
 
 ```json
@@ -434,6 +436,7 @@ Create, edit, delete, and move channels and categories. Enable via `discord.acti
 **Keep it conversational!** Discord is a chat platform, not documentation.
 
 ### Do
+
 - Short, punchy messages (1-3 sentences ideal)
 - Multiple quick replies > one wall of text
 - Use emoji for tone/emphasis ∅
@@ -442,6 +445,7 @@ Create, edit, delete, and move channels and categories. Enable via `discord.acti
 - Match the energy of the conversation
 
 ### Don't
+
 - No markdown tables (Discord renders them as ugly raw `| text |`)
 - No `## Headers` for casual chat (use **bold** or CAPS for emphasis)
 - Avoid multi-paragraph essays
@@ -449,6 +453,7 @@ Create, edit, delete, and move channels and categories. Enable via `discord.acti
 - Skip the "I'd be happy to help!" fluff
 
 ### Formatting that works
+
 - **bold** for emphasis
 - `code` for technical terms
 - Lists for multiple items
@@ -458,6 +463,7 @@ Create, edit, delete, and move channels and categories. Enable via `discord.acti
 ### Example transformations
 
 ❌ Bad:
+
 ```
 I'd be happy to help with that! Here's a comprehensive overview of the versioning strategies available:
 
@@ -469,6 +475,7 @@ CalVer uses date-based versions like...
 ```
 
 ✅ Good:
+
 ```
 versioning options: semver (1.2.3), calver (2026.01.04), or yolo (`latest` forever). what fits your release cadence?
 ```

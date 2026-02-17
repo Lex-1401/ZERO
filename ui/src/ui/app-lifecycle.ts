@@ -1,6 +1,7 @@
 import type { Tab } from "./navigation";
 import { connectGateway } from "./app-gateway";
 import {
+  applySettingsFromInjectedConfig,
   applySettingsFromUrl,
   attachThemeListener,
   detachThemeListener,
@@ -36,6 +37,8 @@ type LifecycleHost = {
   onboarding: boolean;
   setupLoading: boolean;
   setupRecommendations: any[];
+  settings: import("./storage").UiSettings;
+  handleStartTour: () => void;
 };
 
 export function handleConnected(host: LifecycleHost) {
@@ -54,6 +57,9 @@ export function handleConnected(host: LifecycleHost) {
   applySettingsFromUrl(
     host as unknown as Parameters<typeof applySettingsFromUrl>[0],
   );
+  applySettingsFromInjectedConfig(
+    host as unknown as Parameters<typeof applySettingsFromInjectedConfig>[0],
+  );
   connectGateway(host as unknown as Parameters<typeof connectGateway>[0]);
   startNodesPolling(host as unknown as Parameters<typeof startNodesPolling>[0]);
   if (host.tab === "logs") {
@@ -68,6 +74,8 @@ export function handleConnected(host: LifecycleHost) {
       host.setupRecommendations = recommendations;
       host.setupLoading = false;
     });
+  } else if (!host.settings.onboarded) {
+    host.handleStartTour();
   }
 }
 

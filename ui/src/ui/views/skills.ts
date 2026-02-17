@@ -28,14 +28,17 @@ export type SkillsProps = {
 export function renderSkills(props: SkillsProps) {
     const skills = props.report?.skills ?? [];
     const filter = props.filter.trim().toLowerCase();
-    const filtered = filter
+    const filtered = (filter
         ? skills.filter((skill) =>
             [skill.name, skill.description, skill.source]
                 .join(" ")
                 .toLowerCase()
                 .includes(filter),
         )
-        : skills;
+        : skills).sort((a, b) => a.name.localeCompare(b.name));
+
+    const compatibleSkills = filtered.filter(s => s.eligible);
+    const incompatibleSkills = filtered.filter(s => !s.eligible);
 
     return html`
     <div class="animate-fade-in">
@@ -63,14 +66,33 @@ export function renderSkills(props: SkillsProps) {
 
         ${props.activeTab === "installed" ? html`
             <div class="section-title">${t("skills.installed.title")}</div>
-            <div class="group-list">
-                ${filtered.length === 0 ? html`
-                    <div class="group-item" style="padding: 60px; justify-content: center; align-items: center; flex-direction: column; color: var(--text-dim); gap: 12px;">
-                        <div style="transform: scale(1.5); opacity: 0.5;">${icons.zap}</div>
-                        <div>${t("skills.installed.none")}</div>
+            
+            ${compatibleSkills.length > 0 ? html`
+                <div class="skill-group-header" style="font-size: 10px; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.1em; margin: 16px 0 8px 4px; display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 14px; height: 14px; display: flex;">${icons.checkCircle}</span> ${t("skills.group.compatible" as any)}
+                </div>
+                <div class="group-list" style="margin-bottom: 24px;">
+                    ${compatibleSkills.map(skill => renderSkill(skill, props))}
+                </div>
+            ` : nothing}
+
+            ${incompatibleSkills.length > 0 ? html`
+                <div class="skill-group-header" style="font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin: 16px 0 8px 4px; display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 14px; height: 14px; display: flex;">${icons.info}</span> ${t("skills.group.incompatible" as any)}
+                </div>
+                <div class="group-list" style="opacity: 0.85;">
+                    ${incompatibleSkills.map(skill => renderSkill(skill, props))}
+                </div>
+            ` : nothing}
+
+            ${filtered.length === 0 ? html`
+                <div class="group-list">
+                    <div class="empty-state">
+                        <div class="empty-state__icon">${icons.zap}</div>
+                        <div class="empty-state__text">${t("skills.installed.none")}</div>
                     </div>
-                ` : filtered.map(skill => renderSkill(skill, props))}
-            </div>
+                </div>
+            ` : nothing}
         ` : renderMarketplace(props)}
     </div>
   `;
@@ -160,6 +182,14 @@ function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
     const message = props.messages[skill.skillKey] ?? null;
     const canInstall = skill.install.length > 0 && skill.missing.bins.length > 0;
 
+    const reasons: string[] = [];
+    if (!skill.eligible) {
+        if (skill.missing.os.length > 0) reasons.push(t("skills.reason.os" as any, { os: skill.requirements.os.join(", ") }));
+        if (skill.missing.bins.length > 0) reasons.push(t("skills.reason.bins" as any, { bins: skill.missing.bins.join(", ") }));
+        if (skill.missing.env.length > 0) reasons.push(t("skills.reason.env" as any, { env: skill.missing.env.join(", ") }));
+        if (skill.missing.config.length > 0) reasons.push(t("skills.reason.config" as any, { config: skill.missing.config.join(", ") }));
+    }
+
     return html`
     <div class="group-item">
       <div class="group-label">
@@ -168,6 +198,17 @@ function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
             ${skill.name}
         </div>
         <div class="group-desc">${clampText(skill.description, 120)}</div>
+        
+        ${reasons.length > 0 ? html`
+            <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px;">
+                ${reasons.map(r => html`
+                    <div style="font-size: 10px; color: var(--danger); display: flex; align-items: center; gap: 4px;">
+                        <span style="transform: scale(0.8);">${icons.info}</span> ${r}
+                    </div>
+                `)}
+            </div>
+        ` : nothing}
+
         <div style="display: flex; gap: 4px; margin-top: 8px;">
             <span class="badge">${skill.source}</span>
             <span class="badge ${skill.eligible ? "active" : "danger"}">${skill.eligible ? t("skills.eligible" as any) : t("skills.incompatible" as any)}</span>

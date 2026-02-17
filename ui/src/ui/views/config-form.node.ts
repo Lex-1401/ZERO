@@ -581,8 +581,10 @@ function renderArray(params: {
   return html`
     <div class="cfg-array">
       <div class="cfg-array__header">
-        ${showLabel ? html`<span class="cfg-array__label">${label}</span>` : nothing}
-        <span class="cfg-array__count">${t("config.node.array.count" as any).replace("{count}", String(arr.length)).replace("{suffix}", arr.length !== 1 ? "s" : "")}</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          ${showLabel ? html`<span class="cfg-array__label">${label}</span>` : nothing}
+          <span class="cfg-array__count">${t("config.node.array.count" as any).replace("{count}", String(arr.length)).replace("{suffix}", arr.length !== 1 ? "s" : "")}</span>
+        </div>
         <button
           type="button"
           class="cfg-array__add"
@@ -659,7 +661,10 @@ function renderMapField(params: {
   return html`
     <div class="cfg-map">
       <div class="cfg-map__header">
-        <span class="cfg-map__label">${t("config.node.map.custom" as any)}</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="cfg-map__label">${t("config.node.map.custom" as any)}</span>
+          <span class="cfg-map__count">${t("config.node.array.count" as any).replace("{count}", String(entries.length)).replace("{suffix}", entries.length !== 1 ? "s" : "")}</span>
+        </div>
         <button
           type="button"
           class="cfg-map__add"
@@ -677,7 +682,7 @@ function renderMapField(params: {
     }}
         >
           <span class="cfg-map__add-icon">${icons.plus}</span>
-          ${t("config.node.map.add" as any)}
+          ${t("config.node.array.add" as any)}
         </button>
       </div>
 

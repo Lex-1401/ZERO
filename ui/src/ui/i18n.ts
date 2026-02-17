@@ -39,6 +39,28 @@ export const translations = {
         "skills.status.missing": "✗ faltando",
         "skills.eligible": "Elegível",
         "skills.incompatible": "Incompatível",
+        "skills.group.compatible": "Compatíveis",
+        "skills.group.incompatible": "Incompatíveis",
+        "skills.reason.os": "Plataforma {os} não suportada",
+        "skills.reason.bins": "Binários faltando: {bins}",
+        "skills.reason.env": "Ambiente faltando: {env}",
+        "skills.reason.config": "Ajuste faltando: {config}",
+        "onboarding.tour.welcome.title": "Bem-vindo ao ZERO",
+        "onboarding.tour.welcome.desc": "Sua consciência digital local-first. Vamos conhecer os principais controles do seu novo centro de comando.",
+        "onboarding.tour.chat.title": "Núcleo de Comando (Chat)",
+        "onboarding.tour.chat.desc": "Aqui você interage com a inteligência do ZERO. Envie comandos, anexe arquivos e peça automações complexas.",
+        "onboarding.tour.zen.title": "Modo Zen vs. Completo",
+        "onboarding.tour.zen.desc": "Use o seletor no topo para alternar entre o Modo Zen (foco total) e o Modo Completo (todas as ferramentas).",
+        "onboarding.tour.skills.title": "Capacidades (Skills)",
+        "onboarding.tour.skills.desc": "Ative extensões para dar superpoderes ao seu assistente, como gerenciar Trello ou pesquisar na Web.",
+        "onboarding.tour.channels.title": "Canais de Comunicação",
+        "onboarding.tour.channels.desc": "Conecte o ZERO ao WhatsApp, Discord ou Telegram para levar sua inteligência para qualquer lugar.",
+        "onboarding.tour.security.title": "Segurança e Nós",
+        "onboarding.tour.security.desc": "Controle total. Você decide quais comandos podem rodar no seu computador e gerencia seus nós de processamento.",
+        "onboarding.tour.next": "Próximo",
+        "onboarding.tour.prev": "Anterior",
+        "onboarding.tour.finish": "Começar Agora",
+        "onboarding.tour.skip": "Pular Tour",
         "skills.save": "Salvar",
         "skills.activate": "Ativar",
         "skills.deactivate": "Desativar",
@@ -142,6 +164,8 @@ export const translations = {
         "theme.label.system": "Sistema",
         "theme.label.light": "Claro",
         "theme.label.dark": "Escuro",
+        "zen.activate": "Ativar Modo Zen",
+        "zen.exit": "Sair do Modo Zen",
         "chat.compacting": "Compactando contexto...",
         "chat.compacted": "Contexto compactado",
         "chat.send": "Enviar",
@@ -389,6 +413,28 @@ export const translations = {
         "skills.status.missing": "✗ missing",
         "skills.eligible": "Eligible",
         "skills.incompatible": "Incompatible",
+        "skills.group.compatible": "Compatible",
+        "skills.group.incompatible": "Incompatible",
+        "skills.reason.os": "Platform {os} not supported",
+        "skills.reason.bins": "Missing binaries: {bins}",
+        "skills.reason.env": "Missing environment: {env}",
+        "skills.reason.config": "Missing config: {config}",
+        "onboarding.tour.welcome.title": "Welcome to ZERO",
+        "onboarding.tour.welcome.desc": "Your local-first digital consciousness. Let's explore the main controls of your new command center.",
+        "onboarding.tour.chat.title": "Command Center (Chat)",
+        "onboarding.tour.chat.desc": "Interact with the core intelligence here. Send commands, attach files, and request complex automations.",
+        "onboarding.tour.zen.title": "Zen vs. Full Mode",
+        "onboarding.tour.zen.desc": "Use the toggle at the top to switch between Zen Mode (total focus) and Full Mode (all tools).",
+        "onboarding.tour.skills.title": "Capabilities (Skills)",
+        "onboarding.tour.skills.desc": "Enable extensions to give your assistant superpowers, like managing Trello or searching the Web.",
+        "onboarding.tour.channels.title": "Communication Channels",
+        "onboarding.tour.channels.desc": "Connect ZERO to WhatsApp, Discord, or Telegram to take your intelligence anywhere.",
+        "onboarding.tour.security.title": "Security and Nodes",
+        "onboarding.tour.security.desc": "Total control. You decide which commands can run on your computer and manage your compute nodes.",
+        "onboarding.tour.next": "Next",
+        "onboarding.tour.prev": "Back",
+        "onboarding.tour.finish": "Start Now",
+        "onboarding.tour.skip": "Skip Tour",
         "skills.save": "Save",
         "skills.activate": "Activate",
         "skills.deactivate": "Deactivate",
@@ -492,6 +538,8 @@ export const translations = {
         "theme.label.system": "System",
         "theme.label.light": "Light",
         "theme.label.dark": "Dark",
+        "zen.activate": "Activate Zen Mode",
+        "zen.exit": "Exit Zen Mode",
         "chat.compacting": "Compacting context...",
         "chat.compacted": "Compaction complete",
         "chat.send": "Send",
@@ -716,6 +764,12 @@ export function setLanguage(lang: Language) {
     window.location.reload();
 }
 
-export function t(key: keyof typeof translations["pt-BR"]): string {
-    return translations[currentLang][key] || translations["pt-BR"][key] || key;
+export function t(key: keyof typeof translations["pt-BR"], params?: Record<string, string | number>): string {
+    let text = translations[currentLang][key] || translations["pt-BR"][key] || key;
+    if (params) {
+        for (const [k, v] of Object.entries(params)) {
+            text = text.replace(`{${k}}`, String(v));
+        }
+    }
+    return text;
 }

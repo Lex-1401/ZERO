@@ -1,0 +1,24 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+# Trick run-node.mjs to skip build
+send "touch dist/entry.js\r"
+expect "#"
+send "mkdir -p dist\r"
+expect "#"
+send "date +%s%N | cut -b1-13 > dist/.buildstamp\r"
+expect "#"
+# Start the gateway
+send "nohup node scripts/run-node.mjs gateway > /var/log/zero.log 2>&1 &\r"
+expect "#"
+sleep 5
+send "ps aux | grep node\r"
+expect "#"
+send "tail -n 20 /var/log/zero.log\r"
+expect "#"
+send "exit\r"

@@ -1,4 +1,4 @@
-const KEY = "zero.control.settings.v1";
+const KEY = "zero.control.settings.v2";
 
 import type { ThemeMode } from "./theme";
 
@@ -15,18 +15,27 @@ export type UiSettings = {
   navGroupsCollapsed: Record<string, boolean>; // Which nav groups are collapsed
   autopilot: boolean; // Automatic mode for tool execution
   zenMode: boolean; // Zen mode state
+  onboarded: boolean; // Whether the user completed the onboarding tour
 };
 
 export function loadSettings(): UiSettings {
   const defaultUrl = (() => {
     const proto = location.protocol === "https:" ? "wss" : "ws";
-    return `${proto}://${location.hostname}:18789`;
+
+    // Fix: If on Vite dev port (5173), fallback to 3000.
+    if (location.port === "5173") {
+      return `${proto}://${location.hostname}:3000`;
+    }
+
+    // Normal case: Use same port as served (likely 3000).
+    const port = location.port ? `:${location.port}` : "";
+    return `${proto}://${location.hostname}${port}`;
   })();
 
   const defaults: UiSettings = {
     gatewayUrl: defaultUrl,
     token: "",
-    sessionKey: "main",
+    sessionKey: "main", // Default session
     lastActiveSessionKey: "main",
     theme: "system",
     chatFocusMode: false,
@@ -35,18 +44,28 @@ export function loadSettings(): UiSettings {
     navCollapsed: false,
     navGroupsCollapsed: {},
     autopilot: false,
-    zenMode: true,
+    zenMode: true, // Default to Zen Mode for the simplified experience
+    onboarded: false,
   };
 
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return defaults;
+
     const parsed = JSON.parse(raw) as Partial<UiSettings>;
+
+    // Ensure we don't carry over the bad port if it managed to get into v2 somehow, 
+    // or if the user manually set it to 18789.
+    const cleanGatewayUrl = (url: string | undefined): string => {
+      if (!url || typeof url !== "string") return defaultUrl;
+      const trimmed = url.trim();
+      // If it includes the old development port 18789, forcibly replace it with the detected default.
+      if (trimmed.includes(":18789")) return defaultUrl;
+      return trimmed;
+    };
+
     return {
-      gatewayUrl:
-        typeof parsed.gatewayUrl === "string" && parsed.gatewayUrl.trim()
-          ? parsed.gatewayUrl.trim()
-          : defaults.gatewayUrl,
+      gatewayUrl: cleanGatewayUrl(parsed.gatewayUrl),
       token: typeof parsed.token === "string" ? parsed.token : defaults.token,
       sessionKey:
         typeof parsed.sessionKey === "string" && parsed.sessionKey.trim()
@@ -56,8 +75,7 @@ export function loadSettings(): UiSettings {
         typeof parsed.lastActiveSessionKey === "string" &&
           parsed.lastActiveSessionKey.trim()
           ? parsed.lastActiveSessionKey.trim()
-          : (typeof parsed.sessionKey === "string" &&
-            parsed.sessionKey.trim()) ||
+          : (typeof parsed.sessionKey === "string" && parsed.sessionKey.trim()) ||
           defaults.lastActiveSessionKey,
       theme:
         parsed.theme === "light" ||
@@ -96,6 +114,10 @@ export function loadSettings(): UiSettings {
         typeof parsed.zenMode === "boolean"
           ? parsed.zenMode
           : defaults.zenMode,
+      onboarded:
+        typeof parsed.onboarded === "boolean"
+          ? parsed.onboarded
+          : defaults.onboarded,
     };
   } catch {
     return defaults;

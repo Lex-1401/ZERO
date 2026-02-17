@@ -18,6 +18,7 @@ import {
 import { handleCodeCopyClick } from "../chat/code-copy";
 import { renderMarkdownSidebar } from "./markdown-sidebar";
 import "../components/resizable-divider";
+import "../components/model-selector";
 
 export type CompactionIndicatorStatus = {
   active: boolean;
@@ -26,6 +27,8 @@ export type CompactionIndicatorStatus = {
 };
 
 export type ChatProps = {
+  zenMode?: boolean;
+  app?: any;
   sessionKey: string;
   onSessionKeyChange: (next: string) => void;
   thinkingLevel: string | null;
@@ -55,6 +58,18 @@ export type ChatProps = {
   splitRatio?: number;
   assistantName: string;
   assistantAvatar: string | null;
+  chatRecording?: boolean;
+  chatRecordingStartTime?: number | null;
+  chatAttachments?: File[];
+  onAttachmentsChange?: (files: File[]) => void;
+  onToggleRecording?: () => void;
+  onCancelRecording?: () => void;
+  models?: import("../types").GatewayModel[];
+  modelsLoading?: boolean;
+  selectedModel?: string | null;
+  onModelChange?: (model: string | null) => void;
+  configuredProviders?: string[];
+  usage?: import("../types").TelemetrySummary | null;
   // Event handlers
   onRefresh: () => void;
   onToggleFocusMode: () => void;
@@ -121,13 +136,21 @@ export function renderChat(props: ChatProps) {
   const items = buildChatItems(props);
   const showWelcome = !props.loading && (items.length === 0 || (items.length === 1 && items[0].key === "chat:history:notice"));
 
+  // Sort and group models
+  const availableModels = props.models?.filter(m => props.configuredProviders?.includes(m.provider)) ?? [];
+  const otherModels = props.models?.filter(m => !props.configuredProviders?.includes(m.provider)) ?? [];
+
   const starterChips = [
     { label: "Verificar status", prompt: "Verifique o status do sistema." },
     { label: "Listar agentes", prompt: "Quais agentes estão disponíveis?" },
     { label: "Escrever código", prompt: "Vamos escrever uma função em TypeScript." },
   ];
 
-  const renderWelcomeStack = () => html`
+  const renderWelcomeStack = () => {
+    if (props.zenMode) {
+      return html`<zero-zen-dashboard .app=${(props as any).app || (window as any).app}></zero-zen-dashboard>`;
+    }
+    return html`
     <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 1; min-height: 400px; padding: 40px; padding-bottom: 180px;">
       <div class="card--welcome" style="padding: 40px; text-align: center; max-width: 420px; border-radius: var(--radius-xl);">
           <div style="width: 64px; height: 64px; border-radius: var(--radius-xl); background: var(--bg-input); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: var(--text-main); border: 1px solid var(--border-main);">
@@ -153,6 +176,7 @@ export function renderChat(props: ChatProps) {
       </div>
     </div>
   `;
+  };
 
   const thread = html`
     <div
@@ -226,6 +250,21 @@ export function renderChat(props: ChatProps) {
           
           <div class="chat-compose-wrapper" style="padding: 24px; position: absolute; bottom: 0; left: 0; right: 0; pointer-events: none; background: linear-gradient(to top, var(--bg-main) 80%, transparent);">
             <div class="chat-compose" style="pointer-events: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-deep); padding: 8px; display: flex; flex-direction: column;">
+                ${props.chatAttachments && props.chatAttachments.length > 0 ? html`
+                  <div class="chat-attachments" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 8px;">
+                      ${props.chatAttachments.map((file, index) => html`
+                          <div class="attachment-chip" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-main);">
+                              <span style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${file.name}</span>
+                              <button class="btn btn--icon btn--xs" style="width: 16px; height: 16px; min-width: 16px; padding: 0; color: var(--text-muted);" @click=${() => {
+          const next = [...(props.chatAttachments || [])];
+          next.splice(index, 1);
+          props.onAttachmentsChange?.(next);
+        }}>${icons.x}</button>
+                          </div>
+                      `)}
+                  </div>
+                ` : nothing}
+
                 <div class="chat-compose__field">
                     <textarea
                         style="background: transparent; border: none; padding: 12px; font-size: 14px; line-height: 1.5; resize: none; width: 100%; outline: none; color: var(--text-main); font-family: var(--font-sans);"
@@ -253,19 +292,67 @@ export function renderChat(props: ChatProps) {
                     ></textarea>
                 </div>
                 <div class="chat-compose__actions" style="display: flex; justify-content: space-between; padding: 0 8px 4px 8px;">
-                     <button
-                        class="btn btn--icon"
-                        title="Nova Sessão"
-                        ?disabled=${!props.connected || (!canAbort && props.sending)}
-                        @click=${canAbort ? props.onAbort : props.onNewSession}
-                        style="width: 32px; height: 32px; border-radius: 50%;"
-                    >
-                        ${canAbort ? icons.stop : icons.plus}
-                    </button>
-                    
+                     <div style="display: flex; gap: 2px; align-items: center;">
+                       ${props.models && props.models.length > 0 ? html`
+                         <zero-model-selector
+                           .models=${props.models}
+                           .configuredProviders=${props.configuredProviders || []}
+                           .selectedModel=${props.selectedModel || ""}
+                           .usage=${props.usage || null}
+                           @select=${(e: CustomEvent) => props.onModelChange?.(e.detail.model)}
+                           style="margin-right: 4px; padding-right: 8px; border-right: 1px solid var(--border-subtle);"
+                         ></zero-model-selector>
+                       ` : nothing}
+                       <button
+                          class="btn btn--icon"
+                          title="Nova Sessão"
+                          ?disabled=${!props.connected || (!canAbort && props.sending)}
+                          @click=${canAbort ? props.onAbort : props.onNewSession}
+                          style="width: 32px; height: 32px; border-radius: 50%;"
+                      >
+                          ${canAbort ? icons.stop : icons.plus}
+                      </button>
+                      
+                       <input 
+                          type="file" 
+                          id="chat-file-input" 
+                          multiple 
+                          style="display: none;" 
+                          @change=${(e: Event) => {
+      const input = e.target as HTMLInputElement;
+      if (input.files && props.onAttachmentsChange) {
+        props.onAttachmentsChange([...(props.chatAttachments || []), ...Array.from(input.files)]);
+      }
+      input.value = "";
+    }}
+                       />
+                       <button
+                          class="btn btn--icon"
+                          title="Anexar arquivo"
+                          ?disabled=${!props.connected || props.sending}
+                          @click=${() => {
+      const input = document.getElementById('chat-file-input') as HTMLInputElement;
+      if (input) input.click();
+    }}
+                          style="width: 32px; height: 32px; border-radius: 50%;"
+                      >
+                          ${icons.paperclip || html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>`}
+                      </button>
+                      <button
+                           class="btn btn--icon ${props.chatRecording ? 'btn--active' : ''}"
+                           title="${props.chatRecording ? 'Parar Gravação' : 'Gravar Áudio (Ditado)'}"
+                           ?disabled=${!props.connected || props.sending}
+                           @click=${props.onToggleRecording}
+                           style="width: 32px; height: 32px; border-radius: 50%; position: relative; ${props.chatRecording ? 'color: var(--danger);' : ''}"
+                       >
+                           ${props.chatRecording ? icons.stop : icons.mic}
+                           ${props.chatRecording ? html`<style>@keyframes pulse { 0% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 0.2; transform: scale(1.4); } 100% { opacity: 0; transform: scale(1.8); } }</style><span class="recording-pulse" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; border: 2px solid var(--danger); border-radius: 50%; animation: pulse 1.5s infinite; pointer-events: none;"></span>` : nothing}
+                       </button>
+                     </div>
+                                        
                     <button
                         class="btn primary"
-                        ?disabled=${!props.connected || !props.draft.trim()}
+                        ?disabled=${!props.connected || (!props.draft.trim() && (!props.chatAttachments || props.chatAttachments.length === 0))}
                         @click=${() => props.onSend()}
                         style="border-radius: var(--radius-full); padding: 0 16px; height: 32px; font-size: 13px; font-weight: 600;"
                     >

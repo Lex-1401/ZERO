@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+set timeout 30
+set password "7SIiZRHvPD"
+set host "74.1.20.119"
+
+spawn ssh root@$host "ps aux | grep zero-gateway"
+expect "password:" { send "$password\r" }
+expect {
+    timeout { exit 0 }
+    eof { exit 0 }
+}

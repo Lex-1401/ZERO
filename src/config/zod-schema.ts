@@ -436,6 +436,15 @@ export const ZEROSchema = z
           })
           .strict()
           .optional(),
+        cors: z
+          .object({
+            enabled: z.boolean().optional(),
+            allowedOrigins: z.array(z.string()).optional(),
+            allowedMethods: z.array(z.string()).optional(),
+            allowCredentials: z.boolean().optional(),
+          })
+          .strict()
+          .optional(),
       })
       .strict()
       .optional(),

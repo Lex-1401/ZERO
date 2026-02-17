@@ -1,0 +1,19 @@
+#!/usr/bin/expect -f
+set timeout 600
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "7SIiZRHvPD\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+# Rebuild only the UI
+send "pnpm ui:build\r"
+expect "#"
+# Restart the gateway managed by PM2
+send "pm2 restart zero-gateway\r"
+expect "#"
+# Wait a bit
+sleep 5
+send "pm2 logs zero-gateway --lines 20 --nostream\r"
+expect "#"
+send "exit\r"
