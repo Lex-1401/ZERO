@@ -53,8 +53,6 @@ Diferente de sistemas que esquecem após a sessão fechar, o ZERO utiliza um ín
 
 ## 🛡️ A Ética da Autonomia
 
-## 🛡️ A Ética da Autonomia
-
 A auto-evolução do ZERO é governada por **Protocolos de Segurança Multinível (Levels 1-5)**. O sistema nunca expande suas capacidades além do que foi autorizado pelo usuário, garantindo que a autonomia nunca comprometa a soberania humana.
 
 ---
