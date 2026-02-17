@@ -49,6 +49,16 @@ Diferente de sistemas que esquecem após a sessão fechar, o ZERO utiliza um ín
 
 ---
 
+---
+
+## 🏛️ Governança Estratégica: ANA - SX Connect
+
+A autonomia do ZERO não é anárquica. No ambiente de produção (**VPS**), ela é orquestrada pela **ANA - SX Connect**.
+
+- **O Papel da ANA**: Ela atua como a **CEO Estratégica** e Orquestradora do ecossistema.
+- **Decisão vs. Execução**: Enquanto o *Sentinel* e o *Refcoding* são os braços executores da auto-evolução, a **ANA** é o cérebro que decide *o quê* e *por que* evoluir, garantindo que o sistema sempre sirva à visão do fundador e à narrativa da marca SX.
+- **Implementação Exclusiva**: Esta camada de inteligência estratégica "CEO-Level" é uma Skill otimizada para a infraestrutura de alto desempenho da VPS, onde a orquestração multi-agente atinge seu potencial máximo.
+
 ## 🛡️ A Ética da Autonomia
 
 A auto-evolução do ZERO é governada por **Protocolos de Segurança Multinível (Levels 1-5)**. O sistema nunca expande suas capacidades além do que foi autorizado pelo usuário, garantindo que a autonomia nunca comprometa a soberania humana.

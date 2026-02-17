@@ -49,6 +49,16 @@ Unlike systems that forget after the session closes, ZERO uses a local vector in
 
 ---
 
+---
+
+## 🏛️ Strategic Governance: ANA - SX Connect
+
+ZERO's autonomy is not anarchic. In the production environment (**VPS**), it is orchestrated by **ANA - SX Connect**.
+
+- **ANA's Role**: She acts as the **Strategic CEO** and Orchestrator of the ecosystem.
+- **Decision vs. Execution**: While *Sentinel* and *Refcoding* are the executive arms of self-evolution, **ANA** is the brain that decides *what* and *why* to evolve, ensuring the system always serves the founder's vision and the SX brand narrative.
+- **Exclusive Implementation**: This "CEO-Level" strategic intelligence layer is a Skill optimized for the high-performance infrastructure of the VPS, where multi-agent orchestration reaches its full potential.
+
 ## 🛡️ The Ethics of Autonomy
 
 ZERO's self-evolution is governed by **Multi-level Security Protocols (Levels 1-5)**. The system never expands its capabilities beyond what was authorized by the user, ensuring that autonomy never compromises human sovereignty.
