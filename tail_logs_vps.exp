@@ -2,7 +2,7 @@
 set timeout 30
 spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
 expect "password:"
-send "7SIiZRHvPD\r"
+send "bMjVTAVByf\r"
 expect "#"
 send "tail -n 20 /var/log/zero.log\r"
 expect "#"

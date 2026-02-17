@@ -3,7 +3,7 @@ set timeout 60
 log_file -a "/Users/lex/Downloads/Arquivos/ZERO/vps_health_log.txt"
 spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
 expect "password:"
-send "7SIiZRHvPD\r"
+send "bMjVTAVByf\r"
 expect "#"
 send "df -h\r"
 expect "#"

@@ -2,7 +2,7 @@
 set timeout 30
 spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
 expect "password:"
-send "7SIiZRHvPD\r"
+send "bMjVTAVByf\r"
 expect "#"
 # Check content of storage.ts
 send "cat /opt/zero/ui/src/ui/storage.ts\r"

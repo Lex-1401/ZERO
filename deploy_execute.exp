@@ -2,7 +2,7 @@
 set timeout 600
 spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
 expect "password:"
-send "7SIiZRHvPD\r"
+send "bMjVTAVByf\r"
 expect "#"
 send "cd /opt/zero\r"
 expect "#"

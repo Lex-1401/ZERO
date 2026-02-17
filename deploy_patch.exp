@@ -2,5 +2,5 @@
 set timeout 120
 spawn scp -o StrictHostKeyChecking=no ui/src/ui/storage.ts root@74.1.20.119:/opt/zero/ui/src/ui/storage.ts
 expect "password:"
-send "7SIiZRHvPD\r"
+send "bMjVTAVByf\r"
 expect eof

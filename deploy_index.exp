@@ -2,5 +2,5 @@
 set timeout 30
 spawn scp -o StrictHostKeyChecking=no ui/index.html root@74.1.20.119:/opt/zero/ui/index.html
 expect "password:"
-send "7SIiZRHvPD\r"
+send "bMjVTAVByf\r"
 expect eof

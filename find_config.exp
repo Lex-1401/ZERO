@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 set timeout 30
-set password "7SIiZRHvPD"
+set password "bMjVTAVByf"
 set host "74.1.20.119"
 
 spawn ssh root@$host "find / -name zero.json 2>/dev/null"

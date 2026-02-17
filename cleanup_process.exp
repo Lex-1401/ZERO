@@ -2,7 +2,7 @@
 set timeout 20
 spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
 expect "password:"
-send "7SIiZRHvPD\r"
+send "bMjVTAVByf\r"
 expect "#"
 # Check if 9467 is still running
 send "ps -p 9467\r"

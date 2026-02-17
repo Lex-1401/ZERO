@@ -1,15 +1,28 @@
 #!/usr/bin/expect -f
-set timeout 1800
+set timeout 300
+set password "bMjVTAVByf"
+
 spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
 expect "password:"
-send "7SIiZRHvPD\r"
+send "$password\r"
 expect "#"
+
 send "cd /opt/zero\r"
 expect "#"
-send "git fetch origin main && git reset --hard origin/main\r"
+
+# Sincronizar código
+send "git fetch origin main\r"
 expect "#"
-# Build da UI com limite de memória
-send "NODE_OPTIONS='--max-old-space-size=1024' pnpm run ui:build\r"
+send "git reset --hard origin/main\r"
 expect "#"
+
+# Build (se necessário, usando memória limitada para segurança)
+send "NODE_OPTIONS='--max-old-space-size=2048' pnpm run build\r"
+expect "#"
+
+# Reiniciar
+send "pm2 restart zero-gateway\r"
+expect "#"
+
 send "exit\r"
 expect eof
