@@ -140,7 +140,7 @@ export function renderApp(state: AppViewState) {
         <nav style="flex: 1; overflow-y: auto; padding-top: 8px;">
           ${TAB_GROUPS.map((group) => {
     const visibleTabs = isZen
-      ? group.tabs.filter((t) => ["chat", "sessions", "skills", "config"].includes(t))
+      ? group.tabs.filter((t) => ["chat", "sessions", "skills", "config", "docs"].includes(t))
       : group.tabs;
 
     if (visibleTabs.length === 0) return nothing;
