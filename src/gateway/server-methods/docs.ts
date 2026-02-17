@@ -10,7 +10,7 @@ export const docsHandlers: GatewayRequestHandlers = {
     try {
       const entries = await fs.readdir(DOCS_DIR, { withFileTypes: true });
       const docs = entries
-        .filter((e) => e.isFile() && e.name.endsWith(".md"))
+        .filter((e) => e.isFile() && e.name.endsWith(".md") && !e.name.startsWith("."))
         .map((e) => ({
           id: e.name,
           name: e.name.replace(".md", "").replace(/_/g, " "),
