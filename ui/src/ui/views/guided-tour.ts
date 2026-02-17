@@ -20,7 +20,7 @@ export function renderGuidedTour(props: {
     onSkip: () => void;
 }) {
     return html`
-        <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fade-in 0.4s ease-out;">
+        <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.15); backdrop-filter: blur(3px); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fade-in 0.4s ease-out;">
             <style>
                 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
                 @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -31,10 +31,24 @@ export function renderGuidedTour(props: {
                     width: 100%;
                     max-width: 460px;
                     padding: 40px;
-                    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+                    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
                     position: relative;
                     animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                     text-align: center;
+                }
+                .tour-logo-bg {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 160px;
+                    font-weight: 900;
+                    opacity: 0.03;
+                    color: var(--accent-blue);
+                    pointer-events: none;
+                    z-index: 0;
+                    user-select: none;
+                    line-height: 1;
                 }
                 .tour-progress {
                     display: flex;
@@ -58,13 +72,14 @@ export function renderGuidedTour(props: {
             </style>
 
             <div class="tour-card">
+                <div class="tour-logo-bg">∅</div>
                 <div class="tour-progress">
                     ${Array.from({ length: props.totalSteps }).map((_, i) => html`
                         <div class="progress-dot ${i === props.step ? "active" : ""}"></div>
                     `)}
                 </div>
 
-                <div style="width: 80px; height: 80px; border-radius: 20px; background: rgba(var(--accent-blue-rgb), 0.1); color: var(--accent-blue); display: flex; align-items: center; justify-content: center; margin: 0 auto 32px; box-shadow: inset 0 0 20px rgba(var(--accent-blue-rgb), 0.1);">
+                <div style="width: 80px; height: 80px; border-radius: 20px; background: rgba(var(--accent-blue-rgb), 0.1); color: var(--accent-blue); display: flex; align-items: center; justify-content: center; margin: 0 auto 32px; box-shadow: inset 0 0 20px rgba(var(--accent-blue-rgb), 0.1); position: relative; z-index: 1;">
                     <div style="transform: scale(1.8);">${props.currentStep.icon}</div>
                 </div>
 
