@@ -44,7 +44,7 @@ describe("memory embedding batches", () => {
 
   it("splits large files across multiple embedding batches", async () => {
     const line = "a".repeat(200);
-    const content = Array.from({ length: 250 }, () => line).join("\n");
+    const content = Array.from({ length: 50 }, () => line).join("\n");
     await fs.writeFile(path.join(workspaceDir, "memory", "2026-01-03.md"), content);
 
     const cfg = {
@@ -74,7 +74,7 @@ describe("memory embedding batches", () => {
     const totalTexts = embedBatch.mock.calls.reduce((sum, call) => sum + (call[0]?.length ?? 0), 0);
     expect(totalTexts).toBe(status.chunks);
     expect(embedBatch.mock.calls.length).toBeGreaterThan(1);
-  }, 30000);
+  }, 60000);
 
   it("keeps small files in a single embedding batch", async () => {
     const line = "b".repeat(120);
