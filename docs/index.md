@@ -75,6 +75,8 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 - 🚀 **Mission Control** — Painel central de telemetria e Protocolo de Emergência.
 - 🌍 **Globalização & l10n** — Suporte poliglota (Português/Inglês) com **IA Skill Translator** automático.
 - ✨ **Customização Visual** — Seletores dinâmicos de Tema (Light/Dark/System) e Idioma na aba Núcleo.
+- 🏗️ **Evolução Arquitetural v0.2.0** — Abstração de Traits em Rust, Heartbeat Nativo e Cofre AIEOS para soberania de identidade.
+- ⚡ **Modo Kernel-Only** — Execução de baixo consumo (`--kernel-only`) ideal para background e servidores.
 
 ---
 

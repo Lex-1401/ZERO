@@ -1,7 +1,8 @@
 import { Buffer } from "node:buffer";
 import { EventEmitter } from "node:events";
-import { VadEngine } from "@zero/ratchet";
+import { VadEngine, BackchannelEngine } from "@zero/ratchet";
 import { whisperEngine } from "./whisper-engine.js";
+import { speak } from "./tts-service.js"; // Import speak for reactions
 
 export type AudioConfig = {
   sampleRate: number;
@@ -24,8 +25,10 @@ export type AudioEngineConfig = {
 
 export class VoiceSession extends EventEmitter {
   private vad: VadEngine;
+  private backchannel: BackchannelEngine;
   private buffer: Buffer[] = [];
   private engineConfig: AudioEngineConfig;
+  private lastBackchannelTs: number = 0;
 
   constructor(
     public readonly connId: string,
@@ -35,6 +38,8 @@ export class VoiceSession extends EventEmitter {
     super();
     // Native High-Performance VAD Initialization
     this.vad = new VadEngine(500, 800);
+    // Backchannel Heuristics: 10 samples history, 3 seconds cooldown
+    this.backchannel = new BackchannelEngine(10, 3000);
     this.engineConfig = {
       provider: "edge-tts",
       cloningEnabled: true,
@@ -47,6 +52,13 @@ export class VoiceSession extends EventEmitter {
 
     const status = this.vad.processChunk(chunk);
     this.handleVadStatus(status);
+
+    // Heurísticas de Backchannel
+    const rms = this.vad.lastRms;
+    if (this.backchannel.processEnergy(rms)) {
+      this.triggerBackchannelReaction();
+    }
+
     this.processSignal(chunk);
   }
 
@@ -119,6 +131,24 @@ export class VoiceSession extends EventEmitter {
 
     whisperEngine.transcribe(fullAudio).catch((err) => {
       console.error(`[VoiceSession:${this.connId}] Whisper transcription failed:`, err);
+    });
+  }
+
+  private triggerBackchannelReaction() {
+    // Reações rítmicas curtas para simular escuta ativa
+    const reactions = ["hum", "ok", "entendi", "sim"];
+    const text = reactions[Math.floor(Math.random() * reactions.length)];
+
+    console.log(`[VoiceSession:${this.connId}] Backchannel reaction: ${text}`);
+
+    // Disparar síntese sem interromper fluxo principal
+    // Nota: speak() já lida com o playAudio reativo
+    speak(text).catch(() => {});
+
+    this.sendMessage({
+      type: "voice.backchannel",
+      text,
+      ts: Date.now(),
     });
   }
 }

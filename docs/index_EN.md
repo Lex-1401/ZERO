@@ -76,6 +76,8 @@ Most operations flow through the **Gateway** (`zero gateway`), a single long-run
 - 🚀 **Mission Control** — Central telemetry dashboard and Emergency Protocol.
 - 🌍 **Globalization & l10n** — Polyglot support (Portuguese/English) with automatic **IA Skill Translator**.
 - ✨ **Visual Customization** — Dynamic Theme (Light/Dark/System) and Language selectors in the Core tab.
+- 🏗️ **Architectural Evolution v0.2.0** — Rust Traits abstraction, Native Heartbeat, and AIEOS Vault for identity sovereignty.
+- ⚡ **Kernel-Only Mode** — Low-resource execution (`--kernel-only`) ideal for background and servers.
 
 ---
 

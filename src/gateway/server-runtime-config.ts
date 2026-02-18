@@ -43,7 +43,9 @@ export async function resolveGatewayRuntimeConfig(params: {
   const customBindHost = params.cfg.gateway?.customBindHost;
   const bindHost = params.host ?? (await resolveGatewayBindHost(bindMode, customBindHost));
   const controlUiEnabled =
-    params.controlUiEnabled ?? params.cfg.gateway?.controlUi?.enabled ?? true;
+    process.env.ZERO_KERNEL_ONLY === "1"
+      ? false
+      : (params.controlUiEnabled ?? params.cfg.gateway?.controlUi?.enabled ?? true);
   const openAiChatCompletionsEnabled =
     params.openAiChatCompletionsEnabled ??
     params.cfg.gateway?.http?.endpoints?.chatCompletions?.enabled ??
@@ -72,7 +74,9 @@ export async function resolveGatewayRuntimeConfig(params: {
   const authMode: ResolvedGatewayAuth["mode"] = resolvedAuth.mode;
   const hooksConfig = resolveHooksConfig(params.cfg);
   const canvasHostEnabled =
-    process.env.ZERO_SKIP_CANVAS_HOST !== "1" && params.cfg.canvasHost?.enabled !== false;
+    process.env.ZERO_KERNEL_ONLY !== "1" &&
+    process.env.ZERO_SKIP_CANVAS_HOST !== "1" &&
+    params.cfg.canvasHost?.enabled !== false;
 
   assertGatewayAuthConfigured(resolvedAuth);
   if (tailscaleMode === "funnel" && authMode !== "password") {

@@ -5,7 +5,12 @@ import path from "node:path";
 import process from "node:process";
 
 const args = process.argv.slice(2);
+const isKernelOnly = args.includes("--kernel-only");
 const env = { ...process.env };
+if (isKernelOnly) {
+  env.ZERO_KERNEL_ONLY = "1";
+  env.ZERO_SKIP_CHANNELS = "1"; // Auto-skip heavy channels in kernel mode
+}
 const cwd = process.cwd();
 const compiler = env.ZERO_TS_COMPILER === "tsc" ? "tsc" : "tsgo";
 const projectArgs = ["--project", "tsconfig.json"];

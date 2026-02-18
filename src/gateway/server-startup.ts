@@ -38,12 +38,14 @@ export async function startGatewaySidecars(params: {
   logChannels: { info: (msg: string) => void; error: (msg: string) => void };
   logBrowser: { error: (msg: string) => void };
 }) {
-  // Start zero browser control server (unless disabled via config).
+  // Start zero browser control server (unless disabled via config or kernel mode).
   let browserControl: Awaited<ReturnType<typeof startBrowserControlServerIfEnabled>> = null;
-  try {
-    browserControl = await startBrowserControlServerIfEnabled();
-  } catch (err) {
-    params.logBrowser.error(`server failed to start: ${String(err)}`);
+  if (process.env.ZERO_KERNEL_ONLY !== "1") {
+    try {
+      browserControl = await startBrowserControlServerIfEnabled();
+    } catch (err) {
+      params.logBrowser.error(`server failed to start: ${String(err)}`);
+    }
   }
 
   // Start Gmail watcher if configured (hooks.gmail.account).

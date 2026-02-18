@@ -40,6 +40,11 @@ ZERO operates under the **Agentic Operating System** concept, an architecture wh
 5. **Onboarding & Diagnostics**:
     * **Guided Welcome Tour**: An interactive welcome flow that introduces the ZERO cockpit to new users.
     * **Grouping & Diagnostics**: Automatic organization of Skills by compatibility with real-time dependency diagnostics (OS, Binaries, Env).
+6. **Architectural Evolution v0.2.0**:
+    * **Traits System**: Core abstraction (`Provider`/`Channel`) via Rust Traits for extreme modularity.
+    * **Native Heartbeat**: Critical task orchestration in Rust for zero latency.
+    * **AIEOS Vault**: Agent identity containerization for total portability.
+    * **Kernel-Only Mode**: Ultra-light execution (`--kernel-only`) for servers and background.
 
 ---
 

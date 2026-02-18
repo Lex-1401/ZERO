@@ -24,6 +24,7 @@ export function normalizeMessage(message: unknown): NormalizedMessage {
   const hasToolContent =
     Array.isArray(contentItems) &&
     contentItems.some((item) => {
+      if (item === null || typeof item !== "object") return false;
       const x = item as Record<string, unknown>;
       const t = String(x.type ?? "").toLowerCase();
       return t === "toolresult" || t === "tool_result";
@@ -53,12 +54,14 @@ export function normalizeMessage(message: unknown): NormalizedMessage {
   if (typeof m.content === "string") {
     content = [{ type: "text", text: cleanText(m.content) }];
   } else if (Array.isArray(m.content)) {
-    content = m.content.map((item: Record<string, unknown>) => ({
-      type: (item.type as MessageContentItem["type"]) || "text",
-      text: cleanText(item.text as string | undefined ?? ""),
-      name: item.name as string | undefined,
-      args: item.args || item.arguments,
-    }));
+    content = m.content
+      .filter((item) => item !== null && typeof item === "object")
+      .map((item: Record<string, unknown>) => ({
+        type: (item.type as MessageContentItem["type"]) || "text",
+        text: cleanText((item.text as string | undefined) ?? ""),
+        name: item.name as string | undefined,
+        args: item.args || item.arguments,
+      }));
   } else if (typeof m.text === "string") {
     content = [{ type: "text", text: cleanText(m.text) }];
   }

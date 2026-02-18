@@ -12,14 +12,32 @@
 //! - **Telemetry & Metrics**: Precise tracking of token usage and operational latency.
 //! - **Event Deduplication**: Temporal cache for event idempotency.
 //! - **Emergency Governance**: Global panic mode for immediate system lockdown.
+//! - **Heartbeat Engine**: Native management of system health and periodic tasks.
+//! - **Backchannel Heuristics**: Detection of "active listening" opportunities in voice streams.
 
 use napi_derive::napi;
 use indexmap::IndexMap;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::time::{SystemTime, UNIX_EPOCH, Instant};
+use std::time::{SystemTime, UNIX_EPOCH, Instant, Duration};
 use unicode_normalization::UnicodeNormalization;
 use once_cell::sync::Lazy;
 use regex::RegexSet;
+
+/// --- TRAITS ---
+
+/// [PT] Trait base para provedores de IA.
+pub trait Provider {
+    fn name(&self) -> String;
+    fn process(&self, prompt: String) -> String;
+}
+
+/// [PT] Trait base para canais de comunicação.
+pub trait Channel {
+    fn id(&self) -> String;
+    fn send_message(&self, text: String) -> bool;
+}
+
+/// --- END TRAITS ---
 
 /// Global emergency state flag.
 static PANIC_MODE: AtomicBool = AtomicBool::new(false);
@@ -86,6 +104,7 @@ pub struct VadEngine {
     silence_start: Option<Instant>, 
     threshold: f64,
     silence_timeout_ms: u64,
+    last_rms: f64,
 }
 
 #[napi]
@@ -98,7 +117,14 @@ impl VadEngine {
             silence_start: None,
             threshold,
             silence_timeout_ms: silence_timeout_ms as u64,
+            last_rms: 0.0,
         }
+    }
+
+    /// Returns the RMS (Root Mean Square) energy of the last processed chunk.
+    #[napi(getter)]
+    pub fn last_rms(&self) -> f64 {
+        self.last_rms
     }
 
     /// Conducts acoustic analysis on a discrete segment of PCM audio.
@@ -127,6 +153,7 @@ impl VadEngine {
         }
         
         let rms = (sum_sq / samples_count as f64).sqrt();
+        self.last_rms = rms;
 
         if rms > self.threshold {
             self.silence_start = None;
@@ -155,6 +182,59 @@ impl VadEngine {
                 "silent".to_string()
             }
         }
+    }
+}
+
+/// [PT] Motor de Heurísticas de Backchannel (Escuta Ativa).
+/// Detecta janelas de oportunidade rítmicas para emitir reconhecimentos vocais curtos.
+#[napi]
+pub struct BackchannelEngine {
+    energy_history: Vec<f64>,
+    history_limit: usize,
+    last_signal_time: Instant,
+    cooldown_ms: u64,
+}
+
+#[napi]
+impl BackchannelEngine {
+    #[napi(constructor)]
+    pub fn new(history_limit: u32, cooldown_ms: u32) -> Self {
+        BackchannelEngine {
+            energy_history: Vec::with_capacity(history_limit as usize),
+            history_limit: history_limit as usize,
+            last_signal_time: Instant::now() - Duration::from_millis(cooldown_ms as u64),
+            cooldown_ms: cooldown_ms as u64,
+        }
+    }
+
+    #[napi]
+    pub fn process_energy(&mut self, rms: f64) -> bool {
+        if is_panic_mode() { return false; }
+
+        // Manter histórico de energia
+        if self.energy_history.len() >= self.history_limit {
+            self.energy_history.remove(0);
+        }
+        self.energy_history.push(rms);
+
+        // Só disparar se o cooldown expirou
+        if self.last_signal_time.elapsed().as_millis() < self.cooldown_ms as u128 {
+            return false;
+        }
+
+        // Heurística: Queda súbita de energia após um período de atividade (indica pausa natural)
+        if self.energy_history.len() == self.history_limit {
+            let avg_energy: f64 = self.energy_history.iter().sum::<f64>() / self.history_limit as f64;
+            
+            // Se a energia atual está 70% abaixo da média do histórico recente, 
+            // e a média era significativamente alta (ex: voz ativa)
+            if rms < avg_energy * 0.3 && avg_energy > 500.0 {
+                self.last_signal_time = Instant::now();
+                return true;
+            }
+        }
+
+        false
     }
 }
 
@@ -495,5 +575,38 @@ impl SecurityEngine {
         }
         
         entropy
+    }
+}
+
+/// Native Heartbeat Manager for sub-millisecond precision tasks.
+#[napi]
+pub struct HeartbeatManager {
+    last_beat: Instant,
+    interval_ms: u64,
+}
+
+#[napi]
+impl HeartbeatManager {
+    #[napi(constructor)]
+    pub fn new(interval_ms: u32) -> Self {
+        HeartbeatManager {
+            last_beat: Instant::now(),
+            interval_ms: interval_ms as u64,
+        }
+    }
+
+    #[napi]
+    pub fn tick(&mut self) -> bool {
+        if is_panic_mode() { return false; }
+        if self.last_beat.elapsed() >= Duration::from_millis(self.interval_ms) {
+            self.last_beat = Instant::now();
+            return true;
+        }
+        false
+    }
+
+    #[napi]
+    pub fn reset(&mut self) {
+        self.last_beat = Instant::now();
     }
 }

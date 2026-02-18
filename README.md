@@ -44,6 +44,11 @@ O ZERO agora opera sob padrões de arquitetura avançados, elevando a estabilida
 4. **Onboarding & Diagnóstico**:
     * **Guided Welcome Tour**: Um fluxo interativo de boas-vindas que apresenta o cockpit do ZERO para novos usuários.
     * **Grouping & Diagnostics**: Organização automática de Skills por compatibilidade com diagnósticos em tempo real de dependências (OS, Binários, Env).
+5. **Evolução Arquitetural v0.2.0**:
+    * **Traits System**: Abstração de núcleos (`Provider`/`Channel`) via Rust Traits para modularidade extrema.
+    * **Native Heartbeat**: Orquestração de tarefas críticas em Rust para latência zero.
+    * **AIEOS Vault**: Conteinerização de identidade de agente p/ portabilidade total.
+    * **Kernel-Only Mode**: Execução ultra-leve (`--kernel-only`) para servidores e background.
 
 ---
 

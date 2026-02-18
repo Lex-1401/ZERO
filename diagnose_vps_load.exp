@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "top -b -n 1 | head -n 20\r"
+expect "#"
+send "ps aux --sort=-%cpu | head -n 10\r"
+expect "#"
+send "exit\r"
+expect eof
