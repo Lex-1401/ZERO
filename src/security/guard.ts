@@ -4,9 +4,11 @@ import { SecurityEngine as NativeEngine, isPanicMode } from "@zero/ratchet";
 
 const log = createSubsystemLogger("security/guard");
 
-// Native security temporarily disabled due to false positives on short messages
+// Minimum text length before engaging the native engine.
+// Prevents false positives on very short messages (e.g., single-word inputs).
+const NATIVE_ENGINE_MIN_TEXT_LEN = 10;
+
 let nativeSecurity: NativeEngine | null = null;
-/*
 try {
   nativeSecurity = new NativeEngine();
 } catch {
@@ -15,7 +17,6 @@ try {
     log.warn("Failed to load native SecurityEngine, using JS fallback");
   }
 }
-*/
 
 // LLM01: Prompt Injection Guardrails
 const INJECTION_PATTERNS = [
@@ -125,7 +126,7 @@ export class SecurityGuard {
     }
     if (!text) return text;
 
-    if (nativeSecurity) {
+    if (nativeSecurity && text.length >= NATIVE_ENGINE_MIN_TEXT_LEN) {
       return nativeSecurity.redactPii(text);
     }
 
@@ -173,7 +174,7 @@ export class SecurityGuard {
     }
     if (!text) return null;
 
-    if (nativeSecurity) {
+    if (nativeSecurity && text.length >= NATIVE_ENGINE_MIN_TEXT_LEN) {
       const nativeResult = nativeSecurity.detectInjection(text);
       if (nativeResult) {
         log.warn("Native Security Violation Detected", { reason: nativeResult });

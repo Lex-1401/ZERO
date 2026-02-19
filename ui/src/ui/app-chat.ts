@@ -126,9 +126,13 @@ export async function handleSendChat(
   }
 
   if (isChatBusy(host)) {
-    // If we have attachments, we can't easily queue them yet
+    // Preserve attachments in host state so they are not silently lost.
+    // The message is enqueued; attachments remain staged until the queue flushes.
     if (attachments && attachments.length > 0) {
-      // TODO: Support attachment queuing or show busy state
+      // Re-stage attachments so the user can still see them as pending.
+      host.chatAttachments = attachments;
+      // Enqueue the text portion — attachments will be picked up on next send.
+      if (message) enqueueChatMessage(host, message);
       return;
     }
     enqueueChatMessage(host, message);

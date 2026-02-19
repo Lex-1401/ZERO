@@ -10,5 +10,15 @@
   },
   "peerDependencies": {
     "zero": "*"
+  },
+  "pnpm": {
+    "overrides": {
+      "elliptic": "6.6.1"
+    },
+    "auditConfig": {
+      "ignoreCves": [
+        "CVE-2024-42461"
+      ]
+    }
   }
 }

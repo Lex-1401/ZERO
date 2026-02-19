@@ -96,3 +96,9 @@ lint_report.txt
 loc_report.txt
 *_report.txt
 *.log
+
+# Runtime artifacts & sensitive session files (QA-SEC-004)
+cookies.txt
+failure.txt
+vps_health_log.txt
+*.exp.log
