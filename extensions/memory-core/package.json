@@ -8,8 +8,8 @@
       "./index.ts"
     ]
   },
-  "peerDependencies": {
-    "zero": "*"
+  "devDependencies": {
+    "zero": "workspace:*"
   },
   "pnpm": {
     "overrides": {
