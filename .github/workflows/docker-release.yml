@@ -51,7 +51,7 @@ jobs:
             type=semver,pattern={{version}},suffix=-arm64
 
       - name: Build and push multi-arch image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           # Define plataformas alvo (ARM64 removido temporariamente por instabilidade no QEMU/falta de runner)
