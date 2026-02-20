@@ -1,0 +1,26 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+# Check if gateway process is running (assuming pm2 name 'zero-gateway' or similar, asking for list)
+send "pm2 list\r"
+expect "#"
+# Check listening ports
+send "netstat -tulnp | grep :3000\r"
+expect "#"
+send "netstat -tulnp | grep :18789\r"
+expect "#"
+# Check firewall status
+send "ufw status\r"
+expect "#"
+# Check recent logs specifically for startup errors
+send "pm2 logs zero-gateway --lines 50 --nostream\r"
+expect "#"
+# Validade JSON just in case (using node to simple parse)
+send "node -e 'try { console.log(require(\"./zero.json\")) } catch(e) { console.error(e) }' \r"
+expect "root@"
+send "cd /opt/zero && node -e 'try { console.log(require(\"./zero.json\")) } catch(e) { console.error(e) }' \r"
+expect "#"
+send "exit\r"

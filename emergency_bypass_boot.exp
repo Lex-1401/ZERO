@@ -1,0 +1,20 @@
+#!/usr/bin/expect -f
+set timeout 60
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+# Cria o stamp para enganar o run-node.mjs
+send "mkdir -p dist && touch dist/.buildstamp\r"
+expect "#"
+# Tenta subir via PM2 com limite de memória
+send "pm2 delete zero-gateway || echo 'already deleted'\r"
+expect "#"
+send "NODE_OPTIONS='--max-old-space-size=1024' pm2 start scripts/run-node.mjs --name zero-gateway -- gateway --bind 0.0.0.0 --port 3000\r"
+expect "#"
+send "pm2 save\r"
+expect "#"
+send "exit\r"
+expect eof

@@ -1,0 +1,17 @@
+#!/usr/bin/expect -f
+set timeout 60
+log_file -a "/Users/lex/Downloads/Arquivos/ZERO/vps_health_log.txt"
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "df -h\r"
+expect "#"
+send "free -m\r"
+expect "#"
+send "uptime\r"
+expect "#"
+send "ls -la /opt/zero/dist/index.js\r"
+expect "#"
+send "exit\r"
+expect eof

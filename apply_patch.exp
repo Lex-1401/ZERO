@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn scp -o StrictHostKeyChecking=no patch_zod.js root@74.1.20.119:/opt/zero/patch_zod.js
+expect "password:"
+send "bMjVTAVByf\r"
+expect eof
+
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119 "node /opt/zero/patch_zod.js && pm2 restart zero-gateway"
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "exit\r"

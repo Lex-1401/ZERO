@@ -1,0 +1,16 @@
+{
+  "name": "@zero/voice-call",
+  "version": "2026.1.25",
+  "type": "module",
+  "description": "Zero voice-call plugin",
+  "dependencies": {
+    "@sinclair/typebox": "0.34.47",
+    "ws": "^8.19.0",
+    "zod": "^4.3.6"
+  },
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

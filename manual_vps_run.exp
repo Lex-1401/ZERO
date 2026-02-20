@@ -1,0 +1,17 @@
+#!/usr/bin/expect -f
+set timeout 120
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+send "git log -n 1 --oneline\r"
+expect "#"
+send "node scripts/run-node.mjs gateway --bind 0.0.0.0 --port 3000\r"
+# Espera 15 segundos por saída
+sleep 15
+send "\x03"
+expect "#"
+send "exit\r"
+expect eof

@@ -1,0 +1,61 @@
+/* Mobile Layout for Configuration (Responsive Stack) */
+@media (max-width: 800px) {
+    .config-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .config-sidebar {
+        width: 100% !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--glass-border);
+        background: var(--bg-surface) !important;
+        border-radius: var(--radius-xl);
+        margin-bottom: 16px;
+        overflow: hidden;
+    }
+
+    .config-nav {
+        max-height: 200px;
+        /* Limit height of nav on mobile so it doesn't dominate */
+    }
+
+    .config-main {
+        width: 100% !important;
+        height: auto !important;
+        background: var(--bg-surface) !important;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--glass-border);
+        overflow: visible !important;
+        display: block !important;
+        /* Allow content to flow */
+    }
+
+    .config-content {
+        padding: 16px !important;
+        overflow: visible !important;
+    }
+
+    .config-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .config-actions__right {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    /* Form Elements Mobile */
+    .cfg-toggle-row {
+        flex-direction: row;
+        /* Keep toggle row standardized */
+    }
+}

@@ -1,0 +1,45 @@
+name: Install Smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# NOTE: This workflow is disabled for forks as it requires the 'zero' package
+# to be published on npm. Enable when publishing your own version.
+jobs:
+  install-smoke:
+    if: false # Disabled for forks - requires npm package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout CLI
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm (corepack retry)
+        run: |
+          set -euo pipefail
+          corepack enable
+          for attempt in 1 2 3; do
+            if corepack prepare pnpm@9.7.0 --activate; then
+              pnpm -v
+              exit 0
+            fi
+            echo "corepack prepare failed (attempt $attempt/3). Retrying..."
+            sleep $((attempt * 10))
+          done
+          exit 1
+
+      - name: Install pnpm deps (minimal)
+        run: pnpm install --ignore-scripts --frozen-lockfile
+
+      - name: Run installer docker tests
+        env:
+          ZERO_INSTALL_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh
+          ZERO_INSTALL_CLI_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/install-cli.sh
+          ZERO_NO_ONBOARD: "1"
+          ZERO_INSTALL_SMOKE_SKIP_CLI: "1"
+          ZERO_INSTALL_SMOKE_SKIP_NONROOT: ${{ github.event_name == 'pull_request' && '1' || '0' }}
+          ZERO_INSTALL_SMOKE_PREVIOUS: "2026.1.11-4"
+          ZERO_INSTALL_SMOKE_SKIP_PREVIOUS: "1"
+        run: pnpm test:install:smoke

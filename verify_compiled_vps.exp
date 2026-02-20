@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+# Reiniciar o gateway garantindo que o build foi pego
+send "pm2 restart zero-gateway\r"
+expect "#"
+# Verificar se o arquivo navigation.ts compilado tem a palavra 'docs'
+send "grep 'docs' dist/ui/navigation.js 2>/dev/null || echo 'not compiled yet'\r"
+expect "#"
+send "exit\r"
+expect eof

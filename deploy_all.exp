@@ -1,0 +1,33 @@
+#!/usr/bin/expect -f
+set timeout 600
+set password "bMjVTAVByf"
+set host "74.1.20.119"
+
+puts "--- ∅ ZERO: Iniciando Deploy Full (Backend + UI) ---"
+
+# 1. Sincronizar pasta dist (Tudo: gateway, voice, shared, control-ui, etc.)
+# Usando rsync com --delete para limpar arquivos antigos e garantir integridade
+puts "📡 Sincronizando pasta dist (Backend + Frontend)..."
+spawn rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" dist/ root@$host:/opt/zero/dist/
+expect "password:" { send "$password\r" }
+expect eof
+
+# 2. Sincronizar pasta skills (Extensões traduzidas)
+puts "📡 Sincronizando pasta skills..."
+spawn rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" skills/ root@$host:/opt/zero/skills/
+expect "password:" { send "$password\r" }
+expect eof
+
+# 2. Sincronizar ui/index.html (se necessário, embora já esteja no dist/control-ui)
+puts "📡 Verificando index.html principal..."
+spawn scp -o StrictHostKeyChecking=no ui/index.html root@$host:/opt/zero/ui/index.html
+expect "password:" { send "$password\r" }
+expect eof
+
+# 3. Reiniciar o serviço no VPS
+puts "🔄 Reiniciando zero-gateway no PM2..."
+spawn ssh root@$host "pm2 restart zero-gateway"
+expect "password:" { send "$password\r" }
+expect eof
+
+puts "--- ✅ Deploy concluído com sucesso ---"

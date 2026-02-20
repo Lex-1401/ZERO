@@ -1,0 +1,11 @@
+{
+  "name": "@zero/signal",
+  "version": "2026.1.25",
+  "type": "module",
+  "description": "Zero Signal channel plugin",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

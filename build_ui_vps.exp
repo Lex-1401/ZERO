@@ -1,0 +1,13 @@
+#!/usr/bin/expect -f
+set timeout 1200
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+# Build da UI com limite de memória
+send "NODE_OPTIONS='--max-old-space-size=1024' pnpm run ui:build\r"
+expect "#"
+send "exit\r"
+expect eof

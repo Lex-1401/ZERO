@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+set timeout 30
+set password "bMjVTAVByf"
+set host "74.1.20.119"
+
+spawn ssh root@$host "pm2 logs zero-gateway --lines 100 --raw"
+expect "password:" { send "$password\r" }
+# Wait for some log output or timeout
+expect {
+    timeout { exit 0 }
+    eof { exit 0 }
+}

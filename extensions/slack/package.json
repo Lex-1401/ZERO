@@ -1,0 +1,11 @@
+{
+  "name": "@zero/slack",
+  "version": "2026.1.25",
+  "type": "module",
+  "description": "Zero Slack channel plugin",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

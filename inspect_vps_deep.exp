@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+send "git log -n 1 --oneline\r"
+expect "#"
+send "find . -name navigation.ts\r"
+expect "#"
+send "cat ui/src/ui/navigation.ts\r"
+expect "#"
+send "exit\r"
+expect eof

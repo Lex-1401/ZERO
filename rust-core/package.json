@@ -1,0 +1,19 @@
+{
+    "name": "@zero/ratchet",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "index.js",
+    "types": "index.d.ts",
+    "napi": {
+        "binaryName": "ratchet",
+        "packageName": "@zero/ratchet"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@napi-rs/cli": "^3.5.1"
+    },
+    "scripts": {
+        "build": "napi build --platform --release",
+        "build:dev": "napi build --platform"
+    }
+}

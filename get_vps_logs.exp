@@ -1,0 +1,9 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119 "pm2 logs zero-gateway --lines 100 --no-colors"
+expect "password:"
+send "bMjVTAVByf\r"
+# Wait a bit to collect logs and then exit
+sleep 5
+send "\x03"
+expect eof

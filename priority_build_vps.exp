@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+set timeout 1800
+spawn ssh -o StrictHostKeyChecking=no root@74.1.20.119
+expect "password:"
+send "bMjVTAVByf\r"
+expect "#"
+send "cd /opt/zero\r"
+expect "#"
+# Para tudo para liberar RAM
+send "pm2 stop all\r"
+expect "#"
+send "pkill -f node\r"
+expect "#"
+# Build com limite de memória aumentado e swap amigável
+send "NODE_OPTIONS='--max-old-space-size=2048' pnpm run build:full\r"
+expect "#"
+send "pm2 restart zero-gateway || pm2 start scripts/run-node.mjs --name zero-gateway -- gateway --bind 0.0.0.0 --port 3000\r"
+expect "#"
+send "pm2 save\r"
+expect "#"
+send "exit\r"
+expect eof

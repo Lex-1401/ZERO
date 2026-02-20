@@ -1,0 +1,11 @@
+{
+  "name": "@zero/llm-task",
+  "version": "2026.1.25",
+  "type": "module",
+  "description": "Zero JSON-only LLM task plugin",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

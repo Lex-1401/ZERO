@@ -1,0 +1,145 @@
+import { execFile, spawn } from "node:child_process";
+import path from "node:path";
+import { promisify } from "node:util";
+
+import { danger, shouldLogVerbose } from "../globals.js";
+import { logDebug, logError } from "../logger.js";
+import { resolveCommandStdio } from "./spawn-utils.js";
+
+const execFileAsync = promisify(execFile);
+
+// Simple promise-wrapped execFile with optional verbosity logging.
+export async function runExec(
+  command: string,
+  args: string[],
+  opts: number | { timeoutMs?: number; maxBuffer?: number } = 10_000,
+): Promise<{ stdout: string; stderr: string }> {
+  const options =
+    typeof opts === "number"
+      ? { timeout: opts, encoding: "utf8" as const }
+      : {
+          timeout: opts.timeoutMs,
+          maxBuffer: opts.maxBuffer,
+          encoding: "utf8" as const,
+        };
+  try {
+    const { stdout, stderr } = await execFileAsync(command, args, options);
+    if (shouldLogVerbose()) {
+      if (stdout.trim()) logDebug(stdout.trim());
+      if (stderr.trim()) logError(stderr.trim());
+    }
+    return { stdout, stderr };
+  } catch (err) {
+    if (shouldLogVerbose()) {
+      logError(danger(`Command failed: ${command} ${args.join(" ")}`));
+    }
+    throw err;
+  }
+}
+
+export type SpawnResult = {
+  stdout: string;
+  stderr: string;
+  code: number | null;
+  signal: NodeJS.Signals | null;
+  killed: boolean;
+};
+
+export type CommandOptions = {
+  timeoutMs: number;
+  cwd?: string;
+  input?: string;
+  env?: NodeJS.ProcessEnv;
+  windowsVerbatimArguments?: boolean;
+};
+
+export async function runCommandWithTimeout(
+  argv: string[],
+  optionsOrTimeout: number | CommandOptions,
+): Promise<SpawnResult> {
+  const options: CommandOptions =
+    typeof optionsOrTimeout === "number" ? { timeoutMs: optionsOrTimeout } : optionsOrTimeout;
+  const { timeoutMs, cwd, input, env } = options;
+  const { windowsVerbatimArguments } = options;
+  const hasInput = input !== undefined;
+
+  const shouldSuppressNpmFund = (() => {
+    const cmd = path.basename(argv[0] ?? "");
+    if (cmd === "npm" || cmd === "npm.cmd" || cmd === "npm.exe") return true;
+    if (cmd === "node" || cmd === "node.exe") {
+      const script = argv[1] ?? "";
+      return script.includes("npm-cli.js");
+    }
+    return false;
+  })();
+
+  const resolvedEnv = env ? { ...process.env, ...env } : { ...process.env };
+  if (shouldSuppressNpmFund) {
+    if (resolvedEnv.NPM_CONFIG_FUND == null) resolvedEnv.NPM_CONFIG_FUND = "false";
+    if (resolvedEnv.npm_config_fund == null) resolvedEnv.npm_config_fund = "false";
+  }
+
+  if (!argv || argv.length === 0 || !argv[0]) {
+    throw new Error("Invalid command: argv cannot be empty or null");
+  }
+
+  // Sanitize command to prevent execution of arbitrary paths if not intended.
+  // We allow absolute paths or simple command names, but block relative paths or dangerous characters unless they look like legitimate paths.
+  const commandName = argv[0];
+  if (commandName.includes("..") || commandName.includes("\0")) {
+    throw new Error(`Invalid command path detected: ${commandName}`);
+  }
+
+  const stdio = resolveCommandStdio({ hasInput, preferInherit: true });
+  const child = spawn(argv[0], argv.slice(1), {
+    stdio,
+    cwd,
+    env: resolvedEnv,
+    windowsVerbatimArguments,
+    shell: false, // Explicitly disable shell to prevent command injection
+  });
+  // Spawn with inherited stdin (TTY) so tools like `pi` stay interactive when needed.
+  return await new Promise((resolve, reject) => {
+    let stdout = "";
+    let stderr = "";
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (typeof child.kill === "function") {
+        child.kill("SIGKILL");
+      }
+    }, timeoutMs);
+
+    if (hasInput && child.stdin) {
+      child.stdin.write(input ?? "");
+      child.stdin.end();
+    }
+
+    const MAX_BUFFER = 10 * 1024 * 1024; // 10MB limit
+    child.stdout?.on("data", (d) => {
+      if (stdout.length < MAX_BUFFER) {
+        stdout += d.toString();
+      } else if (!stdout.endsWith("\n[TRUNCATED]")) {
+        stdout += "\n[TRUNCATED]";
+      }
+    });
+    child.stderr?.on("data", (d) => {
+      if (stderr.length < MAX_BUFFER) {
+        stderr += d.toString();
+      } else if (!stderr.endsWith("\n[TRUNCATED]")) {
+        stderr += "\n[TRUNCATED]";
+      }
+    });
+    child.on("error", (err) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      reject(err);
+    });
+    child.on("close", (code, signal) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve({ stdout, stderr, code, signal, killed: child.killed });
+    });
+  });
+}

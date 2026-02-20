@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+set timeout 30
+set password "bMjVTAVByf"
+set host "74.1.20.119"
+
+spawn ssh root@$host "pip3 list | grep faster-whisper"
+expect "password:" { send "$password\r" }
+expect eof

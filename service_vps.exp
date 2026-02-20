@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+set timeout 30
+set password "bMjVTAVByf"
+set host "74.1.20.119"
+
+spawn ssh root@$host "systemctl list-units --type=service | grep zero"
+expect "password:" { send "$password\r" }
+expect eof
