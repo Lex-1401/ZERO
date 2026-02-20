@@ -1,0 +1,57 @@
+:root {
+  --bg-color: #0d0d0f;
+  --bg-secondary: rgba(30, 30, 35, 0.7);
+  --text-primary: #f5f5f7; /* macOS label color-ish */
+  --text-secondary: rgba(245, 245, 247, 0.6);
+  --accent-color: #7fb8d4; /* Matching Zero userBubble: rgb(127, 184, 212) */
+  --accent-hover: #6da6c2;
+  --assistant-bubble: rgba(45, 45, 50, 0.88);
+  --user-bubble: #7fb8d4;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow: hidden; /* App feel */
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: inherit;
+}

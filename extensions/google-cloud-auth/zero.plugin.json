@@ -1,0 +1,11 @@
+{
+  "id": "google-cloud-auth",
+  "providers": [
+    "google-cloud-auth"
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

@@ -1,0 +1,132 @@
+node_modules
+**/node_modules/
+.env
+docker-compose.extra.yml
+dist
+!dist/protocol.schema.json
+*.bun-build
+# pnpm-lock.yaml (Removed from ignore to allow CI/CD builds)
+bun.lock
+bun.lockb
+coverage
+.pnpm-store
+.worktrees/
+.DS_Store
+**/.DS_Store
+ui/src/ui/__screenshots__/
+ui/playwright-report/
+ui/test-results/
+
+# Bun build artifacts
+*.bun-build
+apps/macos/.build/
+apps/shared/ZeroKit/.build/
+**/ModuleCache/
+bin/
+bin/zero-mac
+bin/docs-list
+apps/macos/.build-local/
+apps/macos/.swiftpm/
+apps/shared/ZeroKit/.swiftpm/
+Core/
+apps/ios/*.xcodeproj/
+apps/ios/*.xcworkspace/
+apps/ios/.swiftpm/
+vendor/
+apps/ios/Zero.xcodeproj/
+apps/ios/Zero.xcodeproj/**
+apps/macos/.build/**
+**/*.bun-build
+apps/ios/*.xcfilelist
+
+# Vendor build artifacts
+vendor/a2ui/renderers/lit/dist/
+.bundle.hash
+
+# fastlane (iOS)
+apps/ios/fastlane/README.md
+apps/ios/fastlane/report.xml
+apps/ios/fastlane/Preview.html
+apps/ios/fastlane/screenshots/
+apps/ios/fastlane/test_output/
+apps/ios/fastlane/logs/
+apps/ios/fastlane/.env
+apps/ios/fastlane/report.xml
+
+# fastlane build artifacts (local)
+apps/ios/*.ipa
+apps/ios/*.dSYM.zip
+
+# provisioning profiles (local)
+apps/ios/*.mobileprovision
+.env
+
+# Local untracked files
+.local/
+.vscode/
+.tgz
+
+# local tooling
+.serena/
+
+# Build artifacts
+*.node
+*.map
+.build-info.json
+dist/
+src/agents/aci/browser-memory.json
+rust-core/target/
+
+# Security Audit Reports & Local State
+.zero/
+audit-reports/
+*.audit.json
+*.audit.md
+*_REPORT.md
+*.report.md
+SECURITY_AUDIT.md
+BETA_TEST_REPORT.md
+*.json.enc
+*.audit.json
+lint_output.txt
+test_output*.txt
+test_results.txt
+testsprite_tests/
+lint_report.txt
+loc_report.txt
+*_report.txt
+*.log
+
+# Runtime artifacts & sensitive session files (QA-SEC-004)
+cookies.txt
+failure.txt
+vps_health_log.txt
+*.exp.log
+
+# Environment & Secrets (AIOS)
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Dependencies (AIOS)
+node_modules/
+
+# Build & Logs (AIOS)
+build/
+logs/
+
+# IDE & OS (AIOS)
+Thumbs.db
+.idea/
+*.swp
+
+# Sovereign Integrity & AMES Reports
+.aios-core/data/*.vault
+outputs/ames/
+outputs/minds/*.vault
+.ai/
+! .ai/README.md
+
+# Decisões estratégicas (Preservação de Soberania)
+*.sovereign-intelligence.vault

@@ -1,0 +1,74 @@
+services:
+  zero-gateway:
+    image: ${ZERO_IMAGE:-zero:local}
+    # ⚠️ SECURITY: Session keys em env vars são visíveis via 'docker inspect'.
+    # Para produção, use Docker secrets (ver seção 'secrets' abaixo) ou env_file com permissões restritas (chmod 600).
+    #
+    # Para usar Docker secrets em produção:
+    #   1. Crie os arquivos de secret: echo "seu-token" > ./secrets/gateway_token.txt
+    #   2. Descomente a seção 'secrets:' abaixo
+    #   3. No código, leia de /run/secrets/<nome> em vez de env vars
+    #   4. Restrinja permissões: chmod 600 ./secrets/*.txt
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      # Prioritize Docker Secrets/Files for security
+      ZERO_GATEWAY_TOKEN_FILE: /run/secrets/gateway_token
+      CLAUDE_AI_SESSION_KEY_FILE: /run/secrets/claude_ai_session_key
+      CLAUDE_WEB_SESSION_KEY_FILE: /run/secrets/claude_web_session_key
+      CLAUDE_WEB_COOKIE_FILE: /run/secrets/claude_web_cookie
+      # Fallback for local dev (legacy mode)
+      ZERO_GATEWAY_TOKEN: ${ZERO_GATEWAY_TOKEN}
+      CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
+    secrets:
+      - gateway_token
+      - claude_ai_session_key
+      - claude_web_session_key
+      - claude_web_cookie
+    volumes:
+      - ${ZERO_CONFIG_DIR}:/home/node/.zero
+      - ${ZERO_WORKSPACE_DIR}:/home/node/zero
+    ports:
+      - "${ZERO_GATEWAY_PORT:-18789}:18789"
+      - "${ZERO_BRIDGE_PORT:-18790}:18790"
+    init: true
+    restart: unless-stopped
+    command:
+      [
+        "node",
+        "dist/index.js",
+        "gateway",
+        "--bind",
+        "${ZERO_GATEWAY_BIND:-lan}",
+        "--port",
+        "${ZERO_GATEWAY_PORT:-18789}"
+      ]
+
+  zero-cli:
+    image: ${ZERO_IMAGE:-zero:local}
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      BROWSER: echo
+      CLAUDE_AI_SESSION_KEY_FILE: /run/secrets/claude_ai_session_key
+    secrets:
+      - claude_ai_session_key
+    volumes:
+      - ${ZERO_CONFIG_DIR}:/home/node/.zero
+      - ${ZERO_WORKSPACE_DIR}:/home/node/zero
+    stdin_open: true
+    tty: true
+    init: true
+    entrypoint: ["node", "dist/index.js"]
+
+# Docker Secrets Definition
+secrets:
+  gateway_token:
+    file: ${ZERO_SECRETS_DIR:-./secrets}/gateway_token.txt
+  claude_ai_session_key:
+    file: ${ZERO_SECRETS_DIR:-./secrets}/claude_ai_session_key.txt
+  claude_web_session_key:
+    file: ${ZERO_SECRETS_DIR:-./secrets}/claude_web_session_key.txt
+  claude_web_cookie:
+    file: ${ZERO_SECRETS_DIR:-./secrets}/claude_web_cookie.txt
+

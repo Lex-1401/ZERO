@@ -1,0 +1,94 @@
+---
+title: Implante no Railway
+---
+
+Implante o Zero no Railway com um modelo de um clique e finalize a configuração no seu navegador. Este é o caminho mais fácil "sem terminal no servidor": o Railway executa o Gateway para você, e você configura tudo via assistente web em `/setup`.
+
+## Checklist rápido (novos usuários)
+
+1) Clique em **Deploy on Railway** (abaixo).
+2) Adicione um **Volume** montado em `/data`.
+3) Defina as **Variáveis** obrigatórias (pelo menos `SETUP_PASSWORD`).
+4) Ative o **Proxy HTTP** na porta `8080`.
+5) Abra `https://<seu-dominio-railway>/setup` e finalize o assistente.
+
+## Implantação em um clique
+
+<a href="https://railway.com/deploy/zero-railway-template" target="_blank" rel="noreferrer">Implantar no Railway</a>
+
+Após o implante, encontre sua URL pública em **Railway → seu serviço → Configurações → Domínios**.
+
+O Railway irá:
+- Fornecer um domínio gerado (geralmente `https://<algo>.up.railway.app`), ou
+- Usar seu domínio personalizado, caso tenha anexado um.
+
+Então abra:
+
+- `https://<seu-dominio-railway>/setup` — assistente de configuração (protegido por senha).
+- `https://<seu-dominio-railway>/zero` — interface de controle (Control UI).
+
+## O que você recebe
+
+- Gateway Zero hospedado + Interface de Controle (Control UI).
+- Assistente de configuração web em `/setup` (sem comandos de terminal).
+- Armazenamento persistente via Volume do Railway (`/data`) para que configurações/credenciais/workspace sobrevivam a novas implantações.
+- Exportação de backup em `/setup/export` para migrar do Railway posteriormente.
+
+## Configurações obrigatórias no Railway
+
+### Rede Pública (Public Networking)
+
+Ative o **Proxy HTTP** para o serviço.
+
+- Porta: `8080`
+
+### Volume (Obrigatório)
+
+Anexe um volume montado em:
+
+- `/data`
+
+### Variáveis
+
+Defina estas variáveis no serviço:
+
+- `SETUP_PASSWORD` (obrigatório).
+- `PORT=8080` (obrigatório — deve corresponder à porta na Rede Pública).
+- `ZERO_STATE_DIR=/data/.zero` (recomendado).
+- `ZERO_WORKSPACE_DIR=/data/workspace` (recomendado).
+- `ZERO_GATEWAY_TOKEN` (recomendado; trate como um segredo de administrador).
+
+## Fluxo de Configuração
+
+1) Visite `https://<seu-dominio-railway>/setup` e insira sua `SETUP_PASSWORD`.
+2) Escolha um modelo/provedor de autenticação e cole sua chave.
+3) (Opcional) Adicione tokens do Telegram/Discord/Slack.
+4) Clique em **Run setup** (Iniciar configuração).
+
+Se os DMs (mensagens diretas) do Telegram estiverem configurados para pareamento, o assistente de configuração pode aprovar o código de pareamento.
+
+## Obtendo tokens de chat
+
+### Token do Bot do Telegram
+
+1) Envie uma mensagem para o `@BotFather` no Telegram.
+2) Execute `/newbot`.
+3) Copie o token (parecido com `123456789:AA...`).
+4) Cole no assistente `/setup`.
+
+### Token do Bot do Discord
+
+1) Vá para https://discord.com/developers/applications.
+2) **New Application** → escolha um nome.
+3) **Bot** → **Add Bot**.
+4) **Ative MESSAGE CONTENT INTENT** em Bot → Privileged Gateway Intents (obrigatório ou o bot falhará na inicialização).
+5) Copie o **Token do Bot** e cole no assistente `/setup`.
+6) Convide o bot para o seu servidor (OAuth2 URL Generator; escopos: `bot`, `applications.commands`).
+
+## Backups e Migração
+
+Baixe um backup em:
+
+- `https://<seu-dominio-railway>/setup/export`
+
+Isso exporta o estado e o workspace do seu Zero para que você possa migrar para outro host sem perder configurações ou memória.

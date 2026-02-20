@@ -1,0 +1,142 @@
+/* =============================================
+   CHAT TYPOGRAPHY & BLOCKS
+   ============================================= */
+
+.chat-thinking {
+  margin-bottom: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-raised);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.chat-text {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: var(--text-main);
+}
+
+.chat-text :where(p, ul, ol, pre, blockquote, table) {
+  margin: 0;
+}
+
+.chat-text :where(p + p, p + ul, p + ol, p + pre, p + blockquote) {
+  margin-top: var(--s-4);
+}
+
+.chat-text :where(ul, ol) {
+  padding-left: var(--s-6);
+}
+
+.chat-text :where(li + li) {
+  margin-top: var(--s-1);
+}
+
+.chat-text :where(a) {
+  color: var(--accent-main);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.chat-text :where(a:hover) {
+  text-decoration: underline;
+}
+
+.chat-text :where(code) {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.chat-text :where(:not(pre) > code) {
+  background: var(--bg-surface-raised);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Updated Pre/Code Block Styling with Wrapper */
+.code-block-wrapper {
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-md);
+  margin-top: var(--s-3);
+  overflow: hidden; /* Ensure header doesn't overflow corners */
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.03); /* Subtle contrast header */
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.code-lang {
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.copy-code-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-code-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-main);
+}
+
+/* Override default pre margin since it's now inside wrapper */
+.chat-text :where(.code-block-wrapper pre) {
+  margin: 0;
+  padding: var(--s-3);
+  overflow-x: auto;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+/* Fallback for pre without wrapper if any exist */
+.chat-text :where(pre:not(:where(.code-block-wrapper pre))) {
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-md);
+  padding: var(--s-3);
+  overflow-x: auto;
+  margin-top: var(--s-3);
+}
+
+.chat-text :where(blockquote) {
+  border-left: 3px solid var(--accent-main);
+  padding-left: var(--s-4);
+  margin-left: 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.chat-text :where(hr) {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--s-6) 0;
+}
