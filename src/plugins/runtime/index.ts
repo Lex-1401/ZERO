@@ -147,6 +147,7 @@ import {
 } from "../../line/send.js";
 import { monitorLineProvider } from "../../line/monitor.js";
 import { buildTemplateMessageFromPayload } from "../../line/template-messages.js";
+import { VERSION } from "../../version.js";
 
 import type { PluginRuntime } from "./types.js";
 
@@ -154,15 +155,8 @@ let cachedVersion: string | null = null;
 
 function resolveVersion(): string {
   if (cachedVersion) return cachedVersion;
-  try {
-    const require = createRequire(import.meta.url);
-    const pkg = require("../../../package.json") as { version?: string };
-    cachedVersion = pkg.version ?? "unknown";
-    return cachedVersion;
-  } catch {
-    cachedVersion = "unknown";
-    return cachedVersion;
-  }
+  cachedVersion = VERSION;
+  return cachedVersion;
 }
 
 export function createPluginRuntime(): PluginRuntime {
