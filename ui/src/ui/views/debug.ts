@@ -22,7 +22,7 @@ export type DebugProps = {
 };
 
 
-function sanitizeDebugData(data: any): any {
+function sanitizeDebugData(data: unknown): unknown {
     if (!data) return data;
     if (typeof data === "string") {
         // Basic heuristics for file paths
@@ -36,16 +36,16 @@ function sanitizeDebugData(data: any): any {
         return data.map(sanitizeDebugData);
     }
     if (typeof data === "object") {
-        const copy: any = {};
-        for (const key in data) {
-            copy[key] = sanitizeDebugData(data[key]);
+        const copy: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(data as Record<string, unknown>)) {
+            copy[key] = sanitizeDebugData(val);
         }
         return copy;
     }
     return data;
 }
 
-function renderJsonBlock(data: any, style: string = "") {
+function renderJsonBlock(data: unknown, style = "") {
     const sanitized = sanitizeDebugData(data);
     const isEmpty = !sanitized || (typeof sanitized === 'object' && Object.keys(sanitized).length === 0) || (Array.isArray(sanitized) && sanitized.length === 0);
     if (isEmpty) {

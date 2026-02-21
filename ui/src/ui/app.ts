@@ -251,7 +251,7 @@ export class ZEROApp extends LitElement {
 
   @state() nodesLoading = false;
   @state() docsLoading = false;
-  @state() docsList: any[] = [];
+  @state() docsList: unknown[] = [];
   @state() docsSelectedId: string | null = null;
   @state() docsContent: string | null = null;
   @state() docsError: string | null = null;
@@ -831,7 +831,7 @@ export class ZEROApp extends LitElement {
     updatePlayground(this as unknown as AppViewState, patch);
   }
 
-  handleNostrProfileEdit(accountId: string, profile: any) {
+  handleNostrProfileEdit(accountId: string, profile: Record<string, unknown>) {
     this.nostrProfileAccountId = accountId;
     this.nostrProfileFormState = { ...profile };
   }
@@ -841,7 +841,7 @@ export class ZEROApp extends LitElement {
     this.nostrProfileFormState = null;
   }
 
-  handleNostrProfileFieldChange(field: string, value: any) {
+  handleNostrProfileFieldChange(field: string, value: unknown) {
     if (this.nostrProfileFormState) {
       this.nostrProfileFormState = { ...this.nostrProfileFormState, [field]: value };
     }

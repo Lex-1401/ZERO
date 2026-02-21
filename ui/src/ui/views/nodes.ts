@@ -234,9 +234,9 @@ function resolveExecApprovalsAgents(
 ): ExecApprovalsAgentOption[] {
   const agentsNode = (config?.agents ?? {}) as Record<string, unknown>;
   const list = Array.isArray(agentsNode.list) ? agentsNode.list : [];
-  const configAgents: ExecApprovalsAgentOption[] = list.map((record: any) => ({
-    id: record.id,
-    name: record.name,
+  const configAgents: ExecApprovalsAgentOption[] = list.map((record: Record<string, unknown>) => ({
+    id: record.id as string,
+    name: record.name as string,
     isDefault: record.default === true
   }));
   const approvalsAgents = Object.keys(form?.agents ?? {});
@@ -323,7 +323,7 @@ export function renderNodes(props: NodesProps) {
                             <div class="group-desc">${t("nodes.binding.global.desc" as any)}</div>
                         </div>
                         <div class="group-content">
-                            <select class="select-native" style="width: 240px;" @change=${(e: any) => bindingState.onBindDefault(e.target.value || null)}>
+                            <select class="select-native" style="width: 240px;" @change=${(e: Event & { target: HTMLSelectElement }) => bindingState.onBindDefault(e.target.value || null)}>
                                 <option value="" .selected=${!bindingState.defaultBinding}>${t("nodes.binding.any" as any)}</option>
                                 ${bindingState.nodes.map(n => html`<option value=${n.id} .selected=${bindingState.defaultBinding === n.id}>${n.label}</option>`)}
                             </select>
@@ -336,7 +336,7 @@ export function renderNodes(props: NodesProps) {
                                 <div class="group-desc">${t("nexus.node_id" as any)}: ${a.id}</div>
                             </div>
                             <div class="group-content">
-                                <select class="select-native" style="width: 240px;" @change=${(e: any) => bindingState.onBindAgent(a.index, e.target.value || null)}>
+                                <select class="select-native" style="width: 240px;" @change=${(e: Event & { target: HTMLSelectElement }) => bindingState.onBindAgent(a.index, e.target.value || null)}>
                                     <option value="" .selected=${!a.binding}>${t("nodes.binding.inherit" as any)}</option>
                                     ${bindingState.nodes.map(n => html`<option value=${n.id} .selected=${a.binding === n.id}>${n.label}</option>`)}
                                 </select>
@@ -358,12 +358,12 @@ export function renderNodes(props: NodesProps) {
                      <div class="group-item">
                         <div class="group-label"><div class="group-title">${t("nodes.security.target" as any)}</div></div>
                         <div class="group-content" style="gap: 8px;">
-                            <select class="select-native" style="width: 120px;" .value=${approvalsState.target} @change=${(e: any) => approvalsState.onSelectTarget(e.target.value, approvalsState.targetNodeId)}>
+                            <select class="select-native" style="width: 120px;" .value=${approvalsState.target} @change=${(e: Event & { target: HTMLSelectElement }) => approvalsState.onSelectTarget(e.target.value as "gateway" | "node", approvalsState.targetNodeId)}>
                                 <option value="gateway">${t("nodes.security.target.gateway" as any)}</option>
                                 <option value="node">${t("nodes.security.target.local" as any)}</option>
                             </select>
                             ${approvalsState.target === "node" ? html`
-                                <select class="select-native" style="width: 132px;" .value=${approvalsState.targetNodeId || ""} @change=${(e: any) => approvalsState.onSelectTarget("node", e.target.value)}>
+                                <select class="select-native" style="width: 132px;" .value=${approvalsState.targetNodeId || ""} @change=${(e: Event & { target: HTMLSelectElement }) => approvalsState.onSelectTarget("node", e.target.value)}>
                                     <option value="">${t("nodes.security.target.select" as any)}</option>
                                     ${approvalsState.targetNodes.map(n => html`<option value=${n.id}>${n.label}</option>`)}
                                 </select>
@@ -384,7 +384,7 @@ export function renderNodes(props: NodesProps) {
                     <div class="group-item">
                         <div class="group-label"><div class="group-title">${t("nodes.security.level" as any)}</div></div>
                         <div class="group-content">
-                            <select class="select-native" style="width: 240px;" .value=${approvalsState.defaults.security} @change=${(e: any) => approvalsState.onPatch([approvalsState.selectedScope === EXEC_APPROVALS_DEFAULT_SCOPE ? "defaults" : "agents", approvalsState.selectedScope, "security"], e.target.value)}>
+                            <select class="select-native" style="width: 240px;" .value=${approvalsState.defaults.security} @change=${(e: Event & { target: HTMLSelectElement }) => approvalsState.onPatch([approvalsState.selectedScope === EXEC_APPROVALS_DEFAULT_SCOPE ? "defaults" : "agents", approvalsState.selectedScope, "security"], e.target.value)}>
                                 ${SECURITY_OPTIONS.map(o => html`<option value=${o.value}>${o.label}</option>`)}
                             </select>
                         </div>

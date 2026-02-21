@@ -4,7 +4,7 @@ import { buildGatewayConnectionDetails, callGateway } from "../gateway/call.js";
 import { info } from "../globals.js";
 import { formatUsageReportLines, loadProviderUsageSummary } from "../infra/provider-usage.js";
 import type { RuntimeEnv } from "../runtime.js";
-const runSecurityAudit = async (opts: any) => ({
+const runSecurityAudit = async (_opts: unknown) => ({
   summary: { critical: 0, warn: 0, info: 0 },
   findings: [] as any[],
 });

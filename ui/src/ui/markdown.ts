@@ -67,7 +67,7 @@ const allowedAttrs = [
 ];
 
 const renderer = new marked.Renderer();
-renderer.html = (token: any) => escapeHtml(typeof token === 'string' ? token : token.text);
+renderer.html = (token: string | { text: string }) => escapeHtml(typeof token === 'string' ? token : token.text);
 
 renderer.code = ({ text, lang }) => {
   const language = (lang || "").split(" ")[0];

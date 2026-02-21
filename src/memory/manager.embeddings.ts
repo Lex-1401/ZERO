@@ -396,7 +396,7 @@ async function embedChunksWithOpenAiBatch(params: {
   if (missing.length === 0) return embeddings;
 
   const mapping = new Map<string, { index: number; hash: string }>();
-  const requests = missing.map((item) => {
+  const requests: OpenAiBatchRequest[] = missing.map((item) => {
     const customId = hashText(
       `${params.source}:${params.entry.path}:${item.chunk.startLine}:${item.chunk.endLine}:${item.chunk.hash}:${item.index}`,
     );
@@ -406,7 +406,7 @@ async function embedChunksWithOpenAiBatch(params: {
       method: "POST",
       url: OPENAI_BATCH_ENDPOINT,
       body: { model: openAi.model, input: item.chunk.text },
-    } as OpenAiBatchRequest;
+    };
   });
 
   const batchResult = await params.batch.runWithFallback({
@@ -476,7 +476,7 @@ async function embedChunksWithGeminiBatch(params: {
   if (missing.length === 0) return embeddings;
 
   const mapping = new Map<string, { index: number; hash: string }>();
-  const requests = missing.map((item) => {
+  const requests: GeminiBatchRequest[] = missing.map((item) => {
     const customId = hashText(
       `${params.source}:${params.entry.path}:${item.chunk.startLine}:${item.chunk.endLine}:${item.chunk.hash}:${item.index}`,
     );
@@ -485,7 +485,7 @@ async function embedChunksWithGeminiBatch(params: {
       custom_id: customId,
       content: { parts: [{ text: item.chunk.text }] },
       taskType: "RETRIEVAL_DOCUMENT",
-    } as GeminiBatchRequest;
+    };
   });
 
   const batchResult = await params.batch.runWithFallback({

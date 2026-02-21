@@ -235,6 +235,11 @@ export async function runWithModelFallback<T>(params: {
 
       lastError = normalized;
       const described = describeFailoverError(normalized);
+      if (i < candidates.length - 1) {
+        console.warn(
+          `[Gateway Resilient Edge] Model ${candidate.provider}/${candidate.model} failed. Fallback to Secondary provider...`,
+        );
+      }
       attempts.push({
         provider: candidate.provider,
         model: candidate.model,

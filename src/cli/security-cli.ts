@@ -15,11 +15,19 @@ type SecurityAuditOptions = {
   fix?: boolean;
 };
 
+interface SecurityFinding {
+  severity: "critical" | "warn" | "info";
+  checkId: string;
+  title: string;
+  detail: string;
+  remediation?: string;
+}
+
 // Stub for v1.0.0 Baseline
-async function runSecurityAudit(opts: any) {
+async function runSecurityAudit(_opts: unknown) {
   return {
     summary: { critical: 0, warn: 0, info: 0 },
-    findings: [] as any[],
+    findings: [] as SecurityFinding[],
   };
 }
 

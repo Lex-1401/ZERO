@@ -12,11 +12,11 @@ const SERVICE_AUDIT_CODES = {
   gatewayEntrypointMismatch: "gatewayEntrypointMismatch",
 } as const;
 
-async function auditGatewayServiceConfig(opts: any) {
-  return { issues: [] as any[] };
+async function auditGatewayServiceConfig(_opts: unknown) {
+  return { issues: [] as { level: string; code: string; message: string; detail?: string }[] };
 }
 
-function needsNodeRuntimeMigration(issues: any[]) {
+function needsNodeRuntimeMigration(_issues: unknown[]) {
   return false;
 }
 import type { RuntimeEnv } from "../runtime.js";

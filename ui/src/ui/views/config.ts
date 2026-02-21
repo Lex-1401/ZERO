@@ -46,8 +46,8 @@ export type ConfigProps = {
   onRunSoftwareUpdate: () => void;
   theme: string;
   language: string;
-  onThemeChange: (theme: any) => void;
-  onLanguageChange: (lang: any) => void;
+  onThemeChange: (theme: string) => void;
+  onLanguageChange: (lang: string) => void;
   onStartTour: () => void;
 };
 

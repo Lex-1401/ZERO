@@ -59,7 +59,7 @@ export class VoiceSession extends EventEmitter {
       if (this.backchannel.processEnergy(rms)) {
         this.triggerBackchannelReaction();
       }
-    } catch (err) {
+    } catch {
       // Silently ignore audio processing errors to keep the gateway alive
     }
 

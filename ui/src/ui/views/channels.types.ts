@@ -26,7 +26,7 @@ export type ChannelsProps = {
   whatsappQrDataUrl: string | null;
   whatsappConnected: boolean | null;
   whatsappBusy: boolean;
-  nostrProfileFormState?: any | null;
+  nostrProfileFormState?: Record<string, unknown> | null;
   nostrProfileAccountId?: string | null;
   configSchema: JsonSchema | null;
   configSchemaLoading: boolean;
@@ -42,9 +42,9 @@ export type ChannelsProps = {
   onConfigPatch: (path: Array<string | number>, value: unknown) => void;
   onConfigSave: () => void;
   onConfigReload: () => void;
-  onNostrProfileEdit?: (accountId: string, profile: any) => void;
+  onNostrProfileEdit?: (accountId: string, profile: Record<string, unknown>) => void;
   onNostrProfileCancel?: () => void;
-  onNostrProfileFieldChange?: (field: string, value: any) => void;
+  onNostrProfileFieldChange?: (field: string, value: unknown) => void;
   onNostrProfileSave?: () => void;
   onNostrProfileImport?: () => void;
   onNostrProfileToggleAdvanced?: () => void;

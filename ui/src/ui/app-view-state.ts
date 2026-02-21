@@ -44,7 +44,7 @@ export type AppViewState = {
   hello: GatewayHelloOk | null;
   lastError: string | null;
   eventLog: EventLogEntry[];
-  setupRecommendations: any[];
+  setupRecommendations: unknown[];
   setupLoading: boolean;
   setupStep: "scan" | "persona";
   assistantName: string;
@@ -65,7 +65,7 @@ export type AppViewState = {
   chatQueue: ChatQueueItem[];
   chatAttachments: File[];
   chatModel: string | null;
-  models: any[];
+  models: unknown[];
   modelsLoading: boolean;
   nodesLoading: boolean;
   nodes: Array<Record<string, unknown>>;
@@ -111,7 +111,7 @@ export type AppViewState = {
   whatsappLoginQrDataUrl: string | null;
   whatsappLoginConnected: boolean | null;
   whatsappBusy: boolean;
-  nostrProfileFormState: any | null;
+  nostrProfileFormState: Record<string, unknown> | null;
   nostrProfileAccountId: string | null;
 
   configFormDirty: boolean;
@@ -141,7 +141,7 @@ export type AppViewState = {
   skillsReport: SkillStatusReport | null;
   skillsError: string | null;
   docsLoading: boolean;
-  docsList: any[];
+  docsList: unknown[];
   docsSelectedId: string | null;
   docsContent: string | null;
   docsError: string | null;
@@ -183,7 +183,7 @@ export type AppViewState = {
   toggleSidebar: () => void;
   toggleZenMode: (value?: boolean) => void;
   chatStreamStartedAt: number | null;
-  compactionStatus: any;
+  compactionStatus: unknown;
   graphLoading: boolean;
   graphData: { nodes: unknown[]; edges: unknown[] } | null;
   graphError: string | null;
@@ -231,7 +231,7 @@ export type AppViewState = {
   handleCronRunsLoad: (jobId: string) => Promise<void>;
   handleCronFormUpdate: (path: string, value: unknown) => void;
   handleSessionsLoad: () => Promise<void>;
-  handleSessionsPatch: (key: string, patch: any) => Promise<void>;
+  handleSessionsPatch: (key: string, patch: Record<string, unknown>) => Promise<void>;
   handleLoadNodes: () => Promise<void>;
   handleLoadPresence: () => Promise<void>;
   handleLoadSkills: () => Promise<void>;
@@ -244,7 +244,7 @@ export type AppViewState = {
   setPassword: (next: string) => void;
   setSessionKey: (next: string) => void;
   setChatMessage: (next: string) => void;
-  handleSendChat: (messageOverride?: string, opts?: any) => Promise<void>;
+  handleSendChat: (messageOverride?: string, opts?: Record<string, unknown>) => Promise<void>;
   handleAbortChat: () => Promise<void>;
   handleToggleRecording: () => void;
   handleCancelRecording: () => void;
@@ -272,9 +272,9 @@ export type AppViewState = {
   handleSetupSkip: () => void;
   handlePersonaSelect: (personaId: string) => Promise<void>;
   handleSetSkillsTab: (tab: "installed" | "marketplace") => void;
-  handleNostrProfileEdit: (accountId: string, profile: any) => void;
+  handleNostrProfileEdit: (accountId: string, profile: Record<string, unknown>) => void;
   handleNostrProfileCancel: () => void;
-  handleNostrProfileFieldChange: (field: string, value: any) => void;
+  handleNostrProfileFieldChange: (field: string, value: unknown) => void;
   handleNostrProfileSave: () => Promise<void>;
   handleNostrProfileImport: () => Promise<void>;
   handleNostrProfileToggleAdvanced: () => void;

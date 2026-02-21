@@ -36,7 +36,7 @@ type LifecycleHost = {
   topbarObserver: ResizeObserver | null;
   onboarding: boolean;
   setupLoading: boolean;
-  setupRecommendations: any[];
+  setupRecommendations: unknown[];
   settings: import("./storage").UiSettings;
   handleStartTour: () => void;
 };

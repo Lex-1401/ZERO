@@ -4,8 +4,15 @@ import { icons } from "../icons";
 /**
  * Renders the Setup/Onboarding view with a 'Altair' premium executive aesthetic.
  */
+export interface SetupRecommendation {
+    type: string;
+    title: string;
+    description: string;
+    reason: string;
+}
+
 export function renderSetup(props: {
-    recommendations: any[];
+    recommendations: SetupRecommendation[];
     loading: boolean;
     step: "scan" | "persona";
     onApply: () => void;
@@ -126,11 +133,11 @@ export function renderSetup(props: {
                 <div style="padding: 40px; overflow-y: auto;">
                     ${props.recommendations.length > 0 ? html`
                         <div class="group-list">
-                            ${props.recommendations.map(r => html`
+                            ${props.recommendations.map((r: SetupRecommendation) => html`
                                 <div class="group-item" style="padding: 20px; flex-direction: column; align-items: flex-start; gap: 12px;">
                                     <div style="display: flex; gap: 12px; justify-content: space-between; width: 100%;">
                                         <div style="display: flex; gap: 12px; align-items: center;">
-                                            <div style="color: ${getIconColor(r.type)};">${(icons as any)[getIconNameForType(r.type)] || icons.settings}</div>
+                                            <div style="color: ${getIconColor(r.type)};">${(icons as Record<string, unknown>)[getIconNameForType(r.type)] || icons.settings}</div>
                                             <div style="font-weight: 600; font-size: 14px; color: var(--text-main);">${r.title}</div>
                                         </div>
                                         <div class="badge active">RECOMENDADO</div>

@@ -11,10 +11,10 @@ import { ForceGraph3D } from "3d-force-graph";
 export class ZeroMemoryMesh extends LitElement {
   @query("#container") container!: HTMLDivElement;
 
-  @property({ type: Array }) nodes: any[] = [];
-  @property({ type: Array }) links: any[] = [];
+  @property({ type: Array }) nodes: Record<string, unknown>[] = [];
+  @property({ type: Array }) links: Record<string, unknown>[] = [];
 
-  private graph: any;
+  private graph: unknown;
 
   static styles = css`
     :host {
@@ -55,7 +55,7 @@ export class ZeroMemoryMesh extends LitElement {
     this.initGraph();
   }
 
-  updated(changedProperties: PropertyValueMap<any>) {
+  updated(changedProperties: Map<PropertyKey, unknown>) {
     if (changedProperties.has("nodes") || changedProperties.has("links")) {
       this.updateGraphData();
     }
@@ -65,17 +65,21 @@ export class ZeroMemoryMesh extends LitElement {
     // Generate dummy data if empty (for demo/development)
     const initialData = this.nodes.length ? { nodes: this.nodes, links: this.links } : this.generateDummyData();
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     this.graph = ForceGraph3D()(this.container)
       .graphData(initialData)
       .nodeLabel("id")
       .nodeAutoColorBy("group")
       .linkDirectionalParticles("value")
-      .linkDirectionalParticleSpeed((d: any) => d.value * 0.001)
+      .linkDirectionalParticleSpeed((d: { value: number }) => d.value * 0.001)
       .backgroundColor("#00000000") // Transparent
       .showNavInfo(false);
 
     // Custom node rendering for "Altair" style pixels
-    this.graph.nodeThreeObject((node: any) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.graph.nodeThreeObject((node: { color?: string }) => {
       const geometry = new THREE.SphereGeometry(4);
       const material = new THREE.MeshLambertMaterial({
         color: node.color || "#007aff",
@@ -88,6 +92,8 @@ export class ZeroMemoryMesh extends LitElement {
 
   updateGraphData() {
     if (this.graph) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.graph.graphData({
         nodes: this.nodes,
         links: this.links

@@ -286,7 +286,7 @@ export class ZEROForceGraph extends LitElement {
 
 export function renderGraph(props: {
   loading: boolean;
-  data: { nodes: any[]; edges: any[] } | null;
+  data: { nodes: unknown[]; edges: unknown[] } | null;
   error: string | null;
   mode: "memory" | "actions";
   thinkingNodeIds?: string[];

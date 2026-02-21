@@ -7,7 +7,7 @@ export interface TourStep {
     desc: string;
     targetTab?: string;
     zenRequired?: boolean;
-    icon: any;
+    icon: unknown;
 }
 
 export function renderGuidedTour(props: {
