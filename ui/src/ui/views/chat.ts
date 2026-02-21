@@ -307,7 +307,10 @@ export function renderChat(props: ChatProps) {
                           class="btn btn--icon"
                           title="${t("chat.compose.nova_sessao" as any)}"
                           ?disabled=${!props.connected || (!canAbort && props.sending)}
-                          @click=${canAbort ? props.onAbort : props.onNewSession}
+                          @click=${() => {
+      try { if (navigator.vibrate) navigator.vibrate(50); } catch (e) { }
+      canAbort ? props.onAbort?.() : props.onNewSession();
+    }}
                           style="width: 32px; height: 32px; border-radius: 50%;"
                       >
                           ${canAbort ? icons.stop : icons.plus}
@@ -353,7 +356,10 @@ export function renderChat(props: ChatProps) {
                     <button
                         class="btn primary"
                         ?disabled=${!props.connected || (!props.draft.trim() && (!props.chatAttachments || props.chatAttachments.length === 0))}
-                        @click=${() => props.onSend()}
+                        @click=${() => {
+      try { if (navigator.vibrate) navigator.vibrate([10, 30, 10]); } catch (e) { }
+      props.onSend();
+    }}
                         style="border-radius: var(--radius-full); padding: 0 16px; height: 32px; font-size: 13px; font-weight: 600;"
                     >
                         ${isBusy ? t("chat.enqueue" as any) : t("chat.send" as any)} ${icons.arrowUp}
