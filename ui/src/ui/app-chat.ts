@@ -155,6 +155,26 @@ export async function refreshChat(host: ChatHost) {
   scheduleChatScroll(host as unknown as Parameters<typeof scheduleChatScroll>[0], true);
 }
 
+export async function predictivePrefetchChat(host: ZEROApp, sessionKey: string) {
+  if (!host.connected) return;
+  const store = host.chatStore;
+  if (store.historyCache.has(sessionKey)) return;
+  try {
+    const res = (await host.client?.request("chat.history", {
+      sessionKey,
+      limit: 50,
+    })) as { messages?: unknown[]; thinkingLevel?: string | null };
+    if (Array.isArray(res.messages)) {
+      store.historyCache.set(sessionKey, {
+        messages: res.messages,
+        thinkingLevel: res.thinkingLevel ?? null,
+      });
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
 export const flushChatQueueForEvent = flushChatQueue;
 
 type SessionDefaultsSnapshot = {

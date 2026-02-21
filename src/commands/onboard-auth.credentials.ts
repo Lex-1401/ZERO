@@ -113,6 +113,7 @@ export async function setVeniceApiKey(key: string, agentDir?: string) {
 }
 
 export const ZAI_DEFAULT_MODEL_REF = "zai/glm-4.7";
+export const MODAL_GLM5_MODEL_REF = "modal/glm-5-fp8";
 export const OPENROUTER_DEFAULT_MODEL_REF = "openrouter/auto";
 export const VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF = "vercel-ai-gateway/anthropic/claude-opus-4.5";
 
@@ -159,6 +160,90 @@ export async function setOpencodeZenApiKey(key: string, agentDir?: string) {
     credential: {
       type: "api_key",
       provider: "opencode",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
+export async function setModalApiKey(key: string, agentDir?: string) {
+  upsertAuthProfile({
+    profileId: "modal:default",
+    credential: {
+      type: "api_key",
+      provider: "modal",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
+export async function setGrokApiKey(key: string, agentDir?: string) {
+  upsertAuthProfile({
+    profileId: "xai:default",
+    credential: {
+      type: "api_key",
+      provider: "xai",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
+export async function setGroqApiKey(key: string, agentDir?: string) {
+  upsertAuthProfile({
+    profileId: "groq:default",
+    credential: {
+      type: "api_key",
+      provider: "groq",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
+export async function setCerebrasApiKey(key: string, agentDir?: string) {
+  upsertAuthProfile({
+    profileId: "cerebras:default",
+    credential: {
+      type: "api_key",
+      provider: "cerebras",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
+export async function setNebiusApiKey(key: string, agentDir?: string) {
+  upsertAuthProfile({
+    profileId: "nebius:default",
+    credential: {
+      type: "api_key",
+      provider: "nebius",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
+export async function setTogetherApiKey(key: string, agentDir?: string) {
+  upsertAuthProfile({
+    profileId: "together:default",
+    credential: {
+      type: "api_key",
+      provider: "together",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
+export async function setCohereApiKey(key: string, agentDir?: string) {
+  upsertAuthProfile({
+    profileId: "cohere:default",
+    credential: {
+      type: "api_key",
+      provider: "cohere",
       key,
     },
     agentDir: resolveAuthAgentDir(agentDir),

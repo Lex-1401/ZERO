@@ -111,6 +111,8 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 - 🎤 **Notas de voz** — Gancho de transcrição opcional.
 - 🖥️ **WebChat + app macOS** — UI local + companheiro de barra de menu.
 - 📱 **Nó iOS/Android** — Pareia como um nó e expõe Canvas + Chat.
+- 🚀 **Modelos de Elite (Fev 2026)** — Suporte nativo para **Gemini 3.1 Pro**, **Claude 4.6**, **Grok 4.20**, **GPT-5.3** e o ultra-eficiente **Tiny Aya** da Cohere.
+- ⚡ **Inferência Ultra-Rápida** — Integração com **Groq**, **Cerebras** e **Modal Labs** (GLM-5 FP8) para latência quase zero.
 
 Nota: Pi é o único caminho oficial para agente de codificação.
 

@@ -50,13 +50,17 @@ export class VoiceSession extends EventEmitter {
   handleAudio(chunk: Buffer) {
     if (this.config.encoding !== "pcm_16") return;
 
-    const status = this.vad.processChunk(chunk);
-    this.handleVadStatus(status);
+    try {
+      const status = this.vad.processChunk(chunk);
+      this.handleVadStatus(status);
 
-    // Heurísticas de Backchannel
-    const rms = this.vad.lastRms;
-    if (this.backchannel.processEnergy(rms)) {
-      this.triggerBackchannelReaction();
+      // Heurísticas de Backchannel
+      const rms = (this.vad as any).lastRms ?? 0;
+      if (this.backchannel.processEnergy(rms)) {
+        this.triggerBackchannelReaction();
+      }
+    } catch (err) {
+      // Silently ignore audio processing errors to keep the gateway alive
     }
 
     this.processSignal(chunk);

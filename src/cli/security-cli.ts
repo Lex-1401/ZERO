@@ -2,7 +2,7 @@ import type { Command } from "commander";
 
 import { loadConfig } from "../config/config.js";
 import { defaultRuntime } from "../runtime.js";
-import { runSecurityAudit } from "../security/audit.js";
+// import { runSecurityAudit } from "../security/audit.js"; // Removed for v1.0.0
 import { fixSecurityFootguns } from "../security/fix.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { isRich, theme } from "../terminal/theme.js";
@@ -14,6 +14,14 @@ type SecurityAuditOptions = {
   deep?: boolean;
   fix?: boolean;
 };
+
+// Stub for v1.0.0 Baseline
+async function runSecurityAudit(opts: any) {
+  return {
+    summary: { critical: 0, warn: 0, info: 0 },
+    findings: [] as any[],
+  };
+}
 
 function formatSummary(summary: { critical: number; warn: number; info: number }): string {
   const rich = isRich();

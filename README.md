@@ -1,20 +1,14 @@
 # ∅ ZERO — Sistema Operacional Pessoal Agêntico
 
-<p align="center">
-  <img src="README-header.png" alt="ZERO Header">
-</p>
+![ZERO Header](README-header.png)
 
 > **"A infraestrutura invisível é a mais resiliente."** ∅
 
-<p align="center">
-  <a href="https://github.com/Lex-1401/ZERO/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge" alt="CI Status"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge" alt="License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/release-v1.0.0-blue?style=for-the-badge" alt="Version"></a>
-</p>
+[![CI Status](https://img.shields.io/github/actions/workflow/status/Lex-1401/ZERO/ci.yml?branch=main&style=for-the-badge)](https://github.com/Lex-1401/ZERO/actions/workflows/ci.yml?branch=main)
+[![License](https://img.shields.io/badge/License-MIT-000000?style=for-the-badge)](LICENSE)
+[![Version](https://img.shields.io/badge/release-v1.0.0-blue?style=for-the-badge)](CHANGELOG.md)
 
-<p align="center">
-  <a href="README.md"><b>Português 🇧🇷</b></a> | <a href="README_EN.md">English 🇺🇸</a>
-</p>
+[Português 🇧🇷](README.md) | [English 🇺🇸](README_EN.md) | [Español 🇪🇸](README_ES.md)
 
 O **ZERO** busca o ponto de singularidade onde a computação pessoal encontra a autonomia soberana. Concebido e projetado como um **Sistema Operacional de Agentes (A-POS)**, o ZERO transforma sua máquina em uma fortaleza de inteligência local, eliminando a latência da nuvem e a vigilância corporativa.
 
@@ -49,6 +43,9 @@ O ZERO agora opera sob padrões de arquitetura avançados, elevando a estabilida
     * **Native Heartbeat**: Orquestração de tarefas críticas em Rust para latência zero.
     * **AIEOS Vault**: Conteinerização de identidade de agente p/ portabilidade total.
     * **Kernel-Only Mode**: Execução ultra-leve (`--kernel-only`) para servidores e background.
+6. **Modelos de Elite & Ultra-Velocidade (Fev 2026)**:
+    * Suporte nativo para a vanguarda: **Gemini 3.1 Pro**, **Claude 4.6**, **Grok 4.20**, **GPT-5.3** e **Tiny Aya**.
+    * Integração com **Groq**, **Cerebras** e **Modal Labs** (GLM-5 FP8) para latência quase zero.
 
 ---
 
@@ -90,7 +87,7 @@ O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **Ope
 
 ## 🛑 Para Quem é (e Para Quem Não é)
 
-**"A magia deve ser 'invisível'."**
+### "A magia deve ser 'invisível'."
 
 Se você é um usuário comum, não precisa se preocupar com a engenharia pesada (Rust, WebSockets, Vectors). O ZERO foi projetado para abstrair essa complexidade brutal em uma interface fluida que *simplesmente funciona*.
 
@@ -124,9 +121,7 @@ O ZERO liberta você:
 
 O ZERO é projetado com rigor de engenharia aeronáutica. Abaixo, o Blueprint da nossa arquitetura agêntica:
 
-<p align="center">
-  <img src="assets/blueprint-arch.png" alt="ZERO Architecture Blueprint">
-</p>
+![ZERO Architecture Blueprint](assets/blueprint-arch.png)
 
 *Esquema do Córtex Agêntico: Integração entre a Rust Engine e a Interface Altair.*
 
@@ -244,7 +239,7 @@ Para garantir estabilidade e performance:
 
 Escolha o método que melhor se adapta ao seu ambiente:
 
-#### 🍎 Instalação Rápida (Mac/Linux)
+### Instalação Rápida (Mac/Linux)
 
 Ideal para uso pessoal imediato. Abra o terminal e cole:
 
@@ -254,7 +249,7 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | 
 
 *(O script fará tudo: instalar dependências, configurar o Rust e iniciar o assistente de onboarding)*
 
-#### 🌐 Cloud / Servidor (Docker)
+### Cloud / Servidor (Docker)
 
 Ideal para manter seu ZERO online 24/7.
 
@@ -308,9 +303,7 @@ curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/deploy-docker.sh
 
 O módulo **Zero Sentinel** implementa defesas ativas contra ameaças vetoriais:
 
-<p align="center">
-  <img src="assets/sentinel-artwork.png" alt="Zero Sentinel Artwork" width="500">
-</p>
+![Zero Sentinel Artwork](assets/sentinel-artwork.png)
 
 * **LLM Security Guardrails (OWASP Top 10)**: Mitigação ativa de Injeção de Prompt, Injeção Indireta e Jailbreaks.
 * **Sentinel Diagnostic (Self-Healing)**: Mecanismo de diagnóstico que intercepta erros de terminal (exit codes, permissões, dependências) e gera remediações automáticas via IA.

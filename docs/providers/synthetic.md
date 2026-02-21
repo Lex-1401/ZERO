@@ -88,6 +88,21 @@ All models below use cost `0` (input/output/cache).
 | `hf:zai-org/GLM-4.6` | 198000 | 128000 | false | text |
 | `hf:deepseek-ai/DeepSeek-V3` | 128000 | 8192 | false | text |
 | `hf:Qwen/Qwen3-235B-A22B-Thinking-2507` | 256000 | 8192 | true | text |
+| `hf:zai-org/GLM-5` | 128000 | 128000 | true | text |
+| `hf:google/gemini-3.1-pro` | 2000000 | 8192 | true | text + multi |
+| `hf:anthropic/claude-opus-4.6` | 1000000 | 8192 | true | text + image |
+| `hf:anthropic/claude-sonnet-4.6` | 1000000 | 8192 | true | text + image |
+| `hf:xai/grok-4.20-beta` | 128000 | 8192 | true | text |
+| `hf:openai/gpt-5.3-codex` | 128000 | 8192 | true | text |
+| `hf:openai/gpt-5.2-instant` | 128000 | 8192 | false | text |
+| `hf:deepseek-ai/deepseek-v4` | 1000000 | 8192 | true | text |
+| `hf:cohere-ai/tiny-aya` | 128000 | 8192 | false | text |
+| `hf:groq/llama-3.3-70b-specdec` | 128000 | 8192 | false | text |
+| `hf:cerebras/llama-3.3-70b` | 128000 | 8192 | false | text |
+| `hf:nebius/llama-3.3-70b` | 128000 | 8192 | false | text |
+| `hf:together/llama-3.3-70b` | 128000 | 8192 | false | text |
+| `hf:xai/grok-4-heavy` | 2000000 | 8192 | true | text |
+| `hf:xai/grok-4.1-fast` | 2000000 | 8192 | false | text |
 
 ## Notes
 

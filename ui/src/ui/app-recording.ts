@@ -33,7 +33,7 @@ export async function startRecording(host: ZEROApp) {
         host.chatRecordingStartTime = Date.now();
     } catch (err) {
         console.error("Failed to start recording:", err);
-        host.lastError = "Não foi possível acessar o microfone.";
+        host.lastError = "Não foi possível acessar o microfone. Pela web, é necessário uma conexão segura (HTTPS).";
     }
 }
 

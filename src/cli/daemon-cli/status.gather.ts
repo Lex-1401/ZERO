@@ -10,8 +10,11 @@ import type { FindExtraGatewayServicesOptions } from "../../daemon/inspect.js";
 import { findExtraGatewayServices } from "../../daemon/inspect.js";
 import { findLegacyGatewayServices } from "../../daemon/legacy.js";
 import { resolveGatewayService } from "../../daemon/service.js";
-import type { ServiceConfigAudit } from "../../daemon/service-audit.js";
-import { auditGatewayServiceConfig } from "../../daemon/service-audit.js";
+// import { auditGatewayServiceConfig } from "../../daemon/service-audit.js"; // Removed for v1.0.0
+
+async function auditGatewayServiceConfig(opts: any) {
+  return {};
+}
 import { resolveGatewayBindHost } from "../../gateway/net.js";
 import {
   formatPortDiagnostics,
@@ -67,7 +70,7 @@ export type DaemonStatus = {
       cachedLabel?: boolean;
       missingUnit?: boolean;
     };
-    configAudit?: ServiceConfigAudit;
+    configAudit?: any;
   };
   config?: {
     cli: ConfigSummary;

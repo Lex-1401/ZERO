@@ -25,6 +25,9 @@ export class ChatStore implements ReactiveController {
     recording = false;
     recordingStartTime: number | null = null;
 
+    // Predictive UX Cache
+    historyCache = new Map<string, { messages: unknown[]; thinkingLevel: string | null }>();
+
     constructor(host: ReactiveControllerHost) {
         this.host = host;
         host.addController(this);

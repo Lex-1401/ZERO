@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">Português 🇧🇷</a> | <a href="README_EN.md"><b>English 🇺🇸</b></a>
+  <a href="README.md">Português 🇧🇷</a> | <a href="README_EN.md"><b>English 🇺🇸</b></a> | <a href="README_ES.md">Español 🇪🇸</a>
 </p>
 
 **ZERO** seeks the singularity point where personal computing meets sovereign autonomy. Conceived and designed as an **Agent Operating System**, ZERO transforms your machine into a fortress of local intelligence, eliminating cloud latency and corporate surveillance.
@@ -45,6 +45,9 @@ ZERO operates under the **Agentic Operating System** concept, an architecture wh
     * **Native Heartbeat**: Critical task orchestration in Rust for zero latency.
     * **AIEOS Vault**: Agent identity containerization for total portability.
     * **Kernel-Only Mode**: Ultra-light execution (`--kernel-only`) for servers and background.
+7. **Elite Models & Ultra-Speed (Feb 2026)**:
+    * Native support for: **Gemini 3.1 Pro**, **Claude 4.6**, **Grok 4.20**, **GPT-5.3** and **Tiny Aya**.
+    * Integration with **Groq**, **Cerebras** and **Modal Labs** (GLM-5 FP8) for near-zero latency.
 
 ---
 

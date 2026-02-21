@@ -54,6 +54,19 @@
     display: none;
   }
 
+  /* Restore text visibility that was hidden in 1024px breakpoint */
+  .sidebar-search {
+    display: flex !important;
+  }
+
+  .nav-group-title {
+    display: block !important;
+  }
+
+  .nav-item span {
+    display: inline !important;
+  }
+
   /* Topbar Adjustments */
   .topbar {
     grid-area: topbar;

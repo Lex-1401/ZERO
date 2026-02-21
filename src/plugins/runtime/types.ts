@@ -87,8 +87,9 @@ type CreateMemorySearchTool =
 type RegisterMemoryCli = typeof import("../../cli/memory-cli.js").registerMemoryCli;
 type DiscordMessageActions =
   typeof import("../../channels/plugins/actions/discord.js").discordMessageActions;
-type AuditDiscordChannelPermissions =
-  typeof import("../../discord/audit.js").auditDiscordChannelPermissions;
+// type AuditDiscordChannelPermissions =
+//   typeof import("../../discord/audit.js").auditDiscordChannelPermissions;
+type AuditDiscordChannelPermissions = any;
 type ListDiscordDirectoryGroupsLive =
   typeof import("../../discord/directory-live.js").listDiscordDirectoryGroupsLive;
 type ListDiscordDirectoryPeersLive =
@@ -113,10 +114,12 @@ type ResolveSlackUserAllowlist =
 type SendMessageSlack = typeof import("../../slack/send.js").sendMessageSlack;
 type MonitorSlackProvider = typeof import("../../slack/index.js").monitorSlackProvider;
 type HandleSlackAction = typeof import("../../agents/tools/slack-actions.js").handleSlackAction;
-type AuditTelegramGroupMembership =
-  typeof import("../../telegram/audit.js").auditTelegramGroupMembership;
-type CollectTelegramUnmentionedGroupIds =
-  typeof import("../../telegram/audit.js").collectTelegramUnmentionedGroupIds;
+// type AuditTelegramGroupMembership =
+//   typeof import("../../telegram/audit.js").auditTelegramGroupMembership;
+// type CollectTelegramUnmentionedGroupIds =
+//   typeof import("../../telegram/audit.js").collectTelegramUnmentionedGroupIds;
+type AuditTelegramGroupMembership = any;
+type CollectTelegramUnmentionedGroupIds = any;
 type ProbeTelegram = typeof import("../../telegram/probe.js").probeTelegram;
 type ResolveTelegramToken = typeof import("../../telegram/token.js").resolveTelegramToken;
 type SendMessageTelegram = typeof import("../../telegram/send.js").sendMessageTelegram;

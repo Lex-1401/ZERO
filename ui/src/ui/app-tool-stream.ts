@@ -201,13 +201,32 @@ export function isThinkingEvent(payload: AgentEventPayload): boolean {
   return false;
 }
 
+function triggerHaptic(pattern: number | number[]) {
+  if (typeof navigator !== "undefined" && navigator.vibrate) {
+    try {
+      navigator.vibrate(pattern);
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 export function handleAgentEvent(host: ToolStreamHost, payload?: AgentEventPayload) {
   if (!payload) return;
 
   // Handle compaction events
   if (payload.stream === "compaction") {
     handleCompactionEvent(host as CompactionHost, payload);
+    const phase = typeof (payload.data ?? {}).phase === "string" ? (payload.data ?? {}).phase : "";
+    if (phase === "start") triggerHaptic([20, 30, 20]);
     return;
+  }
+
+  // Trigger haptic on specific thinking stages
+  if (payload.stream === "lifecycle" && payload.data?.phase === "start") {
+    triggerHaptic(10);
+  } else if (payload.stream === "tool" && payload.data?.phase === "start") {
+    triggerHaptic(15);
   }
 
   if (payload.stream !== "tool") return;

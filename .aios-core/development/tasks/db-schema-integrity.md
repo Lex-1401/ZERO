@@ -594,7 +594,7 @@ EOF
 
 Display verification summary:
 
-```
+```text
 ✅ SCHEMA INTEGRITY CHECK COMPLETE
 
 Database: [redacted]

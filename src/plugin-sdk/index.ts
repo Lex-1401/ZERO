@@ -249,7 +249,7 @@ export {
   resolveDiscordAccount,
   type ResolvedDiscordAccount,
 } from "../discord/accounts.js";
-export { collectDiscordAuditChannelIds } from "../discord/audit.js";
+// export { collectDiscordAuditChannelIds } from "../discord/audit.js"; // Removed for v1.0.0
 export { discordOnboardingAdapter } from "../channels/plugins/onboarding/discord.js";
 export {
   looksLikeDiscordTargetId,

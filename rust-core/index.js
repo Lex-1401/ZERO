@@ -58,12 +58,31 @@ function loadNativeModule() {
 
 const nativeModule = loadNativeModule();
 
-export const RatchetDedupe = nativeModule.RatchetDedupe;
-export const VadEngine = nativeModule.VadEngine;
-export const MetricsEngine = nativeModule.MetricsEngine;
-export const triggerPanic = nativeModule.triggerPanic;
-export const resetPanic = nativeModule.resetPanic;
-export const isPanicMode = nativeModule.isPanicMode;
-export const ModelMetric = nativeModule.ModelMetric;
-export const MetricsSummary = nativeModule.MetricsSummary;
-export const SecurityEngine = nativeModule.SecurityEngine;
+// Helper to provide a fallback class for missing native constructors
+function getNativeOrStub(name, mockMethods = []) {
+    if (nativeModule[name]) return nativeModule[name];
+    console.warn(`[rust-core] Native class ${name} not found, using stub.`);
+    return class {
+        constructor() {
+            for (const method of mockMethods) {
+                this[method] = () => {
+                    console.warn(`[rust-core] Method ${name}.${method} called on stub.`);
+                    return false;
+                };
+            }
+        }
+    };
+}
+
+export const RatchetDedupe = getNativeOrStub('RatchetDedupe', ['process']);
+export const VadEngine = getNativeOrStub('VadEngine', ['processChunk']);
+export const MetricsEngine = getNativeOrStub('MetricsEngine', ['record']);
+export const SecurityEngine = getNativeOrStub('SecurityEngine', ['audit']);
+export const BackchannelEngine = getNativeOrStub('BackchannelEngine', ['processEnergy']);
+export const HeartbeatManager = getNativeOrStub('HeartbeatManager', ['pulse']);
+
+export const triggerPanic = nativeModule.triggerPanic || (() => { });
+export const resetPanic = nativeModule.resetPanic || (() => { });
+export const isPanicMode = nativeModule.isPanicMode || (() => false);
+export const ModelMetric = nativeModule.ModelMetric || {};
+export const MetricsSummary = nativeModule.MetricsSummary || {};

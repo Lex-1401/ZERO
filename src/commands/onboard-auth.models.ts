@@ -24,6 +24,12 @@ export const KIMI_CODE_MAX_TOKENS = 32768;
 export const KIMI_CODE_HEADERS = { "User-Agent": "KimiCLI/0.77" } as const;
 export const KIMI_CODE_COMPAT = { supportsDeveloperRole: false } as const;
 
+export const MODAL_BASE_URL = "https://api.us-west-2.modal.direct/v1";
+export const MODAL_GLM5_MODEL_ID = "glm-5-fp8";
+export const MODAL_GLM5_MODEL_REF = `modal/${MODAL_GLM5_MODEL_ID}`;
+export const MODAL_DEFAULT_CONTEXT_WINDOW = 128000;
+export const MODAL_DEFAULT_MAX_TOKENS = 8192;
+
 // Pricing: MiniMax doesn't publish public rates. Override in models.json for accurate costs.
 export const MINIMAX_API_COST = {
   input: 15,

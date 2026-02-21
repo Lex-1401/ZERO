@@ -15,6 +15,7 @@ import {
   OPENROUTER_DEFAULT_MODEL_REF,
   VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF,
   ZAI_DEFAULT_MODEL_REF,
+  MODAL_GLM5_MODEL_REF,
 } from "./onboard-auth.credentials.js";
 import {
   buildKimiCodeModelDefinition,
@@ -25,6 +26,10 @@ import {
   MOONSHOT_BASE_URL,
   MOONSHOT_DEFAULT_MODEL_ID,
   MOONSHOT_DEFAULT_MODEL_REF,
+  MODAL_BASE_URL,
+  MODAL_GLM5_MODEL_ID,
+  MODAL_DEFAULT_CONTEXT_WINDOW,
+  MODAL_DEFAULT_MAX_TOKENS,
 } from "./onboard-auth.models.js";
 
 export function applyZaiConfig(cfg: ZEROConfig): ZEROConfig {
@@ -456,6 +461,78 @@ export function applyAuthProfileConfig(
       ...cfg.auth,
       profiles,
       ...(order ? { order } : {}),
+    },
+  };
+}
+
+export function applyModalProviderConfig(cfg: ZEROConfig): ZEROConfig {
+  const models = { ...cfg.agents?.defaults?.models };
+  models[MODAL_GLM5_MODEL_REF] = {
+    ...models[MODAL_GLM5_MODEL_REF],
+    alias: models[MODAL_GLM5_MODEL_REF]?.alias ?? "GLM-5",
+  };
+
+  const providers = { ...cfg.models?.providers };
+  const existingProvider = providers.modal;
+  const { apiKey: existingApiKey, ...existingProviderRest } = (existingProvider ?? {}) as Record<
+    string,
+    unknown
+  > as { apiKey?: string };
+  const resolvedApiKey = typeof existingApiKey === "string" ? existingApiKey : undefined;
+  const normalizedApiKey = resolvedApiKey?.trim();
+
+  providers.modal = {
+    ...existingProviderRest,
+    baseUrl: MODAL_BASE_URL,
+    api: "openai-completions",
+    ...(normalizedApiKey ? { apiKey: normalizedApiKey } : {}),
+    models: [
+      {
+        id: MODAL_GLM5_MODEL_ID,
+        name: "GLM-5 FP8 (Modal)",
+        reasoning: true,
+        input: ["text"],
+        cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+        contextWindow: MODAL_DEFAULT_CONTEXT_WINDOW,
+        maxTokens: MODAL_DEFAULT_MAX_TOKENS,
+      },
+    ],
+  };
+
+  return {
+    ...cfg,
+    agents: {
+      ...cfg.agents,
+      defaults: {
+        ...cfg.agents?.defaults,
+        models,
+      },
+    },
+    models: {
+      mode: cfg.models?.mode ?? "merge",
+      providers,
+    },
+  };
+}
+
+export function applyModalConfig(cfg: ZEROConfig): ZEROConfig {
+  const next = applyModalProviderConfig(cfg);
+  const existingModel = next.agents?.defaults?.model;
+  return {
+    ...next,
+    agents: {
+      ...next.agents,
+      defaults: {
+        ...next.agents?.defaults,
+        model: {
+          ...(existingModel && "fallbacks" in (existingModel as Record<string, unknown>)
+            ? {
+                fallbacks: (existingModel as { fallbacks?: string[] }).fallbacks,
+              }
+            : undefined),
+          primary: MODAL_GLM5_MODEL_REF,
+        },
+      },
     },
   };
 }

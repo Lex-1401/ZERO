@@ -1,6 +1,4 @@
----
-
-# verify-utilities
+# Verify Utilities
 
 **Purpose**: Systematically verify all utilities in `.aios-core/scripts/` to determine their functional status, classify them as WORKING/FIXABLE/DEPRECATED, and generate actionable recommendations for maintenance and cleanup.
 
@@ -9,16 +7,19 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -294,7 +295,7 @@ For utilities with ambiguous status:
 
 For FIXABLE utilities, calculate priority score:
 
-```
+```text
 Priority Score = (Integration Count × 10) + (Completion % × 5) - (Fix Hours)
 ```
 

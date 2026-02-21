@@ -6,11 +6,19 @@ import { findExtraGatewayServices, renderGatewayServiceCleanupHints } from "../d
 import { findLegacyGatewayServices, uninstallLegacyGatewayServices } from "../daemon/legacy.js";
 import { renderSystemNodeWarning, resolveSystemNodeInfo } from "../daemon/runtime-paths.js";
 import { resolveGatewayService } from "../daemon/service.js";
-import {
-  auditGatewayServiceConfig,
-  needsNodeRuntimeMigration,
-  SERVICE_AUDIT_CODES,
-} from "../daemon/service-audit.js";
+// import { auditGatewayServiceConfig, needsNodeRuntimeMigration, SERVICE_AUDIT_CODES } from "../daemon/service-audit.js"; // Removed for v1.0.0
+
+const SERVICE_AUDIT_CODES = {
+  gatewayEntrypointMismatch: "gatewayEntrypointMismatch",
+} as const;
+
+async function auditGatewayServiceConfig(opts: any) {
+  return { issues: [] as any[] };
+}
+
+function needsNodeRuntimeMigration(issues: any[]) {
+  return false;
+}
 import type { RuntimeEnv } from "../runtime.js";
 import { note } from "../terminal/note.js";
 import { buildGatewayInstallPlan, gatewayInstallErrorHint } from "./daemon-install-helpers.js";

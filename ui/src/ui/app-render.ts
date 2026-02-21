@@ -512,7 +512,7 @@ export function renderApp(state: AppViewState) {
         language: getLanguage(),
         onRawChange: (next: string) => (state.configRaw = next),
         onFormModeChange: (next: "form" | "raw") => (state.configFormMode = next),
-        onFormPatch: (path: any, value: any) => updateConfigFormValue(state, path as any, value),
+        onFormPatch: (path: string[], value: unknown) => updateConfigFormValue(state, path, value),
         onSearchChange: (next: string) => (state.configSearchQuery = next),
         onSectionChange: (next: string | null) => (state.configActiveSection = next),
         onSubsectionChange: (next: string | null) => (state.configActiveSubsection = next),
@@ -523,10 +523,10 @@ export function renderApp(state: AppViewState) {
         updateStatus: state.updateStatus,
         updateStatusLoading: state.updateStatusLoading,
         updateStatusError: state.updateStatusError,
-        onRefreshUpdateStatus: (opts: any) => state.handleLoadUpdateStatus(opts),
+        onRefreshUpdateStatus: (opts: Record<string, unknown>) => state.handleLoadUpdateStatus(opts),
         onRunSoftwareUpdate: () => state.handleRunSoftwareUpdate(),
         onThemeChange: (next: ThemeMode) => state.setTheme(next),
-        onLanguageChange: (next: any) => setLanguage(next as Language),
+        onLanguageChange: (next: Language) => setLanguage(next),
         onStartTour: () => state.handleStartTour(),
       } as any)
       : nothing

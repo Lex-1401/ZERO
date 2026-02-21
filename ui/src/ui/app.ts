@@ -61,6 +61,7 @@ import {
 import {
   handleAbortChat as handleAbortChatInternal,
   handleSendChat as handleSendChatInternal,
+  predictivePrefetchChat,
   removeQueuedMessage as removeQueuedMessageInternal,
 } from "./app-chat";
 import {
@@ -154,7 +155,7 @@ export class ZEROApp extends LitElement {
   @state() hello: GatewayHelloOk | null = null;
   @state() lastError: string | null = null;
   @state() setupLoading = false;
-  @state() setupRecommendations: any[] = [];
+  @state() setupRecommendations: unknown[] = [];
   @state() setupStep: "scan" | "persona" = "scan";
   @state() eventLog: EventLogEntry[] = [];
   @state() tourActive = false;
@@ -341,7 +342,7 @@ export class ZEROApp extends LitElement {
   @state() whatsappLoginQrDataUrl: string | null = null;
   @state() whatsappLoginConnected: boolean | null = null;
   @state() whatsappBusy = false;
-  @state() nostrProfileFormState: any | null = null;
+  @state() nostrProfileFormState: Record<string, unknown> | null = null;
   @state() nostrProfileAccountId: string | null = null;
   @state() missionControlLoading = false;
   @state() missionControlSummary: TelemetrySummary | null = null;
@@ -467,7 +468,7 @@ export class ZEROApp extends LitElement {
   @state() isUpdating = false;
 
   @state() modelsLoading = false;
-  @state() models: any[] = [];
+  @state() models: unknown[] = [];
 
   client: GatewayBrowserClient | null = null;
   private chatScrollFrame: number | null = null;
@@ -750,7 +751,7 @@ export class ZEROApp extends LitElement {
   handleUpdateSkillEdit(key: string, value: string) { return updateSkillEdit(this as unknown as AppViewState, key, value); }
   handleSaveSkillApiKey(key: string, apiKey: string) { return saveSkillApiKey(this as unknown as AppViewState, key); }
   handleSetSkillsTab(tab: "installed" | "marketplace") { this.skillsTab = tab; }
-  async handleSessionsPatch(key: string, patch: any) {
+  async handleSessionsPatch(key: string, patch: Record<string, unknown>) {
     return patchSession(this as unknown as AppViewState, key, patch);
   }
   async handleSessionsDelete(key: string) {
@@ -774,7 +775,16 @@ export class ZEROApp extends LitElement {
   handleCronAdd() { return addCronJob(this as unknown as AppViewState); }
   handleCronRunsLoad(jobId: string) { return loadCronRuns(this as unknown as AppViewState, jobId); }
   handleCronFormUpdate(path: string, value: unknown) { /* implement if needed */ }
-  handleSessionsLoad() { return loadSessions(this as unknown as AppViewState); }
+  async handleSessionsLoad() {
+    await loadSessions(this as unknown as AppViewState);
+    // Predictive UX: Prefetch top 3 most recent sessions
+    const sessions = this.sessionsResult?.sessions ?? [];
+    for (const session of sessions.slice(0, 3)) {
+      if (session.key !== this.sessionKey) {
+        void predictivePrefetchChat(this, session.key);
+      }
+    }
+  }
   handleLoadNodes() { return loadNodes(this as unknown as AppViewState); }
   handleLoadPresence() { return loadPresence(this as unknown as AppViewState); }
   handleLoadSkills() { return loadSkills(this as unknown as AppViewState); }

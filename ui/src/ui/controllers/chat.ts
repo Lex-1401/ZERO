@@ -30,6 +30,16 @@ export async function loadChatHistory(state: ChatState) {
     state.chatLoading = false;
     return;
   }
+
+  // Check Predictive UX Cache
+  const store = (state as any).chatStore;
+  if (store && store.historyCache.has(state.sessionKey)) {
+    const cached = store.historyCache.get(state.sessionKey);
+    state.chatMessages = cached.messages;
+    state.chatThinkingLevel = cached.thinkingLevel;
+    // We still load in background to get the full history/latest updates
+  }
+
   state.chatLoading = true;
   state.lastError = null;
   try {
@@ -37,8 +47,15 @@ export async function loadChatHistory(state: ChatState) {
       sessionKey: state.sessionKey,
       limit: 200,
     })) as { messages?: unknown[]; thinkingLevel?: string | null };
-    state.chatMessages = Array.isArray(res.messages) ? res.messages : [];
-    state.chatThinkingLevel = res.thinkingLevel ?? null;
+    const messages = Array.isArray(res.messages) ? res.messages : [];
+    const thinkingLevel = res.thinkingLevel ?? null;
+    state.chatMessages = messages;
+    state.chatThinkingLevel = thinkingLevel;
+
+    // Update Cache
+    if (store) {
+      store.historyCache.set(state.sessionKey, { messages, thinkingLevel });
+    }
   } catch (err) {
     state.lastError = String(err);
   } finally {
