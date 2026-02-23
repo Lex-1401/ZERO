@@ -130,3 +130,17 @@ outputs/minds/*.vault
 
 # Decisões estratégicas (Preservação de Soberania)
 *.sovereign-intelligence.vault
+
+# AIOS Local (AIOS)
+.aios-core/local/
+.claude/settings.local.json
+.aios/install-log.txt
+
+# Local Android/Java Setup
+android-sdk/
+java21/
+local.properties
+.env.backup.*
+*.exp
+test-results.json
+dist/

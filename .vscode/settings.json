@@ -1,0 +1,12 @@
+{
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "/Users/lex/Downloads/Arquivos/ZERO/java21/Contents/Home",
+      "default": true
+    }
+  ],
+  "java.jdt.ls.java.home": "/Users/lex/Downloads/Arquivos/ZERO/java21/Contents/Home",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "git.ignoreLimitWarning": true
+}
