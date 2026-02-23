@@ -73,12 +73,15 @@
     /* 
        Elite Shadows & Optical Effects
     */
-    --glass-blur: blur(40px) saturate(180%);
-    --shadow-vision: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-    --shadow-floating: 0 20px 50px rgba(0, 0, 0, 0.8);
-    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --glow-blue: 0 0 20px rgba(var(--accent-blue-rgb), 0.3);
-    --glow-red: 0 0 20px rgba(var(--accent-red-rgb), 0.3);
+    --glass-blur: blur(50px) saturate(210%);
+    --shadow-vision: 0 8px 32px rgba(0, 0, 0, 0.45),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 0 0 1px rgba(0, 0, 0, 0.4);
+    --shadow-floating: 0 20px 80px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.25);
+    --glow-blue: 0 0 30px rgba(var(--accent-blue-rgb), 0.25);
+    --glow-red: 0 0 30px rgba(var(--accent-red-rgb), 0.25);
 
     /* 
        Advanced Typography System
@@ -159,17 +162,47 @@
 
 body {
     margin: 0;
-    background-color: var(--bg-main);
+    background-color: #020203;
     background-image:
-        radial-gradient(at 0% 0%, rgba(var(--accent-blue-rgb), 0.05) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(var(--accent-purple-rgb), 0.05) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(20, 20, 25, 1) 0px, transparent 100%);
     background-size: 200% 200%;
-    animation: mesh-drift 20s ease infinite alternate;
+    animation: mesh-drift 30s ease infinite alternate;
     color: var(--text-main);
     font-family: 'Inter', -apple-system, sans-serif;
+    letter-spacing: -0.01em;
     font-size: var(--font-size-base);
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 9999;
 }
 
 code,

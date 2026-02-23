@@ -1,5 +1,6 @@
 import { html, nothing } from "lit";
 import { icons } from "../icons";
+import { t } from "../i18n";
 
 /**
  * Renders the Setup/Onboarding view with a 'Altair' premium executive aesthetic.
@@ -25,8 +26,8 @@ export function renderSetup(props: {
                 <div style="width: 64px; height: 64px; border-radius: 18px; background: linear-gradient(135deg, var(--accent-magenta), var(--accent-orange)); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(255, 45, 85, 0.4); margin-bottom: 32px;">
                     <div class="animate-spin" style="color: white; transform: scale(1.2);">${icons.loader}</div>
                 </div>
-                <h2 style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">Iniciando Sistema</h2>
-                <p style="font-size: 13px; color: var(--text-muted);">Calibrando ambiente operacional...</p>
+                <h2 style="font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">${t("setup.loading.title" as any)}</h2>
+                <p style="font-size: 13px; color: var(--text-muted);">${t("setup.loading.desc" as any)}</p>
             </div>
         `;
     }
@@ -42,43 +43,43 @@ export function renderSetup(props: {
                             <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--text-main); color: var(--bg-main); display: flex; align-items: center; justify-content: center; margin-bottom: 32px;">
                                 ${icons.user}
                             </div>
-                            <h1 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; letter-spacing: -0.02em;">Identidade Operacional</h1>
+                            <h1 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; letter-spacing: -0.02em;">${t("setup.persona.title" as any)}</h1>
                             <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-                                O sistema adapta seus protocolos neurais baseando-se no seu perfil de uso. Selecione o arquétipo que melhor descreve sua intenção principal.
+                                ${t("setup.persona.desc" as any)}
                             </p>
                          </div>
-                         <button class="btn ghost" style="justify-content: flex-start; padding-left: 0;" @click=${props.onSkip}>Pular configuração →</button>
+                         <button class="btn ghost" style="justify-content: flex-start; padding-left: 0;" @click=${props.onSkip}>${t("setup.persona.skip" as any)}</button>
                     </div>
 
                     <!-- Content -->
                     <div style="padding: 40px; overflow-y: auto;">
                         <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
-                             ${[
+                              ${[
                 {
                     id: "dev",
-                    name: "Engenheiro de Software",
-                    desc: "Desenvolvimento & Infraestrutura",
+                    name: t("setup.persona.dev.name" as any),
+                    desc: t("setup.persona.dev.desc" as any),
                     icon: "fileCode",
                     color: "var(--accent-cyan)"
                 },
                 {
                     id: "copy",
-                    name: "Criador de Conteúdo",
-                    desc: "Marketing & Redação",
+                    name: t("setup.persona.copy.name" as any),
+                    desc: t("setup.persona.copy.desc" as any),
                     icon: "edit",
                     color: "var(--accent-purple)"
                 },
                 {
                     id: "research",
-                    name: "Analista de Dados",
-                    desc: "Pesquisa & Síntese",
+                    name: t("setup.persona.research.name" as any),
+                    desc: t("setup.persona.research.desc" as any),
                     icon: "search",
                     color: "var(--accent-orange)"
                 },
                 {
                     id: "general",
-                    name: "Assistente Executivo",
-                    desc: "Produtividade Geral",
+                    name: t("setup.persona.general.name" as any),
+                    desc: t("setup.persona.general.desc" as any),
                     icon: "checkSquare",
                     color: "var(--accent-green)"
                 }
@@ -118,14 +119,14 @@ export function renderSetup(props: {
                         <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--text-main); color: var(--bg-main); display: flex; align-items: center; justify-content: center; margin-bottom: 32px;">
                             ${icons.sliders}
                         </div>
-                        <h1 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; letter-spacing: -0.02em;">Otimização de Hardware</h1>
+                        <h1 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; letter-spacing: -0.02em;">${t("setup.hardware.title" as any)}</h1>
                         <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-                            O sistema realizou uma varredura diagnóstica e identificou oportunidades para maximizar a performance na sua máquina.
+                            ${t("setup.hardware.desc" as any)}
                         </p>
                      </div>
                      <div style="display:flex; flex-direction: column; gap: 8px;">
-                        <button class="btn primary" style="width: 100%; justify-content: center; height: 40px; font-weight: 600;" @click=${props.onApply}>Aplicar Otimizações</button>
-                        <button class="btn ghost" style="width: 100%; justify-content: center;" @click=${props.onSkip}>Ignorar</button>
+                        <button class="btn primary" style="width: 100%; justify-content: center; height: 40px; font-weight: 600;" @click=${props.onApply}>${t("setup.hardware.apply" as any)}</button>
+                        <button class="btn ghost" style="width: 100%; justify-content: center;" @click=${props.onSkip}>${t("setup.hardware.skip" as any)}</button>
                      </div>
                 </div>
 
@@ -140,11 +141,11 @@ export function renderSetup(props: {
                                             <div style="color: ${getIconColor(r.type)};">${(icons as Record<string, unknown>)[getIconNameForType(r.type)] || icons.settings}</div>
                                             <div style="font-weight: 600; font-size: 14px; color: var(--text-main);">${r.title}</div>
                                         </div>
-                                        <div class="badge active">RECOMENDADO</div>
+                                        <div class="badge active">${t("setup.hardware.recommended" as any)}</div>
                                     </div>
                                     <div style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">${r.description}</div>
                                     <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); background: rgba(0,0,0,0.2); padding: 6px 8px; border-radius: 6px; width: 100%;">
-                                        Diagnóstico: ${r.reason}
+                                        ${t("setup.hardware.diagnosis" as any, { reason: r.reason })}
                                     </div>
                                 </div>
                             `)}
@@ -152,8 +153,8 @@ export function renderSetup(props: {
                     ` : html`
                          <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-muted);">
                             <div style="font-size: 40px; margin-bottom: 16px; opacity: 0.2;">${icons.checkCircle}</div>
-                            <div style="font-weight: 600;">Sistema Nominal</div>
-                            <div style="font-size: 13px; margin-top: 4px;">Nenhuma otimização necessária.</div>
+                            <div style="font-weight: 600;">${t("setup.hardware.nominal" as any)}</div>
+                            <div style="font-size: 13px; margin-top: 4px;">${t("setup.hardware.none" as any)}</div>
                         </div>
                     `}
                 </div>

@@ -22,6 +22,7 @@ export type ConfigProps = {
   updateStatus: import("../types").UpdateCheckResult | null;
   updateStatusLoading: boolean;
   updateStatusError: string | null;
+  error: string | null;
   connected: boolean;
   schema: unknown | null;
   schemaLoading: boolean;
@@ -87,20 +88,20 @@ const sidebarIcons = {
 };
 
 // Section definitions
-const SECTIONS: Array<{ key: string; label: string }> = [
-  { key: "env", label: "Ambiente" },
-  { key: "update", label: "Atualizações" },
-  { key: "agents", label: "Agentes" },
-  { key: "models", label: "Modelos" },
-  { key: "auth", label: "Autenticação" },
-  { key: "channels", label: "Canais" },
-  { key: "messages", label: "Mensagens" },
-  { key: "commands", label: "Comandos" },
-  { key: "hooks", label: "Hooks" },
-  { key: "skills", label: "Habilidades" },
-  { key: "tools", label: "Ferramentas" },
-  { key: "gateway", label: "Gateway" },
-  { key: "wizard", label: "Assistente de Configuração" },
+const getSections = () => [
+  { key: "env", label: t("config.section.env.label" as any) },
+  { key: "update", label: t("settings.update") },
+  { key: "agents", label: t("config.section.agents.label" as any) },
+  { key: "models", label: t("config.section.models.label" as any) },
+  { key: "auth", label: t("config.section.auth.label" as any) },
+  { key: "channels", label: t("config.section.channels.label" as any) },
+  { key: "messages", label: t("config.section.messages.label" as any) },
+  { key: "commands", label: t("config.section.commands.label" as any) },
+  { key: "hooks", label: t("config.section.hooks.label" as any) },
+  { key: "skills", label: t("config.section.skills.label" as any) },
+  { key: "tools", label: t("config.section.tools.label" as any) },
+  { key: "gateway", label: t("config.section.gateway.label" as any) },
+  { key: "wizard", label: t("config.section.wizard.label" as any) },
 ];
 
 type SubsectionEntry = {
@@ -203,9 +204,10 @@ export function renderConfig(props: ConfigProps) {
     : false;
 
   const schemaProps = analysis.schema?.properties ?? {};
-  const availableSections = SECTIONS.filter(s => s.key in schemaProps);
+  const sections = getSections();
+  const availableSections = sections.filter(s => s.key in schemaProps);
 
-  const knownKeys = new Set(SECTIONS.map(s => s.key));
+  const knownKeys = new Set(sections.map(s => s.key));
   const extraSections = Object.keys(schemaProps)
     .filter(k => !knownKeys.has(k))
     .map(k => ({ key: k, label: k.charAt(0).toUpperCase() + k.slice(1) }));
@@ -272,7 +274,11 @@ export function renderConfig(props: ConfigProps) {
     const registry = status?.registry;
     const pm = status?.packageManager;
 
-    const hasUpdate = (git?.behind ?? 0) > 0 || (registry?.latestVersion && registry.latestVersion !== "0.0.0" && registry.latestVersion !== (git?.tag ?? "0.0.0"));
+    const normalizeVer = (v?: string | null) => v?.replace(/^v/, "").trim() || "0.0.0";
+    const registryVer = normalizeVer(registry?.latestVersion);
+    const currentVer = normalizeVer(git?.tag);
+
+    const hasUpdate = (git?.behind ?? 0) > 0 || (registryVer !== "0.0.0" && registryVer !== currentVer);
 
     return html`
       <div class="animate-fade-in" style="display: flex; flex-direction: column; gap: 24px;">
@@ -318,7 +324,7 @@ export function renderConfig(props: ConfigProps) {
                         <div class="info-value" style="font-family: var(--font-mono); font-size: 18px; color: ${hasUpdate ? "var(--accent-blue)" : "var(--text-muted)"};">
                             ${registry?.latestVersion ?? "checking..."}
                         </div>
-                        ${git?.behind ? html`<div class="info-sub" style="font-size: 11px; color: var(--accent-blue);">${git.behind} commits behind</div>` : nothing}
+                        ${git?.behind ? html`<div class="info-sub" style="font-size: 11px; color: var(--accent-blue); animation: pulse-intense 2s infinite;">${git.behind} commits behind</div>` : nothing}
                     </div>
 
                     <!-- Package Manager -->
@@ -330,17 +336,17 @@ export function renderConfig(props: ConfigProps) {
                     </div>
                 </div>
 
-                <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+                <div style="margin-top: 32px; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);">
                     <div>
                         ${hasUpdate ? html`
-                            <div style="color: var(--accent-blue); font-weight: 600; font-size: 14px;">${t("config.update.ready" as any)}</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">${t("config.update.ready.desc" as any)}</div>
+                            <div style="color: var(--accent-blue); font-weight: 700; font-size: 15px; letter-spacing: -0.01em;">${t("config.update.ready" as any)}</div>
+                            <div style="font-size: 12px; color: var(--text-muted); opacity: 0.8;">${t("config.update.ready.desc" as any)}</div>
                         ` : html`
-                            <div style="color: var(--success); font-weight: 600; font-size: 14px;">${t("config.update.uptodate" as any)}</div>
-                            <div style="font-size: 12px; color: var(--text-muted);">${t("config.update.uptodate.desc" as any)}</div>
+                            <div style="color: var(--success); font-weight: 700; font-size: 15px; letter-spacing: -0.01em;">${t("config.update.uptodate" as any)}</div>
+                            <div style="font-size: 12px; color: var(--text-muted); opacity: 0.8;">${t("config.update.uptodate.desc" as any)}</div>
                         `}
                     </div>
-                    <button class="btn primary" ?disabled=${!hasUpdate || props.updateRunning} @click=${() => props.onRunSoftwareUpdate()}>
+                    <button class="btn primary" ?disabled=${props.updateRunning || !hasUpdate} @click=${() => props.onRunSoftwareUpdate()} style="min-width: 140px; height: 38px; box-shadow: ${hasUpdate ? '0 4px 15px rgba(59, 130, 246, 0.3)' : 'none'};">
                         ${props.updateRunning ? html`<div class="animate-spin" style="margin-right: 8px;">${icons.loader}</div>` : nothing}
                         ${props.updateRunning ? t("config.update.running" as any) : t("config.update.button" as any)}
                     </button>
@@ -506,6 +512,15 @@ export function renderConfig(props: ConfigProps) {
         <!-- Scrollable Content -->
         <div class="config-content">
             
+            ${props.error ? html`
+                <div class="config-error-banner animate-slide-down" style="margin: 0 0 24px 0; padding: 12px 16px; background: rgba(255, 68, 68, 0.1); border-left: 4px solid var(--danger); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <div style="color: var(--danger); font-size: 12px; font-weight: 500;">
+                        ${props.error}
+                    </div>
+                    <button class="btn btn--icon btn--xs" @click=${props.onReload}>${icons.loader}</button>
+                </div>
+            ` : nothing}
+
             ${hasChanges && props.formMode === "form" ? html`
                 <div class="config-diff animate-fade-in" style="margin: 0 0 24px 0;">
                     <div class="config-diff__summary" style="padding: 10px 16px; background: rgba(255, 68, 68, 0.1);">

@@ -102,7 +102,7 @@ export function renderApp(state: AppViewState) {
   /* Setup / Onboarding Flow */
   if (state.onboarding) {
     return renderSetup({
-      recommendations: state.setupRecommendations,
+      recommendations: state.setupRecommendations as any,
       loading: state.setupLoading,
       step: state.setupStep,
       onApply: () => state.handleSetupApply(),
@@ -122,9 +122,14 @@ export function renderApp(state: AppViewState) {
       
       <!-- Native Sidebar -->
       <aside class="nav" style="padding-top: 20px;">
+        <div class="window-controls" style="position: relative; top: -4px; left: 4px; margin-bottom: 24px; padding-left: 8px;">
+            <div class="window-dot dot-red"></div>
+            <div class="window-dot dot-yellow"></div>
+            <div class="window-dot dot-green"></div>
+        </div>
         <div class="mascot-container">
             <div class="mascot-glow"></div>
-            <div class="mascot-container-red" @click=${() => state.setTab("chat")}>
+            <div class="mascot-container-red" @click=${() => state.setTab(state.tab === 'chat' ? 'overview' : 'chat')} style="cursor: pointer;">
                 <img src="logo.png?v=2" alt="Zero Mascot" class="mascot-img-red" />
                 <span class="mascot-brand">ZERO</span>
             </div>
@@ -133,19 +138,22 @@ export function renderApp(state: AppViewState) {
         ${!isZen ? html`
         <div class="sidebar-search">
             <div class="search-icon" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; color: var(--text-dim);">${icons.search}</div>
-            <input type="text" .placeholder="${t("common.search_placeholder")}" />
+            <input type="text" .placeholder="${t("common.search_placeholder")}" .value=${state.tab === 'config' ? state.configSearchQuery : ''} @input=${(e: Event) => {
+        const val = (e.target as HTMLInputElement).value;
+        if (state.tab === 'config') state.configSearchQuery = val;
+      }} />
         </div>
         ` : nothing}
 
         <nav style="flex: 1; overflow-y: auto; padding-top: 8px;">
           ${TAB_GROUPS.map((group) => {
-    const visibleTabs = isZen
-      ? group.tabs.filter((t) => ["chat", "sessions", "skills", "config", "docs"].includes(t))
-      : group.tabs;
+        const visibleTabs = isZen
+          ? group.tabs.filter((t) => ["chat", "sessions", "skills", "config", "docs"].includes(t))
+          : group.tabs;
 
-    if (visibleTabs.length === 0) return nothing;
+        if (visibleTabs.length === 0) return nothing;
 
-    return html`
+        return html`
             <div class="nav-group">
               <div class="nav-group-title">${group.label}</div>
               <div class="nav-group-items">
@@ -153,7 +161,7 @@ export function renderApp(state: AppViewState) {
               </div>
             </div>
           `;
-  })}
+      })}
         </nav>
       </aside>
 
@@ -164,8 +172,8 @@ export function renderApp(state: AppViewState) {
                 ${icons.panelLeft}
             </button>
             ${!isZen ? html`
-                <button class="btn-nav-history">${icons.chevronLeft}</button>
-                <button class="btn-nav-history">${icons.chevronRight}</button>
+                <button class="btn-nav-history" @click=${() => window.history.back()}>${icons.chevronLeft}</button>
+                <button class="btn-nav-history" @click=${() => window.history.forward()}>${icons.chevronRight}</button>
             ` : nothing}
         </div>
         <div class="page-info" style="display: flex; align-items: center; gap: 8px; position: relative;">
@@ -173,33 +181,31 @@ export function renderApp(state: AppViewState) {
             <div class="dropdown" style="display: inline-block;">
                 <button class="btn-nav-history" style="padding: 4px; border-radius: 6px; background: rgba(255,255,255,0.03);" 
                         @click=${(e: Event) => {
-      const menu = (e.currentTarget as HTMLElement).nextElementSibling as HTMLElement;
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
       e.stopPropagation();
-      window.addEventListener('click', () => menu.style.display = 'none', { once: true });
+      state.toggleInterfaceDropdown();
     }}>
                     ${icons.chevronDown}
                 </button>
-                <div class="dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px; min-width: 180px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 8px;">
-                    <div style="font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.3); padding: 8px 12px; text-transform: uppercase; letter-spacing: 0.05em;">Selecionar Interface</div>
+                <div class="dropdown-menu" style="display: ${state.interfaceDropdownOpen ? 'block' : 'none'}; position: absolute; top: calc(100% + 8px); left: 0; background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px; min-width: 180px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div style="font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.3); padding: 8px 12px; text-transform: uppercase; letter-spacing: 0.05em;">${t("app.select_interface" as any)}</div>
                     <div class="dropdown-item" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 600; color: ${state.tab === 'chat' && !state.zenMode ? '#fff' : 'rgba(255,255,255,0.5)'};" 
-                         @click=${() => { state.toggleZenMode(false); state.setTab('chat'); }}>
+                         @click=${() => { state.toggleZenMode(false); state.setTab('chat'); state.toggleInterfaceDropdown(false); }}>
                         <span style="width: 16px; height: 16px;">${icons.messageSquare}</span>
-                        <span>Chat Completo</span>
+                        <span>${t("app.full_chat" as any)}</span>
                     </div>
                     <div class="dropdown-item" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 600; color: ${state.zenMode ? '#fff' : 'rgba(255,255,255,0.5)'};" 
-                         @click=${() => { state.toggleZenMode(true); }}>
+                         @click=${() => { state.toggleZenMode(true); state.toggleInterfaceDropdown(false); }}>
                         <span style="width: 16px; height: 16px;">${icons.maximize}</span>
-                        <span>Modo Zen (Simples)</span>
+                        <span>${t("app.zen_mode" as any)}</span>
                     </div>
                     ${!isZen ? html`
                     <div class="dropdown-item" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 600; color: ${state.tab === 'playground' ? '#fff' : 'rgba(255,255,255,0.5)'};" 
-                         @click=${() => { state.setTab('playground'); }}>
+                         @click=${() => { state.setTab('playground'); state.toggleInterfaceDropdown(false); }}>
                         <span style="width: 16px; height: 16px;">${icons.sliders}</span>
                         <span>Playground</span>
                     </div>
                     <div class="dropdown-item" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 600; color: ${state.tab === 'mission-control' ? '#fff' : 'rgba(255,255,255,0.5)'};" 
-                         @click=${() => { state.setTab('mission-control'); }}>
+                         @click=${() => { state.setTab('mission-control'); state.toggleInterfaceDropdown(false); }}>
                         <span style="width: 16px; height: 16px;">${icons.activity}</span>
                         <span>Mission Control</span>
                     </div>
@@ -222,7 +228,9 @@ export function renderApp(state: AppViewState) {
                 <span class="text-xs font-bold text-muted uppercase tracking-wider">${state.connected ? t("app.online" as any) : t("app.offline" as any)}</span>
             </div>
             ${!isZen ? html`
-                <button class="btn danger" @click=${() => state.handlePanic()}>${t("app.panic" as any)}</button>
+                <button class="btn ${state.hello?.isPanicMode ? "success" : "danger"} animate-pulse-slow" @click=${() => state.handlePanic()}>
+                    ${state.hello?.isPanicMode ? t("mission.control.reset" as any) : t("app.panic" as any)}
+                </button>
             ` : nothing}
         </div>
       </header>
@@ -434,7 +442,7 @@ export function renderApp(state: AppViewState) {
         showThinking: state.settings.chatShowThinking,
         loading: state.chatLoading,
         sending: state.chatSending,
-        compactionStatus: state.compactionStatus,
+        compactionStatus: state.compactionStatus as any,
         assistantAvatarUrl: state.chatAvatarUrl,
         messages: state.chatMessages,
         toolMessages: state.chatToolMessages,
@@ -446,7 +454,7 @@ export function renderApp(state: AppViewState) {
         connected: state.connected,
         onAttachmentsChange: (files) => (state.chatAttachments = files),
         canSend: state.connected,
-        disabledReason: state.connected ? null : "Offline",
+        disabledReason: state.connected ? null : t("app.offline" as any),
         error: state.lastError,
         sessions: state.sessionsResult,
         focusMode: state.settings.chatFocusMode,
@@ -473,7 +481,7 @@ export function renderApp(state: AppViewState) {
         onToggleRecording: () => state.handleToggleRecording(),
         onCancelRecording: () => state.handleCancelRecording(),
 
-        models: state.models,
+        models: state.models as any,
         modelsLoading: state.modelsLoading,
         selectedModel: state.chatModel || state.sessionsResult?.sessions.find(s => s.key === state.sessionKey)?.model,
         configuredProviders: Object.keys((state.configSnapshot?.config as any)?.models?.providers || {}).filter(k => {
@@ -498,6 +506,8 @@ export function renderApp(state: AppViewState) {
         issues: state.configIssues,
         loading: state.configLoading,
         saving: state.configSaving,
+        applying: state.configApplying,
+        updateRunning: state.updateRunning,
         connected: state.connected,
         schema: state.configSchema,
         schemaLoading: state.configSchemaLoading,
@@ -523,6 +533,7 @@ export function renderApp(state: AppViewState) {
         updateStatus: state.updateStatus,
         updateStatusLoading: state.updateStatusLoading,
         updateStatusError: state.updateStatusError,
+        error: state.lastError,
         onRefreshUpdateStatus: (opts: Record<string, unknown>) => state.handleLoadUpdateStatus(opts),
         onRunSoftwareUpdate: () => state.handleRunSoftwareUpdate(),
         onThemeChange: (next: ThemeMode) => state.setTheme(next),
@@ -587,9 +598,9 @@ export function renderApp(state: AppViewState) {
     
     ${state.tab === "docs"
       ? renderDocs({
-        state,
-        onSelect: (id) => void loadDocContent(state, id),
-        onRefresh: () => void loadDocsList(state),
+        state: state as any,
+        onSelect: (id) => void loadDocContent(state as any, id),
+        onRefresh: () => void loadDocsList(state as any),
       })
       : nothing
     }

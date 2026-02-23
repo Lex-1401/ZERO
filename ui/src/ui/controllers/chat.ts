@@ -207,6 +207,9 @@ export function handleChatEvent(
       state.chatStreamStartedAt = Date.now();
     }
   } else if (payload.state === "final") {
+    if (payload.message) {
+      state.chatMessages = [...state.chatMessages, payload.message];
+    }
     state.chatStream = null;
     state.chatRunId = null;
     state.chatStreamStartedAt = null;

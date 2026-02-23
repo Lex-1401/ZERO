@@ -440,10 +440,10 @@ const INJECTION_STRINGS: &[&str] = &[
     r"(?i)run_command\(.*\)",
 
     // Obfuscation / Encoding patterns (hardened)
-    r"(?i)[a-zA-Z0-9+/]{40,}={0,2}",
-    r"(?i)[0-9a-fA-F]{24,}",
+    r"(?i)[a-zA-Z0-9+/]{256,}={0,2}",
+    r"(?i)[0-9a-fA-F]{128,}",
     r"\\u[0-9a-fA-F]{4}",
-    r"(?i)0x[0-9a-fA-F]{24,}",
+    r"(?i)0x[0-9a-fA-F]{128,}",
     
     // Loose / Heuristic Jailbreaks
     r"(?i)(forget|disregard|ignore)\s+.*(rules|instructions|guidelines)",
@@ -523,12 +523,12 @@ impl SecurityEngine {
             // but this safe version is robust.
             if chars.len() > window_size {
                 for i in 0..=(chars.len() - window_size) {
-                    if self.calculate_entropy_slice(&chars[i..i+window_size]) > 4.2 {
+                    if self.calculate_entropy_slice(&chars[i..i+window_size]) > 6.0 {
                         return Some("Injeção detectada: Bloco de alta entropia (ofuscação/segredo)".to_string());
                     }
                 }
             } else {
-                if self.calculate_entropy(text) > 4.2 {
+                if self.calculate_entropy(text) > 6.0 {
                      return Some("Injeção detectada: Conteúdo com alta entropia".to_string());
                 }
             }

@@ -254,6 +254,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var state: AppState?
     private let webChatAutoLogger = Logger(subsystem: "com.zero", category: "Chat")
     let updaterController: UpdaterProviding = makeUpdaterController()
+    let projectPath = "/Users/lex/Downloads/Arquivos/ZERO"
 
     func application(_: NSApplication, open urls: [URL]) {
         Task { @MainActor in
@@ -271,7 +272,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         self.state = AppStateStore.shared
         
-        let officialIconPath = "/Users/lex/Downloads/Arquivos/ZERO/macOS Icon.png"
+        CommandResolver.setProjectRoot(self.projectPath)
+        
+        let officialIconPath = "\(self.projectPath)/apps/macos/Sources/ZERO/Resources/AppIcon_Official.png"
         if let newIcon = NSImage(contentsOfFile: officialIconPath) {
             NSApp.applicationIconImage = newIcon
         }

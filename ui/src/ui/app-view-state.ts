@@ -267,6 +267,8 @@ export type AppViewState = {
     maxTokens: number;
     output: string;
   }>) => void;
+  interfaceDropdownOpen: boolean;
+  toggleInterfaceDropdown: (value?: boolean) => void;
   handlePanic: () => Promise<void>;
   handleSetupApply: () => Promise<void>;
   handleSetupSkip: () => void;

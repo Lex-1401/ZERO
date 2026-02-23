@@ -141,9 +141,9 @@ export function renderChat(props: ChatProps) {
   const otherModels = props.models?.filter(m => !props.configuredProviders?.includes(m.provider)) ?? [];
 
   const starterChips = [
-    { label: "Verificar status", prompt: "Verifique o status do sistema." },
-    { label: "Listar agentes", prompt: "Quais agentes estão disponíveis?" },
-    { label: "Escrever código", prompt: "Vamos escrever uma função em TypeScript." },
+    { label: t("chat.starter.status.label" as any), prompt: t("chat.starter.status.prompt" as any) },
+    { label: t("chat.starter.agents.label" as any), prompt: t("chat.starter.agents.prompt" as any) },
+    { label: t("chat.starter.code.label" as any), prompt: t("chat.starter.code.prompt" as any) },
   ];
 
   const renderWelcomeStack = () => {

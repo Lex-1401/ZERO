@@ -65,8 +65,15 @@ function getNativeOrStub(name, mockMethods = []) {
     return class {
         constructor() {
             for (const method of mockMethods) {
-                this[method] = () => {
+                this[method] = (...args) => {
                     console.warn(`[rust-core] Method ${name}.${method} called on stub.`);
+                    // Intelligent defaults based on method name
+                    if (method === 'check') return true;
+                    if (method === 'redactPii') return args[0];
+                    if (method === 'summarize') return { total_tokens: 0, model_breakdown: [], avg_latency_ms: 0 };
+                    if (method === 'calculateEntropy') return 0;
+                    if (method === 'detectInjection') return null;
+                    if (method === 'size') return 0;
                     return false;
                 };
             }
@@ -74,12 +81,12 @@ function getNativeOrStub(name, mockMethods = []) {
     };
 }
 
-export const RatchetDedupe = getNativeOrStub('RatchetDedupe', ['process']);
+export const RatchetDedupe = getNativeOrStub('RatchetDedupe', ['check', 'clear', 'size']);
 export const VadEngine = getNativeOrStub('VadEngine', ['processChunk']);
-export const MetricsEngine = getNativeOrStub('MetricsEngine', ['record']);
-export const SecurityEngine = getNativeOrStub('SecurityEngine', ['audit']);
+export const MetricsEngine = getNativeOrStub('MetricsEngine', ['recordTokens', 'recordLatency', 'summarize']);
+export const SecurityEngine = getNativeOrStub('SecurityEngine', ['detectInjection', 'redactPii', 'calculateEntropy']);
 export const BackchannelEngine = getNativeOrStub('BackchannelEngine', ['processEnergy']);
-export const HeartbeatManager = getNativeOrStub('HeartbeatManager', ['pulse']);
+export const HeartbeatManager = getNativeOrStub('HeartbeatManager', ['tick', 'reset']);
 
 export const triggerPanic = nativeModule.triggerPanic || (() => { });
 export const resetPanic = nativeModule.resetPanic || (() => { });

@@ -1,5 +1,6 @@
 import { html } from "lit";
 import { icons } from "../icons";
+import { t } from "../i18n";
 
 export function renderNotFound(onNavigate: (route: string) => void) {
     return html`
@@ -10,15 +11,15 @@ export function renderNotFound(onNavigate: (route: string) => void) {
         
         <div style="margin-top: -40px; margin-bottom: 32px; position: relative;">
             <div style="font-size: 24px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-red);filter: drop-shadow(0 0 10px rgba(255, 59, 48, 0.4));">
-                Sinal Perdido
+                ${t("notfound.title" as any)}
             </div>
             <div style="font-size: 12px; color: var(--text-dim); margin-top: 8px; font-family: var(--font-mono);">
-                A rota especificada não consta nos registros do sistema.
+                ${t("notfound.desc" as any)}
             </div>
         </div>
 
         <button class="btn primary" style="height: 48px; padding: 0 32px; font-size: 14px;" @click=${() => onNavigate("overview")}>
-            ${icons.arrowLeft} Retornar ao Núcleo
+            ${icons.arrowLeft} ${t("notfound.back" as any)}
         </button>
 
         <div style="margin-top: 64px; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); opacity: 0.5;">

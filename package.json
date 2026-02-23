@@ -143,7 +143,11 @@
     "protocol:gen:swift": "node --import tsx scripts/protocol-gen-swift.ts",
     "protocol:check": "pnpm protocol:gen && pnpm protocol:gen:swift && git diff --exit-code -- dist/protocol.schema.json apps/macos/Sources/ZEROProtocol/GatewayModels.swift",
     "canvas:a2ui:bundle": "bash scripts/bundle-a2ui.sh",
-    "check:loc": "node --import tsx scripts/check-ts-max-loc.ts --max 500"
+    "check:loc": "node --import tsx scripts/check-ts-max-loc.ts --max 500",
+    "sync:ide": "node .aios-core/development/scripts/apply-inline-greeting-all-agents.js",
+    "sync:ide:check": "node .aios-core/development/scripts/audit-agent-config.js",
+    "validate:structure": "node .aios-core/development/scripts/validate-filenames.js",
+    "validate:agents": "node .aios-core/development/scripts/audit-agent-config.js"
   },
   "keywords": [],
   "author": "",
@@ -229,6 +233,7 @@
     "@types/qrcode-terminal": "^0.12.2",
     "@types/ws": "^8.18.1",
     "@typescript/native-preview": "7.0.0-dev.20260208.1",
+    "@typescript/native-preview-darwin-arm64": "7.0.0-dev.20260222.1",
     "@vitest/coverage-v8": "^4.0.18",
     "docx-preview": "^0.3.7",
     "escodegen": "^2.1.0",

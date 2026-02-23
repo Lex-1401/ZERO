@@ -1,4 +1,4 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.0
 // Package manifest for the Zero macOS companion (menu bar app + IPC library).
 
 import PackageDescription
@@ -26,7 +26,7 @@ let package = Package(
     targets: [
         .target(
             name: "ZeroIPC",
-            dependencies: [],
+            path: "Sources/ZEROIPC",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
@@ -34,8 +34,9 @@ let package = Package(
             name: "ZeroDiscovery",
             dependencies: [
                 .product(name: "ZeroKit", package: "ZeroKit"),
+                .product(name: "ZeroProtocol", package: "ZeroKit"),
             ],
-            path: "Sources/ZeroDiscovery",
+            path: "Sources/ZERODiscovery",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
@@ -44,22 +45,26 @@ let package = Package(
             dependencies: [
                 "ZeroIPC",
                 "ZeroDiscovery",
+                "MenuBarExtraAccess",
                 .product(name: "ZeroKit", package: "ZeroKit"),
-                .product(name: "ZeroChatUI", package: "ZeroKit"),
                 .product(name: "ZeroProtocol", package: "ZeroKit"),
-                .product(name: "SwabbleKit", package: "swabble"),
-                .product(name: "MenuBarExtraAccess", package: "MenuBarExtraAccess"),
+                .product(name: "ZeroChatUI", package: "ZeroKit"),
+                .product(name: "SwabbleKit", package: "Swabble"),
                 .product(name: "Subprocess", package: "swift-subprocess"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Sparkle", package: "Sparkle"),
                 .product(name: "PeekabooBridge", package: "Peekaboo"),
                 .product(name: "PeekabooAutomationKit", package: "Peekaboo"),
             ],
+            path: "Sources/ZERO",
             exclude: [
                 "Resources/Info.plist",
             ],
             resources: [
-                .copy("Resources/Zero.icns"),
+                .process("Resources/MenuBarMascot.png"),
+                .process("Resources/ZERO.icns"),
+                .process("Resources/ZERO_Icon_Alpha.png"),
+                .process("Resources/AppIcon_Official.png"),
                 .copy("Resources/DeviceModels"),
             ],
             swiftSettings: [
@@ -72,21 +77,13 @@ let package = Package(
                 .product(name: "ZeroKit", package: "ZeroKit"),
                 .product(name: "ZeroProtocol", package: "ZeroKit"),
             ],
-            path: "Sources/ZeroMacCLI",
+            path: "Sources/ZEROMacCLI",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .testTarget(
             name: "ZeroIPCTests",
-            dependencies: [
-                "ZeroIPC",
-                "Zero",
-                "ZeroDiscovery",
-                .product(name: "ZeroProtocol", package: "ZeroKit"),
-                .product(name: "SwabbleKit", package: "swabble"),
-            ],
-            swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency"),
-                .enableExperimentalFeature("SwiftTesting"),
-            ]),
+            dependencies: ["Zero", "ZeroIPC", "ZeroDiscovery"],
+            path: "Tests/ZEROIPCTests"
+        ),
     ])

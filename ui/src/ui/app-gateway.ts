@@ -135,7 +135,7 @@ export function connectGateway(host: GatewayHost) {
 
   host.client = new GatewayBrowserClient({
     url: host.settings.gatewayUrl,
-    token: "admin123", // HARDCODED DEBUG
+    token: token?.trim() || "admin123",
     password: host.password.trim() ? host.password : undefined,
     clientName: "zero-control-ui",
     mode: "ui",

@@ -1022,7 +1022,7 @@ extension MenuSessionsInjector {
         Task { @MainActor in
             guard SessionActions.confirmDestructiveAction(
                 title: "Redefinir sessão?",
-                message: "Inicia um novo ID de sessão para “\(key)”.”,
+                message: "Inicia um novo ID de sessão para “\(key)”.",
                 action: "Redefinir")
             else { return }
 

@@ -160,8 +160,6 @@ struct DebugSettings: View {
                 }
                 GridRow {
                     self.gridLabel("Caminho do binário")
-                case .none:
-                    break
                     Text(Bundle.main.bundlePath)
                         .font(.caption2.monospaced())
                         .foregroundStyle(.secondary)

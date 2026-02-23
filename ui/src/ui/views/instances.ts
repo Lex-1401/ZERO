@@ -57,7 +57,7 @@ function renderEntry(entry: PresenceEntry) {
         </div>
         <div class="group-desc">${formatPresenceSummary(entry)}</div>
         <div style="display: flex; gap: 4px; margin-top: 8px;">
-            <span class="badge active">${entry.mode ?? "indeterminado"}</span>
+            <span class="badge active">${entry.mode || t("common.unknown" as any)}</span>
             ${roles.map((role: string) => html`<span class="badge">${role}</span>`)}
             ${entry.platform ? html`<span class="badge">${entry.platform}</span>` : nothing}
             ${entry.version ? html`<span class="badge">v${entry.version}</span>` : nothing}

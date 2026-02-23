@@ -77,7 +77,7 @@ export function renderNexus(props: NexusProps) {
       const v = (e.target as HTMLInputElement).value;
       props.onSettingsChange({ ...props.settings, token: v });
     }}
-                  placeholder="Token de acesso"
+                  placeholder="${t("nexus.token.placeholder" as any)}"
                 />
               </div>
             </div>
@@ -121,8 +121,8 @@ export function renderNexus(props: NexusProps) {
             <div class="group-list" style="margin-top: 32px; border-color: rgba(255, 59, 48, 0.3);">
               <div class="group-item" style="background: rgba(255, 59, 48, 0.05);">
                 <div class="group-label">
-                  <div class="group-title" style="color: var(--danger);">Status da Conexão</div>
-                  <div class="group-desc">${props.lastError.includes("1006") ? "Aguardando sinal do Gateway (Tentando reconectar...)" : props.lastError}</div>
+                  <div class="group-title" style="color: var(--danger);">${t("nexus.connection_status" as any)}</div>
+                  <div class="group-desc">${props.lastError.includes("1006") ? t("nexus.waiting_gateway" as any) : props.lastError}</div>
                 </div>
               </div>
             </div>
@@ -191,12 +191,12 @@ export function renderNexus(props: NexusProps) {
             <!-- Autopilot & Vision Module -->
             <div style="margin-top: 24px; display: flex; gap: 8px; width: 100%;">
                <button class="btn primary" style="flex: 1; background: var(--accent-red); border-color: rgba(0,0,0,0.1); justify-content: center; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);"
-                  @click=${() => alert("Iniciando Módulo de Visão...\n(Solicitando permissão de captura de tela ao navegador...)")}>
-                  <span style="margin-right: 4px;">🔴</span> ${t("nexus.autopilot" as any)}
+                  @click=${() => { /* Vision module handled via state */ }}>
+                  <span style="margin-right: 6px; font-size: 10px; opacity: 0.8;">RADAR</span> ${t("nexus.autopilot" as any)}
                </button>
                <button class="btn" style="flex: 1; justify-content: center;"
                   @click=${() => document.body.classList.toggle("focus-mode")}>
-                  🧘 ${t("nexus.focus" as any)}
+                  ${icons.maximize} ${t("nexus.focus" as any)}
                </button>
             </div>
 
@@ -217,7 +217,7 @@ export function renderNexus(props: NexusProps) {
             <div class="group-item">
                 <div class="group-label">
                     <div class="group-title">${t("nexus.sync.time" as any)}</div>
-                    <div class="group-desc">${props.lastChannelsRefresh ? formatAgo(props.lastChannelsRefresh) : "Nunca"}</div>
+                    <div class="group-desc">${props.lastChannelsRefresh ? formatAgo(props.lastChannelsRefresh) : t("common.never" as any)}</div>
                 </div>
             </div>
             <div class="group-item">

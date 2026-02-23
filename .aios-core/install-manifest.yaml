@@ -1,10 +1,11 @@
-version: 4.2.13
-installed_at: '2026-02-20T20:47:11.233Z'
+version: 4.2.15
+installed_at: '2026-02-23T17:59:56.866Z'
 install_type: full
 files:
   - core/README.md
   - core/code-intel-client.js
   - core/code-intel-enricher.js
+  - core/dev-helper.js
   - core/index.js
   - core/code-graph-provider.js
   - core/provider-interface.js
@@ -843,7 +844,6 @@ files:
   - infrastructure/tech-stack-tmpl.md
   - infrastructure/project-status-loader.test.js
   - infrastructure/regression-suite-v2.md
-  - infrastructure/utilities-audit-results.json
   - infrastructure/validate-module.js
   - infrastructure/worktree-manager.test.js
   - infrastructure/README.md
@@ -865,33 +865,22 @@ files:
   - data/aios-kb.md
   - data/entity-registry.yaml
   - data/learned-patterns.yaml
-  - data/registry-update-log.jsonl
   - data/_template.md
   - data/nextjs-react.md
   - data/technical-preferences.md
   - data/workflow-patterns.yaml
   - data/workflow-state-schema.yaml
-  - docs/SHARD-TRANSLATION-GUIDE.md
-  - docs/component-creation-guide.md
-  - docs/session-update-pattern.md
   - docs/AGENT-PERSONALIZATION-STANDARD-V1.md
   - docs/AIOS-COLOR-PALETTE-QUICK-REFERENCE.md
   - docs/AIOS-COLOR-PALETTE-V2.1.md
-  - docs/AIOS-FRAMEWORK-MASTER.md
   - docs/AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md
-  - docs/AIOS-LIVRO-DE-OURO-V2.1-SUMMARY.md
-  - docs/AIOS-LIVRO-DE-OURO-V2.1.md
   - docs/AIOS-LIVRO-DE-OURO-V2.2-SUMMARY.md
-  - docs/AIOS-LIVRO-DE-OURO.md
   - docs/EXECUTOR-DECISION-TREE.md
   - docs/OPEN-SOURCE-VS-SERVICE-DIFFERENCES.md
   - docs/QUALITY-GATES-SPECIFICATION.md
   - docs/STANDARDS-INDEX.md
   - docs/STORY-TEMPLATE-V2-SPECIFICATION.md
   - docs/TASK-FORMAT-SPECIFICATION-V1.md
-  - docs/V3-ARCHITECTURAL-DECISIONS.md
-  - docs/template-syntax.md
-  - docs/troubleshooting-guide.md
   - elicitation/agent-elicitation.js
   - elicitation/task-elicitation.js
   - elicitation/workflow-elicitation.js
@@ -991,10 +980,7 @@ files:
   - cli/index.js
   - cli/output-formatter-cli.js
   - cli/score-calculator.js
-  - manifests/agents.csv
   - manifests/manifest-schema.json
-  - manifests/tasks.csv
-  - manifests/workers.csv
   - schemas/README.md
   - schemas/agent-v3-schema.json
   - schemas/squad-design-schema.json

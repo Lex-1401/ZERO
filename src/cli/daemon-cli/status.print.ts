@@ -92,7 +92,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
   }
   spacer();
 
-  if (service.configAudit?.issues.length) {
+  if (service.configAudit?.issues?.length) {
     defaultRuntime.error(warnText("A configuração do serviço parece desatualizada ou não padrão."));
     for (const issue of service.configAudit.issues) {
       const detail = issue.detail ? ` (${issue.detail})` : "";

@@ -128,6 +128,11 @@ cd "$ROOT_DIR/apps/macos"
 echo "🔨 Building $PRODUCT ($BUILD_CONFIG) [${BUILD_ARCHS[*]}]"
 for arch in "${BUILD_ARCHS[@]}"; do
   BUILD_PATH="$(build_path_for_arch "$arch")"
+  # Ensure checkout and strip unsupported macros for CLI builds
+  swift package --build-path "$BUILD_PATH" resolve || true
+  python3 "$ROOT_DIR/scripts/patch-macros.py" "$BUILD_ROOT/checkouts" || true
+  python3 "$ROOT_DIR/scripts/patch-macros.py" "$BUILD_PATH/checkouts" || true
+
   swift build -c "$BUILD_CONFIG" --product "$PRODUCT" --build-path "$BUILD_PATH" --arch "$arch" -Xlinker -rpath -Xlinker @executable_path/../Frameworks
 done
 
@@ -200,8 +205,9 @@ else
   echo "WARN: Swift compatibility library not found at $SWIFT_COMPAT_LIB (continuing)" >&2
 fi
 
-echo "🖼  Copying app icon"
-cp "$ROOT_DIR/apps/macos/Sources/ZERO/Resources/ZERO.icns" "$APP_ROOT/Contents/Resources/ZERO.icns"
+echo "🖼  Copying app icons and mascot"
+cp "$ROOT_DIR/apps/macos/Sources/ZERO/Resources/"*.icns "$APP_ROOT/Contents/Resources/" 2>/dev/null || true
+cp "$ROOT_DIR/apps/macos/Sources/ZERO/Resources/"*.png "$APP_ROOT/Contents/Resources/" 2>/dev/null || true
 
 echo "📦 Copying device model resources"
 rm -rf "$APP_ROOT/Contents/Resources/DeviceModels"

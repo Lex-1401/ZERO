@@ -50,13 +50,25 @@ export function renderNode(params: {
   const showLabel = params.showLabel ?? true;
   const type = schemaType(schema);
   const propKey = String(path.at(-1));
-  const hint = hintForPath(path, hints);
-  const label = hint?.label ?? schema.title ?? t(`config.field.${propKey}` as any) !== `config.field.${propKey}` ? t(`config.field.${propKey}` as any) : humanize(propKey);
 
+  const hint = hintForPath(path, hints);
+
+  // Labels: Prioritize explicit translation, then schema title, then hint label, then humanized key
+  const labelKey = `config.field.${propKey}`;
+  const translatedLabel = t(labelKey as any);
+  const label =
+    translatedLabel !== labelKey
+      ? translatedLabel
+      : hint?.label ?? schema.title ?? humanize(propKey);
+
+  // Help: Prioritize explicit translation, then hint help, then schema description
   const helpKey = `config.description.${propKey}`;
-  const helpTranslation = t(helpKey as any);
-  // Prioritize translation over hint.help if translation exists
-  const help = helpTranslation !== helpKey ? helpTranslation : (hint?.help ?? schema.description);
+  const translatedHelp = t(helpKey as any);
+  const help =
+    translatedHelp !== helpKey
+      ? translatedHelp
+      : hint?.help ?? schema.description;
+
   const key = pathKey(path);
 
   if (unsupported.has(key)) {

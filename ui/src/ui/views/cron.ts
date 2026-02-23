@@ -2,10 +2,10 @@ import { html, nothing } from "lit";
 
 import { formatMs } from "../format";
 import {
-  formatCronPayload,
-  formatCronSchedule,
-  formatCronState,
-  formatNextRun,
+    formatCronPayload,
+    formatCronSchedule,
+    formatCronState,
+    formatNextRun,
 } from "../presenter";
 import { t } from "../i18n";
 import type { ChannelUiMetaEntry, CronJob, CronRunLogEntry, CronStatus } from "../types";
@@ -13,51 +13,51 @@ import { icons } from "../icons";
 import type { CronFormState } from "../ui-types";
 
 export type CronProps = {
-  loading: boolean;
-  status: CronStatus | null;
-  jobs: CronJob[];
-  error: string | null;
-  busy: boolean;
-  form: CronFormState;
-  channels: string[];
-  channelLabels?: Record<string, string>;
-  channelMeta?: ChannelUiMetaEntry[];
-  runsJobId: string | null;
-  runs: CronRunLogEntry[];
-  onFormChange: (patch: Partial<CronFormState>) => void;
-  onRefresh: () => void;
-  onAdd: () => void;
-  onToggle: (job: CronJob, enabled: boolean) => void;
-  onRun: (job: CronJob) => void;
-  onRemove: (job: CronJob) => void;
-  onLoadRuns: (jobId: string) => void;
+    loading: boolean;
+    status: CronStatus | null;
+    jobs: CronJob[];
+    error: string | null;
+    busy: boolean;
+    form: CronFormState;
+    channels: string[];
+    channelLabels?: Record<string, string>;
+    channelMeta?: ChannelUiMetaEntry[];
+    runsJobId: string | null;
+    runs: CronRunLogEntry[];
+    onFormChange: (patch: Partial<CronFormState>) => void;
+    onRefresh: () => void;
+    onAdd: () => void;
+    onToggle: (job: CronJob, enabled: boolean) => void;
+    onRun: (job: CronJob) => void;
+    onRemove: (job: CronJob) => void;
+    onLoadRuns: (jobId: string) => void;
 };
 
 function buildChannelOptions(props: CronProps): string[] {
-  const options = ["last", ...props.channels.filter(Boolean)];
-  const current = props.form.channel?.trim();
-  if (current && !options.includes(current)) {
-    options.push(current);
-  }
-  const seen = new Set<string>();
-  return options.filter((value) => {
-    if (seen.has(value)) return false;
-    seen.add(value);
-    return true;
-  });
+    const options = ["last", ...props.channels.filter(Boolean)];
+    const current = props.form.channel?.trim();
+    if (current && !options.includes(current)) {
+        options.push(current);
+    }
+    const seen = new Set<string>();
+    return options.filter((value) => {
+        if (seen.has(value)) return false;
+        seen.add(value);
+        return true;
+    });
 }
 
 function resolveChannelLabel(props: CronProps, channel: string): string {
-  if (channel === "last") return t("cron.channel.last" as any);
-  const meta = props.channelMeta?.find((entry) => entry.id === channel);
-  if (meta?.label) return meta.label;
-  return props.channelLabels?.[channel] ?? channel;
+    if (channel === "last") return t("cron.channel.last" as any);
+    const meta = props.channelMeta?.find((entry) => entry.id === channel);
+    if (meta?.label) return meta.label;
+    return props.channelLabels?.[channel] ?? channel;
 }
 
 export function renderCron(props: CronProps) {
-  const channelOptions = buildChannelOptions(props);
+    const channelOptions = buildChannelOptions(props);
 
-  return html`
+    return html`
     <div class="animate-fade-in">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
@@ -111,7 +111,7 @@ export function renderCron(props: CronProps) {
                             <div class="group-title">${t("cron.form.agentId" as any)}</div>
                         </div>
                         <div class="group-content">
-                            <input class="input-native" style="width: 240px;" .value=${props.form.agentId} placeholder="default" @input=${(e: Event) => props.onFormChange({ agentId: (e.target as HTMLInputElement).value })} />
+                            <input class="input-native" style="width: 240px;" .value=${props.form.agentId} placeholder="${t("common.default" as any)}" @input=${(e: Event) => props.onFormChange({ agentId: (e.target as HTMLInputElement).value })} />
                         </div>
                     </div>
                     <div class="group-item">
@@ -208,9 +208,9 @@ export function renderCron(props: CronProps) {
 }
 
 function renderScheduleFields(props: CronProps) {
-  const form = props.form;
-  if (form.scheduleKind === "at") {
-    return html`
+    const form = props.form;
+    if (form.scheduleKind === "at") {
+        return html`
       <div class="group-item">
         <div class="group-label"><div class="group-title">${t("cron.fields.moment" as any)}</div></div>
         <div class="group-content">
@@ -218,9 +218,9 @@ function renderScheduleFields(props: CronProps) {
         </div>
       </div>
     `;
-  }
-  if (form.scheduleKind === "every") {
-    return html`
+    }
+    if (form.scheduleKind === "every") {
+        return html`
       <div class="group-item">
         <div class="group-label"><div class="group-title">${t("cron.fields.periodicity" as any)}</div></div>
         <div class="group-content" style="gap: 8px;">
@@ -233,8 +233,8 @@ function renderScheduleFields(props: CronProps) {
         </div>
       </div>
     `;
-  }
-  return html`
+    }
+    return html`
     <div class="group-item">
       <div class="group-label"><div class="group-title">${t("cron.fields.cronDef" as any)}</div></div>
       <div class="group-content">
@@ -245,8 +245,8 @@ function renderScheduleFields(props: CronProps) {
 }
 
 function renderJob(job: CronJob, props: CronProps) {
-  const isSelected = props.runsJobId === job.id;
-  return html`
+    const isSelected = props.runsJobId === job.id;
+    return html`
     <div class="group-item ${isSelected ? "list-item-selected" : ""}" style="cursor: pointer; ${isSelected ? "background: rgba(0,122,255,0.05);" : ""}" @click=${() => props.onLoadRuns(job.id)}>
       <div class="group-label">
         <div class="group-title" style="display: flex; align-items: center; gap: 8px;">
@@ -269,7 +269,7 @@ function renderJob(job: CronJob, props: CronProps) {
 }
 
 function renderRun(entry: CronRunLogEntry) {
-  return html`
+    return html`
     <div class="group-item">
       <div class="group-label">
         <div class="group-title">${entry.status}</div>

@@ -6,9 +6,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_BUNDLE="${ZERO_APP_BUNDLE:-}"
 APP_PROCESS_PATTERN="ZERO.app/Contents/MacOS/ZERO"
-DEBUG_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/debug/ZERO"
-LOCAL_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build-local/debug/ZERO"
-RELEASE_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/release/ZERO"
+DEBUG_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/debug/Zero"
+LOCAL_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build-local/debug/Zero"
+RELEASE_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/release/Zero"
 LAUNCH_AGENT="${HOME}/Library/LaunchAgents/com.zero.mac.plist"
 LOCK_KEY="$(printf '%s' "${ROOT_DIR}" | shasum -a 256 | cut -c1-8)"
 LOCK_DIR="${TMPDIR:-/tmp}/zero-restart-${LOCK_KEY}"
@@ -157,8 +157,9 @@ stop_launch_agent
 run_step "bundle canvas a2ui" bash -lc "cd '${ROOT_DIR}' && pnpm canvas:a2ui:bundle"
 
 # 2) Rebuild into the same path the packager consumes (.build).
-run_step "clean build cache" bash -lc "cd '${ROOT_DIR}/apps/macos' && rm -rf .build .build-swift .swiftpm 2>/dev/null || true"
-run_step "swift build" bash -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product ZERO"
+# Note: Cleaning and building moved to package-mac-app.sh to ensure patches are applied.
+# run_step "clean build cache" bash -lc "cd '${ROOT_DIR}/apps/macos' && rm -rf .build .build-swift .swiftpm 2>/dev/null || true"
+# run_step "swift build" bash -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product Zero --skip-update"
 
 if [ "$AUTO_DETECT_SIGNING" -eq 1 ]; then
   if check_signing_keys; then

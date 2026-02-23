@@ -58,10 +58,7 @@ export function loadSettings(): UiSettings {
     // or if the user manually set it to 18789.
     const cleanGatewayUrl = (url: string | undefined): string => {
       if (!url || typeof url !== "string") return defaultUrl;
-      const trimmed = url.trim();
-      // If it includes the old development port 18789, forcibly replace it with the detected default.
-      if (trimmed.includes(":18789")) return defaultUrl;
-      return trimmed;
+      return url.trim();
     };
 
     return {

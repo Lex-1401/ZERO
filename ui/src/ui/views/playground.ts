@@ -8,9 +8,9 @@ export type PlaygroundProps = {
     systemPrompt: string;
     userPrompt: string;
     output: string;
-    model: string;
-    temperature: number;
-    maxTokens: number;
+    model: string | null;
+    temperature: number | undefined;
+    maxTokens: number | undefined;
     loading: boolean;
     onSystemPromptChange: (val: string) => void;
     onUserPromptChange: (val: string) => void;
@@ -52,20 +52,20 @@ export function renderPlayground(props: PlaygroundProps) {
                 <div class="group-item" style="display: block;">
                     <div class="group-label" style="margin-bottom: 8px; display: flex; justify-content: space-between;">
                         <div class="group-title">Temperatura</div>
-                        <div class="group-desc">${props.temperature.toFixed(2)}</div>
+                        <div class="group-desc">${(props.temperature ?? 0.7).toFixed(2)}</div>
                     </div>
                     <div class="group-content" style="width: 100%;">
-                        <input type="range" class="range-native" min="0" max="2" step="0.01" style="width: 100%;" .value=${String(props.temperature)} @input=${(e: Event) => props.onTemperatureChange(parseFloat((e.target as HTMLInputElement).value))} />
+                        <input type="range" class="range-native" min="0" max="2" step="0.01" style="width: 100%;" .value=${String(props.temperature ?? 0.7)} @input=${(e: Event) => props.onTemperatureChange(parseFloat((e.target as HTMLInputElement).value))} />
                     </div>
                 </div>
 
                 <div class="group-item" style="display: block;">
                      <div class="group-label" style="margin-bottom: 8px; display: flex; justify-content: space-between;">
                         <div class="group-title">Máximo de Tokens</div>
-                         <div class="group-desc">${props.maxTokens}</div>
+                         <div class="group-desc">${props.maxTokens ?? 1024}</div>
                     </div>
                     <div class="group-content" style="width: 100%;">
-                        <input class="input-native" type="number" min="1" max="128000" style="width: 100%;" .value=${String(props.maxTokens)} @input=${(e: Event) => props.onMaxTokensChange(parseInt((e.target as HTMLInputElement).value))} />
+                        <input class="input-native" type="number" min="1" max="128000" style="width: 100%;" .value=${String(props.maxTokens ?? 1024)} @input=${(e: Event) => props.onMaxTokensChange(parseInt((e.target as HTMLInputElement).value))} />
                     </div>
                 </div>
             </div>

@@ -101,38 +101,38 @@ export function renderSkills(props: SkillsProps) {
 function renderMarketplace(props: SkillsProps) {
     const marketplace = props.marketplaceSkills.length > 0 ? props.marketplaceSkills : [
         {
-            name: "🌐 Navegação Stealth",
-            description: "Navegue pela web sem ser detectado. Ideal para extração de dados e automações complexas que exigem discrição.",
+            name: t("skills.marketplace.stealth.name" as any),
+            description: t("skills.marketplace.stealth.desc" as any),
             link: "https://www.clawhub.com/skills/stealthy-auto-browse",
             command: "npx clawhub@latest install stealthy-auto-browse"
         },
         {
-            name: "🇧🇷 Trello Pro",
-            description: "Organize seus projetos. Gerencie quadros, listas e cartões do Trello com comandos de linguagem natural em Português.",
+            name: t("skills.marketplace.trello.name" as any),
+            description: t("skills.marketplace.trello.desc" as any),
             link: "https://www.clawhub.com/skills/trello-skill",
             command: "npx clawhub@latest install trello-skill"
         },
         {
-            name: "💬 Integração Slack",
-            description: "Sua consciência no ambiente corporativo. Envie mensagens, monitore mensagens e interaja com canais do Slack.",
+            name: t("skills.marketplace.slack.name" as any),
+            description: t("skills.marketplace.slack.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/slack",
             command: "npx clawhub@latest install slack-skill"
         },
         {
-            name: "🔍 Pesquisa Brave",
-            description: "Acesse a internet em tempo real. Pesquisas precisas e atualizadas usando o motor do Brave Search.",
+            name: t("skills.marketplace.brave.name" as any),
+            description: t("skills.marketplace.brave.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/brave-search",
             command: "npx clawhub@latest install brave-search"
         },
         {
-            name: "🐳 Docker Control",
-            description: "Gerencie seu ambiente de desenvolvimento. Liste, inicie e pare containers Docker diretamente pela interface do ZERO.",
+            name: t("skills.marketplace.docker.name" as any),
+            description: t("skills.marketplace.docker.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/docker",
             command: "npx clawhub@latest install docker"
         },
         {
-            name: "🎨 Design de Frontend",
-            description: "Crie interfaces modernas. Assistente especializado em React, Tailwind e componentes UI de alta qualidade.",
+            name: t("skills.marketplace.frontend.name" as any),
+            description: t("skills.marketplace.frontend.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/frontend-design",
             command: "npx clawhub@latest install frontend-design"
         }
@@ -162,7 +162,7 @@ function renderMarketplace(props: SkillsProps) {
                 <div class="group-item" style="background: rgba(255,255,255,0.02); padding: 16px 24px; border-top: 1px solid var(--border-subtle);">
                     <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
                         <button class="btn btn--sm" style="width: 100%; font-size: 10px; font-family: monospace; background: rgba(0,0,0,0.2); border: 1px dashed var(--border-subtle);" 
-                            @click=${() => { navigator.clipboard.writeText((item as any).command); alert('Comando copiado! Cole no seu terminal para instalar.'); }}>
+                            @click=${() => { navigator.clipboard.writeText((item as any).command); alert(t("skills.marketplace.copy_success" as any)); }}>
                             ${t("skills.marketplace.copy")}
                         </button>
                         <a href=${item.link} target="_blank" class="btn btn--sm primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -218,7 +218,7 @@ function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
       <div class="group-content" style="flex-direction: column; align-items: flex-end; gap: 8px; width: 100%;">
         <div class="skill-actions">
             ${skill.primaryEnv ? html`
-                <input class="input-native" type="password" style="width: 140px; height: 24px;" placeholder="API Key" .value=${apiKey} @input=${(e: Event) => props.onEdit(skill.skillKey, (e.target as HTMLInputElement).value)} />
+                <input class="input-native" type="password" style="width: 140px; height: 24px;" placeholder="${t("skills.placeholder.apikey" as any)}" .value=${apiKey} @input=${(e: Event) => props.onEdit(skill.skillKey, (e.target as HTMLInputElement).value)} />
                 <button class="btn btn--sm primary" ?disabled=${busy || !apiKey} @click=${() => props.onSaveKey(skill.skillKey)}>${t("skills.save" as any)}</button>
             ` : nothing}
             <button class="btn btn--sm" ?disabled=${busy} @click=${() => props.onToggle(skill.skillKey, skill.disabled)}>${skill.disabled ? t("skills.activate" as any) : t("skills.deactivate" as any)}</button>

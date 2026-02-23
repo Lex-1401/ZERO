@@ -1,6 +1,7 @@
 import { LitElement, html, css, svg } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { icons } from "../icons";
+import { t } from "../i18n";
 
 // --- Types ---
 type GraphNode = { id: string; name: string; type: string; description?: string; x?: number; y?: number; vx?: number; vy?: number };
@@ -275,8 +276,8 @@ export class ZEROForceGraph extends LitElement {
           </g>
         </svg>
         <div class="controls">
-            <button @click=${() => this.initSimulation()} title="Reorganizar">${icons.rotateCcw || "R"}</button>
-            <button @click=${() => this.transform = { x: 0, y: 0, k: 1 }} title="Centralizar">${icons.maximize || "C"}</button>
+            <button @click=${() => this.initSimulation()} title="${t("graph.controls.reorganize" as any)}">${icons.rotateCcw || "R"}</button>
+            <button @click=${() => this.transform = { x: 0, y: 0, k: 1 }} title="${t("graph.controls.center" as any)}">${icons.maximize || "C"}</button>
         </div>
       `;
   }
@@ -297,7 +298,7 @@ export function renderGraph(props: {
     return html`
       <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim);">
         <div class="animate-spin" style="margin-bottom: 12px; font-size: 24px;">${icons.loader}</div>
-        <div style="font-size: 13px;">Mapeando Caminhos Neurais...</div>
+        <div style="font-size: 13px;">${t("graph.loading" as any)}</div>
       </div>
     `;
   }
@@ -305,9 +306,9 @@ export function renderGraph(props: {
   if (props.error) {
     return html`
        <div class="group-list" style="margin: 40px; border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px;">
-            <div style="color: var(--danger); font-size: 12px; font-weight: 700;">Erro de Visualização</div>
+            <div style="color: var(--danger); font-size: 12px; font-weight: 700;">${t("graph.error.title" as any)}</div>
             <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${props.error}</div>
-            <button class="btn btn--sm primary" style="margin-top: 12px;" @click=${props.onRefresh}>Tentar Novamente</button>
+            <button class="btn btn--sm primary" style="margin-top: 12px;" @click=${props.onRefresh}>${t("graph.error.retry" as any)}</button>
         </div>
     `;
   }
@@ -321,20 +322,20 @@ export function renderGraph(props: {
            
            <div class="badge" style="height: 32px; padding: 0 12px; gap: 8px; display: flex; align-items: center; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
              <div class="status-orb success" style="box-shadow: 0 0 8px rgba(40, 205, 65, 0.6);"></div>
-             <span style="font-weight: 600; color: var(--text-main);">Grafo Neural</span>
+             <span style="font-weight: 600; color: var(--text-main);">${t("graph.title" as any)}</span>
              <span style="opacity: 0.2; height: 12px; width: 1px; background: currentColor;"></span>
-             <span style="font-family: var(--font-mono); font-size: 11px; opacity: 0.7;">${props.data?.nodes?.length ?? 0} NÓS</span>
+             <span style="font-family: var(--font-mono); font-size: 11px; opacity: 0.7;">${props.data?.nodes?.length ?? 0} ${t("graph.nodes" as any)}</span>
            </div>
            
            <div class="segmented-control">
               <button 
                 class="segmented-control__btn ${mode === "memory" ? "active" : ""}" 
                 @click=${() => props.onModeChange("memory")}
-              >Memória</button>
+              >${t("graph.mode.memory" as any)}</button>
               <button 
                 class="segmented-control__btn ${mode === "actions" ? "active" : ""}" 
                 @click=${() => props.onModeChange("actions")}
-              >Ações</button>
+              >${t("graph.mode.actions" as any)}</button>
            </div>
         </div>
         

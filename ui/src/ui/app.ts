@@ -160,6 +160,7 @@ export class ZEROApp extends LitElement {
   @state() eventLog: EventLogEntry[] = [];
   @state() tourActive = false;
   @state() tourStep = 0;
+  @state() interfaceDropdownOpen = false;
   private eventLogBuffer: EventLogEntry[] = [];
   private toolStreamSyncTimer: number | null = null;
   private sidebarCloseTimer: number | null = null;
@@ -235,6 +236,10 @@ export class ZEROApp extends LitElement {
   toggleZenMode(value?: boolean) {
     this.zenMode = value ?? !this.zenMode;
     this.applySettings({ ...this.settings, zenMode: this.zenMode });
+  }
+
+  toggleInterfaceDropdown(value?: boolean) {
+    this.interfaceDropdownOpen = value ?? !this.interfaceDropdownOpen;
   }
 
   handleToggleRecording() {

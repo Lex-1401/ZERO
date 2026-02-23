@@ -13,14 +13,12 @@ Este documento define os princípios fundamentais e inegociáveis do Synkra AIOS
 O CLI é a fonte da verdade onde toda inteligência, execução, e automação vivem.
 
 **Regras:**
-
 - MUST: Toda funcionalidade nova DEVE funcionar 100% via CLI antes de qualquer UI
 - MUST: Dashboards apenas observam, NUNCA controlam ou tomam decisões
 - MUST: A UI NUNCA é requisito para operação do sistema
 - MUST: Ao decidir onde implementar, sempre CLI > Observability > UI
 
 **Hierarquia:**
-
 ```
 CLI (Máxima) → Observability (Secundária) → UI (Terciária)
 ```
@@ -34,7 +32,6 @@ CLI (Máxima) → Observability (Secundária) → UI (Terciária)
 Cada agente tem autoridades exclusivas que não podem ser violadas.
 
 **Regras:**
-
 - MUST: Apenas @devops pode executar `git push` para remote
 - MUST: Apenas @devops pode criar Pull Requests
 - MUST: Apenas @devops pode criar releases e tags
@@ -61,7 +58,6 @@ Cada agente tem autoridades exclusivas que não podem ser violadas.
 Todo desenvolvimento começa e termina com uma story.
 
 **Regras:**
-
 - MUST: Nenhum código é escrito sem uma story associada
 - MUST: Stories DEVEM ter acceptance criteria claros antes de implementação
 - MUST: Progresso DEVE ser rastreado via checkboxes na story
@@ -77,7 +73,6 @@ Todo desenvolvimento começa e termina com uma story.
 Especificações não inventam - apenas derivam dos requisitos.
 
 **Regras:**
-
 - MUST: Todo statement em spec.md DEVE rastrear para:
   - Um requisito funcional (FR-*)
   - Um requisito não-funcional (NFR-*)
@@ -96,7 +91,6 @@ Especificações não inventam - apenas derivam dos requisitos.
 Qualidade não é negociável. Todo código passa por múltiplos gates antes de merge.
 
 **Regras:**
-
 - MUST: `npm run lint` passa sem erros
 - MUST: `npm run typecheck` passa sem erros
 - MUST: `npm test` passa sem falhas
@@ -114,13 +108,11 @@ Qualidade não é negociável. Todo código passa por múltiplos gates antes de 
 Imports relativos criam acoplamento e dificultam refatoração.
 
 **Regras:**
-
 - SHOULD: Sempre usar imports absolutos com alias `@/`
 - SHOULD NOT: Usar imports relativos (`../../../`)
 - EXCEPTION: Imports dentro do mesmo módulo/feature podem ser relativos
 
 **Exemplo:**
-
 ```typescript
 // CORRETO
 import { useStore } from '@/stores/feature/store'
@@ -130,22 +122,6 @@ import { useStore } from '../../../stores/feature/store'
 ```
 
 **Gate:** ESLint rule (já implementado)
-
----
-
-### VII. Hygiene & Minimalism (E-HYG) (MUST)
-
-O repositório DEVE ser mantido em estado imaculado, livre de artefatos temporários e ruído.
-
-**Regras:**
-
-- MUST: NUNCA commitar logs, screenshots de teste, dumps de banco, ou zips (`.log`, `.txt` de debug, `.png` de falha de teste, `.zip`, `.bak`)
-- MUST: Remover scripts de "patch" temporários (`patch_*.js`, `*.exp`) imediatamente após a conclusão da tarefa
-- MUST: Manter o histórico do Git limpo; squashes agressivos DEVEM ser feitos antes de transições para Master/Main
-- MUST: Higiene de Metadados (A-POS): NUNCA armazenar relatórios de auditoria ou menções a "VAPT" no repositório. Usar terminologia neutra (Integridade, Verificação).
-- MUST NOT: Manter "Código Morto" ou backups de arquivos renomeados dentro da árvore de diretórios ativa.
-
-**Gate:** `pre-push.md` - BLOCK se arquivos proibidos detectados; `dev-develop-story.md` - WARN se ruído detectado.
 
 ---
 
@@ -191,5 +167,5 @@ O repositório DEVE ser mantido em estado imaculado, livre de artefatos temporá
 
 ---
 
-*Synkra AIOS Constitution v1.1.0*
-*CLI First | Agent-Driven | Quality First | Clean Repo*
+*Synkra AIOS Constitution v1.0.0*
+*CLI First | Agent-Driven | Quality First*

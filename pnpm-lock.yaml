@@ -256,6 +256,9 @@ importers:
       '@typescript/native-preview':
         specifier: 7.0.0-dev.20260208.1
         version: 7.0.0-dev.20260208.1
+      '@typescript/native-preview-darwin-arm64':
+        specifier: 7.0.0-dev.20260222.1
+        version: 7.0.0-dev.20260222.1
       '@vitest/coverage-v8':
         specifier: ^4.0.18
         version: 4.0.18(@vitest/browser@4.0.18(vite@7.3.1(@types/node@25.2.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@4.8.1)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.2.3)(@vitest/browser-playwright@4.0.18)(jiti@2.6.1)(jsdom@24.0.0)(lightningcss@1.30.2)(terser@4.8.1)(tsx@4.21.0)(yaml@2.8.2)))(vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.2.3)(@vitest/browser-playwright@4.0.18)(jiti@2.6.1)(jsdom@24.0.0)(lightningcss@1.30.2)(terser@4.8.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -1406,6 +1409,7 @@ packages:
   '@lancedb/lancedb@0.26.2':
     resolution: {integrity: sha512-umk4WMCTwJntLquwvUbpqE+TXREolcQVL9MHcxr8EhRjsha88+ATJ4QuS/hpyiE1CG3R/XcgrMgJAGkziPC/gA==}
     engines: {node: '>= 18'}
+    cpu: [x64, arm64]
     os: [darwin, linux, win32]
     peerDependencies:
       apache-arrow: '>=15.0.0 <=18.1.0'
@@ -3341,6 +3345,11 @@ packages:
 
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260208.1':
     resolution: {integrity: sha512-ixnfsxZVziOh/tsuqrjJvXvfBqcilASOnWCsGLaBL9LwpY/0kZxfwvqR8c9DAyB9ilYsmrbu6mi8VtE39eNL9g==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260222.1':
+    resolution: {integrity: sha512-aXfK/s3QlbzXvZoFQ07KJDNx86q61nCITSreqLytnqjhjsXUUuMACsxjy/YsReLG2bdii+mHTA2WB2IB0LKKGA==}
     cpu: [arm64]
     os: [darwin]
 
@@ -9411,6 +9420,8 @@ snapshots:
 
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260208.1':
     optional: true
+
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260222.1': {}
 
   '@typescript/native-preview-darwin-x64@7.0.0-dev.20260208.1':
     optional: true

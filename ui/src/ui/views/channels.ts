@@ -30,6 +30,7 @@ import { renderSlackCard } from "./channels.slack";
 import { renderTelegramCard } from "./channels.telegram";
 import { renderWhatsAppCard } from "./channels.whatsapp";
 import { icons } from "../icons";
+import { t } from "../i18n";
 
 export function renderChannels(props: ChannelsProps) {
   const channels = props.snapshot?.channels as Record<string, unknown> | null;
@@ -82,24 +83,24 @@ export function renderChannels(props: ChannelsProps) {
       <section style="padding: 0 20px;">
         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
           <div>
-            <div class="section-title">Saúde da Integração</div>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Logs de sincronização e integridade estrutural do gateway.</div>
+            <div class="section-title">${t("channels.health.title" as any)}</div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">${t("channels.health.desc" as any)}</div>
           </div>
           <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">
-            Sinal: ${props.lastSuccessAt ? formatAgo(props.lastSuccessAt) : "Aguardando..."}
+            ${t("channels.health.signal" as any)}: ${props.lastSuccessAt ? formatAgo(props.lastSuccessAt) : t("channels.health.waiting" as any)}
           </div>
         </div>
         
         ${props.lastError ? html`
              <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
-                <div style="color: var(--danger); font-size: 12px; font-weight: 700;">Erro Crítico Detectado</div>
+                <div style="color: var(--danger); font-size: 12px; font-weight: 700;">${t("channels.health.error.title" as any)}</div>
                 <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${props.lastError}</div>
             </div>
         ` : nothing}
         
         <div class="group-list">
              <div class="group-item" style="padding: 0;">
-                <textarea class="code-block" style="width: 100%; height: 300px; border: none; background: transparent; padding: 20px; font-size: 11px; resize: vertical;" readonly>${props.snapshot ? JSON.stringify(props.snapshot, null, 2) : "Calculando telemetria..."}</textarea>
+                <textarea class="code-block" style="width: 100%; height: 300px; border: none; background: transparent; padding: 20px; font-size: 11px; resize: vertical;" readonly>${props.snapshot ? JSON.stringify(props.snapshot, null, 2) : t("channels.health.telemetry.loading" as any)}</textarea>
             </div>
         </div>
       </section>
@@ -207,10 +208,10 @@ function renderGenericChannelCard(
     
     <div class="group-list">
         <div class="group-item">
-            <div class="group-label"><div class="group-title">Status Global</div></div>
+            <div class="group-label"><div class="group-title">${t("channels.generic.status" as any)}</div></div>
              <div class="group-content" style="gap: 8px;">
-                <span class="badge ${configured ? "active" : ""}">${configured ? "Configurado" : "Pendente"}</span>
-                <span class="badge ${running ? "active" : ""}">${running ? "Rodando" : "Parado"}</span>
+                <span class="badge ${configured ? "active" : ""}">${configured ? t("channels.generic.configured" as any) : t("channels.generic.pending" as any)}</span>
+                <span class="badge ${running ? "active" : ""}">${running ? t("channels.generic.running" as any) : t("channels.generic.stopped" as any)}</span>
              </div>
         </div>
         ${lastError ? html`

@@ -65,6 +65,23 @@ struct MacGatewayChatTransport: ZeroChatTransport, Sendable {
         try await GatewayConnection.shared.healthOK(timeoutMs: timeoutMs)
     }
 
+    func patchSession(sessionKey: String, model: String?, thinkingLevel: String?) async throws {
+        var params: [String: AnyCodable] = ["sessionKey": AnyCodable(sessionKey)]
+        if let model { params["model"] = AnyCodable(model) }
+        if let thinkingLevel { params["thinkingLevel"] = AnyCodable(thinkingLevel) }
+        _ = try await GatewayConnection.shared.request(
+            method: "chat.session.patch",
+            params: params,
+            timeoutMs: 10000)
+    }
+
+    func setActiveSessionKey(_ sessionKey: String) async throws {
+        _ = try await GatewayConnection.shared.request(
+            method: "chat.session.active.set",
+            params: ["sessionKey": AnyCodable(sessionKey)],
+            timeoutMs: 10000)
+    }
+
     func events() -> AsyncStream<ZeroChatTransportEvent> {
         AsyncStream { continuation in
             let task = Task {

@@ -1,6 +1,7 @@
 import { html } from "lit";
 import type { TelemetrySummary } from "../types";
 import { icons } from "../icons";
+import { t } from "../i18n";
 
 export type MissionControlProps = {
     loading: boolean;
@@ -19,18 +20,18 @@ export function renderMissionControl(props: MissionControlProps) {
             <!-- Header Status -->
             <div class="mc-card mc-header ${props.panicActive ? 'panic' : ''}">
                 <div class="mc-header__info">
-                    <div class="mc-header__title">Mission Control</div>
+                    <div class="mc-header__title">${t("mission.control.title" as any)}</div>
                     <div class="mc-header__status">
                         <span class="status-dot ${props.panicActive ? 'status-dot--danger' : 'status-dot--success'}"></span>
-                        ${props.panicActive ? 'Protocolo de Emergência Ativo' : 'Sistemas Operacionais'}
+                        ${props.panicActive ? t("mission.control.emergency" as any) : t("mission.control.nominal" as any)}
                     </div>
                 </div>
                 <div class="mc-header__actions">
                     <button class="btn btn--glass" ?disabled=${props.loading} @click=${props.onRefresh}>
-                        ${icons.rotateCcw} Atualizar
+                        ${icons.rotateCcw} ${t("mission.control.refresh" as any)}
                     </button>
                     <button class="btn ${props.panicActive ? 'btn--success' : 'btn--danger'}" @click=${props.onPanic}>
-                        ${props.panicActive ? 'Resetar Sistema' : 'BOTÃO DE PÂNICO'}
+                        ${props.panicActive ? t("mission.control.reset" as any) : t("mission.control.panic" as any)}
                     </button>
                 </div>
             </div>
@@ -40,14 +41,14 @@ export function renderMissionControl(props: MissionControlProps) {
                 <div class="mc-stat-card hover-lift">
                     <div class="mc-stat-card__icon">${icons.zap}</div>
                     <div class="mc-stat-card__content">
-                        <div class="mc-stat-card__label">Total de Tokens</div>
+                        <div class="mc-stat-card__label">${t("mission.control.tokens" as any)}</div>
                         <div class="mc-stat-card__value">${summary?.totalTokens?.toLocaleString() ?? '0'}</div>
                     </div>
                 </div>
                 <div class="mc-stat-card hover-lift">
                     <div class="mc-stat-card__icon">${icons.activity}</div>
                     <div class="mc-stat-card__content">
-                        <div class="mc-stat-card__label">Latência Média</div>
+                        <div class="mc-stat-card__label">${t("mission.control.latency" as any)}</div>
                         <div class="mc-stat-card__value">${summary?.avgLatencyMs?.toFixed(0) ?? '0'} ms</div>
                     </div>
                 </div>
@@ -55,18 +56,18 @@ export function renderMissionControl(props: MissionControlProps) {
 
             <!-- Breakdown -->
             <div class="mc-card mc-breakdown" style="min-height: 180px;">
-                <div class="section-title">Distribuição por Modelo</div>
+                <div class="section-title">${t("mission.control.distribution" as any)}</div>
                 <div class="mc-breakdown__list">
                     ${!summary ? html`
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             ${[1, 2, 3].map(() => html`
                                 <div class="skeleton" style="height: 48px; border-radius: 12px; display: flex; align-items: center; padding: 0 16px; color: var(--text-dim); font-size: 11px; margin-bottom: 8px;">
-                                    Aguardando telemetria...
+                                    ${t("mission.control.waiting" as any)}
                                 </div>
                             `)}
                         </div>
                     ` : summary.modelBreakdown.length === 0 ? html`
-                        <div class="empty-state">Sem dados de processamento ainda.</div>
+                        <div class="empty-state">${t("mission.control.empty" as any)}</div>
                     ` : summary.modelBreakdown.map(m => html`
                         <div class="mc-breakdown__item">
                             <div class="mc-model-info">

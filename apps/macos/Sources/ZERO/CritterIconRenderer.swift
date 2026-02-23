@@ -112,14 +112,20 @@ enum CritterIconRenderer {
         eyesClosedLines: Bool = false,
         badge: Badge? = nil) -> NSImage
     {
-        let mascotPath = "/Users/lex/Downloads/Arquivos/ZERO/macOS Icon.png"
-        
-        if let mascotImage = NSImage(contentsOfFile: mascotPath) ?? NSImage(named: "AppIcon_Official") {
-            // We use a slightly larger frame for the drawing to maximize the "presence" 
-            // of the ZERO icon in the 18x18 menu bar slot.
+        let mascotImage: NSImage? = {
+            if let path = Bundle.main.path(forResource: "MenuBarMascot", ofType: "png") ?? 
+                          Bundle.main.path(forResource: "AppIcon_Official", ofType: "png") {
+                return NSImage(contentsOfFile: path)
+            }
+            return nil
+        }()
+
+        if let mascotImage {
+            // Ensure template mode for menu bar rendering
+            mascotImage.isTemplate = true
+            
             let renderSize = NSSize(width: 19, height: 19) 
             mascotImage.size = renderSize
-            mascotImage.isTemplate = true
             
             guard let rep = self.makeBitmapRep() else { return mascotImage }
             rep.size = self.size
