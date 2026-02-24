@@ -36,6 +36,8 @@ import { handleOpenResponsesHttpRequest } from "./openresponses-http.js";
 import { handleToolsInvokeHttpRequest } from "./tools-invoke-http.js";
 import { handleMemoryGraphHttpRequest } from "./memory-graph-http.js";
 import { handleAudioTranscribeHttpRequest } from "./audio-transcribe-http.js";
+import { loadCombinedSessionStoreForGateway, listSessionsFromStore } from "./session-utils.js";
+import { listDevicePairing } from "../infra/device-pairing.js";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 
@@ -55,6 +57,12 @@ type HookDispatchers = {
   }) => string;
 };
 
+/**
+ * Utilitário para enviar uma resposta JSON com o status HTTP apropriado.
+ * @param res O objeto Response do servidor HTTP.
+ * @param status O código de status HTTP (ex: 200, 404).
+ * @param body O objeto ou dado a ser serializado como JSON.
+ */
 function sendJson(res: ServerResponse, status: number, body: unknown) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -63,6 +71,12 @@ function sendJson(res: ServerResponse, status: number, body: unknown) {
 
 export type HooksRequestHandler = (req: IncomingMessage, res: ServerResponse) => Promise<boolean>;
 
+/**
+ * Cria um manipulador de requisições para Webhooks do sistema.
+ * Valida o token, o método HTTP e roteia a requisição para o dispatcher apropriado.
+ * @param opts Opções de configuração, incluindo loggers e dispatchers de hooks.
+ * @returns Uma função assíncrona que processa a IncomingMessage.
+ */
 export function createHooksRequestHandler(
   opts: {
     getHooksConfig: () => HooksConfigResolved | null;
@@ -229,7 +243,49 @@ export function createGatewayHttpServer(opts: {
 
   const router = new Router();
 
-  // 1. Hooks & Plugins (High priority)
+  // 1. Health & Status (Standard monitoring)
+  router.get("/health", async (ctx) => {
+    sendJson(ctx.res, 200, { status: "ok", version: "1.0.0", timestamp: Date.now() });
+    return true;
+  });
+
+  router.all("/api/sessions/list", async (ctx) => {
+    console.log("[debug-api] sessions.list hit");
+    const config = loadConfig();
+    const token = getBearerToken(ctx.req);
+    const authResult = await authorizeGatewayConnect({
+      auth: resolvedAuth,
+      connectAuth: token ? { token, password: token } : null,
+      req: ctx.req,
+    });
+    if (!authResult.ok) {
+      sendUnauthorized(ctx.res);
+      return true;
+    }
+    const { storePath, store } = loadCombinedSessionStoreForGateway(config);
+    const result = listSessionsFromStore({ cfg: config, storePath, store, opts: {} });
+    sendJson(ctx.res, 200, result);
+    return true;
+  });
+
+  router.all("/api/nodes", async (ctx) => {
+    console.log("[debug-api] nodes hit");
+    const token = getBearerToken(ctx.req);
+    const authResult = await authorizeGatewayConnect({
+      auth: resolvedAuth,
+      connectAuth: token ? { token, password: token } : null,
+      req: ctx.req,
+    });
+    if (!authResult.ok) {
+      sendUnauthorized(ctx.res);
+      return true;
+    }
+    const list = await listDevicePairing();
+    sendJson(ctx.res, 200, list.paired);
+    return true;
+  });
+
+  // 2. Hooks & Plugins (High priority)
   router.all("*", async (ctx) => {
     if (await handleHooksRequest(ctx.req, ctx.res)) return true;
     if (handlePluginRequest && (await handlePluginRequest(ctx.req, ctx.res))) return true;
@@ -391,11 +447,11 @@ export function createGatewayHttpServer(opts: {
 
   const httpServer: HttpServer = opts.tlsOptions
     ? createHttpsServer(opts.tlsOptions, (req, res) => {
-        void handleRequest(req, res);
-      })
+      void handleRequest(req, res);
+    })
     : createHttpServer((req, res) => {
-        void handleRequest(req, res);
-      });
+      void handleRequest(req, res);
+    });
 
   // HIGH-004: Rate Limiter global (CWE-770)
   const globalRateLimiter = new RateLimiter({
@@ -450,14 +506,14 @@ export function createGatewayHttpServer(opts: {
     res.setHeader(
       "Content-Security-Policy",
       "default-src 'self'; " +
-        `script-src 'self' 'unsafe-inline' 'nonce-${cspNonce}'; ` +
-        "style-src 'self' 'unsafe-inline'; " + // inline styles necessários para UI dinâmica
-        "img-src 'self' data: https:; " +
-        "font-src 'self' data:; " +
-        "connect-src 'self' ws: wss:; " +
-        "frame-ancestors 'none'; " +
-        "base-uri 'self'; " +
-        "form-action 'self'",
+      `script-src 'self' 'unsafe-inline' 'nonce-${cspNonce}'; ` +
+      "style-src 'self' 'unsafe-inline'; " + // inline styles necessários para UI dinâmica
+      "img-src 'self' data: https:; " +
+      "font-src 'self' data:; " +
+      "connect-src 'self' ws: wss:; " +
+      "frame-ancestors 'none'; " +
+      "base-uri 'self'; " +
+      "form-action 'self'",
     );
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("X-Frame-Options", "DENY");

@@ -462,7 +462,7 @@ class ChatController(
   }
 
   private fun parseHistory(historyJson: String, sessionKey: String): ChatHistory {
-    val root = json.parseToJsonElement(historyJson).asObjectOrNull() ?: return ChatHistory(sessionKey, null, null, emptyList())
+    val root = json.parseToJsonElement(historyJson).asObjectOrNull() ?: return ChatHistory(sessionKey, null, null, null, emptyList())
     val sid = root["sessionId"].asStringOrNull()
     val thinkingLevel = root["thinkingLevel"].asStringOrNull()
     val model = root["model"].asStringOrNull()

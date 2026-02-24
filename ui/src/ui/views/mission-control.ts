@@ -72,7 +72,7 @@ export function renderMissionControl(props: MissionControlProps) {
                         <div class="mc-breakdown__item">
                             <div class="mc-model-info">
                                 <span class="mc-model-name">${m.model}</span>
-                                <span class="mc-model-count">${m.count.toLocaleString()} tokens</span>
+                                <span class="mc-model-count">${m.count.toLocaleString()} ${t("mission.control.tokens_suffix" as any)}</span>
                             </div>
                             <div class="mc-progress-bar">
                                 <div class="mc-progress-fill" style="width: ${Math.min(100, (m.count / (summary.totalTokens || 1)) * 100)}%"></div>

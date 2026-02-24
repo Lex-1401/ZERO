@@ -192,7 +192,7 @@ export function renderNexus(props: NexusProps) {
             <div style="margin-top: 24px; display: flex; gap: 8px; width: 100%;">
                <button class="btn primary" style="flex: 1; background: var(--accent-red); border-color: rgba(0,0,0,0.1); justify-content: center; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);"
                   @click=${() => { /* Vision module handled via state */ }}>
-                  <span style="margin-right: 6px; font-size: 10px; opacity: 0.8;">RADAR</span> ${t("nexus.autopilot" as any)}
+                  <span style="margin-right: 6px; font-size: 10px; opacity: 0.8;">${t("nexus.radar" as any)}</span> ${t("nexus.autopilot" as any)}
                </button>
                <button class="btn" style="flex: 1; justify-content: center;"
                   @click=${() => document.body.classList.toggle("focus-mode")}>
@@ -223,7 +223,7 @@ export function renderNexus(props: NexusProps) {
             <div class="group-item">
                 <div class="group-label">
                     <div class="group-title">${t("nexus.version" as any)}</div>
-                    <div class="group-desc">Altair 1.4.0-stable</div>
+                    <div class="group-desc">${t("nexus.version.altair" as any, { version: "1.4.0" })}</div>
                 </div>
             </div>
           </div>

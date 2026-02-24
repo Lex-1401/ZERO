@@ -66,11 +66,13 @@ export class Router {
     const url = new URL(req.url ?? "/", "http://localhost");
     const pathname = url.pathname;
     const method = req.method;
+    // console.log(`[Router] handling ${method} ${pathname}`);
 
     for (const route of this.routes) {
       if (route.method && route.method !== method) continue;
 
       const match = pathname.match(route.regex);
+      // if (match) console.log(`[Router] matched ${route.path}`);
       if (match) {
         const params: Record<string, string> = {};
         route.keys.forEach((key, i) => {

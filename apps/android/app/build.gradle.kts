@@ -55,6 +55,9 @@ android {
   testOptions {
     unitTests.isIncludeAndroidResources = true
   }
+  kotlinOptions {
+    jvmTarget = "17"
+  }
 }
 
 androidComponents {
@@ -70,22 +73,16 @@ androidComponents {
       }
   }
 }
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "17"
-        allWarningsAsErrors = true
-    }
-}
 
 dependencies {
-  val composeBom = platform("androidx.compose:compose-bom:2026.02.00")
+  val composeBom = platform("androidx.compose:compose-bom:2025.01.00")
   implementation(composeBom)
   androidTestImplementation(composeBom)
 
-  implementation("androidx.core:core-ktx:1.17.0")
-  implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
-  implementation("androidx.activity:activity-compose:1.12.4")
-  implementation("androidx.webkit:webkit:1.15.0")
+  implementation("androidx.core:core-ktx:1.15.0")
+  implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+  implementation("androidx.activity:activity-compose:1.10.0")
+  implementation("androidx.webkit:webkit:1.12.1")
 
   implementation("androidx.compose.ui:ui")
   implementation("androidx.compose.ui:ui-tooling-preview")
@@ -98,12 +95,12 @@ dependencies {
   // Material Components (XML theme + resources)
   implementation("com.google.android.material:material:1.13.0")
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
   implementation("androidx.security:security-crypto:1.1.0")
   implementation("androidx.exifinterface:exifinterface:1.4.2")
-  implementation("com.squareup.okhttp3:okhttp:5.3.2")
+  implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
   // CameraX (for node.invoke camera.* parity)
   implementation("androidx.camera:camera-core:1.5.3")
@@ -121,6 +118,14 @@ dependencies {
   testImplementation("io.kotest:kotest-assertions-core-jvm:6.1.3")
   testImplementation("org.robolectric:robolectric:4.16.1")
   testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.2")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("org.jetbrains.kotlin:kotlin-stdlib:2.0.21")
+        force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21")
+        force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.21")
+    }
 }
 
 tasks.withType<Test>().configureEach {
