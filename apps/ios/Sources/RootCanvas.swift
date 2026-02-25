@@ -27,6 +27,10 @@ struct RootCanvas: View {
 
     var body: some View {
         ZStack {
+            // Premium background mesh
+            MeshBackground()
+                .ignoresSafeArea()
+
             CanvasContent(
                 systemColorScheme: self.systemColorScheme,
                 gatewayStatus: self.gatewayStatus,
@@ -140,7 +144,7 @@ private struct CanvasContent: View {
         ZStack(alignment: .topTrailing) {
             ScreenTab()
 
-            VStack(spacing: 10) {
+            VStack(spacing: 12) {
                 OverlayButton(systemImage: "text.bubble.fill", brighten: self.brightenButtons) {
                     self.openChat()
                 }
@@ -265,7 +269,13 @@ private struct OverlayButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: self.action) {
+        Button(action: {
+            // Native Haptic Feedback (Impact)
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.prepare()
+            generator.impactOccurred()
+            self.action()
+        }) {
             Image(systemName: self.systemImage)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(self.isActive ? (self.tint ?? .primary) : .primary)
@@ -335,7 +345,36 @@ private struct CameraFlashOverlay: View {
                     withAnimation(.easeOut(duration: 0.32)) {
                         self.opacity = 0
                     }
-                }
             }
     }
 }
+
+private struct MeshBackground: View {
+    @State private var animate = false
+
+    var body: some View {
+        ZStack {
+            Color(red: 0.02, green: 0.02, blue: 0.03)
+            
+            GeometryReader { geo in
+                ZStack {
+                    // Tahoe Blue (#2563EB)
+                    RadialGradient(colors: [Color(red: 0.145, green: 0.388, blue: 0.921).opacity(0.25), .clear], center: .topLeading, startRadius: 0, endRadius: geo.size.width * 0.9)
+                        .offset(x: self.animate ? 60 : -60, y: self.animate ? -40 : 40)
+
+                    RadialGradient(colors: [Color(red: 0.65, green: 0.46, blue: 1.0).opacity(0.25), .clear], center: .topTrailing, startRadius: 0, endRadius: geo.size.width * 0.9)
+                        .offset(x: self.animate ? -50 : 50, y: self.animate ? 80 : -80)
+
+                    RadialGradient(colors: [Color(red: 0.05, green: 0.05, blue: 0.08).opacity(0.4), .clear], center: .bottom, startRadius: 0, endRadius: geo.size.height * 0.8)
+                }
+                .blur(radius: 60) /* Deeper Tahoe Blur */
+            }
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 15).repeatForever(autoreverses: true)) {
+                self.animate.toggle()
+            }
+        }
+    }
+}
+

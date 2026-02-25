@@ -77,6 +77,7 @@ import {
   stopRecording,
   cancelRecording,
 } from "./app-recording";
+import { HapticService } from "./services/haptic-service";
 
 import { loadAssistantIdentity as loadAssistantIdentityInternal } from "./controllers/assistant-identity";
 import { loadGraph } from "./controllers/graph";
@@ -592,6 +593,7 @@ export class ZEROApp extends LitElement {
   }
 
   async handleAbortChat() {
+    HapticService.light();
     await handleAbortChatInternal(
       this as unknown as Parameters<typeof handleAbortChatInternal>[0],
     );
@@ -760,6 +762,7 @@ export class ZEROApp extends LitElement {
     return patchSession(this as unknown as AppViewState, key, patch);
   }
   async handleSessionsDelete(key: string) {
+    HapticService.warning();
     return deleteSession(this as unknown as AppViewState, key);
   }
   async handleCronToggle(jobId: string, enabled: boolean) {
@@ -860,6 +863,7 @@ export class ZEROApp extends LitElement {
   handleNostrProfileToggleAdvanced() { /* ... */ }
 
   async handlePanic() {
+    HapticService.panic();
     console.warn("pânico: parada de emergência acionada");
     this.chatQueue = [];
     this.playgroundLoading = false;

@@ -15,8 +15,8 @@ type RateLimitEntry = {
 /**
  * RateLimiter Engine
  *
- * Implements a High-Performance Sliding Window rate limiting algorithm to mitigate Resource Exhaustion (CWE-770)
- * and Denial of Service (DoS) attack vectors. This module provides granular control over request density
+ * Implements a High-Performance Sliding Window rate limiting algorithm to maintain system stability
+ * and mitigate excessive request volume. This module provides granular control over request density
  * per identifier (e.g., IPv4, IPv6, Session UUID, or User Principal).
  *
  * @category Gateway

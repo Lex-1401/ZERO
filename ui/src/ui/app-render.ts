@@ -59,6 +59,7 @@ import { loadCronRuns, toggleCronJob, runCronJob, removeCronJob, addCronJob } fr
 import { loadDebug, callDebugMethod } from "./controllers/debug";
 import { loadLogs } from "./controllers/logs";
 
+import { LocalizationAgent } from "./agents/localization-agent";
 import "./zen/zen-dashboard";
 
 const TOUR_STEPS: TourStep[] = [
@@ -130,7 +131,7 @@ export function renderApp(state: AppViewState) {
         <div class="mascot-container">
             <div class="mascot-glow"></div>
             <div class="mascot-container-red" @click=${() => state.setTab(state.tab === 'chat' ? 'overview' : 'chat')} style="cursor: pointer;">
-                <img src="logo.png?v=2" alt="Zero Mascot" class="mascot-img-red" />
+                <img src="logo.png?v=5" alt="Zero Mascot" class="mascot-img-red" />
                 <span class="mascot-brand">ZERO</span>
             </div>
         </div>
@@ -559,6 +560,7 @@ export function renderApp(state: AppViewState) {
         onCallParamsChange: (n) => (state.debugCallParams = n),
         onRefresh: () => loadDebug(state),
         onCall: () => callDebugMethod(state),
+        onStressTest: () => LocalizationAgent.getInstance().runStressTest(state, getLanguage()),
       })
       : nothing
     }

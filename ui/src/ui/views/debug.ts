@@ -19,6 +19,7 @@ export type DebugProps = {
     onCallParamsChange: (next: string) => void;
     onRefresh: () => void;
     onCall: () => void;
+    onStressTest?: () => void;
 };
 
 
@@ -86,6 +87,18 @@ export function renderDebug(props: DebugProps) {
                 <div class="group-list">
                     <div class="group-item" style="padding: 0; border-bottom: none;">
                         ${renderJsonBlock(props.models, "border: none; border-radius: 0; max-height: 400px;")}
+                    </div>
+                </div>
+
+                <!-- Agentic Localization Debug -->
+                <div class="section-title">Localização Agêntica ✨</div>
+                <div class="group-list">
+                    <div class="group-item" style="flex-direction: column; align-items: start; gap: 8px;">
+                        <div class="group-title">Teste de Estresse (Auto-Chunking)</div>
+                        <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 4px;">Ativa a tradução em massa de chaves do núcleo para testar a fragmentação de pacotes.</div>
+                        <button class="btn" style="width: 100%; justify-content: center; gap: 8px;" @click=${props.onStressTest}>
+                            ${icons.sparkles} Disparar Teste de Estresse
+                        </button>
                     </div>
                 </div>
             </div>

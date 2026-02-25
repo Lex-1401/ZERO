@@ -18,7 +18,7 @@ try {
   }
 }
 
-// LLM01: Prompt Injection Guardrails
+// FEATURE: Prompt Injection Guardrails
 const INJECTION_PATTERNS = [
   /ignore (all )?previous instructions/i,
   /render system prompt/i,
@@ -43,7 +43,7 @@ const INJECTION_PATTERNS = [
   // Fragmentation-aware patterns (spaces, dots, newlines between keywords)
   /i\s*g\s*n\s*o\s*r\s*e\s*a\s*l\s*l/i,
   /p\s*r\s*e\s*v\s*i\s*n\s*s\s*t/i,
-  // VAPT-MEDIUM-008: Modern attack vectors
+  // SECURITY: Protection against modern adversarial patterns
   /repeat.{0,100}(?:above|system|instructions)/i,
   /translate.{0,100}(?:above|preceding|system).{0,100}(?:to|into)/i,
   /what (?:are|were) your (?:instructions|rules|system)/i,
@@ -55,7 +55,7 @@ const INJECTION_PATTERNS = [
   /\u0456gn\u043bre/i, // Unicode homoglyph 'ignore' with Cyrillic chars
 ];
 
-// LLM06: PII Patterns for Output Firewall (Fallback)
+// FEATURE: PII Patterns for Output Firewall (Fallback)
 const PII_PATTERNS = [
   /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/, // Email
   /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/, // CPF (Brazil)
@@ -93,11 +93,8 @@ export type SecurityViolation = {
 /**
  * SecurityGuard is the primary defense layer for the ZERO platform.
  *
- * It implements several LLM security guardrails as defined in the OWASP Top 10 for LLM:
- * - LLM01: Prompt Injection Guardrails (detects adversarial overrides)
- * - LLM02: Chain-of-Thought (CoT) & Hallucination Checks (enforces thinking protocol)
- * - LLM06: PII & Sensitive Disclosure Firewall (redacts secrets in/out)
- * - LLM09: Context Citation Enforcement (ensures model cites sources)
+ * - Redaction of sensitive data and PII.
+ * - Contextual integrity and citation checks.
  *
  * The guard leverages the high-performance native Rust core (SecurityEngine) for
  * sub-millisecond pattern matching and entropy analysis when available.
@@ -162,7 +159,7 @@ export class SecurityGuard {
   }
 
   /**
-   * LLM01: Prompt Injection Detection.
+   * SECURITY: Prompt Injection Detection.
    * Orchestrates high-speed pattern matching via SecurityEngine (Rust).
    */
   static detectPromptInjection(text: string): SecurityViolation | null {
@@ -307,7 +304,7 @@ export class SecurityGuard {
   }
 
   /**
-   * LLM02: CoT & Hallucination Check.
+   * SECURITY: CoT & Hallucination Check.
    * Validates that the model response contains the required <think> and <final> blocks.
    *
    * @param text - The raw model output.
@@ -338,7 +335,7 @@ export class SecurityGuard {
   }
 
   /**
-   * LLM09: Context Citation Check.
+   * SECURITY: Context Citation Check.
    * Ensures that the model response includes citations when RAG or file context was provided.
    *
    * @param text - The model response.
@@ -364,7 +361,7 @@ export class SecurityGuard {
   }
 
   /**
-   * LLM06: Sensitive Disclosure Firewall (Output).
+   * SECURITY: Sensitive Disclosure Firewall (Output).
    * Scans model responses for potential PII or secrets using both native and JS engines.
    *
    * @param text - The model response text.
@@ -437,7 +434,7 @@ export class SecurityGuard {
   }
 
   /**
-   * LLM03: Data Poisoning Sanitization.
+   * SECURITY: Data Poisoning Sanitization.
    * Cleans content retrieved from external sources before feeding it into the RAG pipeline.
    *
    * This implementation goes beyond basic PII redaction by:

@@ -24,12 +24,12 @@ type BashRequest =
 type ActiveBashJob =
   | { state: "starting"; startedAt: number; command: string }
   | {
-      state: "running";
-      sessionId: string;
-      startedAt: number;
-      command: string;
-      watcherAttached: boolean;
-    };
+    state: "running";
+    sessionId: string;
+    startedAt: number;
+    command: string;
+    watcherAttached: boolean;
+  };
 
 let activeJob: ActiveBashJob | null = null;
 
@@ -349,17 +349,19 @@ export async function handleBashChatCommand(params: {
     });
 
     if (result.details?.status === "running") {
-      const sessionId = result.details.sessionId;
+      const sessionId = result.details.sessionId ?? "";
       activeJob = {
         state: "running",
         sessionId,
-        startedAt: result.details.startedAt,
+        startedAt: result.details.startedAt ?? Date.now(),
         command: commandText,
         watcherAttached: false,
       };
-      attachActiveWatcher(sessionId);
-      const snippet = formatSessionSnippet(sessionId);
-      logVerbose(`Started bash session ${snippet}: ${commandText}`);
+      if (sessionId) {
+        attachActiveWatcher(sessionId);
+        const snippet = formatSessionSnippet(sessionId);
+        logVerbose(`Started bash session ${snippet}: ${commandText}`);
+      }
       return {
         text: `⚙️ bash started (session ${sessionId}). Still running; use !poll / !stop (or /bash poll / /bash stop).`,
       };

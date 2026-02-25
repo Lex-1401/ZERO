@@ -418,7 +418,7 @@ const INJECTION_STRINGS: &[&str] = &[
     r"(?i)p\s*r\s*e\s*v\s*i\s*n\s*s\s*t",
     r"\u{0456}gn\u{043b}re", // Cyrillic homoglyph
 
-    // Modern attack vectors (VAPT-MEDIUM-008 & 009)
+    // SECURITY: Modern attack vectors protection patterns
     r"(?i)repeat\s+.*(?:above|system|instructions)",
     r"(?i)translate\s+.*(?:above|preceding|system).*(?:to|into)",
     r"(?i)what\s+(?:are|were)\s+your\s+(?:instructions|rules|system)",

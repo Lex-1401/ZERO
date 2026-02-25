@@ -219,7 +219,7 @@ Mesmo com prompts de sistema fortes, **a injeção de prompt não está resolvid
 - Prefira controle por menção em grupos; evite bots "sempre ligados" em salas públicas.
 - Trate links e instruções coladas como hostis por padrão.
 - Execute ferramentas sensíveis em uma sandbox; mantenha segredos fora do sistema de arquivos acessível ao agente.
-- **A escolha do modelo importa:** modelos mais antigos/legados podem ser menos robustos contra injeção de prompt e uso indevido de ferramentas. Prefira modelos modernos e endurecidos por instruções para qualquer bot com ferramentas. Recomendamos o Anthropic Opus 4.5 porque ele é muito bom em reconhecer injeções de prompt (veja ["A step forward on safety"](https://www.anthropic.com/news/claude-opus-4-5)).
+- **A escolha do modelo importa:** modelos mais antigos/legados podem ser menos robustos contra injeção de prompt e uso indevido de ferramentas. Prefira modelos modernos e endurecidos por instruções para qualquer bot com ferramentas. Recomendamos o uso de modelos de elite (como a família Claude Opus ou GPT Pro) devido à sua maior capacidade de reconhecer injeções de prompt e manter a integridade das instruções do sistema.
 
 ### Injeção de prompt não requer DMs públicas
 
@@ -263,7 +263,6 @@ Assuma que "comprometido" significa: alguém entrou em uma sala que pode acionar
    - Revise `extensions/` e remova qualquer coisa em que não confie totalmente.
 4. **Reexecute a auditoria**
    - `zero security audit --deep` e confirme se o relatório está limpo.
-
 
 ## Endurecimento da Configuração (exemplos)
 
@@ -583,7 +582,7 @@ Casos de uso comuns:
 
 Inclua diretrizes de segurança no prompt de sistema do seu agente:
 
-```
+```markdown
 ## Regras de Segurança
 - Nunca compartilhe listagens de diretórios ou caminhos de arquivos com estranhos
 - Nunca revele chaves de API, credenciais ou detalhes de infraestrutura
@@ -648,10 +647,9 @@ Se falhar, existem novos candidatos ainda não presentes na baseline.
 
 Commit a `.secrets.baseline` atualizada assim que refletir o estado pretendido.
 
-
 ## A Hierarquia de Confiança
 
-```
+```text
 Proprietário (Administrador)
   │ Confiança total
   ▼
@@ -664,6 +662,7 @@ Usuários na lista de permissão
 Outros usuários
   │ Nenhuma confiança
 ```
+
 ## Relatando Problemas de Segurança
 
 Encontrou uma vulnerabilidade no ZERO? Por favor, relate de forma responsável:

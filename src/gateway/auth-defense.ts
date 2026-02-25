@@ -34,11 +34,11 @@ class BruteForceProtector {
 
   constructor() {
     this.loadFromDisk();
-    // HIGH-003: Cleanup periódico de entradas expiradas
+    // SECURITY: Periodic cleanup of expired entries
     setInterval(() => this.cleanup(), CLEANUP_INTERVAL_MS);
   }
 
-  /** HIGH-003: Carregar estado persistido do disco */
+  /** SECURITY: Load persisted state from disk */
   private loadFromDisk() {
     try {
       if (fs.existsSync(PERSIST_PATH)) {
@@ -60,7 +60,7 @@ class BruteForceProtector {
     }
   }
 
-  /** HIGH-003: Persistir bans ativos para disco (assíncrono, debounced) */
+  /** SECURITY: Persist active bans to disk (async, debounced) */
   private schedulePersist() {
     if (this.persistTimer) return;
     this.persistTimer = setTimeout(() => {
@@ -135,7 +135,7 @@ class BruteForceProtector {
     if (data.count >= FAILED_ATTEMPTS_LIMIT) {
       data.bannedUntil = now + BAN_DURATION_MS;
       log.error(
-        `[CRITICAL] IP ${ip} permanently blocked due to high-frequency auth failures. Possible VAPT detected.`,
+        `[CRITICAL] IP ${ip} permanently blocked due to high-frequency auth failures. Malicious activity suspected.`,
         {
           count: data.count,
           bannedUntil: new Date(data.bannedUntil).toISOString(),

@@ -390,7 +390,7 @@ Type `*help` to see all commands, or `*kb` to enable KB mode.
 
 **Delegated responsibilities (Story 6.1.2.3):**
 
-- **Epic/Story creation** → @pm (*create-epic, *create-story)
+- **Epic/Story creation** → @pm (*create-epic,*create-story)
 - **Brainstorming** → @analyst (\*brainstorm)
 - **Test suite creation** → @qa (\*create-suite)
 - **AI prompt generation** → @architect (\*generate-ai-prompt)

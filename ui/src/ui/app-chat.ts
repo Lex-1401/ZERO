@@ -8,6 +8,7 @@ import { normalizeBasePath } from "./navigation";
 import type { GatewayHelloOk } from "./gateway";
 import { parseAgentSessionKey } from "../../../src/sessions/session-key-utils.js";
 import type { ZEROApp } from "./app";
+import { HapticService } from "./services/haptic-service";
 
 type ChatHost = {
   connected: boolean;
@@ -76,6 +77,7 @@ async function sendChatMessageNow(
     }
   }
   if (ok) {
+    HapticService.success();
     setLastActiveSessionKey(host as unknown as Parameters<typeof setLastActiveSessionKey>[0], host.sessionKey);
   }
   if (ok && opts?.restoreDraft && opts.previousDraft?.trim()) {

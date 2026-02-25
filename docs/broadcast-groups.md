@@ -360,7 +360,7 @@ tail -f ~/.zero/logs/gateway.log | grep broadcast
 **Respostas:**
 
 - code-formatter: "Indentação corrigida e dicas de tipo adicionadas"
-- security-scanner: "⚠️ Vulnerabilidade de SQL injection na linha 12"
+- security-scanner: "⚠️ Foram identificados pontos de atenção na lógica de acesso aos dados."
 - test-coverage: "A cobertura é de 45%, faltam testes para casos de erro"
 - docs-checker: "Faltando docstring para a função `process_data`"
 

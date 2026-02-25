@@ -9,7 +9,7 @@ export class ProactiveNudge {
 
   static start() {
     this.interval = setInterval(() => this.check(), 60000); // Check every minute
-    console.log("[Proactive] Nudge engine started.");
+
   }
 
   static stop() {
@@ -27,8 +27,7 @@ export class ProactiveNudge {
       // Logic to determine if a nudge is appropriate
       const suggestion = await this.generateSuggestion();
       if (suggestion) {
-        console.log(`[Proactive] Nudge: ${suggestion}`);
-        // In a real implementation, this would push a message to the user via the active channel
+        // Logic to push message to active channel should go here
         // e.g. events.emit("nudge", suggestion);
       }
     }

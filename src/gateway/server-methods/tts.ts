@@ -30,7 +30,7 @@ export const ttsHandlers: GatewayRequestHandlers = {
         .slice(1)
         .filter((candidate) => isTtsProviderConfigured(config, candidate));
       respond(true, {
-        enabled: isTtsEnabled(config, prefsPath),
+        enabled: isTtsEnabled(config),
         auto: autoMode,
         provider,
         fallbackProvider: fallbackProviders[0] ?? null,
@@ -49,7 +49,7 @@ export const ttsHandlers: GatewayRequestHandlers = {
       const cfg = loadConfig();
       const config = resolveTtsConfig(cfg);
       const prefsPath = resolveTtsPrefsPath(config);
-      setTtsEnabled(prefsPath, true);
+      setTtsEnabled(config, true);
       respond(true, { enabled: true });
     } catch (err) {
       respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, formatForLog(err)));
@@ -60,7 +60,7 @@ export const ttsHandlers: GatewayRequestHandlers = {
       const cfg = loadConfig();
       const config = resolveTtsConfig(cfg);
       const prefsPath = resolveTtsPrefsPath(config);
-      setTtsEnabled(prefsPath, false);
+      setTtsEnabled(config, false);
       respond(true, { enabled: false });
     } catch (err) {
       respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, formatForLog(err)));

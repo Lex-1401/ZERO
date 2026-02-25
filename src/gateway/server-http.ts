@@ -269,7 +269,7 @@ export function createGatewayHttpServer(opts: {
   });
 
   router.all("/api/nodes", async (ctx) => {
-    console.log("[debug-api] nodes hit");
+
     const token = getBearerToken(ctx.req);
     const authResult = await authorizeGatewayConnect({
       auth: resolvedAuth,
@@ -354,7 +354,7 @@ export function createGatewayHttpServer(opts: {
   // 5. Control UI (Dashboard)
   router.all("*", async (ctx) => {
     if (!controlUiEnabled) return false;
-    console.log(`[debug-ui] request: ${ctx.req.method} ${ctx.req.url}`);
+
 
     const config = loadConfig();
 
@@ -406,7 +406,7 @@ export function createGatewayHttpServer(opts: {
       return true;
     }
 
-    // PT-005: Session Fixation fix — gerar token de sessão opaco
+    // SECURITY: Session Fixation prevention — generate opaque session token
     // O cookie NUNCA contém o gateway token real. Um UUID de sessão é usado.
     if (fromQuery && token) {
       const sessionToken = randomUUID();
@@ -417,7 +417,7 @@ export function createGatewayHttpServer(opts: {
         // Manter mapeamento interno: sessionToken → gatewayToken (via cookie adicional assinado)
         `zero_auth=${token}; Path=/; HttpOnly; SameSite=Strict${securePart}; Max-Age=31536000`,
       ]);
-      // CRITICAL-003: Redirecionar para limpar o token da URL (evita leakage via Referer/logs)
+      // SECURITY: Redirect to clear token from URL (prevents leakage via Referer/logs)
       const cleanUrl = new URL(ctx.req.url ?? "/", `http://${ctx.req.headers.host}`);
       cleanUrl.searchParams.delete("token");
       ctx.res.writeHead(302, { Location: cleanUrl.pathname + cleanUrl.search });
@@ -453,7 +453,7 @@ export function createGatewayHttpServer(opts: {
       void handleRequest(req, res);
     });
 
-  // HIGH-004: Rate Limiter global (CWE-770)
+  // SECURITY: Global Rate Limiting implementation
   const globalRateLimiter = new RateLimiter({
     windowMs: 60_000, // 1 minuto
     maxRequests: 120, // 120 req/min por IP
@@ -493,15 +493,15 @@ export function createGatewayHttpServer(opts: {
         return;
       }
     } else {
-      // HIGH-005: Bloquear requisições com IP desconhecido (previne bypass)
+      // SECURITY: Block requests with unknown IP source (prevents bypass)
       res.statusCode = 403;
       res.setHeader("Content-Type", "application/json; charset=utf-8");
       res.end(JSON.stringify({ ok: false, error: "Forbidden: Unknown IP source" }));
       return;
     }
 
-    // Security Headers (HIGH-001: CSP Implementation with nonces)
-    // Protege contra XSS, clickjacking, MIME sniffing, e outros ataques
+    // SECURITY: Content Security Policy (CSP) implementation with nonces
+    // Protects against XSS, clickjacking, MIME sniffing, and other attacks
     const cspNonce = randomBytes(16).toString("base64");
     res.setHeader(
       "Content-Security-Policy",
@@ -522,7 +522,7 @@ export function createGatewayHttpServer(opts: {
     res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
     res.setHeader("X-CSP-Nonce", cspNonce); // Disponibilizar nonce para UI dinâmica
 
-    // MED-001: CORS Headers (configurável via zero.json)
+    // SECURITY: CORS Headers (configurable via zero.json)
     const corsConfig = config.gateway?.cors;
     if (corsConfig?.enabled) {
       const origin = req.headers.origin;
@@ -579,7 +579,7 @@ export function createGatewayHttpServer(opts: {
   return httpServer;
 }
 
-// WS-ORIGIN: Origens permitidas para WebSocket (CWE-1385)
+// SECURITY: Allowed origins for WebSockets
 const WS_ALLOWED_ORIGINS = new Set([
   "http://localhost",
   "https://localhost",
@@ -617,7 +617,7 @@ export function attachGatewayUpgradeHandler(opts: {
 }) {
   const { httpServer, wss, canvasHost } = opts;
   httpServer.on("upgrade", (req, socket, head) => {
-    // WS-ORIGIN: Validar Origin header (CVE-2026-25253 defense)
+    // SECURITY: Validate Origin header for CSRF protection
     const origin = req.headers.origin;
     const config = loadConfig();
     if (!isAllowedWsOrigin(origin, config)) {

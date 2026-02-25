@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { completeSimple } from "@mariozechner/pi-ai";
 import { getApiKeyForModel } from "../agents/model-auth.js";
-import { resolveModel } from "../agents/pi-embedded-runner/model.js";
+
 import { resolveTtsConfig } from "./tts.config.js";
 import {
     isValidVoiceId,
@@ -156,7 +156,9 @@ describe("tts.utils", () => {
             const mockSummary = "This is a summarized version of the text.";
             vi.mocked(completeSimple).mockResolvedValue({
                 content: [{ type: "text", text: mockSummary }],
-            });
+                model: "gpt-4o-mini",
+                usage: { inputTokens: 0, outputTokens: 0 },
+            } as any);
 
             const longText = "A".repeat(2000);
             const result = await summarizeText({

@@ -43,9 +43,9 @@ O ZERO agora opera sob padrões de arquitetura avançados, elevando a estabilida
     * **Native Heartbeat**: Orquestração de tarefas críticas em Rust para latência zero.
     * **AIEOS Vault**: Conteinerização de identidade de agente p/ portabilidade total.
     * **Kernel-Only Mode**: Execução ultra-leve (`--kernel-only`) para servidores e background.
-6. **Modelos de Elite & Ultra-Velocidade (Fev 2026)**:
-    * Suporte nativo para a vanguarda: **Gemini 3.1 Pro**, **Claude 4.6**, **Grok 4.20**, **GPT-5.3** e **Tiny Aya**.
-    * Integração com **Groq**, **Cerebras** e **Modal Labs** (GLM-5 FP8) para latência quase zero.
+6. **Modelos de Elite & Ultra-Velocidade**:
+    * Suporte nativo para modelos de fronteira com orquestração de alta performance.
+    * Integração com provedores de baixa latência para inferência em tempo quase real.
 
 ---
 
@@ -64,22 +64,15 @@ O ZERO opera em silêncio. Invisível. Negligenciado pelos gigantes, mas sustent
 
 ---
 
-## ♻️ Origens e Evolução (OpenClaw - <https://openclaw.ai/>)
+## ♻️ Evolução e Arquitetura
 
-O ZERO não nasceu no vácuo. Ele é um "Hard Fork" e evolução direta do **OpenClaw** (anteriormente conhecido como *Clawdbot* e *Moltbot*).
+O ZERO foi concebido como uma evolução de sistemas de agentes locais, elevando os padrões de segurança e performance através de uma abordagem híbrida e soberana.
 
-* **Fundação Original (2025-2026)**: Criado por **Peter Steinberger**, o OpenClaw estabeleceu o padrão para agentes pessoais locais em TypeScript/Swift, atingindo >100k estrelas no GitHub. Agradecemos a visão original de Steinberger de criar uma IA que "roda no seu dispositivo".
-  * *Repositório Original*: [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
-* **Aprendizado Contínuo (Issues & Bugs)**:
-  * Monitoramos ativamente as *Issues* do repositório upstream. O que falha lá, nós corrigimos aqui.
-  * **Exemplos Reais de Correções ZERO**:
-        1. **Segurança (CVE-2026-25253)**: O OpenClaw sofria com WebSockets não autenticados e "Skills" maliciosas no marketplace. O **Zero Sentinel** implementa um sandbox rigoroso e não carrega código remoto não assinado.
-        2. **"Queima de Tokens" (Custo Infinito)**: O OpenClaw enviava todo o histórico a cada "heartbeat". O **ZERO** utiliza um algoritmo de *Context Compaction* (Rust) que sumariza memórias antigas, mantendo os custos de tokens sob controle.
-        3. **Vazamentos de Memória no Gateway**: Sessões longas no OpenClaw costumavam travar o Node.js. Movemos o gerenciamento de estado crítico e VAD para o **Rust Core**, eliminando vazamentos de memória (pressão de GC).
-* **Divergência Tecnológica ZERO**:
-  * Enquanto o OpenClaw foca na pureza de TypeScript/Swift, o **ZERO** adotou uma arquitetura híbrida **Rust + Node.js** para performance crítica.
-  * Introduzimos o **Zero Sentinel** para mitigar riscos de segurança que a versão original não cobria (Firewall de PII e Injeção).
-  * Reconstruímos a interface (Altair) focada em uma estética "Premium Sci-Fi" versus a UI utilitária original.
+* **Fundação e Melhoria Contínua**: Baseado em princípios de execução local e privacidade, o sistema incorpora aprendizados de diversas implementações de agentes para oferecer uma infraestrutura resiliente.
+* **Foco em Segurança**: Implementamos o **Zero Sentinel**, um sandbox de última geração que governa a execução de ferramentas e previne vetores de ataque comuns em sistemas agênticos.
+* **Otimização de Recursos**: Introduzimos algoritmos de compactação de contexto em **Rust** para garantir eficiência no uso de tokens e memória em sessões de longa duração.
+* **Performance Híbrida**: Diferente de implementações puramente em runtimes de alto nível, o ZERO utiliza um núcleo nativo para tarefas críticas (VAD, Telemetria, Segurança), eliminando gargalos de latência.
+* **Experiência Premium**: A **Interface Altair** oferece um console de comando avançado que traduz a complexidade da inteligência artificial em uma experiência de usuário fluida e profissional.
 
 > *Honramos o código que veio antes (Peter Steinberger & Comunidade), enquanto construímos o futuro que precisamos e aspiramos agora.*
 
@@ -247,7 +240,7 @@ Ideal para uso pessoal imediato. Abra o terminal e cole:
 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
 ```
 
-*(O script fará tudo: instalar dependências, configurar o Rust e iniciar o assistente de onboarding)*
+*(O script fará tudo: instalar dependências, configurar o Rust e iniciar o assistente de onboarding)*.
 
 ### Cloud / Servidor (Docker)
 
@@ -317,7 +310,7 @@ O módulo **Zero Sentinel** implementa defesas ativas contra ameaças vetoriais:
 
 ### 🔬 Engenharia de Privacidade (Deep Dive)
 
-*Respondendo à provocação: "Algoritmos de detecção são realmente eficazes?"*
+**Respondendo à provocação:** "Algoritmos de detecção são realmente eficazes?"
 
 O **Zero Sentinel** não é apenas um filtro de palavras-chave. Ele opera no nível do kernel agêntico em **Rust** para garantir latência sub-milissegundo:
 

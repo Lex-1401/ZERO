@@ -1,0 +1,21 @@
+{
+    "id": "AUDIT-001",
+    "title": "Auditoria Técnica e Refinamento de UX/UI Zero macOS",
+    "description": "Limpeza de strings não traduzidas, correção de fluxos de atualização travados, refinamento de branding (logo) e correção de interatividade nos controles de núcleo.",
+    "objectives": [
+        "Traduzir 100% da interface do usuário para Português-Br, removendo labels hardcoded em Inglês.",
+        "Restaurar funcionalidade dos botões Salvar/Aplicar no painel de configuração.",
+        "Resolver o travamento no processo de atualização de software (v1.1.23).",
+        "Substituir o logo com fundo por uma versão transparente profissional encontrada no repositório.",
+        "Sanitizar referências a infraestruturas externas (VPS) para manter soberania local."
+    ],
+    "requirements": [
+        "Uso obrigatório de i18n.ts para todas as strings.",
+        "Validação de permissões de arquivo para o update-runner.",
+        "Verificação de handlers RPC para comandos de configuração.",
+        "Uso de ativos transparentes em ui/public/."
+    ],
+    "status": "in_progress",
+    "priority": "high",
+    "owner": "Antigravity"
+}

@@ -107,9 +107,8 @@ Os testes live são divididos em duas camadas para que possamos isolar falhas:
   - `pnpm test:live` (ou `ZERO_LIVE_TEST=1` se invocar o Vitest diretamente).
 - Defina `ZERO_LIVE_MODELS=modern` (ou `all`, apelido para modern) para realmente executar esta suíte; caso contrário, ela será ignorada para manter o `pnpm test:live` focado no smoke do gateway.
 - Como selecionar modelos:
-  - `ZERO_LIVE_MODELS=modern` para executar a lista de permissão moderna (Opus/Sonnet/Haiku 4.5, GPT-5.x + Codex, Gemini 3, GLM 4.7, MiniMax M2.1, Grok 4).
-  - `ZERO_LIVE_MODELS=all` é um apelido para a lista moderna.
-  - Ou `ZERO_LIVE_MODELS="openai/gpt-5.2,anthropic/claude-opus-4-5,..."` (lista separada por vírgulas).
+  - `ZERO_LIVE_MODELS=modern` para executar a lista de permissão de modelos recomendados para testes de integração.
+  - Ou `ZERO_LIVE_MODELS="provider/model_id"` (lista separada por vírgulas).
 - Como selecionar provedores:
   - `ZERO_LIVE_PROVIDERS="google,google-cloud-auth,google-gemini-cli"` (lista separada por vírgulas).
 - De onde vêm as chaves:
@@ -138,8 +137,7 @@ Os testes live são divididos em duas camadas para que possamos isolar falhas:
 - Como ativar:
   - `pnpm test:live` (ou `ZERO_LIVE_TEST=1` se invocar o Vitest diretamente).
 - Como selecionar modelos:
-  - Padrão: lista moderna (Opus/Sonnet/Haiku 4.5, GPT-5.x + Codex, Gemini 3, GLM 4.7, MiniMax M2.1, Grok 4).
-  - `ZERO_LIVE_GATEWAY_MODELS=all` é um apelido para a lista moderna.
+  - Padrão: lista de modelos compatíveis com chamadas de ferramentas e visão.
   - Ou defina `ZERO_LIVE_GATEWAY_MODELS="provider/model"` (ou lista por vírgulas) para filtrar.
 - Como selecionar provedores (evite o "OpenRouter para tudo"):
   - `ZERO_LIVE_GATEWAY_PROVIDERS="google,google-cloud-auth,google-gemini-cli,openai,anthropic,zai,minimax"` (lista separada por vírgulas).
@@ -241,20 +239,17 @@ Notas:
 
 Não há uma "lista fixa de modelos para o CI" (os testes live são opcionais), mas estes são os modelos **recomendados** para serem cobertos regularmente em uma máquina de desenvolvimento com chaves.
 
-### Conjunto moderno de fumaça (chamada de ferramentas + imagem)
+### Conjunto de fumaça recomendado (chamada de ferramentas + imagem)
 
-Este é o conjunto de "modelos comuns" que esperamos manter funcionando:
+Este é o conjunto de categorias de modelos que devem ser cobertas regularmente para garantir a integridade do sistema:
 
-- OpenAI (não-Codex): `openai/gpt-5.2` (opcional: `openai/gpt-5.1`)
-- OpenAI Codex: `openai-codex/gpt-5.2` (opcional: `openai-codex/gpt-5.2-codex`)
-- Anthropic: `anthropic/claude-opus-4-5` (ou `anthropic/claude-sonnet-4-5`)
-- Google (API Gemini): `google/gemini-3-pro-preview` e `google/gemini-3-flash-preview` (evite modelos Gemini 2.x mais antigos)
-- Google (Google Cloud Auth): `google-cloud-auth/claude-opus-4-5-thinking` e `google-cloud-auth/gemini-3-flash`
-- Z.AI (GLM): `zai/glm-4.7`
-- MiniMax: `minimax/minimax-m2.1`
+- Modelos de Frontal de Texto
+- Modelos de Texto + Código (Codex)
+- Modelos Multimodais (Visão)
+- Modelos de Baixa Latência e Ingestão de Fluxo
 
 Execute o smoke do gateway com ferramentas + imagem:
-`ZERO_LIVE_GATEWAY_MODELS="openai/gpt-5.2,openai-codex/gpt-5.2,anthropic/claude-opus-4-5,google/gemini-3-pro-preview,google/gemini-3-flash-preview,google-cloud-auth/claude-opus-4-5-thinking,google-cloud-auth/gemini-3-flash,zai/glm-4.7,minimax/minimax-m2.1" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+`ZERO_LIVE_GATEWAY_MODELS="vendor/model-1,vendor/model-2" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 ### Base: chamada de ferramentas (Leitura + opcional Execução)
 

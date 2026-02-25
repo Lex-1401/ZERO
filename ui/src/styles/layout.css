@@ -61,7 +61,8 @@
   border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  padding: 52px 12px 20px 12px;
+  padding: 52px 16px 24px 16px;
+  /* 8pt aligned */
   z-index: 50;
   transition: transform 0.4s var(--ease-premium), opacity 0.3s ease;
   transform-origin: left;
@@ -157,14 +158,17 @@
 
 .mascot-brand {
   font-family: 'Inter', sans-serif;
-  font-weight: 900;
-  font-size: 26px;
-  letter-spacing: 0.35em;
+  font-weight: var(--font-weight-black);
+  font-size: 22px;
+  letter-spacing: 0.5em;
   color: #fff;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
-  opacity: 0.95;
-  transition: all 0.4s var(--ease-premium);
+  text-indent: 0.5em;
+  /* Center compensation */
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 30px rgba(var(--accent-blue-rgb), 0.3);
+  opacity: 0.9;
+  transition: all 0.5s var(--ease-premium);
   z-index: 3;
+  margin-top: 12px;
 }
 
 .mascot-container-red:hover {
@@ -172,8 +176,10 @@
 }
 
 .mascot-container-red:hover .mascot-brand {
-  letter-spacing: 0.45em;
-  text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+  letter-spacing: 0.6em;
+  text-indent: 0.6em;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(var(--accent-blue-rgb), 0.6);
+  opacity: 1;
 }
 
 @keyframes mascot-appear {
@@ -221,15 +227,42 @@
   }
 }
 
-@keyframes stroke-pulse {
+/* Orbiting Status Orb */
+.status-orb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.status-orb.success {
+  background: var(--success);
+  box-shadow: 0 0 12px var(--success), 0 0 24px rgba(var(--accent-green-rgb), 0.4);
+  animation: orb-breath 2s infinite ease-in-out;
+}
+
+.status-orb.danger {
+  background: var(--danger);
+  box-shadow: 0 0 12px var(--danger), 0 0 24px rgba(var(--accent-red-rgb), 0.4);
+}
+
+@keyframes orb-breath {
   0% {
-    stroke-opacity: 0.8;
-    stroke-width: 3;
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 8px var(--success);
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 16px var(--success), 0 0 30px rgba(var(--accent-green-rgb), 0.6);
   }
 
   100% {
-    stroke-opacity: 1;
-    stroke-width: 4;
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 8px var(--success);
   }
 }
 
@@ -475,7 +508,8 @@
 /* --- CONTENT --- */
 .content {
   grid-area: content;
-  padding: 40px 60px;
+  padding: 48px 64px;
+  /* 8pt Grid: 6x8 and 8x8 */
   overflow-y: auto;
   background: transparent;
   scroll-behavior: smooth;

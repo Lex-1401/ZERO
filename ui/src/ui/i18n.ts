@@ -4,15 +4,15 @@ export type Language = "pt-BR" | "en-US";
 export const translations = {
     "pt-BR": {
         "app.title": "ZERO",
-        "app.online": "Online",
-        "app.offline": "Offline",
+        "app.online": "CONECTADO",
+        "app.offline": "DESCONECTADO",
         "app.panic": "PÂNICO",
         "app.sentinel": "SENTINELA ATIVO",
         "app.select_interface": "Selecionar Interface",
-        "app.full_chat": "Chat Completo",
-        "app.zen_mode": "Modo Zen (Simples)",
+        "app.full_chat": "Chat Principal",
+        "app.zen_mode": "Modo Zen (Simplificado)",
         "nav.mission-control": "Missão",
-        "nav.overview": "Hub",
+        "nav.overview": "Visão Geral",
         "nav.channels": "Conexões",
         "nav.instances": "Presença",
         "nav.sessions": "Contextos",
@@ -68,7 +68,7 @@ export const translations = {
         "skills.activate": "Ativar",
         "skills.deactivate": "Desativar",
         "skills.installing": "Instalando…",
-        "tab.overview": "Hub",
+        "tab.overview": "Visão Geral",
         "tab.channels": "Conexões",
         "tab.instances": "Presença",
         "tab.sessions": "Contextos",
@@ -77,12 +77,13 @@ export const translations = {
         "tab.nodes": "Hardware",
         "tab.graph": "Memória",
         "tab.playground": "Laboratório",
-        "tab.chat": "Interface",
+        "tab.chat": "Chat Principal",
         "tab.config": "Núcleo",
         "tab.debug": "Diagnóstico",
         "tab.logs": "Registros",
-        "tab.docs": "Docs",
-        "tab.mission-control": "Missão",
+        "tab.docs": "Documentos",
+        "tab.mission-control": "Missão Control",
+        "tab.interface": "Interface de Usuário",
         "subtitle.overview": "Origem e integridade do sistema.",
         "subtitle.channels": "Interação com o mundo exterior.",
         "subtitle.instances": "Espelhamento de processos ativos.",
@@ -124,6 +125,8 @@ export const translations = {
         "config.update.button": "Atualizar Agora",
         "config.update.check": "Buscar Atualizações",
         "nexus.core": "Acesso ao Núcleo",
+
+
         "nexus.endpoint": "Endpoint do Gateway",
         "nexus.endpoint.desc": "Endereço do protocolo de controle local.",
         "nexus.token": "Token de Acesso",
@@ -158,6 +161,7 @@ export const translations = {
         "nexus.radar": "RADAR",
         "common.search": "Buscar",
         "common.search_placeholder": "Buscar no sistema…",
+        "common.loading": "Carregando",
         "common.none": "n/d",
         "common.unknown": "desconhecido",
         "common.io": "I/O",
@@ -342,8 +346,13 @@ export const translations = {
         "config.section.wizard.desc": "Estado e histórico do assistente de configuração",
         "config.section.meta.label": "Metadados",
         "config.section.meta.desc": "Metadados do gateway e informações de versão",
+        "config.section.diagnostics.label": "Diagnóstico",
+        "config.section.diagnostics.desc": "Relatórios de integridade e registro de eventos do sistema",
         "config.section.logging.label": "Logs",
-        "config.section.logging.desc": "Níveis de log e configuração de saída",
+        "config.section.logging.desc": "Níveis de registro e configuração de saída",
+        "config.section.nodeHost.label": "Servidor Node",
+        "config.section.nodeHost.desc": "Configurações do hospedeiro de nós local e proxy",
+
         "config.section.browser.label": "Navegador",
         "config.section.browser.desc": "Configurações de automação de navegador",
         "config.section.ui.label": "Interface (UI)",
@@ -427,9 +436,24 @@ export const translations = {
         "config.description.billingBackoffHours": "Intervalo base para falhas de faturamento.",
         "config.field.bash": "Execução Bash",
         "config.description.bash": "Permitir comandos shell via chat.",
-        "config.field.entries": "Registros",
         "config.field.env": "Ambiente",
         "config.field.config": "Configuração",
+        "config.field.shell_env": "Terminal Host",
+        "config.field.timeout_ms": "Tempo Limite (ms)",
+        "config.field.local": "Local",
+        "config.field.remote": "Remoto",
+        "config.field.stable": "Estável",
+        "config.field.beta": "Beta",
+        "config.field.dev": "Desenvolvimento",
+        "config.field.online": "Conectado",
+        "config.field.offline": "Offline",
+        "config.value.local": "Local",
+        "config.value.remote": "Remoto",
+        "config.value.stable": "Estável",
+        "config.value.beta": "Beta",
+        "config.value.dev": "Desenvolvimento",
+        "config.value.online": "Conectado",
+        "config.value.offline": "Desconectado",
         "zen.title": "Modo Zen Ativo",
         "zen.description": "Interface simplificada para foco total.",
         "zen.config_persona": "Persona",
@@ -1129,8 +1153,68 @@ export function setLanguage(lang: Language) {
     }
 }
 
-export function t(key: keyof typeof translations["pt-BR"], params?: Record<string, string | number>): string {
-    let text = translations[currentLang][key] || translations["pt-BR"][key] || key;
+// Dicionário Dinâmico Gerado por Agentes (Persistente em tempo de execução e no localStorage)
+const STORAGE_KEY = "zero-ai-i18n";
+
+function loadPersistentTranslations() {
+    if (typeof localStorage === "undefined") return {};
+    const cache = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    // Reinjetar valores no objeto translations em memória
+    Object.entries(cache).forEach(([lang, keys]) => {
+        if (Array.isArray(keys)) {
+            keys.forEach(key => {
+                const val = localStorage.getItem(`zero-lang-custom-${lang}-${key}`);
+                if (val) {
+                    if (!(translations as any)[lang]) (translations as any)[lang] = {};
+                    (translations as any)[lang][key] = val;
+                }
+            });
+        }
+    });
+    return cache;
+}
+
+const loadedCache = loadPersistentTranslations();
+
+export const aiGeneratedTranslations: Record<string, Set<string>> = {
+    "pt-BR": new Set(loadedCache["pt-BR"] || []),
+    "en-US": new Set(loadedCache["en-US"] || [])
+};
+
+// Adiciona suporte a novos idiomas dinamicamente
+export function injectTranslation(lang: string, key: string, value: string, isAi: boolean = false) {
+    const dict = (translations as any);
+    if (!dict[lang]) {
+        dict[lang] = {};
+        if (!aiGeneratedTranslations[lang]) aiGeneratedTranslations[lang] = new Set();
+    }
+    dict[lang][key] = value;
+
+    if (isAi) {
+        aiGeneratedTranslations[lang].add(key);
+        // Persistir no localStorage
+        if (typeof localStorage !== "undefined") {
+            const cache: any = {};
+            Object.entries(aiGeneratedTranslations).forEach(([l, set]) => {
+                cache[l] = Array.from(set);
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+            localStorage.setItem(`zero-lang-custom-${lang}-${key}`, value);
+        }
+    }
+}
+
+export function isAiTranslated(key: string, lang: string): boolean {
+    return aiGeneratedTranslations[lang]?.has(key) || false;
+}
+
+export function t(key: string, params?: Record<string, string | number>): string {
+    const lang = currentLang;
+    const dict = (translations as any);
+    let text = (dict[lang] ? dict[lang][key] : null) ||
+        dict["pt-BR"][key] ||
+        key;
+
     if (params) {
         for (const [k, v] of Object.entries(params)) {
             text = text.replace(`{${k}}`, String(v));

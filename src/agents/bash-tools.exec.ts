@@ -44,10 +44,18 @@ import { SecurityGuard } from "../security/guard.js";
 // Importações dos arquivos fragmentados
 import { execSchema } from "./bash-tools.exec.schema.js";
 import {
-  ExecToolDefaults,
-  ExecToolDetails,
-  ExecProcessHandle
+  type ExecToolDefaults,
+  type ExecToolDetails,
+  type ExecProcessHandle,
+  type ExecElevatedDefaults
 } from "./bash-tools.exec.types.js";
+export {
+  type ExecToolDefaults,
+  type ExecToolDetails,
+  type ExecProcessHandle,
+  type ExecElevatedDefaults
+};
+export { type BashSandboxConfig } from "./bash-tools.shared.js";
 import {
   normalizeExecHost,
   normalizeExecSecurity,

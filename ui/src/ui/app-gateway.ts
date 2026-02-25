@@ -145,7 +145,17 @@ export function connectGateway(host: GatewayHost) {
       host.connected = true;
       host.lastError = null;
       host.hello = hello;
+
+      // Force clear update state on successful connection/reconnection
+      if ("isUpdating" in host) (host as any).isUpdating = false;
+      if ("updateRunning" in host) (host as any).updateRunning = false;
+      if ((host as any).configStore) {
+        (host as any).configStore.updateRunning = false;
+        (host as any).configStore.requestUpdate();
+      }
+
       applySnapshot(host, hello);
+
       void loadAssistantIdentity(host as unknown as ZEROApp);
       void loadAgents(host as unknown as ZEROApp);
       void loadModels(host as unknown as ZEROApp);

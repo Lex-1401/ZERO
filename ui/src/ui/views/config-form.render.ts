@@ -71,6 +71,7 @@ export const SECTION_META: Record<string, { label: string; description: string }
   wizard: { label: t("config.section.wizard.label" as any), description: t("config.section.wizard.desc" as any) },
   // Additional sections
   meta: { label: t("config.section.meta.label" as any), description: t("config.section.meta.desc" as any) },
+  diagnostics: { label: t("config.section.diagnostics.label" as any), description: t("config.section.diagnostics.desc" as any) },
   logging: { label: t("config.section.logging.label" as any), description: t("config.section.logging.desc" as any) },
   browser: { label: t("config.section.browser.label" as any), description: t("config.section.browser.desc" as any) },
   ui: { label: t("config.section.ui.label" as any), description: t("config.section.ui.desc" as any) },
@@ -86,6 +87,7 @@ export const SECTION_META: Record<string, { label: string; description: string }
   talk: { label: t("config.section.talk.label" as any), description: t("config.section.talk.desc" as any) },
   plugins: { label: t("config.section.plugins.label" as any), description: t("config.section.plugins.desc" as any) },
 };
+
 
 function getSectionIcon(key: string) {
   return sectionIcons[key as keyof typeof sectionIcons] ?? sectionIcons.default;

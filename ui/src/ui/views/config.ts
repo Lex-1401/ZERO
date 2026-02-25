@@ -102,7 +102,23 @@ const getSections = () => [
   { key: "tools", label: t("config.section.tools.label" as any) },
   { key: "gateway", label: t("config.section.gateway.label" as any) },
   { key: "wizard", label: t("config.section.wizard.label" as any) },
+  { key: "diagnostics", label: t("config.section.diagnostics.label" as any) },
+  { key: "logging", label: t("config.section.logging.label" as any) },
+  { key: "nodeHost", label: t("config.section.nodeHost.label" as any) },
+  { key: "ui", label: t("config.section.ui.label" as any) },
+  { key: "browser", label: t("config.section.browser.label" as any) },
+  { key: "bindings", label: t("config.section.bindings.label" as any) },
+  { key: "broadcast", label: t("config.section.broadcast.label" as any) },
+  { key: "audio", label: t("config.section.audio.label" as any) },
+  { key: "session", label: t("config.section.session.label" as any) },
+  { key: "cron", label: t("config.section.cron.label" as any) },
+  { key: "web", label: t("config.section.web.label" as any) },
+  { key: "discovery", label: t("config.section.discovery.label" as any) },
+  { key: "canvasHost", label: t("config.section.canvasHost.label" as any) },
+  { key: "talk", label: t("config.section.talk.label" as any) },
+  { key: "plugins", label: t("config.section.plugins.label" as any) },
 ];
+
 
 type SubsectionEntry = {
   key: string;
@@ -315,16 +331,16 @@ export function renderConfig(props: ConfigProps) {
                         <div class="info-value" style="font-family: var(--font-mono); font-size: 18px; color: var(--hdr-white);">
                             ${git?.tag ?? git?.sha?.slice(0, 7) ?? "v0.0.0"}
                         </div>
-                        ${git?.branch ? html`<div class="info-sub" style="font-size: 11px; opacity: 0.6;">Branch: ${git.branch}</div>` : nothing}
+                        ${git?.branch ? html`<div class="info-sub" style="font-size: 11px; opacity: 0.6;">Ramo (Branch): ${git.branch}</div>` : nothing}
                     </div>
 
                     <!-- Upgrade Info -->
                     <div class="info-group">
                         <div class="info-label">${t("config.update.available" as any)}</div>
                         <div class="info-value" style="font-family: var(--font-mono); font-size: 18px; color: ${hasUpdate ? "var(--accent-blue)" : "var(--text-muted)"};">
-                            ${registry?.latestVersion ?? "checking..."}
+                            ${registry?.latestVersion ?? "verificando..."}
                         </div>
-                        ${git?.behind ? html`<div class="info-sub" style="font-size: 11px; color: var(--accent-blue); animation: pulse-intense 2s infinite;">${git.behind} commits behind</div>` : nothing}
+                        ${git?.behind ? html`<div class="info-sub" style="font-size: 11px; color: var(--accent-blue); animation: pulse-intense 2s infinite;">${git.behind} commits atrasado</div>` : nothing}
                     </div>
 
                     <!-- Package Manager -->
@@ -430,7 +446,7 @@ export function renderConfig(props: ConfigProps) {
             </div>
             <div style="padding: 16px;">
                 <button class="btn primary" style="width: 100%; border-radius: 12px; height: 44px; font-weight: 700;" @click=${props.onStartTour}>
-                    ${icons.playCircle} Repetir Tour do Sistema
+                    ${icons.playCircle} ${t("onboarding.tour.welcome.title" as any)}
                 </button>
             </div>
         </div>

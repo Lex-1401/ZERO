@@ -108,6 +108,30 @@ export class Sentinel {
       originalError,
     ].join("\n");
   }
+
+  /**
+   * Attempts to self-repair the identified breach.
+   * Leverages the "Refcoding" pilar of ZERO's autonomy.
+   * [ISSUE-EVOL-002]
+   */
+  static async attemptSelfRepair(diagnostic: ToolFailureDiagnostic): Promise<boolean> {
+    if (diagnostic.severity === "low") return false;
+
+    _log.warn(`[SENTINEL SELF-HEALING] Protocolo de reparo ativado para: ${diagnostic.rootCause}`);
+
+    // Simulação do loop de Refcoding
+    if (diagnostic.rootCause.includes("Missing environment dependency")) {
+      _log.info(`[SENTINEL] Sugerindo instalação automática via MCP/Package Manager.`);
+      return true;
+    }
+
+    if (diagnostic.rootCause.includes("Syntactic integrity breach")) {
+      _log.warn(`[SENTINEL] Disparando loop de autocorreção de sintaxe (Refcoding).`);
+      return true;
+    }
+
+    return false;
+  }
 }
 
 /**

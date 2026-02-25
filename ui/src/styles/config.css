@@ -18,6 +18,7 @@
   backdrop-filter: var(--glass-blur);
 }
 
+
 /* Sidebar */
 .config-sidebar {
   display: flex;
@@ -258,8 +259,9 @@
   gap: var(--s-4);
   padding: var(--s-5) var(--s-8);
   border-bottom: 1px solid var(--glass-border);
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+  background: linear-gradient(to bottom, var(--glass-background), transparent);
 }
+
 
 .config-section-hero__icon {
   width: 42px;
@@ -320,8 +322,9 @@
 .config-section-card {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--glass-background);
   overflow: hidden;
+
   transition: all var(--duration-normal) var(--ease-out);
   margin-bottom: var(--s-6);
   padding-bottom: var(--s-8);
@@ -338,9 +341,10 @@
   align-items: flex-start;
   gap: var(--s-4);
   padding: var(--s-5) var(--s-6);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-background);
   border-bottom: 1px solid var(--glass-border);
 }
+
 
 .config-section-card__content {
   padding: var(--s-6);
@@ -365,14 +369,13 @@
 }
 
 .cfg-field__label {
+  line-height: 1;
   font-size: 11px;
   font-weight: var(--font-weight-bold);
-  color: var(--text-muted);
+  color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 4px;
-  /* Increased from 2px */
-  opacity: 0.8;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
   display: block;
 }
 
@@ -595,9 +598,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-background);
   border-bottom: 1px solid var(--glass-border);
 }
+
 
 .cfg-array__label,
 .cfg-map__label {
@@ -765,10 +769,11 @@
   list-style: none;
   font-weight: var(--font-weight-medium);
   color: var(--text-main);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-background);
   border-bottom: 1px solid var(--glass-border);
   transition: background var(--duration-fast) ease;
 }
+
 
 .cfg-object__header:hover {
   background: rgba(255, 255, 255, 0.05);

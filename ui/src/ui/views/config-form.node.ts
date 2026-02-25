@@ -113,7 +113,7 @@ export function renderNode(params: {
                 ?disabled=${disabled}
                 @click=${() => onPatch(path, lit)}
               >
-                ${String(lit)}
+                ${t(`config.value.${lit}` as any) !== `config.value.${lit}` ? t(`config.value.${lit}` as any) : String(lit)}
               </button>
             `)}
           </div>
@@ -172,7 +172,7 @@ export function renderNode(params: {
                 ?disabled=${disabled}
                 @click=${() => onPatch(path, opt)}
               >
-                ${String(opt)}
+                ${t(`config.value.${opt}` as any) !== `config.value.${opt}` ? t(`config.value.${opt}` as any) : String(opt)}
               </button>
             `)}
           </div>
@@ -448,7 +448,7 @@ function renderSelect(params: {
       >
         <option value=${unset}>${t("config.node.select" as any)}</option>
         ${options.map((opt, idx) => html`
-          <option value=${String(idx)}>${String(opt)}</option>
+          <option value=${String(idx)}>${t(`config.value.${opt}` as any) !== `config.value.${opt}` ? t(`config.value.${opt}` as any) : String(opt)}</option>
         `)}
       </select>
     </div>

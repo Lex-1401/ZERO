@@ -220,7 +220,7 @@ fun RootScreen(viewModel: MainViewModel) {
   Popup(alignment = Alignment.TopEnd, properties = PopupProperties(focusable = false)) {
     Column(
       modifier = Modifier.windowInsetsPadding(safeOverlayInsets).padding(end = 12.dp, top = 12.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp),
+      verticalArrangement = Arrangement.spacedBy(12.dp),
       horizontalAlignment = Alignment.End,
     ) {
       OverlayIconButton(

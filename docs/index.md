@@ -5,9 +5,7 @@ read_when:
 ---
 # ZERO ∅ (Distro Brasileira)
 
-<p align="center">
-  <img src="whatsapp-zero.jpg" alt="ZERO" width="420" />
-</p>
+![ZERO](whatsapp-zero.jpg)
 
 O **ZERO** é o primeiro Sistema Operacional Pessoal Agêntico focado em soberania local e interatividade multicanal de alto desempenho. Imagine uma camada de inteligência transparente que reside em seu hardware local, orquestrando fluxos de trabalho entre dispositivos e plataformas de mensageria com latência ultra-baixa.
 
@@ -15,12 +13,7 @@ O **ZERO** é uma distribuição brasileira criada por **Leandro Azevdo**, basea
 
 Enquanto o Moltbot provê a base sólida e a arquitetura modular, o ZERO adapta e expande essa experiência para o mercado brasileiro, focando em localização, soberania de dados, **Segurança Zero Trust** e defesa ativa.
 
-<p align="center">
-  <a href="https://github.com/zero/zero">GitHub</a> ·
-  <a href="https://github.com/zero/zero/releases">Releases</a> ·
-  <a href="/">Documentação</a> ·
-  <a href="/start/zero">Configuração do assistente ZERO</a>
-</p>
+[GitHub](https://github.com/zero/zero) · [Releases](https://github.com/zero/zero/releases) · [Documentação](/) · [Configuração do assistente ZERO](/start/zero)
 
 ZERO conecta WhatsApp (via WhatsApp Web / Baileys), Telegram (Bot API / grammY), Discord (Bot API / channels.discord.js) e iMessage (CLI imsg) a agentes de codificação como o [Pi](https://github.com/badlogic/pi-mono). Plugins adicionam Mattermost (Bot API + WebSocket) e muito mais.
 ZERO agora apresenta o **Zero**, seu assistente pessoal com a nova **Interface Altair** (Design Premium estilo nativo).
@@ -104,15 +97,15 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 - 🛡️ **Zero Sentinel** — *Engine Nativa de Resiliência & Segurança*. Auto-correção de erros de terminal (**Self-Healing**), **Speculative Pre-warming** de arquivos e mitigação proativa de injeção de prompt. [Saiba mais](/concepts/sentinel)
 - 🚀 **DevOps Suite** — Integrações nativas com Vercel, Netlify, Supabase, Firebase, Railway.
 - 💡 **Nudge Engine** — *IA Proativa*. Sugere ações inteligentes baseadas no contexto (ex: "Sexta-feira à tarde?").
-- 🧠 **Brain V3** — Plataforma com **Estabilidade S-Rank**. Memória persistente, **Arquitetura ClearCode** e orquestração proativa de contexto.
+- 🧠 **Brain V3** — Plataforma com **Alta Estabilidade**. Memória persistente, **Arquitetura ClearCode** e orquestração proativa de contexto.
 - 🦞 **Mascote Zero** — A nova face da sua IA pessoal.
 - 🕸️ **Grafo de Conhecimento** — Malha vetorial persistente e navegável em SQLite.
 - 🛡️ **Painel de Auditoria** — Logs de segurança em tempo real.
 - 🎤 **Notas de voz** — Gancho de transcrição opcional.
 - 🖥️ **WebChat + app macOS** — UI local + companheiro de barra de menu.
 - 📱 **Nó iOS/Android** — Pareia como um nó e expõe Canvas + Chat.
-- 🚀 **Modelos de Elite (Fev 2026)** — Suporte nativo para **Gemini 3.1 Pro**, **Claude 4.6**, **Grok 4.20**, **GPT-5.3** e o ultra-eficiente **Tiny Aya** da Cohere.
-- ⚡ **Inferência Ultra-Rápida** — Integração com **Groq**, **Cerebras** e **Modal Labs** (GLM-5 FP8) para latência quase zero.
+- 🚀 **Modelos de Elite** — Suporte nativo para os modelos de linguagem mais avançados do mercado.
+- ⚡ **Inferência de Alta Performance** — Integração com provedores de computação especializada para latência reduzida.
 
 Nota: Pi é o único caminho oficial para agente de codificação.
 
