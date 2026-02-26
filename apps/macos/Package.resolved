@@ -1,5 +1,5 @@
 {
-  "originHash" : "8ff1ebd80d363de84b691d6bb3ba1ce8799a0626c3551ebdc3fdddb5ac1cb020",
+  "originHash" : "443f8b60d34b4ec85189e98db90545ea4374ebec44feb89d1f2dd3faf43cb89b",
   "pins" : [
     {
       "identity" : "axorcist",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/orchetect/MenuBarExtraAccess",
       "state" : {
-        "revision" : "707dff6f55217b3ef5b6be84ced3e83511d4df5c",
-        "version" : "1.2.2"
+        "revision" : "33bb0e4b1e407feac791e047dcaaf9c69b25fd26",
+        "version" : "1.3.0"
       }
     },
     {
