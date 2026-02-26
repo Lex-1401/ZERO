@@ -237,7 +237,7 @@
     "@types/qrcode-terminal": "^0.12.2",
     "@types/ws": "^8.18.1",
     "@typescript/native-preview": "7.0.0-dev.20260208.1",
-    "@typescript/native-preview-darwin-arm64": "7.0.0-dev.20260222.1",
+    "@typescript/native-preview-darwin-arm64": "7.0.0-dev.20260226.1",
     "@vitest/coverage-v8": "^4.0.18",
     "docx-preview": "^0.3.7",
     "escodegen": "^2.1.0",
