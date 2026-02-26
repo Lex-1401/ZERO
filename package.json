@@ -250,7 +250,7 @@
     "oxlint": "^1.47.0",
     "oxlint-tsgolint": "^0.12.2",
     "quicktype-core": "^23.2.6",
-    "rolldown": "1.0.0-rc.3",
+    "rolldown": "1.0.0-rc.6",
     "signal-utils": "^0.21.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
