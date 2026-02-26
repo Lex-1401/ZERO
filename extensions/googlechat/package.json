@@ -28,7 +28,7 @@
     }
   },
   "dependencies": {
-    "google-auth-library": "^10.5.0"
+    "google-auth-library": "^10.6.1"
   },
   "devDependencies": {
     "zero": "workspace:*"
