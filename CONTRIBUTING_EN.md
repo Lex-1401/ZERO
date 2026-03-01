@@ -30,7 +30,7 @@ Welcome to the ZERO project! ∅
 - Test locally with your Zero instance.
 - Run the linter: `npm run lint`.
 - Keep PRs focused (one thing per PR).
-- Describe the *what* and the *why*.
+- Describe the _what_ and the _why_.
 
 ## AI / Vibe Coded PRs are Welcome! ∅
 

@@ -144,11 +144,11 @@ launchctl bootout gui/$UID/com.zero.ssh-tunnel
 
 ## Como Funciona
 
-| Componente | O que faz |
-| :--- | :--- |
-| `LocalForward 18789 127.0.0.1:18789` | Encaminha a porta local 18789 para a porta remota 18789 |
-| `ssh -N` | SSH sem executar comandos remotos (apenas encaminhamento de porta) |
-| `KeepAlive` | Reinicia automaticamente o túnel se ele falhar |
-| `RunAtLoad` | Inicia o túnel quando o agente é carregado |
+| Componente                           | O que faz                                                          |
+| :----------------------------------- | :----------------------------------------------------------------- |
+| `LocalForward 18789 127.0.0.1:18789` | Encaminha a porta local 18789 para a porta remota 18789            |
+| `ssh -N`                             | SSH sem executar comandos remotos (apenas encaminhamento de porta) |
+| `KeepAlive`                          | Reinicia automaticamente o túnel se ele falhar                     |
+| `RunAtLoad`                          | Inicia o túnel quando o agente é carregado                         |
 
 O ZERO.app se conecta a `ws://127.0.0.1:18789` na sua máquina cliente. O túnel SSH encaminha essa conexão para a porta 18789 na máquina remota onde o Gateway está sendo executado.

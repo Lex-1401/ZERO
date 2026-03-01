@@ -10,38 +10,38 @@
  * @module path-analyzer
  */
 
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 // Reference patterns to detect
 const REFERENCE_PATTERNS = [
   // Markdown code refs to .aios-core
-  { pattern: /`\.aios-core\/[^`]+`/g, type: 'code-ref' },
+  { pattern: /`\.aios-core\/[^`]+`/g, type: "code-ref" },
   // Task references
-  { pattern: /tasks\/([a-z0-9-]+)\.md/gi, type: 'task' },
+  { pattern: /tasks\/([a-z0-9-]+)\.md/gi, type: "task" },
   // Template references (yaml, yml, md)
-  { pattern: /templates\/([a-z0-9-]+)\.(yaml|yml|md)/gi, type: 'template' },
+  { pattern: /templates\/([a-z0-9-]+)\.(yaml|yml|md)/gi, type: "template" },
   // Checklist references
-  { pattern: /checklists\/([a-z0-9-]+)\.md/gi, type: 'checklist' },
+  { pattern: /checklists\/([a-z0-9-]+)\.md/gi, type: "checklist" },
   // Script references
-  { pattern: /scripts\/([a-z0-9-]+)\.js/gi, type: 'script' },
+  { pattern: /scripts\/([a-z0-9-]+)\.js/gi, type: "script" },
   // Data file references
-  { pattern: /data\/([a-z0-9-]+)\.(md|yaml|yml|json)/gi, type: 'data' },
+  { pattern: /data\/([a-z0-9-]+)\.(md|yaml|yml|json)/gi, type: "data" },
   // Schema references
-  { pattern: /schemas\/([a-z0-9-]+)\.(json|js)/gi, type: 'schema' },
+  { pattern: /schemas\/([a-z0-9-]+)\.(json|js)/gi, type: "schema" },
   // Direct file paths in dependencies section
-  { pattern: /^\s+-\s+([a-z0-9-]+\.(?:md|yaml|yml|js))$/gim, type: 'dependency-item' },
+  { pattern: /^\s+-\s+([a-z0-9-]+\.(?:md|yaml|yml|js))$/gim, type: "dependency-item" },
 ];
 
 // Asset directories for path resolution
 const ASSET_DIRS = {
-  task: '.aios-core/development/tasks',
-  template: '.aios-core/product/templates',
-  checklist: '.aios-core/product/checklists',
-  script: '.aios-core/infrastructure/scripts',
-  data: '.aios-core/development/data',
-  schema: '.aios-core/schemas',
-  agent: '.aios-core/development/agents',
+  task: ".aios-core/development/tasks",
+  template: ".aios-core/product/templates",
+  checklist: ".aios-core/product/checklists",
+  script: ".aios-core/infrastructure/scripts",
+  data: ".aios-core/development/data",
+  schema: ".aios-core/schemas",
+  agent: ".aios-core/development/agents",
 };
 
 /**
@@ -50,10 +50,10 @@ const ASSET_DIRS = {
 async function findFilesToAnalyze(rootPath) {
   const files = [];
   const dirsToScan = [
-    { dir: '.aios-core/development/agents', type: 'agent' },
-    { dir: '.aios-core/development/tasks', type: 'task' },
-    { dir: '.aios-core/product/templates', type: 'template' },
-    { dir: '.aios-core/product/checklists', type: 'checklist' },
+    { dir: ".aios-core/development/agents", type: "agent" },
+    { dir: ".aios-core/development/tasks", type: "task" },
+    { dir: ".aios-core/product/templates", type: "template" },
+    { dir: ".aios-core/product/checklists", type: "checklist" },
   ];
 
   for (const { dir, type } of dirsToScan) {
@@ -61,7 +61,7 @@ async function findFilesToAnalyze(rootPath) {
     try {
       const entries = await fs.readdir(fullDir);
       for (const entry of entries) {
-        if (entry.endsWith('.md') || entry.endsWith('.yaml') || entry.endsWith('.yml')) {
+        if (entry.endsWith(".md") || entry.endsWith(".yaml") || entry.endsWith(".yml")) {
           files.push({
             path: path.join(dir, entry),
             fullPath: path.join(fullDir, entry),
@@ -93,7 +93,7 @@ function extractReferences(content, filePath) {
       let refName = match[1] || fullMatch;
 
       // Clean up the reference
-      refName = refName.replace(/^`|`$/g, '');
+      refName = refName.replace(/^`|`$/g, "");
 
       // Skip if it's a self-reference
       if (refName === path.basename(filePath)) continue;
@@ -115,12 +115,12 @@ function extractReferences(content, filePath) {
  */
 function resolveReference(ref, rootPath) {
   // If it's a full path already
-  if (ref.reference.startsWith('.aios-core/')) {
+  if (ref.reference.startsWith(".aios-core/")) {
     return path.join(rootPath, ref.reference);
   }
 
   // If it's a dependency item (just filename)
-  if (ref.type === 'dependency-item') {
+  if (ref.type === "dependency-item") {
     // Try to find in common locations
     const possibleDirs = Object.values(ASSET_DIRS);
     for (const dir of possibleDirs) {
@@ -142,7 +142,7 @@ function resolveReference(ref, rootPath) {
   const baseDir = dirMap[ref.type];
   if (baseDir) {
     // Extract just the filename if it includes directory
-    const filename = ref.reference.includes('/') ? path.basename(ref.reference) : ref.reference;
+    const filename = ref.reference.includes("/") ? path.basename(ref.reference) : ref.reference;
     return path.join(rootPath, baseDir, filename);
   }
 
@@ -165,7 +165,7 @@ async function fileExists(filePath) {
  * Analyze a single file
  */
 async function analyzeFile(file, rootPath) {
-  const content = await fs.readFile(file.fullPath, 'utf-8');
+  const content = await fs.readFile(file.fullPath, "utf-8");
   const references = extractReferences(content, file.path);
 
   const analysis = {
@@ -222,17 +222,17 @@ async function suggestFixes(brokenRef, rootPath) {
         // Check for exact match
         if (file === filename || file === brokenRef.reference) {
           suggestions.push({
-            type: 'exact-match',
+            type: "exact-match",
             suggestedPath: path.join(dir, file),
-            confidence: 'high',
+            confidence: "high",
           });
         }
         // Check for similar name (case insensitive)
         else if (fileWithoutExt.toLowerCase() === nameWithoutExt.toLowerCase()) {
           suggestions.push({
-            type: 'similar-name',
+            type: "similar-name",
             suggestedPath: path.join(dir, file),
-            confidence: 'medium',
+            confidence: "medium",
           });
         }
         // Check for partial match
@@ -241,9 +241,9 @@ async function suggestFixes(brokenRef, rootPath) {
           nameWithoutExt.includes(fileWithoutExt)
         ) {
           suggestions.push({
-            type: 'partial-match',
+            type: "partial-match",
             suggestedPath: path.join(dir, file),
-            confidence: 'low',
+            confidence: "low",
           });
         }
       }
@@ -336,59 +336,59 @@ async function analyzePaths(rootPath, options = {}) {
 function formatConsoleOutput(report, verbose = false) {
   const lines = [];
 
-  lines.push('');
-  lines.push('═══════════════════════════════════════════════════════════');
-  lines.push('  AIOS Path Analysis Report');
+  lines.push("");
+  lines.push("═══════════════════════════════════════════════════════════");
+  lines.push("  AIOS Path Analysis Report");
   lines.push(`  Generated: ${report.generated}`);
-  lines.push('═══════════════════════════════════════════════════════════');
-  lines.push('');
+  lines.push("═══════════════════════════════════════════════════════════");
+  lines.push("");
 
-  lines.push('SUMMARY');
-  lines.push('───────');
+  lines.push("SUMMARY");
+  lines.push("───────");
   lines.push(`  Files Analyzed:    ${report.stats.filesAnalyzed}`);
   lines.push(`  Total References:  ${report.stats.totalReferences}`);
   lines.push(`  Valid References:  ${report.stats.validReferences}`);
   lines.push(`  Broken References: ${report.stats.brokenReferences}`);
-  lines.push('');
+  lines.push("");
 
-  lines.push('REFERENCES BY TYPE');
-  lines.push('──────────────────');
+  lines.push("REFERENCES BY TYPE");
+  lines.push("──────────────────");
   for (const [type, count] of Object.entries(report.stats.byType)) {
     lines.push(`  ${type}: ${count}`);
   }
-  lines.push('');
+  lines.push("");
 
   if (report.brokenReferences.length > 0) {
-    lines.push('BROKEN REFERENCES');
-    lines.push('─────────────────');
+    lines.push("BROKEN REFERENCES");
+    lines.push("─────────────────");
     report.brokenReferences.forEach((ref) => {
       lines.push(`  ❌ ${ref.sourceFile}`);
       lines.push(`     └─ Missing: ${ref.reference} (type: ${ref.type})`);
     });
-    lines.push('');
+    lines.push("");
   }
 
   if (report.fixSuggestions && report.fixSuggestions.length > 0) {
-    lines.push('FIX SUGGESTIONS');
-    lines.push('───────────────');
+    lines.push("FIX SUGGESTIONS");
+    lines.push("───────────────");
     report.fixSuggestions.forEach((fix) => {
       lines.push(`  📍 ${fix.broken.reference} in ${fix.broken.sourceFile}`);
       fix.suggestions.slice(0, 3).forEach((s) => {
-        const icon = s.confidence === 'high' ? '✅' : s.confidence === 'medium' ? '🔶' : '🔷';
+        const icon = s.confidence === "high" ? "✅" : s.confidence === "medium" ? "🔶" : "🔷";
         lines.push(`     ${icon} ${s.suggestedPath} (${s.confidence})`);
       });
     });
-    lines.push('');
+    lines.push("");
   }
 
   if (report.brokenReferences.length === 0) {
-    lines.push('✅ All references are valid!');
-    lines.push('');
+    lines.push("✅ All references are valid!");
+    lines.push("");
   }
 
-  lines.push('═══════════════════════════════════════════════════════════');
+  lines.push("═══════════════════════════════════════════════════════════");
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 /**
@@ -397,7 +397,7 @@ function formatConsoleOutput(report, verbose = false) {
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.includes('--help')) {
+  if (args.includes("--help")) {
     console.log(`
 AIOS Path Analyzer
 
@@ -414,25 +414,25 @@ Options:
     return;
   }
 
-  const verbose = args.includes('--verbose');
-  const jsonOutput = args.includes('--json');
-  const fix = args.includes('--fix');
-  const outputIndex = args.indexOf('--output');
+  const verbose = args.includes("--verbose");
+  const jsonOutput = args.includes("--json");
+  const fix = args.includes("--fix");
+  const outputIndex = args.indexOf("--output");
   const outputPath = outputIndex !== -1 ? args[outputIndex + 1] : null;
 
   // Find project root
   let rootPath = process.cwd();
-  while (rootPath !== '/') {
+  while (rootPath !== "/") {
     try {
-      await fs.access(path.join(rootPath, '.aios-core'));
+      await fs.access(path.join(rootPath, ".aios-core"));
       break;
     } catch {
       rootPath = path.dirname(rootPath);
     }
   }
 
-  if (rootPath === '/') {
-    console.error('Error: Could not find .aios-core directory. Run from project root.');
+  if (rootPath === "/") {
+    console.error("Error: Could not find .aios-core directory. Run from project root.");
     process.exit(1);
   }
 
@@ -468,7 +468,7 @@ module.exports = {
 // Run CLI if called directly
 if (require.main === module) {
   main().catch((error) => {
-    console.error('Error:', error.message);
+    console.error("Error:", error.message);
     process.exit(1);
   });
 }

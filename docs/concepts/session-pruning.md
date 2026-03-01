@@ -4,6 +4,7 @@ read_when:
   - Você deseja reduzir o crescimento do contexto do LLM vindo das saídas de ferramentas
   - Você está ajustando o agents.defaults.contextPruning
 ---
+
 # Poda de Sessão (Session Pruning)
 
 A poda de sessão corta **resultados de ferramentas antigos** do contexto em memória logo antes de cada chamada de LLM. Ela **não** reescreve o histórico da sessão no disco (`*.jsonl`).
@@ -41,10 +42,10 @@ A poda de sessão corta **resultados de ferramentas antigos** do contexto em mem
 
 A poda usa uma janela de contexto estimada (caracteres ≈ tokens × 4). O tamanho da janela é resolvido nesta ordem:
 
-1) `contextWindow` da definição do modelo (do registro do modelo).
-2) Sobrescrita em `models.providers.*.models[].contextWindow`.
-3) `agents.defaults.contextTokens`.
-4) Padrão de `200000` tokens.
+1. `contextWindow` da definição do modelo (do registro do modelo).
+2. Sobrescrita em `models.providers.*.models[].contextWindow`.
+3. `agents.defaults.contextTokens`.
+4. Padrão de `200000` tokens.
 
 ## Modos
 
@@ -89,8 +90,8 @@ Padrão (desativado):
 ```json5
 {
   agent: {
-    contextPruning: { mode: "off" }
-  }
+    contextPruning: { mode: "off" },
+  },
 }
 ```
 
@@ -99,8 +100,8 @@ Habilitar poda ciente de TTL:
 ```json5
 {
   agent: {
-    contextPruning: { mode: "cache-ttl", ttl: "5m" }
-  }
+    contextPruning: { mode: "cache-ttl", ttl: "5m" },
+  },
 }
 ```
 
@@ -111,9 +112,9 @@ Restringir a poda a ferramentas específicas:
   agent: {
     contextPruning: {
       mode: "cache-ttl",
-      tools: { allow: ["exec", "read"], deny: ["*image*"] }
-    }
-  }
+      tools: { allow: ["exec", "read"], deny: ["*image*"] },
+    },
+  },
 }
 ```
 

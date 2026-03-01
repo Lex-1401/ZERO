@@ -4,6 +4,7 @@ read_when:
   - Procurando o status do aplicativo complementar para Linux
   - Planejando a cobertura de plataformas ou contribuições
 ---
+
 # Aplicativo para Linux
 
 O Gateway é totalmente suportado no Linux. **Node é o runtime recomendado**.
@@ -13,11 +14,11 @@ Aplicativos nativos complementares para Linux estão planejados. Contribuições
 
 ## Caminho rápido para iniciantes (VPS)
 
-1) Instale Node 22+
-2) `npm i -g zero@latest`
-3) `zero onboard --install-daemon`
-4) Do seu laptop: `ssh -N -L 18789:127.0.0.1:18789 <usuario>@<host>`
-5) Abra `http://127.0.0.1:18789/` e cole seu token
+1. Instale Node 22+
+2. `npm i -g zero@latest`
+3. `zero onboard --install-daemon`
+4. Do seu laptop: `ssh -N -L 18789:127.0.0.1:18789 <usuario>@<host>`
+5. Abra `http://127.0.0.1:18789/` e cole seu token
 
 Guia passo a passo para VPS: [exe.dev](/platforms/exe-dev)
 

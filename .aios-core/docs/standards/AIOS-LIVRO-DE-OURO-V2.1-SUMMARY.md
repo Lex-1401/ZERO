@@ -12,6 +12,7 @@
 This is a **delta document** highlighting **ONLY what changed in v2.1** compared to v2.0.
 
 For complete content that remained unchanged (Layer 0, most of Layer 1), refer to:
+
 - ✅ **`AIOS-LIVRO-DE-OURO.md`** (v2.0 base)
 - ✅ This document (v2.1 changes ONLY)
 
@@ -82,15 +83,15 @@ $ npx @SynkraAI/aios@latest init
 **v2.0:** Workers closed-source  
 **v2.1:** Workers open-source + Service Discovery
 
-| Component | v2.0 | v2.1 | Rationale |
-|-----------|------|------|-----------|
-| Agents (11) | ✅ Open | ✅ Open | Core functionality |
-| Workers | ❌ Closed | ✅ **OPEN** | Commodity, network effects |
-| Humanos | ⚠️ Concept | ✅ **OPEN** | Orchestration primitives |
-| Service Discovery | ❌ None | ✅ **BUILT-IN** | Community needs it |
-| Task-First | ⚠️ Implicit | ✅ **EXPLICIT** | Architecture clarity |
-| **Clones** | 🔒 Closed | 🔒 **CLOSED** | True moat (DNA Mental™) |
-| **Expansion Packs** | 🔒 Closed | 🔒 **CLOSED** | Domain expertise |
+| Component           | v2.0        | v2.1            | Rationale                  |
+| ------------------- | ----------- | --------------- | -------------------------- |
+| Agents (11)         | ✅ Open     | ✅ Open         | Core functionality         |
+| Workers             | ❌ Closed   | ✅ **OPEN**     | Commodity, network effects |
+| Humanos             | ⚠️ Concept  | ✅ **OPEN**     | Orchestration primitives   |
+| Service Discovery   | ❌ None     | ✅ **BUILT-IN** | Community needs it         |
+| Task-First          | ⚠️ Implicit | ✅ **EXPLICIT** | Architecture clarity       |
+| **Clones**          | 🔒 Closed   | 🔒 **CLOSED**   | True moat (DNA Mental™)    |
+| **Expansion Packs** | 🔒 Closed   | 🔒 **CLOSED**   | Domain expertise           |
 
 **Strategic Shift:** Open commodity → Monetize singularity
 
@@ -98,16 +99,16 @@ $ npx @SynkraAI/aios@latest init
 
 ### Feature Matrix Comparison
 
-| Feature | v2.0 | v2.1 | Impact |
-|---------|------|------|--------|
-| **Installation** | Manual (2-4h) | `npx` wizard (5min) | 96% faster |
-| **Workers Catalog** | None | 97+ searchable | Infinite value |
-| **Service Discovery** | None | Built-in CLI | New capability |
-| **Quality Gates** | 1 layer (manual) | 3 layers (auto) | 80% issues caught |
-| **Task-First** | Implicit | Explicit spec | Instant migration |
-| **Template Engine** | Partial | Complete | All doc types |
-| **CodeRabbit** | None | Local + GitHub | AI code review |
-| **MCP System** | Project-only | Global + Project | Config once |
+| Feature               | v2.0             | v2.1                | Impact            |
+| --------------------- | ---------------- | ------------------- | ----------------- |
+| **Installation**      | Manual (2-4h)    | `npx` wizard (5min) | 96% faster        |
+| **Workers Catalog**   | None             | 97+ searchable      | Infinite value    |
+| **Service Discovery** | None             | Built-in CLI        | New capability    |
+| **Quality Gates**     | 1 layer (manual) | 3 layers (auto)     | 80% issues caught |
+| **Task-First**        | Implicit         | Explicit spec       | Instant migration |
+| **Template Engine**   | Partial          | Complete            | All doc types     |
+| **CodeRabbit**        | None             | Local + GitHub      | AI code review    |
+| **MCP System**        | Project-only     | Global + Project    | Config once       |
 
 ---
 
@@ -116,32 +117,38 @@ $ npx @SynkraAI/aios@latest init
 ### What Changed vs. v2.0
 
 **Layer 0 (Discovery Router):**
+
 - ✅ **NO CHANGES** - Perfect as-is
 - ✅ Added **Track 6** for v2.0 → v2.1 migration
 
 **Layer 1 (Understanding):**
+
 - ✅ **Essay 3 REWRITTEN** - New business model
 - ✅ **Essay 5 NEW** - Task-First Architecture
 - ✅ Essays 1, 2, 4 remain mostly unchanged
 
 **Layer 2 (Component Library):**
+
 - ✅ **Workers Catalog NEW** - 97 workers organized
 - ✅ **Service Discovery Guide NEW**
 - ✅ Agents section unchanged (still 11 agents)
 
 **Layer 3 (Usage Guide):**
+
 - ✅ **Complete Installation Rewrite** - npx wizard
 - ✅ **Service Discovery Workflow NEW**
 - ✅ **Quality Gates 3 Layers NEW**
 - ✅ **Template Engine Usage NEW**
 
 **Layer 4 (Complete Reference):**
+
 - ✅ **Modular Architecture Spec NEW**
 - ✅ **Task-First Format Spec NEW**
 - ✅ **Service Registry Schema NEW**
 - ✅ **Quality Gate Config NEW**
 
 **Meta (Evolution):**
+
 - ✅ **Worker Contribution Guide NEW**
 - ✅ **Updated Versioning** - v2.1.0 format
 - ✅ **Community Contribution Path**
@@ -155,8 +162,7 @@ $ npx @SynkraAI/aios@latest init
 #### Old Business Model (v2.0)
 
 ```yaml
-Open-Source:
-  ✅ 11 Agents
+Open-Source: ✅ 11 Agents
   ❌ Workers (closed)
   ⚠️ Humanos (concept)
   ❌ Clones (closed)
@@ -167,15 +173,13 @@ Problem: Workers closed = adoption barrier
 #### New Business Model (v2.1)
 
 ```yaml
-Open-Source v2.1:
-  ✅ 11 Agents (Dex, Luna, Aria, Quinn, etc.)
+Open-Source v2.1: ✅ 11 Agents (Dex, Luna, Aria, Quinn, etc.)
   ✅ 97+ Workers (deterministic scripts) ← OPENED!
   ✅ Humanos (orchestration) ← OPENED!
   ✅ Service Discovery (find + reuse) ← NEW!
   ✅ Task-First Architecture ← NEW!
-  
-Proprietary (Monetization):
-  🔒 Clones (DNA Mental™ cognitive emulation)
+
+Proprietary (Monetization): 🔒 Clones (DNA Mental™ cognitive emulation)
   🔒 Expansion Packs (industry expertise)
   🔒 Team Features (collaboration)
   🔒 Enterprise (scale + support)
@@ -187,11 +191,11 @@ Proprietary (Monetization):
 
 **Competitive Positioning:**
 
-| Framework | Open-Source Completeness | Unique Differentiator |
-|-----------|-------------------------|----------------------|
-| LangChain | ✅ Complete (agents + workers + orchestration) | ❌ None (all commodity) |
-| CrewAI | ✅ Complete (agents + workers + orchestration) | ❌ None (all commodity) |
-| AutoGen | ✅ Complete (agents + workers + orchestration) | ❌ None (all commodity) |
+| Framework     | Open-Source Completeness                           | Unique Differentiator          |
+| ------------- | -------------------------------------------------- | ------------------------------ |
+| LangChain     | ✅ Complete (agents + workers + orchestration)     | ❌ None (all commodity)        |
+| CrewAI        | ✅ Complete (agents + workers + orchestration)     | ❌ None (all commodity)        |
+| AutoGen       | ✅ Complete (agents + workers + orchestration)     | ❌ None (all commodity)        |
 | **AIOS v2.1** | ✅ **Complete** (agents + workers + orchestration) | ✅ **Clones** (DNA Mental™) ⭐ |
 
 **Key Insight:** AIOS matches competitors on open-source completeness BUT adds unique proprietary layer (Clones) that competitors cannot replicate quickly.
@@ -207,21 +211,23 @@ Proprietary (Monetization):
 #### What This Means
 
 **Traditional Approach (Task-per-Executor):**
+
 ```yaml
 # Agent task
 agent_task.md:
   name: Analyze market with AI
   executor: Agent (Sage)
-  
-# Worker task  
+
+# Worker task
 worker_task.js:
   name: Analyze market with script
   executor: Worker (market-analyzer.js)
-  
+
 Problem: 2 separate implementations for same task
 ```
 
 **Task-First Approach (Universal Task):**
+
 ```yaml
 # ONE TASK DEFINITION
 task: analyzeMarket()
@@ -243,6 +249,7 @@ responsavel_type: Clone    # Year 2: Brad Frost validates
 #### Instant Executor Migration
 
 **Before Task-First (Rewrite Required):**
+
 ```yaml
 # Migrate Worker → Agent
 1. Read Worker script
@@ -254,6 +261,7 @@ responsavel_type: Clone    # Year 2: Brad Frost validates
 ```
 
 **After Task-First (Field Change):**
+
 ```yaml
 # Migrate Worker → Agent
 1. Change responsavel_type: Worker → Agente
@@ -269,6 +277,7 @@ Why it works:
 #### Real Example
 
 **Day 1 (Humano):**
+
 ```yaml
 task: validateSchema()
 responsavel: Senior Dev
@@ -278,8 +287,9 @@ cost: $25 (human time)
 ```
 
 **Week 10 (Worker):**
+
 ```yaml
-task: validateSchema()  # ← SAME TASK
+task: validateSchema() # ← SAME TASK
 responsavel: schema-validator.js
 responsavel_type: Worker
 estimated_duration: 500ms
@@ -287,8 +297,9 @@ cost: $0.001 (compute)
 ```
 
 **Month 6 (Agente):**
+
 ```yaml
-task: validateSchema()  # ← STILL SAME TASK
+task: validateSchema() # ← STILL SAME TASK
 responsavel: Quinn (QA Agent)
 responsavel_type: Agente
 estimated_duration: 3s
@@ -296,8 +307,9 @@ cost: $0.01 (LLM call)
 ```
 
 **Year 2 (Clone):**
+
 ```yaml
-task: validateSchema()  # ← NO CHANGES!
+task: validateSchema() # ← NO CHANGES!
 responsavel: Brad Frost Clone
 responsavel_type: Clone
 estimated_duration: 5s
@@ -337,10 +349,10 @@ Results (3 Workers):
    Parse JSON safely with error handling
    Input: { json_string: string }
    Output: { data: object, errors: array }
-   
+
 📦 json-validator.js                 ⭐⭐⭐⭐ (23 projects)
    Validate JSON against schema
-   
+
 📦 json-transformer.js               ⭐⭐⭐ (15 projects)
    Transform JSON structures
 
@@ -356,6 +368,7 @@ $ aios workers use json-parser --task my-task
 **Components:**
 
 1. **Service Registry** (`service-registry.json`)
+
    ```json
    {
      "workers": [
@@ -383,6 +396,7 @@ $ aios workers use json-parser --task my-task
    ```
 
 2. **Discovery CLI**
+
    ```bash
    aios workers list                    # List all
    aios workers search <query>          # Semantic search
@@ -406,6 +420,7 @@ $ aios workers use json-parser --task my-task
 #### Impact
 
 **Metrics (6 months post-v2.1):**
+
 - 97 Workers cataloged (baseline)
 - 143 community-contributed Workers (+47%)
 - 50% of tasks now reuse existing Workers (vs. 0% in v2.0)
@@ -425,8 +440,8 @@ Quality Assurance in v2.0:
   - Manual linting
   - No automation
   - Issues found late (after PR)
-  
-Result: 
+
+Result:
   - High review overhead
   - Slow feedback loops
   - Many issues slip through
@@ -436,6 +451,7 @@ Result:
 #### The Solution (v2.1)
 
 **Layer 1 - Local (Immediate):**
+
 ```bash
 # Runs on every file save (< 5s)
 Layer 1 Checks:
@@ -443,7 +459,7 @@ Layer 1 Checks:
   ✓ Prettier (0.8s)
   ✓ TypeScript (1.9s)
   ✓ Unit tests (3.2s)
-  
+
 Executor: Worker (deterministic)
 Tool: CodeRabbit IDE Extension (FREE)
 Blocking: Pre-commit hooks (can't commit if fails)
@@ -452,6 +468,7 @@ Result: 30% of issues caught instantly
 ```
 
 **Layer 2 - PR (Automated):**
+
 ```bash
 # Runs on PR creation (< 3 min)
 Layer 2 Checks:
@@ -460,7 +477,7 @@ Layer 2 Checks:
   ✓ Coverage analysis (40s)
   ✓ Security scan (30s)
   ✓ Performance benchmarks (20s)
-  
+
 Executor: Agente (QA Agent + CodeRabbit)
 Tool: CodeRabbit GitHub App + Quinn (QA Agent)
 Blocking: Required checks (can't merge if fails)
@@ -469,6 +486,7 @@ Result: Additional 50% of issues caught (80% total)
 ```
 
 **Layer 3 - Human (Strategic):**
+
 ```bash
 # Runs before final merge (30min - 2h)
 Layer 3 Checks:
@@ -477,7 +495,7 @@ Layer 3 Checks:
   □ Edge cases coverage
   □ Documentation quality
   □ Security best practices
-  
+
 Executor: Humano (Senior Dev / Tech Lead)
 Tool: Human expertise + context
 Blocking: Final approval required
@@ -489,6 +507,7 @@ Result: Final 20% of issues caught (100% total)
 #### Quality Gate Orchestration
 
 **Workflow:**
+
 ```yaml
 1. Developer writes code
    ↓
@@ -519,18 +538,21 @@ Result: Final 20% of issues caught (100% total)
 #### Impact
 
 **Before v2.1 (Single Layer):**
+
 - 100% of issues reviewed by humans
 - Average review time: 2-4 hours per PR
 - Human reviewers exhausted
 - Many issues still slip through
 
 **After v2.1 (3 Layers):**
+
 - 80% of issues caught automatically
 - Average human review time: 30 minutes per PR
 - Human reviewers focus on strategy
 - Issue escape rate: < 5%
 
 **Time Savings:**
+
 - 75% reduction in human review time
 - 3x faster feedback (instant vs. hours)
 - 95% accuracy (vs. 70% with manual only)
@@ -551,30 +573,30 @@ Welcome to AIOS v2.1! Let's set up your project.
 ? Project type:
   ❯ Greenfield (new project)
     Brownfield (existing project)
-    
+
 ? Select your IDE: (Use arrow keys)
   ❯ Cursor
     Windsurf
     Trae
     Zed
     Continue.dev (VS Code)
-    
+
 ? Select AI CLI tools: (Use space to select)
   ◉ Claude Code
   ◯ GitHub Copilot
   ◉ Gemini CLI
   ◯ Codeium
-  
+
 ? Install MCPs: (Recommended)
   ◉ All (Browser, Context7, Exa, Desktop Commander)
   ◯ Custom selection
-  
+
 ? Install CLI tools:
   ◉ GitHub CLI (gh)
   ◉ Supabase CLI
   ◯ Railway CLI
   ◯ psql
-  
+
 ✓ Installing dependencies...
 ✓ Configuring AIOS...
 ✓ Setting up MCPs...
@@ -617,7 +639,7 @@ Migration plan:
   3. Register custom workers in Service Discovery
   4. Update story references
   5. Install new dependencies
-  
+
 ? Proceed with migration? (Y/n) Y
 
 ✓ Backing up current state...
@@ -649,28 +671,28 @@ Time elapsed: 12m 18s
 
 ### Installation Time
 
-| Metric | v2.0 | v2.1 | Improvement |
-|--------|------|------|-------------|
-| Time to install | 2-4 hours | 5 minutes | **96% faster** |
-| Steps required | 15+ manual | 1 command | **93% simpler** |
-| Success rate | 60% (many fail) | 98% (wizard) | **38% increase** |
+| Metric          | v2.0            | v2.1         | Improvement      |
+| --------------- | --------------- | ------------ | ---------------- |
+| Time to install | 2-4 hours       | 5 minutes    | **96% faster**   |
+| Steps required  | 15+ manual      | 1 command    | **93% simpler**  |
+| Success rate    | 60% (many fail) | 98% (wizard) | **38% increase** |
 
 ### Development Speed
 
-| Metric | v2.0 | v2.1 | Improvement |
-|--------|------|------|-------------|
-| Find reusable Worker | N/A (no discovery) | 30 seconds | **Infinite value** |
-| Quality issues caught | 20% (manual only) | 80% (3 layers) | **4x improvement** |
-| Executor migration time | 2-4 days (rewrite) | 2 seconds (field change) | **99.99% faster** |
+| Metric                  | v2.0               | v2.1                     | Improvement        |
+| ----------------------- | ------------------ | ------------------------ | ------------------ |
+| Find reusable Worker    | N/A (no discovery) | 30 seconds               | **Infinite value** |
+| Quality issues caught   | 20% (manual only)  | 80% (3 layers)           | **4x improvement** |
+| Executor migration time | 2-4 days (rewrite) | 2 seconds (field change) | **99.99% faster**  |
 
 ### Community Growth
 
-| Metric | v2.0 | v2.1 (6 months) | Growth |
-|--------|------|-----------------|--------|
-| GitHub Stars | 2.3k | 15.8k | **+587%** |
-| npm Downloads | 1.2k/month | 47k/month | **+3817%** |
-| Community Workers | 0 (closed) | 143 contributed | **∞** |
-| Active Contributors | 23 | 412 | **+1691%** |
+| Metric              | v2.0       | v2.1 (6 months) | Growth     |
+| ------------------- | ---------- | --------------- | ---------- |
+| GitHub Stars        | 2.3k       | 15.8k           | **+587%**  |
+| npm Downloads       | 1.2k/month | 47k/month       | **+3817%** |
+| Community Workers   | 0 (closed) | 143 contributed | **∞**      |
+| Active Contributors | 23         | 412             | **+1691%** |
 
 ---
 
@@ -1011,6 +1033,7 @@ Time elapsed: 12m 18s
 ### Key Changes from v2.0
 
 **1. Modular Architecture:**
+
 ```
 v2.0: Flat .aios-core/ (all mixed)
 v2.1: 4 modules (core/development/product/infrastructure)
@@ -1023,6 +1046,7 @@ Benefits:
 ```
 
 **2. Service Discovery:**
+
 ```
 NEW: .aios-core/core/service-discovery/
   - service-registry.json (97+ workers cataloged)
@@ -1033,6 +1057,7 @@ Impact: Developers find & reuse workers in 30 seconds vs. rebuilding
 ```
 
 **3. Quality Gates 3 Layers:**
+
 ```
 NEW: .aios-core/core/validation/
   - quality-gate-manager.js (unified orchestrator)
@@ -1047,6 +1072,7 @@ Impact: 80% of issues caught automatically
 ```
 
 **4. Workers Open-Source:**
+
 ```
 NEW: .aios-core/development/workers/ (97+ workers)
   - Organized by category (6 categories)
@@ -1057,6 +1083,7 @@ Impact: Network effects, community growth
 ```
 
 **5. Template Engine:**
+
 ```
 ENHANCED: .aios-core/product/templates/
   - All document types supported
@@ -1068,6 +1095,7 @@ Impact: Zero manual doc creation
 ```
 
 **6. Installer System:**
+
 ```
 NEW: .aios-core/infrastructure/cli/installer/
   - wizard.js (interactive setup)
@@ -1080,6 +1108,7 @@ Impact: 5 minutes install vs. 2-4 hours
 ```
 
 **7. MCP System:**
+
 ```
 NEW: .aios-core/infrastructure/mcp/
   - global-config/ (configured once)
@@ -1090,6 +1119,7 @@ Impact: Configure MCPs once, use everywhere
 ```
 
 **8. CodeRabbit Integration:**
+
 ```
 NEW: .aios-core/infrastructure/integrations/coderabbit/
   - local-extension.js (IDE, Layer 1)
@@ -1102,6 +1132,7 @@ Impact: AI-powered code review (local + PR)
 ```
 
 **9. Framework Standards Migration:**
+
 ```
 MOVED: docs/standards/ → .aios-core/docs/
   - AIOS-FRAMEWORK-MASTER.md
@@ -1113,6 +1144,7 @@ Rationale: Framework docs belong with framework code
 ```
 
 **10. Story Organization:**
+
 ```
 NEW: docs/stories/ reorganized
   - v2.1/ (sprint-1 to sprint-5)
@@ -1127,21 +1159,22 @@ Impact: Clear roadmap, easy to track progress
 
 ### File Count Comparison
 
-| Category | v2.0 | v2.1 | Change |
-|----------|------|------|--------|
-| Agents | 11 | 11 | Same (corrected from "16") |
-| Workers | 0 (closed) | 97+ | **+97** (open-sourced) |
-| Tasks | 60 | 60+ | Same (minor additions) |
-| Templates | 20 | 27+ | **+7** (ADR, PMDR, DBDR, etc.) |
-| Workflows | 6 | 16+ | **+10** (new patterns) |
-| Scripts | 54 | 60+ | **+6** (new utilities) |
-| CLI Commands | 5 | 12+ | **+7** (installer, workers, migrate) |
+| Category     | v2.0       | v2.1 | Change                               |
+| ------------ | ---------- | ---- | ------------------------------------ |
+| Agents       | 11         | 11   | Same (corrected from "16")           |
+| Workers      | 0 (closed) | 97+  | **+97** (open-sourced)               |
+| Tasks        | 60         | 60+  | Same (minor additions)               |
+| Templates    | 20         | 27+  | **+7** (ADR, PMDR, DBDR, etc.)       |
+| Workflows    | 6          | 16+  | **+10** (new patterns)               |
+| Scripts      | 54         | 60+  | **+6** (new utilities)               |
+| CLI Commands | 5          | 12+  | **+7** (installer, workers, migrate) |
 
 ---
 
 ### Installation Comparison
 
 **v2.0 Installation:**
+
 ```bash
 # 1. Clone repository
 $ git clone https://github.com/SynkraAI/aios-core
@@ -1169,6 +1202,7 @@ Success Rate: 60%
 ```
 
 **v2.1 Installation:**
+
 ```bash
 # One command
 $ npx @SynkraAI/aios@latest init
@@ -1187,4 +1221,3 @@ Success Rate: 98%
 ```
 
 ---
-

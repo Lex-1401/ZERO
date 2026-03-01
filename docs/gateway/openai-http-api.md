@@ -50,10 +50,10 @@ Defina `gateway.http.endpoints.chatCompletions.enabled` como `true`:
   gateway: {
     http: {
       endpoints: {
-        chatCompletions: { enabled: true }
-      }
-    }
-  }
+        chatCompletions: { enabled: true },
+      },
+    },
+  },
 }
 ```
 
@@ -66,10 +66,10 @@ Defina `gateway.http.endpoints.chatCompletions.enabled` como `false`:
   gateway: {
     http: {
       endpoints: {
-        chatCompletions: { enabled: false }
-      }
-    }
-  }
+        chatCompletions: { enabled: false },
+      },
+    },
+  },
 }
 ```
 

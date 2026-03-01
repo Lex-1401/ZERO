@@ -7,40 +7,39 @@ import type { SkillMessageMap } from "../controllers/skills";
 import { t } from "../i18n";
 
 export type SkillsProps = {
-    loading: boolean;
-    report: SkillStatusReport | null;
-    error: string | null;
-    filter: string;
-    edits: Record<string, string>;
-    busyKey: string | null;
-    messages: SkillMessageMap;
-    activeTab: "installed" | "marketplace";
-    marketplaceSkills: Array<{ name: string; description: string; link: string }>;
-    onTabChange: (tab: "installed" | "marketplace") => void;
-    onFilterChange: (next: string) => void;
-    onRefresh: () => void;
-    onToggle: (skillKey: string, enabled: boolean) => void;
-    onEdit: (skillKey: string, value: string) => void;
-    onSaveKey: (skillKey: string) => void;
-    onInstall: (skillKey: string, name: string, installId: string) => void;
+  loading: boolean;
+  report: SkillStatusReport | null;
+  error: string | null;
+  filter: string;
+  edits: Record<string, string>;
+  busyKey: string | null;
+  messages: SkillMessageMap;
+  activeTab: "installed" | "marketplace";
+  marketplaceSkills: Array<{ name: string; description: string; link: string }>;
+  onTabChange: (tab: "installed" | "marketplace") => void;
+  onFilterChange: (next: string) => void;
+  onRefresh: () => void;
+  onToggle: (skillKey: string, enabled: boolean) => void;
+  onEdit: (skillKey: string, value: string) => void;
+  onSaveKey: (skillKey: string) => void;
+  onInstall: (skillKey: string, name: string, installId: string) => void;
 };
 
 export function renderSkills(props: SkillsProps) {
-    const skills = props.report?.skills ?? [];
-    const filter = props.filter.trim().toLowerCase();
-    const filtered = (filter
-        ? skills.filter((skill) =>
-            [skill.name, skill.description, skill.source]
-                .join(" ")
-                .toLowerCase()
-                .includes(filter),
+  const skills = props.report?.skills ?? [];
+  const filter = props.filter.trim().toLowerCase();
+  const filtered = (
+    filter
+      ? skills.filter((skill) =>
+          [skill.name, skill.description, skill.source].join(" ").toLowerCase().includes(filter),
         )
-        : skills).sort((a, b) => a.name.localeCompare(b.name));
+      : skills
+  ).sort((a, b) => a.name.localeCompare(b.name));
 
-    const compatibleSkills = filtered.filter(s => s.eligible);
-    const incompatibleSkills = filtered.filter(s => !s.eligible);
+  const compatibleSkills = filtered.filter((s) => s.eligible);
+  const incompatibleSkills = filtered.filter((s) => !s.eligible);
 
-    return html`
+  return html`
     <div class="animate-fade-in">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <div class="segmented-control">
@@ -57,98 +56,128 @@ export function renderSkills(props: SkillsProps) {
             </div>
         </div>
 
-        ${props.error ? html`
+        ${
+          props.error
+            ? html`
             <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
                 <div style="color: var(--danger); font-size: 12px; font-weight: 700;">${t("skills.error.title")}</div>
                 <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${props.error}</div>
             </div>
-        ` : nothing}
+        `
+            : nothing
+        }
 
-        ${props.activeTab === "installed" ? html`
+        ${
+          props.activeTab === "installed"
+            ? html`
             <div class="section-title">${t("skills.installed.title")}</div>
             
-            ${compatibleSkills.length > 0 ? html`
+            ${
+              compatibleSkills.length > 0
+                ? html`
                 <div class="skill-group-header" style="font-size: 10px; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.1em; margin: 16px 0 8px 4px; display: flex; align-items: center; gap: 8px;">
                     <span style="width: 14px; height: 14px; display: flex;">${icons.checkCircle}</span> ${t("skills.group.compatible" as any)}
                 </div>
                 <div class="group-list" style="margin-bottom: 24px;">
-                    ${compatibleSkills.map(skill => renderSkill(skill, props))}
+                    ${compatibleSkills.map((skill) => renderSkill(skill, props))}
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${incompatibleSkills.length > 0 ? html`
+            ${
+              incompatibleSkills.length > 0
+                ? html`
                 <div class="skill-group-header" style="font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin: 16px 0 8px 4px; display: flex; align-items: center; gap: 8px;">
                     <span style="width: 14px; height: 14px; display: flex;">${icons.info}</span> ${t("skills.group.incompatible" as any)}
                 </div>
                 <div class="group-list" style="opacity: 0.85;">
-                    ${incompatibleSkills.map(skill => renderSkill(skill, props))}
+                    ${incompatibleSkills.map((skill) => renderSkill(skill, props))}
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${filtered.length === 0 ? html`
+            ${
+              filtered.length === 0
+                ? html`
                 <div class="group-list">
                     <div class="empty-state">
                         <div class="empty-state__icon">${icons.zap}</div>
                         <div class="empty-state__text">${t("skills.installed.none")}</div>
                     </div>
                 </div>
-            ` : nothing}
-        ` : renderMarketplace(props)}
+            `
+                : nothing
+            }
+        `
+            : renderMarketplace(props)
+        }
     </div>
   `;
 }
 
 function renderMarketplace(props: SkillsProps) {
-    const marketplace = props.marketplaceSkills.length > 0 ? props.marketplaceSkills : [
-        {
+  const marketplace =
+    props.marketplaceSkills.length > 0
+      ? props.marketplaceSkills
+      : [
+          {
             name: t("skills.marketplace.stealth.name" as any),
             description: t("skills.marketplace.stealth.desc" as any),
             link: "https://www.clawhub.com/skills/stealthy-auto-browse",
-            command: "npx clawhub@latest install stealthy-auto-browse"
-        },
-        {
+            command: "npx clawhub@latest install stealthy-auto-browse",
+          },
+          {
             name: t("skills.marketplace.trello.name" as any),
             description: t("skills.marketplace.trello.desc" as any),
             link: "https://www.clawhub.com/skills/trello-skill",
-            command: "npx clawhub@latest install trello-skill"
-        },
-        {
+            command: "npx clawhub@latest install trello-skill",
+          },
+          {
             name: t("skills.marketplace.slack.name" as any),
             description: t("skills.marketplace.slack.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/slack",
-            command: "npx clawhub@latest install slack-skill"
-        },
-        {
+            command: "npx clawhub@latest install slack-skill",
+          },
+          {
             name: t("skills.marketplace.brave.name" as any),
             description: t("skills.marketplace.brave.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/brave-search",
-            command: "npx clawhub@latest install brave-search"
-        },
-        {
+            command: "npx clawhub@latest install brave-search",
+          },
+          {
             name: t("skills.marketplace.docker.name" as any),
             description: t("skills.marketplace.docker.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/docker",
-            command: "npx clawhub@latest install docker"
-        },
-        {
+            command: "npx clawhub@latest install docker",
+          },
+          {
             name: t("skills.marketplace.frontend.name" as any),
             description: t("skills.marketplace.frontend.desc" as any),
             link: "https://github.com/openclaw/skills/tree/main/skills/frontend-design",
-            command: "npx clawhub@latest install frontend-design"
-        }
-    ];
+            command: "npx clawhub@latest install frontend-design",
+          },
+        ];
 
-    return html`
+  return html`
     <div class="section-title">${t("skills.marketplace.title")}</div>
     <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 20px; padding: 0 4px;">
         ${t("skills.marketplace.hint")}
     </div>
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
         ${marketplace.map((item, idx) => {
-        const itemIcons = [icons.globe, icons.layout, icons.messageSquare, icons.search, icons.box, icons.penLine];
-        const itemIcon = itemIcons[idx % itemIcons.length];
+          const itemIcons = [
+            icons.globe,
+            icons.layout,
+            icons.messageSquare,
+            icons.search,
+            icons.box,
+            icons.penLine,
+          ];
+          const itemIcon = itemIcons[idx % itemIcons.length];
 
-        return html`
+          return html`
             <div class="group-list" style="margin: 0; display: flex; flex-direction: column; height: 100%; border-radius: 12px; transition: all 0.2s ease; border: 1px solid var(--border-subtle);" onmouseover="this.style.transform='translateY(-2px)'; this.style.borderColor='var(--accent-blue)'; this.style.boxShadow='var(--shadow-floating)'" onmouseout="this.style.transform='none'; this.style.borderColor='var(--border-subtle)'; this.style.boxShadow='none'">
                 <div class="group-item" style="flex: 1; flex-direction: column; align-items: start; border-bottom: none; gap: 12px; padding: 24px;">
                     <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(var(--accent-blue-rgb), 0.1); color: var(--accent-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
@@ -162,7 +191,10 @@ function renderMarketplace(props: SkillsProps) {
                 <div class="group-item" style="background: rgba(255,255,255,0.02); padding: 16px 24px; border-top: 1px solid var(--border-subtle);">
                     <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
                         <button class="btn btn--sm" style="width: 100%; font-size: 10px; font-family: monospace; background: rgba(0,0,0,0.2); border: 1px dashed var(--border-subtle);" 
-                            @click=${() => { navigator.clipboard.writeText((item as any).command); alert(t("skills.marketplace.copy_success" as any)); }}>
+                            @click=${() => {
+                              navigator.clipboard.writeText((item as any).command);
+                              alert(t("skills.marketplace.copy_success" as any));
+                            }}>
                             ${t("skills.marketplace.copy")}
                         </button>
                         <a href=${item.link} target="_blank" class="btn btn--sm primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -171,26 +203,31 @@ function renderMarketplace(props: SkillsProps) {
                     </div>
                 </div>
             </div>
-        `})}
+        `;
+        })}
     </div>
   `;
 }
 
 function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
-    const busy = props.busyKey === skill.skillKey;
-    const apiKey = props.edits[skill.skillKey] ?? "";
-    const message = props.messages[skill.skillKey] ?? null;
-    const canInstall = skill.install.length > 0 && skill.missing.bins.length > 0;
+  const busy = props.busyKey === skill.skillKey;
+  const apiKey = props.edits[skill.skillKey] ?? "";
+  const message = props.messages[skill.skillKey] ?? null;
+  const canInstall = skill.install.length > 0 && skill.missing.bins.length > 0;
 
-    const reasons: string[] = [];
-    if (!skill.eligible) {
-        if (skill.missing.os.length > 0) reasons.push(t("skills.reason.os" as any, { os: skill.requirements.os.join(", ") }));
-        if (skill.missing.bins.length > 0) reasons.push(t("skills.reason.bins" as any, { bins: skill.missing.bins.join(", ") }));
-        if (skill.missing.env.length > 0) reasons.push(t("skills.reason.env" as any, { env: skill.missing.env.join(", ") }));
-        if (skill.missing.config.length > 0) reasons.push(t("skills.reason.config" as any, { config: skill.missing.config.join(", ") }));
-    }
+  const reasons: string[] = [];
+  if (!skill.eligible) {
+    if (skill.missing.os.length > 0)
+      reasons.push(t("skills.reason.os" as any, { os: skill.requirements.os.join(", ") }));
+    if (skill.missing.bins.length > 0)
+      reasons.push(t("skills.reason.bins" as any, { bins: skill.missing.bins.join(", ") }));
+    if (skill.missing.env.length > 0)
+      reasons.push(t("skills.reason.env" as any, { env: skill.missing.env.join(", ") }));
+    if (skill.missing.config.length > 0)
+      reasons.push(t("skills.reason.config" as any, { config: skill.missing.config.join(", ") }));
+  }
 
-    return html`
+  return html`
     <div class="group-item">
       <div class="group-label">
         <div class="group-title" style="display: flex; align-items: center; gap: 8px;">
@@ -199,15 +236,21 @@ function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
         </div>
         <div class="group-desc">${clampText(skill.description, 120)}</div>
         
-        ${reasons.length > 0 ? html`
+        ${
+          reasons.length > 0
+            ? html`
             <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px;">
-                ${reasons.map(r => html`
+                ${reasons.map(
+                  (r) => html`
                     <div style="font-size: 10px; color: var(--danger); display: flex; align-items: center; gap: 4px;">
                         <span style="transform: scale(0.8);">${icons.info}</span> ${r}
                     </div>
-                `)}
+                `,
+                )}
             </div>
-        ` : nothing}
+        `
+            : nothing
+        }
 
         <div style="display: flex; gap: 4px; margin-top: 8px;">
             <span class="badge">${skill.source}</span>
@@ -217,10 +260,14 @@ function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
       </div>
       <div class="group-content" style="flex-direction: column; align-items: flex-end; gap: 8px; width: 100%;">
         <div class="skill-actions">
-            ${skill.primaryEnv ? html`
+            ${
+              skill.primaryEnv
+                ? html`
                 <input class="input-native" type="password" style="width: 140px; height: 24px;" placeholder="${t("skills.placeholder.apikey" as any)}" .value=${apiKey} @input=${(e: Event) => props.onEdit(skill.skillKey, (e.target as HTMLInputElement).value)} />
                 <button class="btn btn--sm primary" ?disabled=${busy || !apiKey} @click=${() => props.onSaveKey(skill.skillKey)}>${t("skills.save" as any)}</button>
-            ` : nothing}
+            `
+                : nothing
+            }
             <button class="btn btn--sm" ?disabled=${busy} @click=${() => props.onToggle(skill.skillKey, skill.disabled)}>${skill.disabled ? t("skills.activate" as any) : t("skills.deactivate" as any)}</button>
             ${canInstall ? html`<button class="btn btn--sm primary" ?disabled=${busy} @click=${() => props.onInstall(skill.skillKey, skill.name, skill.install[0].id)}>${busy ? t("skills.installing" as any) : skill.install[0].label}</button>` : nothing}
         </div>

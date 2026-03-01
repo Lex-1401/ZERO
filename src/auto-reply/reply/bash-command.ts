@@ -24,12 +24,12 @@ type BashRequest =
 type ActiveBashJob =
   | { state: "starting"; startedAt: number; command: string }
   | {
-    state: "running";
-    sessionId: string;
-    startedAt: number;
-    command: string;
-    watcherAttached: boolean;
-  };
+      state: "running";
+      sessionId: string;
+      startedAt: number;
+      command: string;
+      watcherAttached: boolean;
+    };
 
 let activeJob: ActiveBashJob | null = null;
 

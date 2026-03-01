@@ -41,18 +41,18 @@ outputs:
 ### Step 1: Load Session State
 
 ```javascript
-const { loadSessionState } = require('.aios-core/core/orchestration');
+const { loadSessionState } = require(".aios-core/core/orchestration");
 const sessionState = await loadSessionState(projectRoot);
 
 if (!sessionState) {
-  return { action: 'no_session', message: 'No session state found' };
+  return { action: "no_session", message: "No session state found" };
 }
 ```
 
 ### Step 2: Check for Crash
 
 ```javascript
-const { SessionState } = require('.aios-core/core/orchestration');
+const { SessionState } = require(".aios-core/core/orchestration");
 const manager = new SessionState(projectRoot);
 await manager.loadSessionState();
 
@@ -110,42 +110,42 @@ options:
 ### Step 5: Execute Selected Action
 
 ```javascript
-const { ResumeOption } = require('.aios-core/core/orchestration');
+const { ResumeOption } = require(".aios-core/core/orchestration");
 
 const result = await manager.handleResumeOption(selectedOption);
 
 switch (result.action) {
-  case 'continue':
+  case "continue":
     // Resume from last state
     return {
-      action: 'continue',
+      action: "continue",
       storyPath: result.story,
       phase: result.phase,
       message: `Continuando story ${result.story} da fase ${result.phase}`,
     };
 
-  case 'review':
+  case "review":
     // Show progress summary
     const summary = result.summary;
-    console.log('\n📊 Resumo do Progresso:\n');
+    console.log("\n📊 Resumo do Progresso:\n");
     console.log(`Epic: ${summary.epic.title}`);
     console.log(`Progresso: ${summary.progress.percentage}%`);
-    console.log(`Stories completas: ${summary.progress.storiesDone.join(', ')}`);
-    console.log(`Stories pendentes: ${summary.progress.storiesPending.join(', ')}`);
+    console.log(`Stories completas: ${summary.progress.storiesDone.join(", ")}`);
+    console.log(`Stories pendentes: ${summary.progress.storiesPending.join(", ")}`);
     // Re-prompt after review
     break;
 
-  case 'restart':
+  case "restart":
     return {
-      action: 'restart',
+      action: "restart",
       storyPath: result.story,
       message: `Recomeçando story ${result.story} do início`,
     };
 
-  case 'discard':
+  case "discard":
     return {
-      action: 'discard',
-      message: 'Sessão descartada. Pronto para novo épico.',
+      action: "discard",
+      message: "Sessão descartada. Pronto para novo épico.",
     };
 }
 ```
@@ -169,11 +169,11 @@ on_activation:
 
 ## Error Handling
 
-| Error | Recovery |
-|-------|----------|
-| Corrupted state file | Offer to discard and start fresh |
-| Invalid YAML | Parse error with file path, offer discard |
-| Missing required fields | Warn and offer partial recovery |
+| Error                   | Recovery                                  |
+| ----------------------- | ----------------------------------------- |
+| Corrupted state file    | Offer to discard and start fresh          |
+| Invalid YAML            | Parse error with file path, offer discard |
+| Missing required fields | Warn and offer partial recovery           |
 
 ---
 

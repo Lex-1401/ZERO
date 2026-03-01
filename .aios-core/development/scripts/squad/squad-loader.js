@@ -9,31 +9,31 @@
  * @see Story SQS-2: Squad Loader Utility
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Supported manifest file names in order of preference
  * @constant {string[]}
  */
-const MANIFEST_FILES = ['squad.yaml', 'config.yaml'];
+const MANIFEST_FILES = ["squad.yaml", "config.yaml"];
 
 /**
  * Default path for squads directory
  * @constant {string}
  */
-const DEFAULT_SQUADS_PATH = './squads';
+const DEFAULT_SQUADS_PATH = "./squads";
 
 /**
  * Error codes for SquadLoaderError
  * @enum {string}
  */
 const ErrorCodes = {
-  SQUAD_NOT_FOUND: 'SQUAD_NOT_FOUND',
-  MANIFEST_NOT_FOUND: 'MANIFEST_NOT_FOUND',
-  YAML_PARSE_ERROR: 'YAML_PARSE_ERROR',
-  PERMISSION_DENIED: 'PERMISSION_DENIED',
+  SQUAD_NOT_FOUND: "SQUAD_NOT_FOUND",
+  MANIFEST_NOT_FOUND: "MANIFEST_NOT_FOUND",
+  YAML_PARSE_ERROR: "YAML_PARSE_ERROR",
+  PERMISSION_DENIED: "PERMISSION_DENIED",
 };
 
 /**
@@ -43,12 +43,9 @@ const ErrorCodes = {
 const ErrorSuggestions = {
   [ErrorCodes.SQUAD_NOT_FOUND]: (squadName) =>
     `Create squad with: @squad-creator *create-squad ${squadName}`,
-  [ErrorCodes.MANIFEST_NOT_FOUND]: () =>
-    'Create squad.yaml in squad directory',
-  [ErrorCodes.YAML_PARSE_ERROR]: () =>
-    'Check YAML syntax - use a YAML linter',
-  [ErrorCodes.PERMISSION_DENIED]: (filePath) =>
-    `Check file permissions: chmod 644 ${filePath}`,
+  [ErrorCodes.MANIFEST_NOT_FOUND]: () => "Create squad.yaml in squad directory",
+  [ErrorCodes.YAML_PARSE_ERROR]: () => "Check YAML syntax - use a YAML linter",
+  [ErrorCodes.PERMISSION_DENIED]: (filePath) => `Check file permissions: chmod 644 ${filePath}`,
 };
 
 /**
@@ -65,10 +62,10 @@ class SquadLoaderError extends Error {
    */
   constructor(code, message, suggestion, filePath) {
     super(message);
-    this.name = 'SquadLoaderError';
+    this.name = "SquadLoaderError";
     this.code = code;
-    this.suggestion = suggestion || '';
-    this.filePath = filePath || '';
+    this.suggestion = suggestion || "";
+    this.filePath = filePath || "";
 
     // Maintains proper stack trace for where error was thrown (V8 engines)
     if (Error.captureStackTrace) {
@@ -237,22 +234,22 @@ class SquadLoader {
 
     // Deprecation warning for config.yaml
     const manifestFilename = path.basename(manifestPath);
-    if (manifestFilename === 'config.yaml') {
+    if (manifestFilename === "config.yaml") {
       console.warn(
         `\u26a0\ufe0f  DEPRECATED: ${manifestPath} uses legacy format. Rename to squad.yaml`,
       );
     }
 
     try {
-      const content = await fs.readFile(manifestPath, 'utf-8');
+      const content = await fs.readFile(manifestPath, "utf-8");
       const parsed = yaml.load(content);
       this._log(`Manifest loaded successfully: ${manifestPath}`);
       return parsed;
     } catch (error) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+      if (error.code === "EACCES" || error.code === "EPERM") {
         throw SquadLoaderError.permissionDenied(manifestPath, error);
       }
-      if (error.name === 'YAMLException') {
+      if (error.name === "YAMLException") {
         throw SquadLoaderError.yamlParseError(manifestPath, error);
       }
       throw error;
@@ -281,7 +278,7 @@ class SquadLoader {
 
     const exists = await this._pathExists(this.squadsPath);
     if (!exists) {
-      this._log('Squads directory does not exist, returning empty array');
+      this._log("Squads directory does not exist, returning empty array");
       return [];
     }
 
@@ -289,7 +286,7 @@ class SquadLoader {
     try {
       entries = await fs.readdir(this.squadsPath, { withFileTypes: true });
     } catch (error) {
-      if (error.code === 'EACCES' || error.code === 'EPERM') {
+      if (error.code === "EACCES" || error.code === "EPERM") {
         throw SquadLoaderError.permissionDenied(this.squadsPath, error);
       }
       throw error;

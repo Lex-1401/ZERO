@@ -75,7 +75,7 @@ workflow:
     retryDelay: 1000
 
     # Gate behavior
-    strictGate: true  # BLOCKED verdict halts pipeline
+    strictGate: true # BLOCKED verdict halts pipeline
 
     # Output directory pattern
     outputDir: docs/stories/{storyId}/spec/
@@ -162,7 +162,6 @@ workflow:
   # ═══════════════════════════════════════════════════════════════════════════════════
 
   sequence:
-
     # ═════════════════════════════════════════════════════════════════════════════════
     # PHASE 1: GATHER REQUIREMENTS
     # ═════════════════════════════════════════════════════════════════════════════════
@@ -186,7 +185,7 @@ workflow:
       outputs:
         - requirements.json
 
-      elicit: true  # Requires user interaction
+      elicit: true # Requires user interaction
 
       on_success:
         log: "✅ Requirements gathered: {requirements.functional.length} FR, {requirements.nonFunctional.length} NFR"
@@ -223,7 +222,7 @@ workflow:
 
       on_success:
         log: "📊 Complexity assessed: {complexity.result} (score: {complexity.totalScore})"
-        dynamic_phases: true  # Use complexity.result to determine phases
+        dynamic_phases: true # Use complexity.result to determine phases
         next: research
 
       on_failure:
@@ -324,7 +323,7 @@ workflow:
       outputs:
         - critique.json
 
-      gate: true  # Blocking gate
+      gate: true # Blocking gate
 
       on_verdict:
         APPROVED:
@@ -423,7 +422,7 @@ workflow:
 
       condition: "critique.verdict === 'APPROVED'"
 
-      task: plan-create-implementation.md  # Future task
+      task: plan-create-implementation.md # Future task
 
       inputs:
         storyId: "{storyId}"

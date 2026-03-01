@@ -74,7 +74,7 @@ export function resetChatState(state: ChatState) {
 export async function sendChatMessage(
   state: ChatState,
   message: string,
-  attachments?: File[]
+  attachments?: File[],
 ): Promise<boolean> {
   if (!state.client || !state.connected) return false;
   const msg = message.trim();
@@ -174,9 +174,7 @@ export async function abortChatRun(state: ChatState): Promise<boolean> {
   try {
     await state.client.request(
       "chat.abort",
-      runId
-        ? { sessionKey: state.sessionKey, runId }
-        : { sessionKey: state.sessionKey },
+      runId ? { sessionKey: state.sessionKey, runId } : { sessionKey: state.sessionKey },
     );
     return true;
   } catch (err) {
@@ -185,14 +183,10 @@ export async function abortChatRun(state: ChatState): Promise<boolean> {
   }
 }
 
-export function handleChatEvent(
-  state: ChatState,
-  payload?: ChatEventPayload,
-) {
+export function handleChatEvent(state: ChatState, payload?: ChatEventPayload) {
   if (!payload) return null;
   if (payload.sessionKey !== state.sessionKey) return null;
-  if (payload.runId && state.chatRunId && payload.runId !== state.chatRunId)
-    return null;
+  if (payload.runId && state.chatRunId && payload.runId !== state.chatRunId) return null;
 
   if (payload.state === "delta") {
     const next = extractText(payload.message);

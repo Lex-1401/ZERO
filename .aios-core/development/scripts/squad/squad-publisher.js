@@ -9,9 +9,9 @@
  * @see Story SQS-6: Download & Publish Tasks
  */
 
-const { execSync, spawnSync } = require('child_process');
-const fs = require('fs').promises;
-const path = require('path');
+const { execSync, spawnSync } = require("child_process");
+const fs = require("fs").promises;
+const path = require("path");
 
 /**
  * Regex pattern for safe squad/branch names
@@ -24,22 +24,22 @@ const SAFE_NAME_PATTERN = /^[a-zA-Z0-9._-]+$/;
  * Repository for aios-squads
  * @constant {string}
  */
-const AIOS_SQUADS_REPO = 'SynkraAI/aios-squads';
+const AIOS_SQUADS_REPO = "SynkraAI/aios-squads";
 
 /**
  * Error codes for SquadPublisherError
  * @enum {string}
  */
 const PublisherErrorCodes = {
-  AUTH_REQUIRED: 'AUTH_REQUIRED',
-  VALIDATION_FAILED: 'VALIDATION_FAILED',
-  SQUAD_NOT_FOUND: 'SQUAD_NOT_FOUND',
-  MANIFEST_ERROR: 'MANIFEST_ERROR',
-  GH_CLI_ERROR: 'GH_CLI_ERROR',
-  PR_ERROR: 'PR_ERROR',
-  FORK_ERROR: 'FORK_ERROR',
-  SQUAD_EXISTS_IN_REGISTRY: 'SQUAD_EXISTS_IN_REGISTRY',
-  INVALID_SQUAD_NAME: 'INVALID_SQUAD_NAME',
+  AUTH_REQUIRED: "AUTH_REQUIRED",
+  VALIDATION_FAILED: "VALIDATION_FAILED",
+  SQUAD_NOT_FOUND: "SQUAD_NOT_FOUND",
+  MANIFEST_ERROR: "MANIFEST_ERROR",
+  GH_CLI_ERROR: "GH_CLI_ERROR",
+  PR_ERROR: "PR_ERROR",
+  FORK_ERROR: "FORK_ERROR",
+  SQUAD_EXISTS_IN_REGISTRY: "SQUAD_EXISTS_IN_REGISTRY",
+  INVALID_SQUAD_NAME: "INVALID_SQUAD_NAME",
 };
 
 /**
@@ -48,14 +48,14 @@ const PublisherErrorCodes = {
  * @returns {string} Sanitized value
  */
 function sanitizeForShell(value) {
-  if (!value || typeof value !== 'string') {
-    return '';
+  if (!value || typeof value !== "string") {
+    return "";
   }
   // Replace unsafe characters with hyphens, then collapse multiple hyphens
   return value
-    .replace(/[^a-zA-Z0-9._-]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/[^a-zA-Z0-9._-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 /**
@@ -64,7 +64,7 @@ function sanitizeForShell(value) {
  * @returns {boolean} True if safe
  */
 function isValidName(name) {
-  if (!name || typeof name !== 'string') {
+  if (!name || typeof name !== "string") {
     return false;
   }
   return SAFE_NAME_PATTERN.test(name);
@@ -83,9 +83,9 @@ class SquadPublisherError extends Error {
    */
   constructor(code, message, suggestion) {
     super(message);
-    this.name = 'SquadPublisherError';
+    this.name = "SquadPublisherError";
     this.code = code;
-    this.suggestion = suggestion || '';
+    this.suggestion = suggestion || "";
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SquadPublisherError);
@@ -146,22 +146,22 @@ class SquadPublisher {
    * }
    */
   async checkAuth() {
-    this._log('Checking GitHub CLI authentication');
+    this._log("Checking GitHub CLI authentication");
 
     try {
-      const result = execSync('gh auth status', {
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
+      const result = execSync("gh auth status", {
+        encoding: "utf-8",
+        stdio: ["pipe", "pipe", "pipe"],
       });
 
       // Extract username from output (supports hyphenated GitHub usernames)
       const usernameMatch = result.match(/Logged in to .* as ([\w-]+)/);
       const username = usernameMatch ? usernameMatch[1] : null;
 
-      this._log(`Authenticated as: ${username || 'unknown'}`);
+      this._log(`Authenticated as: ${username || "unknown"}`);
       return { authenticated: true, username };
     } catch {
-      this._log('Not authenticated with GitHub CLI');
+      this._log("Not authenticated with GitHub CLI");
       return { authenticated: false, username: null };
     }
   }
@@ -187,7 +187,7 @@ class SquadPublisher {
    * const preview = await dryPublisher.publish('./squads/my-squad');
    */
   async publish(squadPath, options = {}) {
-    const category = options.category || 'community';
+    const category = options.category || "community";
 
     this._log(`Publishing squad from: ${squadPath}`);
     this._log(`Category: ${category}`);
@@ -198,7 +198,7 @@ class SquadPublisher {
       throw new SquadPublisherError(
         PublisherErrorCodes.SQUAD_NOT_FOUND,
         `Squad not found at: ${squadPath}`,
-        'Check the path and ensure squad exists',
+        "Check the path and ensure squad exists",
       );
     }
 
@@ -207,8 +207,8 @@ class SquadPublisher {
     if (!validation.valid) {
       throw new SquadPublisherError(
         PublisherErrorCodes.VALIDATION_FAILED,
-        `Squad validation failed:\n${validation.errors.map((e) => e.message).join('\n')}`,
-        'Run *validate-squad to see all issues',
+        `Squad validation failed:\n${validation.errors.map((e) => e.message).join("\n")}`,
+        "Run *validate-squad to see all issues",
       );
     }
 
@@ -217,8 +217,8 @@ class SquadPublisher {
     if (!manifest || !manifest.name) {
       throw new SquadPublisherError(
         PublisherErrorCodes.MANIFEST_ERROR,
-        'Failed to load squad manifest or missing name',
-        'Ensure squad.yaml has required fields: name, version',
+        "Failed to load squad manifest or missing name",
+        "Ensure squad.yaml has required fields: name, version",
       );
     }
 
@@ -229,7 +229,7 @@ class SquadPublisher {
       throw new SquadPublisherError(
         PublisherErrorCodes.INVALID_SQUAD_NAME,
         `Invalid squad name: "${squadName}". Only alphanumerics, hyphens, underscores, and dots allowed.`,
-        'Update squad.yaml name field to use only safe characters',
+        "Update squad.yaml name field to use only safe characters",
       );
     }
 
@@ -243,8 +243,8 @@ class SquadPublisher {
     if (!auth.authenticated) {
       throw new SquadPublisherError(
         PublisherErrorCodes.AUTH_REQUIRED,
-        'GitHub CLI not authenticated',
-        'Run: gh auth login',
+        "GitHub CLI not authenticated",
+        "Run: gh auth login",
       );
     }
 
@@ -254,9 +254,9 @@ class SquadPublisher {
 
     // 6. Dry run - return preview
     if (this.dryRun) {
-      this._log('Dry run mode - not creating actual PR');
+      this._log("Dry run mode - not creating actual PR");
       return {
-        prUrl: '[dry-run] PR would be created',
+        prUrl: "[dry-run] PR would be created",
         branch: branchName,
         manifest,
         preview: {
@@ -282,7 +282,7 @@ class SquadPublisher {
    * @param {string} [category='community'] - Squad category
    * @returns {string} Markdown-formatted PR body
    */
-  generatePRBody(manifest, category = 'community') {
+  generatePRBody(manifest, category = "community") {
     const components = manifest.components || {};
     const tasksCount = components.tasks?.length || 0;
     const agentsCount = components.agents?.length || 0;
@@ -292,10 +292,10 @@ class SquadPublisher {
 
     return `## New Squad: ${manifest.name}
 
-**Version:** ${manifest.version || '1.0.0'}
-**Author:** ${manifest.author || 'Unknown'}
+**Version:** ${manifest.version || "1.0.0"}
+**Author:** ${manifest.author || "Unknown"}
 **Category:** ${category}
-**Description:** ${manifest.description || 'No description provided'}
+**Description:** ${manifest.description || "No description provided"}
 
 ### Components
 
@@ -309,7 +309,7 @@ class SquadPublisher {
 
 ### Dependencies
 
-${manifest.dependencies?.length > 0 ? manifest.dependencies.map((d) => `- ${d}`).join('\n') : 'None specified'}
+${manifest.dependencies?.length > 0 ? manifest.dependencies.map((d) => `- ${d}`).join("\n") : "None specified"}
 
 ### Pre-submission Checklist
 
@@ -344,116 +344,131 @@ Tested locally with:
   async _createPR(squadPath, manifest, branchName, title, body) {
     const squadName = manifest.name;
     // Sanitize values for commit message (safety layer even though name is validated)
-    const safeVersion = sanitizeForShell(manifest.version) || '1.0.0';
-    const safeAuthor = sanitizeForShell(manifest.author) || 'Unknown';
+    const safeVersion = sanitizeForShell(manifest.version) || "1.0.0";
+    const safeAuthor = sanitizeForShell(manifest.author) || "Unknown";
 
     try {
       // Step 1: Fork the repository (if not already forked)
-      this._log('Checking/creating fork...');
+      this._log("Checking/creating fork...");
       try {
         // Use spawnSync with array args to prevent shell injection
-        const forkResult = spawnSync('gh', ['repo', 'fork', this.repo, '--clone=false'], {
-          encoding: 'utf-8',
-          stdio: ['pipe', 'pipe', 'pipe'],
+        const forkResult = spawnSync("gh", ["repo", "fork", this.repo, "--clone=false"], {
+          encoding: "utf-8",
+          stdio: ["pipe", "pipe", "pipe"],
         });
         if (forkResult.error) {
           throw forkResult.error;
         }
       } catch {
         // Fork may already exist, that's OK
-        this._log('Fork already exists or created');
+        this._log("Fork already exists or created");
       }
 
       // Step 2: Clone the fork to a temp directory
-      const tempDir = path.join(process.cwd(), '.tmp-squad-publish');
+      const tempDir = path.join(process.cwd(), ".tmp-squad-publish");
       await this._cleanupTemp(tempDir);
       await fs.mkdir(tempDir, { recursive: true });
 
       this._log(`Cloning fork to: ${tempDir}`);
       // Use spawnSync with array args
-      const cloneResult = spawnSync('gh', ['repo', 'clone', this.repo, tempDir, '--', '--depth', '1'], {
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
-      });
+      const cloneResult = spawnSync(
+        "gh",
+        ["repo", "clone", this.repo, tempDir, "--", "--depth", "1"],
+        {
+          encoding: "utf-8",
+          stdio: ["pipe", "pipe", "pipe"],
+        },
+      );
       if (cloneResult.status !== 0) {
-        throw new Error(cloneResult.stderr || 'Clone failed');
+        throw new Error(cloneResult.stderr || "Clone failed");
       }
 
       // Step 3: Create branch
       this._log(`Creating branch: ${branchName}`);
       // Use spawnSync with array args - branchName is validated
-      const checkoutResult = spawnSync('git', ['checkout', '-b', branchName], {
+      const checkoutResult = spawnSync("git", ["checkout", "-b", branchName], {
         cwd: tempDir,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
+        encoding: "utf-8",
+        stdio: ["pipe", "pipe", "pipe"],
       });
       if (checkoutResult.status !== 0) {
-        throw new Error(checkoutResult.stderr || 'Checkout failed');
+        throw new Error(checkoutResult.stderr || "Checkout failed");
       }
 
       // Step 4: Copy squad files
-      const targetSquadDir = path.join(tempDir, 'packages', squadName);
+      const targetSquadDir = path.join(tempDir, "packages", squadName);
       await fs.mkdir(targetSquadDir, { recursive: true });
       await this._copyDir(squadPath, targetSquadDir);
 
       this._log(`Copied squad to: ${targetSquadDir}`);
 
       // Step 5: Update registry.json (add to community section)
-      const registryPath = path.join(tempDir, 'registry.json');
+      const registryPath = path.join(tempDir, "registry.json");
       await this._updateRegistry(registryPath, manifest);
 
       // Step 6: Commit changes
-      this._log('Committing changes...');
-      spawnSync('git', ['add', '.'], {
+      this._log("Committing changes...");
+      spawnSync("git", ["add", "."], {
         cwd: tempDir,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
+        encoding: "utf-8",
+        stdio: ["pipe", "pipe", "pipe"],
       });
 
       // Build commit message with sanitized values
       const commitMessage = `Add squad: ${squadName}\n\nVersion: ${safeVersion}\nAuthor: ${safeAuthor}`;
       // Use spawnSync with -m flag and message as separate arg
-      const commitResult = spawnSync('git', ['commit', '-m', commitMessage], {
+      const commitResult = spawnSync("git", ["commit", "-m", commitMessage], {
         cwd: tempDir,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
+        encoding: "utf-8",
+        stdio: ["pipe", "pipe", "pipe"],
       });
       if (commitResult.status !== 0) {
-        throw new Error(commitResult.stderr || 'Commit failed');
+        throw new Error(commitResult.stderr || "Commit failed");
       }
 
       // Step 7: Push branch
-      this._log('Pushing to fork...');
+      this._log("Pushing to fork...");
       // Use spawnSync with array args - branchName is validated
-      const pushResult = spawnSync('git', ['push', '-u', 'origin', branchName], {
+      const pushResult = spawnSync("git", ["push", "-u", "origin", branchName], {
         cwd: tempDir,
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
+        encoding: "utf-8",
+        stdio: ["pipe", "pipe", "pipe"],
       });
       if (pushResult.status !== 0) {
-        throw new Error(pushResult.stderr || 'Push failed');
+        throw new Error(pushResult.stderr || "Push failed");
       }
 
       // Step 8: Create PR
-      this._log('Creating PR...');
-      const prBodyFile = path.join(tempDir, 'pr-body.md');
+      this._log("Creating PR...");
+      const prBodyFile = path.join(tempDir, "pr-body.md");
       await fs.writeFile(prBodyFile, body);
 
       // Use spawnSync with array args - title contains validated squadName
       const prResult = spawnSync(
-        'gh',
-        ['pr', 'create', '--repo', this.repo, '--title', title, '--body-file', prBodyFile, '--base', 'main'],
+        "gh",
+        [
+          "pr",
+          "create",
+          "--repo",
+          this.repo,
+          "--title",
+          title,
+          "--body-file",
+          prBodyFile,
+          "--base",
+          "main",
+        ],
         {
           cwd: tempDir,
-          encoding: 'utf-8',
-          stdio: ['pipe', 'pipe', 'pipe'],
+          encoding: "utf-8",
+          stdio: ["pipe", "pipe", "pipe"],
         },
       );
       if (prResult.status !== 0) {
-        throw new Error(prResult.stderr || 'PR creation failed');
+        throw new Error(prResult.stderr || "PR creation failed");
       }
 
-      const prUrl = (prResult.stdout || '').trim();
+      const prUrl = (prResult.stdout || "").trim();
 
       // Step 9: Cleanup
       await this._cleanupTemp(tempDir);
@@ -463,7 +478,7 @@ Tested locally with:
       throw new SquadPublisherError(
         PublisherErrorCodes.PR_ERROR,
         `Failed to create PR: ${error.message}`,
-        'Check GitHub CLI is working: gh auth status',
+        "Check GitHub CLI is working: gh auth status",
       );
     }
   }
@@ -478,12 +493,12 @@ Tested locally with:
     let registry;
 
     try {
-      const content = await fs.readFile(registryPath, 'utf-8');
+      const content = await fs.readFile(registryPath, "utf-8");
       registry = JSON.parse(content);
     } catch {
       // Create new registry if doesn't exist
       registry = {
-        version: '1.0.0',
+        version: "1.0.0",
         squads: {
           official: [],
           community: [],
@@ -506,28 +521,28 @@ Tested locally with:
       registry.squads.community = registry.squads.community.map((s) =>
         s.name === manifest.name
           ? {
-            name: manifest.name,
-            version: manifest.version || '1.0.0',
-            description: manifest.description || '',
-            author: manifest.author || 'Unknown',
-          }
+              name: manifest.name,
+              version: manifest.version || "1.0.0",
+              description: manifest.description || "",
+              author: manifest.author || "Unknown",
+            }
           : s,
       );
     } else {
       // Add new entry
       registry.squads.community.push({
         name: manifest.name,
-        version: manifest.version || '1.0.0',
-        description: manifest.description || '',
-        author: manifest.author || 'Unknown',
+        version: manifest.version || "1.0.0",
+        description: manifest.description || "",
+        author: manifest.author || "Unknown",
       });
     }
 
     // Sort alphabetically
     registry.squads.community.sort((a, b) => a.name.localeCompare(b.name));
 
-    await fs.writeFile(registryPath, JSON.stringify(registry, null, 2) + '\n');
-    this._log('Updated registry.json');
+    await fs.writeFile(registryPath, JSON.stringify(registry, null, 2) + "\n");
+    this._log("Updated registry.json");
   }
 
   /**
@@ -538,7 +553,7 @@ Tested locally with:
    */
   async _validateSquad(squadPath) {
     try {
-      const { SquadValidator } = require('./squad-validator');
+      const { SquadValidator } = require("./squad-validator");
       const validator = new SquadValidator({ verbose: this.verbose });
       return await validator.validate(squadPath);
     } catch (error) {
@@ -558,7 +573,7 @@ Tested locally with:
    */
   async _loadManifest(squadPath) {
     try {
-      const { SquadLoader } = require('./squad-loader');
+      const { SquadLoader } = require("./squad-loader");
       const loader = new SquadLoader();
       return await loader.loadManifest(squadPath);
     } catch (error) {

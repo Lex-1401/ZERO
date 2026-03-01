@@ -40,13 +40,13 @@ A configuração atual (um arquivo por dia) é excelente para:
 
 Duas peças para misturar:
 
-1) **Loop de controle estilo Letta/MemGPT**
+1. **Loop de controle estilo Letta/MemGPT**
 
 - manter um pequeno “core” sempre em contexto (persona + fatos chave do usuário)
 - todo o resto está fora de contexto e é recuperado via ferramentas
 - escritas na memória são chamadas de ferramentas explícitas (anexar/substituir/inserir), persistidas e reinjetadas no próximo turno
 
-1) **Substrato de memória estilo Hindsight**
+1. **Substrato de memória estilo Hindsight**
 
 - separar o que é observado vs o que é acreditado vs o que é resumido
 - suportar reter/recordar/refletir

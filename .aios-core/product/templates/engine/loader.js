@@ -6,11 +6,11 @@
  * @version 2.0.0
  */
 
-'use strict';
+"use strict";
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Parse template content separating frontmatter from body
@@ -19,12 +19,12 @@ const yaml = require('js-yaml');
  */
 function parseTemplate(content) {
   // Normalize line endings to Unix-style for consistent parsing
-  const normalizedContent = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const normalizedContent = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
   const match = normalizedContent.match(frontmatterRegex);
 
   if (!match) {
-    throw new Error('Invalid template format: missing YAML frontmatter');
+    throw new Error("Invalid template format: missing YAML frontmatter");
   }
 
   const [, frontmatter, body] = match;
@@ -49,19 +49,19 @@ function parseTemplate(content) {
  */
 function validateMetadata(metadata) {
   // Guard against non-object metadata (null, undefined, scalar values)
-  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
-    throw new Error('Template metadata must be a valid object');
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
+    throw new Error("Template metadata must be a valid object");
   }
 
-  const requiredFields = ['template_id', 'template_name', 'version'];
-  const missingFields = requiredFields.filter(field => !metadata[field]);
+  const requiredFields = ["template_id", "template_name", "version"];
+  const missingFields = requiredFields.filter((field) => !metadata[field]);
 
   if (missingFields.length > 0) {
-    throw new Error(`Template missing required fields: ${missingFields.join(', ')}`);
+    throw new Error(`Template missing required fields: ${missingFields.join(", ")}`);
   }
 
   if (metadata.variables && !Array.isArray(metadata.variables)) {
-    throw new Error('Template variables must be an array');
+    throw new Error("Template variables must be an array");
   }
 }
 
@@ -75,8 +75,8 @@ class TemplateLoader {
    * @param {string} options.templatesDir - Path to templates directory
    */
   constructor(options = {}) {
-    this.templatesDir = options.templatesDir ||
-      path.join(process.cwd(), '.aios-core', 'product', 'templates');
+    this.templatesDir =
+      options.templatesDir || path.join(process.cwd(), ".aios-core", "product", "templates");
     this.cache = new Map();
   }
 
@@ -98,9 +98,9 @@ class TemplateLoader {
 
     let content;
     try {
-      content = await fs.readFile(templatePath, 'utf-8');
+      content = await fs.readFile(templatePath, "utf-8");
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if (error.code === "ENOENT") {
         throw new Error(`Template not found: ${templateType} (${templatePath})`);
       }
       throw new Error(`Failed to read template ${templateType}: ${error.message}`);
@@ -130,11 +130,11 @@ class TemplateLoader {
    * @returns {string} Full path to template file
    */
   resolveTemplatePath(templateType) {
-    const extensions = ['.hbs', '.handlebars', '.md'];
+    const extensions = [".hbs", ".handlebars", ".md"];
 
     // Handle versioned templates (e.g., prd-v2 -> prd-v2.0.hbs)
     const templateAliases = {
-      'prd-v2': 'prd-v2.0',
+      "prd-v2": "prd-v2.0",
     };
 
     const templateName = templateAliases[templateType] || templateType;
@@ -144,7 +144,7 @@ class TemplateLoader {
     for (const ext of extensions) {
       const fullPath = basePath + ext;
       try {
-        require('fs').accessSync(fullPath);
+        require("fs").accessSync(fullPath);
         return fullPath;
       } catch {
         // Continue to next extension
@@ -152,7 +152,7 @@ class TemplateLoader {
     }
 
     // Default to .hbs if none found
-    return basePath + '.hbs';
+    return basePath + ".hbs";
   }
 
   /**
@@ -161,11 +161,11 @@ class TemplateLoader {
    * @returns {Array} Normalized variable definitions
    */
   normalizeVariables(variables) {
-    return variables.map(variable => ({
+    return variables.map((variable) => ({
       name: variable.name,
-      type: variable.type || 'string',
+      type: variable.type || "string",
       // Variables with requiredIf are NOT required by default - they're conditionally required
-      required: variable.requiredIf ? false : (variable.required !== false),
+      required: variable.requiredIf ? false : variable.required !== false,
       requiredIf: variable.requiredIf,
       default: variable.default,
       prompt: variable.prompt || `Enter ${variable.name}:`,
@@ -185,7 +185,7 @@ class TemplateLoader {
       const templates = [];
 
       for (const file of files) {
-        if (file.endsWith('.hbs') || file.endsWith('.handlebars')) {
+        if (file.endsWith(".hbs") || file.endsWith(".handlebars")) {
           const type = path.basename(file, path.extname(file));
           templates.push(type);
         }

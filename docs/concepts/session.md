@@ -3,6 +3,7 @@ summary: "Regras de gerenciamento de sessão, chaves e persistência para chats"
 read_when:
   - Modificando o tratamento de sessão ou armazenamento
 ---
+
 # Gerenciamento de Sessão
 
 O ZERO trata **uma sessão de chat direto por agente** como primária. Chats diretos são recolhidos para `agent:<agentId>:<mainKey>` (padrão `main`), enquanto chats de grupo/canal recebem suas próprias chaves. O `session.mainKey` é respeitado.
@@ -79,11 +80,11 @@ Bloqueia a entrega para tipos de sessão específicos sem listar IDs individuais
     sendPolicy: {
       rules: [
         { action: "deny", match: { channel: "discord", chatType: "group" } },
-        { action: "deny", match: { keyPrefix: "cron:" } }
+        { action: "deny", match: { keyPrefix: "cron:" } },
       ],
-      default: "allow"
-    }
-  }
+      default: "allow",
+    },
+  },
 }
 ```
 
@@ -92,7 +93,7 @@ Sobrescrita em tempo de execução (apenas proprietário):
 - `/send on` → permitir para esta sessão
 - `/send off` → negar para esta sessão
 - `/send inherit` → limpar sobrescrita e usar regras de configuração
-Envie estas mensagens sozinhas para que sejam registradas.
+  Envie estas mensagens sozinhas para que sejam registradas.
 
 ## Configuração (exemplo de renomeação opcional)
 
@@ -100,30 +101,30 @@ Envie estas mensagens sozinhas para que sejam registradas.
 // ~/.zero/zero.json
 {
   session: {
-    scope: "per-sender",      // manter as chaves de grupo separadas
-    dmScope: "main",          // continuidade de DM (defina per-channel-peer para caixas de entrada compartilhadas)
+    scope: "per-sender", // manter as chaves de grupo separadas
+    dmScope: "main", // continuidade de DM (defina per-channel-peer para caixas de entrada compartilhadas)
     identityLinks: {
-      alice: ["telegram:123456789", "discord:987654321012345678"]
+      alice: ["telegram:123456789", "discord:987654321012345678"],
     },
     reset: {
       // Padrões: mode=daily, atHour=4 (horário local do host do gateway).
       // Se você também definir idleMinutes, o que expirar primeiro vence.
       mode: "daily",
       atHour: 4,
-      idleMinutes: 120
+      idleMinutes: 120,
     },
     resetByType: {
       thread: { mode: "daily", atHour: 4 },
       dm: { mode: "idle", idleMinutes: 240 },
-      group: { mode: "idle", idleMinutes: 120 }
+      group: { mode: "idle", idleMinutes: 120 },
     },
     resetByChannel: {
-      discord: { mode: "idle", idleMinutes: 10080 }
+      discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
     store: "~/.zero/agents/{agentId}/sessions/sessions.json",
     mainKey: "main",
-  }
+  },
 }
 ```
 
@@ -152,4 +153,4 @@ Cada entrada de sessão registra de onde veio (melhor esforço) em `origin`:
 - `from`/`to`: IDs de roteamento brutos do pacote de entrada
 - `accountId`: ID da conta do provedor (quando multi-conta)
 - `threadId`: ID da thread/tópico quando o canal suporta
-Os campos de origem são preenchidos para mensagens diretas, canais e grupos. Se um conector atualizar apenas o roteamento de entrega (por exemplo, para manter uma sessão principal de DM atualizada), ele ainda deve fornecer o contexto de entrada para que a sessão mantenha seus metadados explicativos. Extensões podem fazer isso enviando `ConversationLabel`, `GroupSubject`, `GroupChannel`, `GroupSpace` e `SenderName` no contexto de entrada e chamando `recordSessionMetaFromInbound` (ou passando o mesmo contexto para `updateLastRoute`).
+  Os campos de origem são preenchidos para mensagens diretas, canais e grupos. Se um conector atualizar apenas o roteamento de entrega (por exemplo, para manter uma sessão principal de DM atualizada), ele ainda deve fornecer o contexto de entrada para que a sessão mantenha seus metadados explicativos. Extensões podem fazer isso enviando `ConversationLabel`, `GroupSubject`, `GroupChannel`, `GroupSpace` e `SenderName` no contexto de entrada e chamando `recordSessionMetaFromInbound` (ou passando o mesmo contexto para `updateLastRoute`).

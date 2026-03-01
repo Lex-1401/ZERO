@@ -1,0 +1,56 @@
+identify:
+  name: "Engineering Sovereign Squad"
+  version: "1.0.0"
+  description: "Squad de elite (PhD Tier) para construção e arquitetura do ecossistema ZERO."
+  author: "Lex (Sovereign Owner)"
+  license: "Private/Proprietary (Local IP)"
+
+trigger:
+  slashPrefix: "zero-build"
+
+aios:
+  minVersion: "4.2.0"
+  type: "squad"
+  layers:
+    - l0-constitution
+    - l1-global
+    - l2-agent
+  intelligence:
+    core: ".zero/CORE_INTELLIGENCE.md"
+    registry: ".aios-core/data/entity-registry.yaml"
+
+parameters:
+  cognitive_tier: "Master PhD"
+  iq_baseline: 224
+  optimization:
+    payload_reduction: true
+    handoff_compaction: true
+    registry_active_lookup: true
+
+squad:
+  coordinator: "@aios-master"
+  agents:
+    - id: "@aios-master"
+      role: "Mestre de Orquestração"
+      domain: "Engenharia de Sistemas"
+    - id: "@architect"
+      role: "Arquiteto de Soluções"
+      domain: "Arquitetura e Padrões"
+    - id: "@dev"
+      role: "Engenheiro de Software"
+      domain: "Implementação Full-Stack"
+    - id: "@qa"
+      role: "Engenheiro de Qualidade"
+      domain: "Auditoria e Testes"
+
+config:
+  extends: "override"
+  standards:
+    - ".aios-core/development/checklists/standard-prd.md"
+    - ".aios-core/development/checklists/quality-gate.md"
+
+permissions:
+  restricted_paths:
+    - ".zero/*" # Somente agentes autorizados acessam o núcleo da alma técnica
+  high_authority:
+    - "@aios-master"

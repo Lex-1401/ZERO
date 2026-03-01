@@ -3,6 +3,7 @@ summary: "Ciclo de vida do loop do agente, streams e semântica de espera"
 read_when:
   - Você precisa de um passo a passo exato do loop do agente ou dos eventos de seu ciclo de vida
 ---
+
 # Loop do Agente (ZERO)
 
 Um loop agêntico é a execução “real” completa de um agente: ingestão → montagem do contexto → inferência do modelo → execução de ferramentas → transmissão de respostas (streaming) → persistência. É o caminho oficial que transforma uma mensagem em ações e em uma resposta final, mantendo consistente o estado da sessão.
@@ -16,23 +17,23 @@ No ZERO, um loop é uma execução única e serializada por sessão que emite ev
 
 ## Como funciona (visão de alto nível)
 
-1) O RPC `agent` valida os parâmetros, resolve a sessão (sessionKey/sessionId), persiste os metadados da sessão e retorna imediatamente `{ runId, acceptedAt }`.
-2) O `agentCommand` executa o agente:
+1. O RPC `agent` valida os parâmetros, resolve a sessão (sessionKey/sessionId), persiste os metadados da sessão e retorna imediatamente `{ runId, acceptedAt }`.
+2. O `agentCommand` executa o agente:
    - resolve o modelo + padrões de pensamento (thinking)/detalhamento (verbose).
    - carrega o snapshot das habilidades (skills).
    - chama `runEmbeddedPiAgent` (tempo de execução do pi-agent-core).
    - emite **fim/erro de ciclo de vida** se o loop embutido não emitir um.
-3) `runEmbeddedPiAgent`:
+3. `runEmbeddedPiAgent`:
    - serializa as execuções via filas globais + por sessão.
    - resolve o modelo + perfil de autenticação e constrói a sessão pi.
    - subscreve aos eventos pi e transmite deltas de assistente/ferramenta.
    - impõe timeout -> aborta a execução se excedido.
    - retorna os payloads + metadados de uso.
-4) `subscribeEmbeddedPiSession` conecta os eventos do pi-agent-core ao stream `agent` do ZERO:
+4. `subscribeEmbeddedPiSession` conecta os eventos do pi-agent-core ao stream `agent` do ZERO:
    - eventos de ferramenta => `stream: "tool"`
    - deltas do assistente => `stream: "assistant"`
    - eventos de ciclo de vida => `stream: "lifecycle"` (`phase: "start" | "end" | "error"`)
-5) `agent.wait` usa `waitForAgentJob`:
+5. `agent.wait` usa `waitForAgentJob`:
    - aguarda pelo **fim/erro de ciclo de vida** para o `runId`.
    - retorna `{ status: ok|error|timeout, startedAt, endedAt, error? }`
 

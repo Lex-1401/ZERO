@@ -10,14 +10,14 @@ Status: pronto para DM e canais de texto de guilda via gateway oficial de bot do
 
 ## Configuração rápida (iniciante)
 
-1) Crie um bot Discord e copie o token do bot.
-2) Defina o token para o ZERO:
+1. Crie um bot Discord e copie o token do bot.
+2. Defina o token para o ZERO:
    - Env: `DISCORD_BOT_TOKEN=...`
    - Ou config: `channels.discord.token: "..."`.
    - Se ambos estiverem definidos, a config tem precedência (fallback de env é apenas para conta padrão).
-3) Convide o bot para seu servidor com permissões de mensagem.
-4) Inicie o gateway.
-5) O acesso via DM é pairing (emparelhamento) por padrão; aprove o código de emparelhamento no primeiro contato.
+3. Convide o bot para seu servidor com permissões de mensagem.
+4. Inicie o gateway.
+5. O acesso via DM é pairing (emparelhamento) por padrão; aprove o código de emparelhamento no primeiro contato.
 
 Configuração mínima:
 
@@ -26,9 +26,9 @@ Configuração mínima:
   channels: {
     discord: {
       enabled: true,
-      token: "SEU_BOT_TOKEN"
-    }
-  }
+      token: "SEU_BOT_TOKEN",
+    },
+  },
 }
 ```
 
@@ -74,7 +74,7 @@ Desative com:
 
 ```json5
 {
-  channels: { discord: { configWrites: false } }
+  channels: { discord: { configWrites: false } },
 }
 ```
 
@@ -148,9 +148,9 @@ Ou via configuração:
   channels: {
     discord: {
       enabled: true,
-      token: "SEU_BOT_TOKEN"
-    }
-  }
+      token: "SEU_BOT_TOKEN",
+    },
+  },
 }
 ```
 
@@ -167,22 +167,22 @@ Exemplo "servidor único, permitir apenas eu, permitir apenas #help":
       enabled: true,
       dm: { enabled: false },
       guilds: {
-        "SEU_GUILD_ID": {
+        SEU_GUILD_ID: {
           users: ["SEU_USER_ID"],
           requireMention: true,
           channels: {
-            help: { allow: true, requireMention: true }
-          }
-        }
+            help: { allow: true, requireMention: true },
+          },
+        },
       },
       retry: {
         attempts: 3,
         minDelayMs: 500,
         maxDelayMs: 30000,
-        jitter: 0.1
-      }
-    }
-  }
+        jitter: 0.1,
+      },
+    },
+  },
 }
 ```
 
@@ -247,9 +247,9 @@ Chamadas de saída da API Discord tentam novamente em limites de taxa (429) usan
       guilds: {
         "*": {
           channels: {
-            general: { allow: true }
-          }
-        }
+            general: { allow: true },
+          },
+        },
       },
       mediaMaxMb: 8,
       actions: {
@@ -270,7 +270,7 @@ Chamadas de saída da API Discord tentam novamente em limites de taxa (429) usan
         channels: true,
         voiceStatus: true,
         events: true,
-        moderation: false
+        moderation: false,
       },
       replyToMode: "off",
       dm: {
@@ -278,7 +278,7 @@ Chamadas de saída da API Discord tentam novamente em limites de taxa (429) usan
         policy: "pairing", // pairing | allowlist | open | disabled
         allowFrom: ["123456789012345678", "steipete"],
         groupEnabled: false,
-        groupChannels: ["zero-dm"]
+        groupChannels: ["zero-dm"],
       },
       guilds: {
         "*": { requireMention: true },
@@ -294,13 +294,13 @@ Chamadas de saída da API Discord tentam novamente em limites de taxa (429) usan
               requireMention: true,
               users: ["987654321098765432"],
               skills: ["search", "docs"],
-              systemPrompt: "Keep answers short."
-            }
-          }
-        }
-      }
-    }
-  }
+              systemPrompt: "Keep answers short.",
+            },
+          },
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -351,26 +351,26 @@ Notificações de reação usam `guilds.<id>.reactionNotifications`:
 
 ### Padrões de ação de ferramenta
 
-| Action group | Default | Notes |
-| :--- | :--- | :--- |
-| reactions | enabled | React + list reactions + emojiList |
-| stickers | enabled | Send stickers |
-| emojiUploads | enabled | Upload emojis |
-| stickerUploads | enabled | Upload stickers |
-| polls | enabled | Create polls |
-| permissions | enabled | Channel permission snapshot |
-| messages | enabled | Read/send/edit/delete |
-| threads | enabled | Create/list/reply |
-| pins | enabled | Pin/unpin/list |
-| search | enabled | Message search (recurso de prévia) |
-| memberInfo | enabled | Member info |
-| roleInfo | enabled | Role list |
-| channelInfo | enabled | Channel info + list |
-| channels | enabled | Channel/category management |
-| voiceStatus | enabled | Voice state lookup |
-| events | enabled | List/create scheduled events |
-| roles | disabled | Role add/remove |
-| moderation | disabled | Timeout/kick/ban |
+| Action group   | Default  | Notes                              |
+| :------------- | :------- | :--------------------------------- |
+| reactions      | enabled  | React + list reactions + emojiList |
+| stickers       | enabled  | Send stickers                      |
+| emojiUploads   | enabled  | Upload emojis                      |
+| stickerUploads | enabled  | Upload stickers                    |
+| polls          | enabled  | Create polls                       |
+| permissions    | enabled  | Channel permission snapshot        |
+| messages       | enabled  | Read/send/edit/delete              |
+| threads        | enabled  | Create/list/reply                  |
+| pins           | enabled  | Pin/unpin/list                     |
+| search         | enabled  | Message search (recurso de prévia) |
+| memberInfo     | enabled  | Member info                        |
+| roleInfo       | enabled  | Role list                          |
+| channelInfo    | enabled  | Channel info + list                |
+| channels       | enabled  | Channel/category management        |
+| voiceStatus    | enabled  | Voice state lookup                 |
+| events         | enabled  | List/create scheduled events       |
+| roles          | disabled | Role add/remove                    |
+| moderation     | disabled | Timeout/kick/ban                   |
 
 - `replyToMode`: `off` (padrão), `first`, ou `all`. Aplica-se apenas quando o modelo inclui uma tag de resposta.
 
@@ -380,7 +380,7 @@ Para solicitar uma resposta encadeada (threaded), o modelo pode incluir uma tag 
 
 - `[[reply_to_current]]` — responder à mensagem do Discord que acionou.
 - `[[reply_to:<id>]]` — responder a um id de mensagem específico do contexto/histórico.
-IDs de mensagem atuais são anexados aos prompts como `[message_id: …]`; entradas de histórico já incluem ids.
+  IDs de mensagem atuais são anexados aos prompts como `[message_id: …]`; entradas de histórico já incluem ids.
 
 O comportamento é controlado por `channels.discord.replyToMode`:
 

@@ -22,8 +22,8 @@
  * @version 1.0.0
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              CONFIGURATION
@@ -31,21 +31,21 @@ const path = require('path');
 
 const CONFIG = {
   // Output paths
-  outputPath: '.aios/gotchas.md',
-  outputJsonPath: '.aios/gotchas.json',
+  outputPath: ".aios/gotchas.md",
+  outputJsonPath: ".aios/gotchas.json",
 
   // Input paths for scanning
   insightsPaths: [
-    'docs/stories/**/insights/*.json',
-    'docs/stories/**/session-*.json',
-    '.aios/insights/*.json',
+    "docs/stories/**/insights/*.json",
+    "docs/stories/**/session-*.json",
+    ".aios/insights/*.json",
   ],
 
   // Version
-  version: '1.0.0',
+  version: "1.0.0",
 
   // Schema version
-  schemaVersion: 'aios-gotchas-v1',
+  schemaVersion: "aios-gotchas-v1",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -56,26 +56,26 @@ const CONFIG = {
  * Gotcha categories (AC4)
  */
 const Category = {
-  STATE_MANAGEMENT: 'State Management',
-  API: 'API',
-  DATABASE: 'Database',
-  FRONTEND: 'Frontend/React',
-  TESTING: 'Testing',
-  BUILD_DEPLOY: 'Build/Deploy',
-  TYPESCRIPT: 'TypeScript',
-  AUTHENTICATION: 'Authentication',
-  PERFORMANCE: 'Performance',
-  SECURITY: 'Security',
-  OTHER: 'Other',
+  STATE_MANAGEMENT: "State Management",
+  API: "API",
+  DATABASE: "Database",
+  FRONTEND: "Frontend/React",
+  TESTING: "Testing",
+  BUILD_DEPLOY: "Build/Deploy",
+  TYPESCRIPT: "TypeScript",
+  AUTHENTICATION: "Authentication",
+  PERFORMANCE: "Performance",
+  SECURITY: "Security",
+  OTHER: "Other",
 };
 
 /**
  * Severity levels
  */
 const Severity = {
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
+  HIGH: "high",
+  MEDIUM: "medium",
+  LOW: "low",
 };
 
 /**
@@ -83,122 +83,122 @@ const Severity = {
  */
 const CATEGORY_KEYWORDS = {
   [Category.STATE_MANAGEMENT]: [
-    'zustand',
-    'redux',
-    'state',
-    'store',
-    'persist',
-    'hydration',
-    'context',
-    'recoil',
-    'jotai',
-    'mobx',
+    "zustand",
+    "redux",
+    "state",
+    "store",
+    "persist",
+    "hydration",
+    "context",
+    "recoil",
+    "jotai",
+    "mobx",
   ],
   [Category.API]: [
-    'fetch',
-    'axios',
-    'http',
-    'endpoint',
-    'rest',
-    'graphql',
-    'api',
-    'request',
-    'response',
-    'cors',
+    "fetch",
+    "axios",
+    "http",
+    "endpoint",
+    "rest",
+    "graphql",
+    "api",
+    "request",
+    "response",
+    "cors",
   ],
   [Category.DATABASE]: [
-    'sql',
-    'postgres',
-    'mysql',
-    'mongodb',
-    'prisma',
-    'drizzle',
-    'supabase',
-    'query',
-    'migration',
-    'orm',
+    "sql",
+    "postgres",
+    "mysql",
+    "mongodb",
+    "prisma",
+    "drizzle",
+    "supabase",
+    "query",
+    "migration",
+    "orm",
   ],
   [Category.FRONTEND]: [
-    'react',
-    'component',
-    'hook',
-    'useEffect',
-    'useState',
-    'render',
-    'jsx',
-    'tsx',
-    'dom',
-    'css',
-    'tailwind',
-    'nextjs',
-    'next.js',
+    "react",
+    "component",
+    "hook",
+    "useEffect",
+    "useState",
+    "render",
+    "jsx",
+    "tsx",
+    "dom",
+    "css",
+    "tailwind",
+    "nextjs",
+    "next.js",
   ],
   [Category.TESTING]: [
-    'test',
-    'jest',
-    'vitest',
-    'mock',
-    'stub',
-    'expect',
-    'assert',
-    'coverage',
-    'e2e',
-    'playwright',
+    "test",
+    "jest",
+    "vitest",
+    "mock",
+    "stub",
+    "expect",
+    "assert",
+    "coverage",
+    "e2e",
+    "playwright",
   ],
   [Category.BUILD_DEPLOY]: [
-    'build',
-    'deploy',
-    'ci',
-    'cd',
-    'webpack',
-    'vite',
-    'docker',
-    'vercel',
-    'railway',
-    'bundle',
+    "build",
+    "deploy",
+    "ci",
+    "cd",
+    "webpack",
+    "vite",
+    "docker",
+    "vercel",
+    "railway",
+    "bundle",
   ],
   [Category.TYPESCRIPT]: [
-    'typescript',
-    'type',
-    'interface',
-    'generic',
-    'infer',
-    'as const',
-    'satisfies',
-    'enum',
-    'tsconfig',
+    "typescript",
+    "type",
+    "interface",
+    "generic",
+    "infer",
+    "as const",
+    "satisfies",
+    "enum",
+    "tsconfig",
   ],
   [Category.AUTHENTICATION]: [
-    'auth',
-    'login',
-    'logout',
-    'session',
-    'token',
-    'jwt',
-    'oauth',
-    'password',
-    'credential',
+    "auth",
+    "login",
+    "logout",
+    "session",
+    "token",
+    "jwt",
+    "oauth",
+    "password",
+    "credential",
   ],
   [Category.PERFORMANCE]: [
-    'performance',
-    'memory',
-    'leak',
-    'optimization',
-    'cache',
-    'lazy',
-    'debounce',
-    'throttle',
-    'memoize',
+    "performance",
+    "memory",
+    "leak",
+    "optimization",
+    "cache",
+    "lazy",
+    "debounce",
+    "throttle",
+    "memoize",
   ],
   [Category.SECURITY]: [
-    'security',
-    'xss',
-    'csrf',
-    'injection',
-    'sanitize',
-    'escape',
-    'vulnerability',
-    'encrypt',
+    "security",
+    "xss",
+    "csrf",
+    "injection",
+    "sanitize",
+    "escape",
+    "vulnerability",
+    "encrypt",
   ],
 };
 
@@ -267,7 +267,7 @@ class GotchasDocumenter {
           this._log(`  Extracted ${gotchas.length} gotchas from ${path.basename(filePath)}`);
         }
       } catch (error) {
-        this._log(`  Warning: Failed to process ${filePath}: ${error.message}`, 'warn');
+        this._log(`  Warning: Failed to process ${filePath}: ${error.message}`, "warn");
       }
     }
 
@@ -289,7 +289,7 @@ class GotchasDocumenter {
       throw new Error(`Insights file not found: ${absolutePath}`);
     }
 
-    const content = fs.readFileSync(absolutePath, 'utf-8');
+    const content = fs.readFileSync(absolutePath, "utf-8");
     const insights = JSON.parse(content);
     const extractedGotchas = [];
 
@@ -423,7 +423,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
       }
     }
 
-    md += '\n---\n\n';
+    md += "\n---\n\n";
 
     // Generate content for each category
     for (const category of Object.values(Category)) {
@@ -487,12 +487,12 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    fs.writeFileSync(savePath, markdown, 'utf-8');
+    fs.writeFileSync(savePath, markdown, "utf-8");
     this._log(`Saved gotchas to: ${savePath}`);
 
     // Also save JSON version
-    const jsonPath = savePath.replace('.md', '.json');
-    fs.writeFileSync(jsonPath, JSON.stringify(this.toJSON(), null, 2), 'utf-8');
+    const jsonPath = savePath.replace(".md", ".json");
+    fs.writeFileSync(jsonPath, JSON.stringify(this.toJSON(), null, 2), "utf-8");
     this._log(`Saved JSON to: ${jsonPath}`);
 
     return savePath;
@@ -510,12 +510,12 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
       : path.join(this.rootPath, existingPath);
 
     if (!fs.existsSync(absolutePath)) {
-      this._log('No existing gotchas file found, creating new');
+      this._log("No existing gotchas file found, creating new");
       return this.gotchas.size;
     }
 
     try {
-      const content = fs.readFileSync(absolutePath, 'utf-8');
+      const content = fs.readFileSync(absolutePath, "utf-8");
       const existing = JSON.parse(content);
 
       // Add existing gotchas
@@ -535,7 +535,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
 
       return newCount;
     } catch (error) {
-      this._log(`Warning: Failed to merge with existing: ${error.message}`, 'warn');
+      this._log(`Warning: Failed to merge with existing: ${error.message}`, "warn");
       return 0;
     }
   }
@@ -560,7 +560,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
           low: [...this.gotchas.values()].filter((g) => g.severity === Severity.LOW).length,
         },
         byCategory: Object.fromEntries(
-          [...categories.entries()].map(([cat, items]) => [cat, items.length])
+          [...categories.entries()].map(([cat, items]) => [cat, items.length]),
         ),
         insightsScanned: this.stats.insightsScanned,
       },
@@ -605,13 +605,13 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
     const lowerQuery = query.toLowerCase();
     return [...this.gotchas.values()].filter((gotcha) => {
       const searchText = [
-        gotcha.title || '',
-        gotcha.wrong || '',
-        gotcha.right || '',
-        gotcha.reason || '',
-        gotcha.category || '',
+        gotcha.title || "",
+        gotcha.wrong || "",
+        gotcha.right || "",
+        gotcha.reason || "",
+        gotcha.category || "",
       ]
-        .join(' ')
+        .join(" ")
         .toLowerCase();
 
       return searchText.includes(lowerQuery);
@@ -639,7 +639,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
     const files = [];
 
     // Convert glob to regex-ish pattern
-    const parts = pattern.split('/');
+    const parts = pattern.split("/");
     const basePath = this.rootPath;
 
     const search = (currentPath, patternParts) => {
@@ -648,7 +648,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
       const currentPattern = patternParts[0];
       const remaining = patternParts.slice(1);
 
-      if (currentPattern === '**') {
+      if (currentPattern === "**") {
         // Recursive search
         if (fs.existsSync(currentPath) && fs.statSync(currentPath).isDirectory()) {
           const entries = fs.readdirSync(currentPath, { withFileTypes: true });
@@ -666,9 +666,9 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
             }
           }
         }
-      } else if (currentPattern.includes('*')) {
+      } else if (currentPattern.includes("*")) {
         // Wildcard pattern
-        const regex = new RegExp('^' + currentPattern.replace(/\*/g, '.*') + '$');
+        const regex = new RegExp("^" + currentPattern.replace(/\*/g, ".*") + "$");
 
         if (fs.existsSync(currentPath) && fs.statSync(currentPath).isDirectory()) {
           const entries = fs.readdirSync(currentPath, { withFileTypes: true });
@@ -725,9 +725,9 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
       id,
       title: raw.title || this._generateTitle(raw),
       category,
-      wrong: raw.wrong || raw.antiPattern || '',
-      right: raw.right || raw.correctPattern || raw.pattern || '',
-      reason: raw.reason || raw.explanation || raw.description || '',
+      wrong: raw.wrong || raw.antiPattern || "",
+      right: raw.right || raw.correctPattern || raw.pattern || "",
+      reason: raw.reason || raw.explanation || raw.description || "",
       severity: this._normalizeSeverity(raw.severity),
       discoveredAt: raw.discoveredAt || insights.capturedAt || new Date().toISOString(),
       storyId: insights.storyId || null,
@@ -741,16 +741,16 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
    * @private
    */
   _isGotchaLike(discovery) {
-    const text = `${discovery.description || ''} ${discovery.content || ''}`.toLowerCase();
+    const text = `${discovery.description || ""} ${discovery.content || ""}`.toLowerCase();
     return (
-      text.includes('pitfall') ||
-      text.includes('gotcha') ||
-      text.includes('wrong') ||
-      text.includes('avoid') ||
-      text.includes('don\'t') ||
-      text.includes('should not') ||
-      text.includes('instead of') ||
-      text.includes('common mistake')
+      text.includes("pitfall") ||
+      text.includes("gotcha") ||
+      text.includes("wrong") ||
+      text.includes("avoid") ||
+      text.includes("don't") ||
+      text.includes("should not") ||
+      text.includes("instead of") ||
+      text.includes("common mistake")
     );
   }
 
@@ -764,9 +764,9 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
         description: discovery.description,
         category: discovery.category,
         relatedFiles: discovery.relatedFiles,
-        severity: discovery.relevance === 'high' ? Severity.HIGH : Severity.MEDIUM,
+        severity: discovery.relevance === "high" ? Severity.HIGH : Severity.MEDIUM,
       },
-      insights
+      insights,
     );
   }
 
@@ -778,13 +778,13 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
     return this._normalizeGotcha(
       {
         title: pattern.name,
-        wrong: pattern.antiPattern || pattern.wrong || '',
-        right: pattern.example || pattern.pattern || pattern.right || '',
-        reason: pattern.description || pattern.reason || '',
+        wrong: pattern.antiPattern || pattern.wrong || "",
+        right: pattern.example || pattern.pattern || pattern.right || "",
+        reason: pattern.description || pattern.reason || "",
         category: this._detectCategory(pattern),
         severity: Severity.MEDIUM,
       },
-      insights
+      insights,
     );
   }
 
@@ -834,9 +834,9 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
    * @private
    */
   _generateGotchaId(gotcha, insights) {
-    const content = `${gotcha.wrong || ''}${gotcha.right || ''}${gotcha.reason || ''}`;
+    const content = `${gotcha.wrong || ""}${gotcha.right || ""}${gotcha.reason || ""}`;
     const hash = this._simpleHash(content);
-    const storyPart = insights.storyId ? `-${insights.storyId}` : '';
+    const storyPart = insights.storyId ? `-${insights.storyId}` : "";
     return `gotcha${storyPart}-${hash}`;
   }
 
@@ -845,7 +845,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
    * @private
    */
   _generateGotchaHash(gotcha) {
-    const content = `${gotcha.wrong || ''}${gotcha.right || ''}`.toLowerCase().replace(/\s+/g, '');
+    const content = `${gotcha.wrong || ""}${gotcha.right || ""}`.toLowerCase().replace(/\s+/g, "");
     return this._simpleHash(content);
   }
 
@@ -868,7 +868,8 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
    * @private
    */
   _detectCategory(gotcha) {
-    const text = `${gotcha.wrong || ''} ${gotcha.right || ''} ${gotcha.reason || ''} ${gotcha.description || ''} ${gotcha.title || ''}`.toLowerCase();
+    const text =
+      `${gotcha.wrong || ""} ${gotcha.right || ""} ${gotcha.reason || ""} ${gotcha.description || ""} ${gotcha.title || ""}`.toLowerCase();
 
     for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
       for (const keyword of keywords) {
@@ -917,8 +918,8 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
     if (!severity) return Severity.MEDIUM;
 
     const lower = severity.toLowerCase();
-    if (lower === 'high' || lower === 'critical') return Severity.HIGH;
-    if (lower === 'low' || lower === 'minor') return Severity.LOW;
+    if (lower === "high" || lower === "critical") return Severity.HIGH;
+    if (lower === "low" || lower === "minor") return Severity.LOW;
     return Severity.MEDIUM;
   }
 
@@ -927,13 +928,13 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
    * @private
    */
   _generateTitle(gotcha) {
-    const reason = gotcha.reason || gotcha.description || '';
+    const reason = gotcha.reason || gotcha.description || "";
     if (reason.length > 0) {
       // Take first sentence or first 60 chars
       const firstSentence = reason.split(/[.!?]/)[0];
-      return firstSentence.length > 60 ? firstSentence.substring(0, 57) + '...' : firstSentence;
+      return firstSentence.length > 60 ? firstSentence.substring(0, 57) + "..." : firstSentence;
     }
-    return 'Untitled Gotcha';
+    return "Untitled Gotcha";
   }
 
   /**
@@ -943,8 +944,8 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
   _toAnchor(text) {
     return text
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
   }
 
   /**
@@ -954,10 +955,10 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
   _renderGotcha(gotcha) {
     const severityEmoji =
       {
-        high: '**[HIGH]**',
-        medium: '**[MEDIUM]**',
-        low: '[LOW]',
-      }[gotcha.severity] || '';
+        high: "**[HIGH]**",
+        medium: "**[MEDIUM]**",
+        low: "[LOW]",
+      }[gotcha.severity] || "";
 
     let md = `### ${gotcha.title}\n\n`;
     md += `${severityEmoji}\n\n`;
@@ -978,16 +979,16 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
 
     if (gotcha.storyId) {
       const date = gotcha.discoveredAt
-        ? new Date(gotcha.discoveredAt).toISOString().split('T')[0]
-        : 'Unknown';
+        ? new Date(gotcha.discoveredAt).toISOString().split("T")[0]
+        : "Unknown";
       md += `**Discovered:** ${gotcha.storyId} (${date})\n\n`;
     }
 
     if (gotcha.relatedFiles && gotcha.relatedFiles.length > 0) {
-      md += `**Related Files:** ${gotcha.relatedFiles.join(', ')}\n\n`;
+      md += `**Related Files:** ${gotcha.relatedFiles.join(", ")}\n\n`;
     }
 
-    md += '---\n\n';
+    md += "---\n\n";
     return md;
   }
 
@@ -995,13 +996,13 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
    * Log message
    * @private
    */
-  _log(message, level = 'info') {
+  _log(message, level = "info") {
     if (this.quiet) return;
 
     const prefix = {
-      info: '',
-      warn: '\x1b[33m[WARN]\x1b[0m ',
-      error: '\x1b[31m[ERROR]\x1b[0m ',
+      info: "",
+      warn: "\x1b[33m[WARN]\x1b[0m ",
+      error: "\x1b[31m[ERROR]\x1b[0m ",
     }[level];
 
     console.log(`${prefix}${message}`);
@@ -1017,40 +1018,40 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
   static async main() {
     const args = process.argv.slice(2);
 
-    if (args.includes('--help') || args.includes('-h')) {
+    if (args.includes("--help") || args.includes("-h")) {
       GotchasDocumenter.showHelp();
       process.exit(0);
     }
 
     // Parse arguments
-    let command = 'update';
+    let command = "update";
     let rootPath = process.cwd();
     let outputPath = null;
     let severity = null;
     let category = null;
-    let format = 'md';
+    let format = "md";
     let quiet = false;
     let query = null;
 
     for (let i = 0; i < args.length; i++) {
       const arg = args[i];
 
-      if (arg === '--root' && args[i + 1]) {
+      if (arg === "--root" && args[i + 1]) {
         rootPath = args[++i];
-      } else if (arg === '--output' && args[i + 1]) {
+      } else if (arg === "--output" && args[i + 1]) {
         outputPath = args[++i];
-      } else if (arg === '--severity' && args[i + 1]) {
+      } else if (arg === "--severity" && args[i + 1]) {
         severity = args[++i];
-      } else if (arg === '--category' && args[i + 1]) {
+      } else if (arg === "--category" && args[i + 1]) {
         category = args[++i];
-      } else if (arg === '--format' && args[i + 1]) {
+      } else if (arg === "--format" && args[i + 1]) {
         format = args[++i];
-      } else if (arg === '--quiet' || arg === '-q') {
+      } else if (arg === "--quiet" || arg === "-q") {
         quiet = true;
-      } else if (!arg.startsWith('-')) {
-        if (['update', 'list', 'search', 'category'].includes(arg)) {
+      } else if (!arg.startsWith("-")) {
+        if (["update", "list", "search", "category"].includes(arg)) {
           command = arg;
-        } else if (command === 'search' || command === 'category') {
+        } else if (command === "search" || command === "category") {
           query = arg;
         }
       }
@@ -1060,7 +1061,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
       const documenter = new GotchasDocumenter(rootPath, { outputPath, quiet });
 
       switch (command) {
-        case 'update': {
+        case "update": {
           // Merge with existing if present
           const existingJson = path.join(rootPath, CONFIG.outputJsonPath);
           documenter.mergeWithExisting(existingJson);
@@ -1079,7 +1080,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
           break;
         }
 
-        case 'list': {
+        case "list": {
           // Load existing
           const existingJson = path.join(rootPath, CONFIG.outputJsonPath);
           documenter.mergeWithExisting(existingJson);
@@ -1092,7 +1093,7 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
           }
 
           // Output
-          if (format === 'json') {
+          if (format === "json") {
             console.log(JSON.stringify(gotchas, null, 2));
           } else {
             console.log(`\n=== Known Gotchas (${gotchas.length}) ===\n`);
@@ -1100,15 +1101,15 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
               console.log(`[${gotcha.severity.toUpperCase()}] ${gotcha.title}`);
               console.log(`  Category: ${gotcha.category}`);
               if (gotcha.storyId) console.log(`  Story: ${gotcha.storyId}`);
-              console.log('');
+              console.log("");
             }
           }
           break;
         }
 
-        case 'search': {
+        case "search": {
           if (!query) {
-            console.error('Error: Search query required');
+            console.error("Error: Search query required");
             process.exit(1);
           }
 
@@ -1118,22 +1119,22 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
 
           const results = documenter.search(query);
 
-          if (format === 'json') {
+          if (format === "json") {
             console.log(JSON.stringify(results, null, 2));
           } else {
             console.log(`\n=== Search Results for "${query}" (${results.length}) ===\n`);
             for (const gotcha of results) {
               console.log(`[${gotcha.severity.toUpperCase()}] ${gotcha.title}`);
               console.log(`  ${gotcha.reason.substring(0, 100)}...`);
-              console.log('');
+              console.log("");
             }
           }
           break;
         }
 
-        case 'category': {
+        case "category": {
           if (!query && !category) {
-            console.error('Error: Category name required');
+            console.error("Error: Category name required");
             process.exit(1);
           }
 
@@ -1143,14 +1144,14 @@ Each gotcha includes the **wrong** approach, the **right** approach, and the **r
 
           const catResults = documenter.listByCategory(category || query);
 
-          if (format === 'json') {
+          if (format === "json") {
             console.log(JSON.stringify(catResults, null, 2));
           } else {
             console.log(`\n=== ${category || query} Gotchas (${catResults.length}) ===\n`);
             for (const gotcha of catResults) {
               console.log(`[${gotcha.severity.toUpperCase()}] ${gotcha.title}`);
               if (gotcha.reason) console.log(`  ${gotcha.reason.substring(0, 100)}...`);
-              console.log('');
+              console.log("");
             }
           }
           break;

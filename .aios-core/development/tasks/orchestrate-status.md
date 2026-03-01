@@ -3,8 +3,8 @@ title: Orchestrate Status
 description: Show orchestrator status for a story
 agent: aios-master
 version: 1.0.0
-story: '0.9'
-epic: '0'
+story: "0.9"
+epic: "0"
 ---
 
 # \*orchestrate-status Command

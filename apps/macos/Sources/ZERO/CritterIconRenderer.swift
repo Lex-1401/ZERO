@@ -1,7 +1,7 @@
 import AppKit
 
 enum CritterIconRenderer {
-    private static let size = NSSize(width: 18, height: 18)
+    private static let size = NSSize(width: 22, height: 22)
 
     struct Badge {
         let symbolName: String
@@ -124,7 +124,7 @@ enum CritterIconRenderer {
             // Ensure template mode for menu bar rendering
             mascotImage.isTemplate = true
             
-            let renderSize = NSSize(width: 19, height: 19) 
+            let renderSize = NSSize(width: 22, height: 22) 
             mascotImage.size = renderSize
             
             guard let rep = self.makeBitmapRep() else { return mascotImage }
@@ -136,7 +136,7 @@ enum CritterIconRenderer {
             context.imageInterpolation = .high
             
             // Draw mascot to fit perfectly in the 18x18 menu bar slot
-            let drawRect = NSRect(x: 0, y: 0, width: 18, height: 18)
+            let drawRect = NSRect(x: 0, y: 0, width: 22, height: 22)
             mascotImage.draw(in: drawRect)
             
             if let badge {
@@ -188,9 +188,9 @@ enum CritterIconRenderer {
     }
 
     private static func makeBitmapRep() -> NSBitmapImageRep? {
-        // Force a 36×36px backing store (2× for the 18pt logical canvas) so the menu bar icon stays crisp on Retina.
-        let pixelsWide = 36
-        let pixelsHigh = 36
+        // Force a 44×44px backing store (2× for the 22pt logical canvas) so the menu bar icon stays crisp on Retina.
+        let pixelsWide = 44
+        let pixelsHigh = 44
         return NSBitmapImageRep(
             bitmapDataPlanes: nil,
             pixelsWide: pixelsWide,

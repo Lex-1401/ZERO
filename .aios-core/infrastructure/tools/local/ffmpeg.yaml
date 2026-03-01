@@ -159,7 +159,7 @@ tool:
         command: "ffprobe -v quiet -print_format json -show_format -show_streams input.mp4"
 
       - operation: "Set metadata"
-        command: "ffmpeg -i input.mp4 -metadata title=\"My Video\" output.mp4"
+        command: 'ffmpeg -i input.mp4 -metadata title="My Video" output.mp4'
 
   common_flags:
     input_output:

@@ -41,7 +41,7 @@ class PMAdapter {
    * }
    */
   async syncStory(_storyPath) {
-    throw new Error('syncStory must be implemented by adapter');
+    throw new Error("syncStory must be implemented by adapter");
   }
 
   /**
@@ -61,7 +61,7 @@ class PMAdapter {
    * }
    */
   async pullStory(_storyId) {
-    throw new Error('pullStory must be implemented by adapter');
+    throw new Error("pullStory must be implemented by adapter");
   }
 
   /**
@@ -82,7 +82,7 @@ class PMAdapter {
    * });
    */
   async createStory(_storyData) {
-    throw new Error('createStory must be implemented by adapter');
+    throw new Error("createStory must be implemented by adapter");
   }
 
   /**
@@ -100,7 +100,7 @@ class PMAdapter {
    * await adapter.updateStatus('3.20', 'InProgress');
    */
   async updateStatus(_storyId, _status) {
-    throw new Error('updateStatus must be implemented by adapter');
+    throw new Error("updateStatus must be implemented by adapter");
   }
 
   /**
@@ -119,7 +119,7 @@ class PMAdapter {
    * }
    */
   async testConnection() {
-    throw new Error('testConnection must be implemented by adapter');
+    throw new Error("testConnection must be implemented by adapter");
   }
 
   /**
@@ -127,7 +127,7 @@ class PMAdapter {
    * @returns {string} Adapter name (e.g., 'ClickUp', 'GitHub Projects')
    */
   getName() {
-    return this.constructor.name.replace('Adapter', '');
+    return this.constructor.name.replace("Adapter", "");
   }
 }
 

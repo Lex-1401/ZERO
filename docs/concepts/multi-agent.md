@@ -4,9 +4,10 @@ title: Roteamento Multi-Agente
 read_when: "Você deseja múltiplos agentes isolados (espaços de trabalho + autenticação) em um único processo do gateway."
 status: active
 ---
+
 # Roteamento Multi-Agente
 
-Objetivo: múltiplos agentes *isolados* (espaço de trabalho separado + `agentDir` + sessões), além de múltiplas contas de canais (ex: dois WhatsApps) em um único Gateway em execução. A entrada é roteada para um agente via vínculos (bindings).
+Objetivo: múltiplos agentes _isolados_ (espaço de trabalho separado + `agentDir` + sessões), além de múltiplas contas de canais (ex: dois WhatsApps) em um único Gateway em execução. A entrada é roteada para um agente via vínculos (bindings).
 
 ## O que é “um agente”?
 
@@ -84,19 +85,19 @@ Exemplo:
   agents: {
     list: [
       { id: "alex", workspace: "~/zero-alex" },
-      { id: "mia", workspace: "~/zero-mia" }
-    ]
+      { id: "mia", workspace: "~/zero-mia" },
+    ],
   },
   bindings: [
     { agentId: "alex", match: { channel: "whatsapp", peer: { kind: "dm", id: "+15551230001" } } },
-    { agentId: "mia",  match: { channel: "whatsapp", peer: { kind: "dm", id: "+15551230002" } } }
+    { agentId: "mia", match: { channel: "whatsapp", peer: { kind: "dm", id: "+15551230002" } } },
   ],
   channels: {
     whatsapp: {
       dmPolicy: "allowlist",
-      allowFrom: ["+15551230001", "+15551230002"]
-    }
-  }
+      allowFrom: ["+15551230001", "+15551230002"],
+    },
+  },
 }
 ```
 
@@ -204,20 +205,20 @@ Dividido por canal: roteia o WhatsApp para um agente rápido do dia a dia e o Te
         id: "chat",
         name: "Dia a dia",
         workspace: "~/zero-chat",
-        model: "anthropic/claude-sonnet-4-5"
+        model: "anthropic/claude-sonnet-4-5",
       },
       {
         id: "opus",
         name: "Trabalho Profundo",
         workspace: "~/zero-opus",
-        model: "anthropic/claude-opus-4-5"
-      }
-    ]
+        model: "anthropic/claude-opus-4-5",
+      },
+    ],
   },
   bindings: [
     { agentId: "chat", match: { channel: "whatsapp" } },
-    { agentId: "opus", match: { channel: "telegram" } }
-  ]
+    { agentId: "opus", match: { channel: "telegram" } },
+  ],
 }
 ```
 
@@ -234,14 +235,24 @@ Mantenha o WhatsApp no agente rápido, mas roteie uma DM para o Opus:
 {
   agents: {
     list: [
-      { id: "chat", name: "Dia a dia", workspace: "~/zero-chat", model: "anthropic/claude-sonnet-4-5" },
-      { id: "opus", name: "Trabalho Profundo", workspace: "~/zero-opus", model: "anthropic/claude-opus-4-5" }
-    ]
+      {
+        id: "chat",
+        name: "Dia a dia",
+        workspace: "~/zero-chat",
+        model: "anthropic/claude-sonnet-4-5",
+      },
+      {
+        id: "opus",
+        name: "Trabalho Profundo",
+        workspace: "~/zero-opus",
+        model: "anthropic/claude-opus-4-5",
+      },
+    ],
   },
   bindings: [
     { agentId: "opus", match: { channel: "whatsapp", peer: { kind: "dm", id: "+15551234567" } } },
-    { agentId: "chat", match: { channel: "whatsapp" } }
-  ]
+    { agentId: "chat", match: { channel: "whatsapp" } },
+  ],
 }
 ```
 
@@ -261,28 +272,36 @@ Vincula um agente familiar dedicado a um único grupo de WhatsApp, com controle 
         workspace: "~/zero-familia",
         identity: { name: "Bot da Família" },
         groupChat: {
-          mentionPatterns: ["@familia", "@botdafamilia", "@Bot da Família"]
+          mentionPatterns: ["@familia", "@botdafamilia", "@Bot da Família"],
         },
         sandbox: {
           mode: "all",
-          scope: "agent"
+          scope: "agent",
         },
         tools: {
-          allow: ["exec", "read", "sessions_list", "sessions_history", "sessions_send", "sessions_spawn", "session_status"],
-          deny: ["write", "edit", "apply_patch", "browser", "canvas", "nodes", "cron"]
-        }
-      }
-    ]
+          allow: [
+            "exec",
+            "read",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "session_status",
+          ],
+          deny: ["write", "edit", "apply_patch", "browser", "canvas", "nodes", "cron"],
+        },
+      },
+    ],
   },
   bindings: [
     {
       agentId: "familia",
       match: {
         channel: "whatsapp",
-        peer: { kind: "group", id: "120363999999999999@g.us" }
-      }
-    }
-  ]
+        peer: { kind: "group", id: "120363999999999999@g.us" },
+      },
+    },
+  ],
 }
 ```
 

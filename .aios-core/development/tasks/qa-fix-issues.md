@@ -24,7 +24,7 @@ Fix issues reported in QA review following a structured 8-phase workflow. This t
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: qa-fix
 
   deterministic: true
@@ -52,13 +52,13 @@ autoClaude:
       type: file
       path: docs/stories/{storyId}/qa/QA_FIX_REQUEST.md
       required: true
-      description: 'Path to the QA fix request file'
+      description: "Path to the QA fix request file"
 
     - name: qaReportPath
       type: file
       path: docs/stories/{storyId}/qa/qa_report.md
       required: false
-      description: 'Path to the full QA report (optional)'
+      description: "Path to the full QA report (optional)"
 
   outputs:
     - name: fixResult
@@ -72,7 +72,7 @@ autoClaude:
 
     - name: signalReReview
       type: boolean
-      description: 'Signal to QA that fixes are ready for re-review'
+      description: "Signal to QA that fixes are ready for re-review"
 
   verification:
     type: checklist
@@ -86,17 +86,17 @@ autoClaude:
 
 ```yaml
 command:
-  name: '*fix-qa-issues'
-  syntax: '*fix-qa-issues {story-id}'
+  name: "*fix-qa-issues"
+  syntax: "*fix-qa-issues {story-id}"
   agent: dev
 
   examples:
-    - '*fix-qa-issues 6.4'
-    - '*fix-qa-issues story-6.4'
+    - "*fix-qa-issues 6.4"
+    - "*fix-qa-issues story-6.4"
 
   aliases:
-    - '*qa-fix'
-    - '*fix-qa'
+    - "*qa-fix"
+    - "*fix-qa"
 ```
 
 ---
@@ -117,7 +117,7 @@ scope_enforcement:
 
   on_violation:
     action: halt
-    message: 'Scope creep detected. Only fix issues from QA_FIX_REQUEST.md'
+    message: "Scope creep detected. Only fix issues from QA_FIX_REQUEST.md"
 ```
 
 ---
@@ -128,9 +128,9 @@ scope_enforcement:
 
 ```yaml
 phase_0:
-  id: '0'
-  name: 'Load Context'
-  description: 'Load QA fix request and report to understand scope'
+  id: "0"
+  name: "Load Context"
+  description: "Load QA fix request and report to understand scope"
 
   actions:
     - action: load_file
@@ -142,7 +142,7 @@ phase_0:
       path: docs/stories/{storyId}/qa/qa_report.md
       required: false
       variable: qaReport
-      fallback: 'Use fixRequest only'
+      fallback: "Use fixRequest only"
 
     - action: load_file
       path: docs/stories/{storyId}.md
@@ -150,13 +150,13 @@ phase_0:
       variable: storyFile
 
   validation:
-    check: 'QA_FIX_REQUEST.md exists and is valid markdown'
+    check: "QA_FIX_REQUEST.md exists and is valid markdown"
     onFailure: halt
 
   error_cases:
-    - condition: 'QA_FIX_REQUEST.md not found'
+    - condition: "QA_FIX_REQUEST.md not found"
       action: halt
-      message: 'No fix request found at docs/stories/{storyId}/qa/QA_FIX_REQUEST.md'
+      message: "No fix request found at docs/stories/{storyId}/qa/QA_FIX_REQUEST.md"
 
   output:
     fixRequest: object
@@ -168,9 +168,9 @@ phase_0:
 
 ```yaml
 phase_1:
-  id: '1'
-  name: 'Parse Requirements'
-  description: 'Extract list of issues and create fix checklist'
+  id: "1"
+  name: "Parse Requirements"
+  description: "Extract list of issues and create fix checklist"
 
   actions:
     - action: parse_fix_request
@@ -197,7 +197,7 @@ phase_1:
         - MINOR # Fix last
 
   validation:
-    check: 'At least one issue extracted from fix request'
+    check: "At least one issue extracted from fix request"
     onFailure: halt
 
   output:
@@ -212,28 +212,28 @@ phase_1:
 
 ```yaml
 phase_2:
-  id: '2'
-  name: 'Start Development'
-  description: 'Prepare environment for fixing'
+  id: "2"
+  name: "Start Development"
+  description: "Prepare environment for fixing"
 
   actions:
     - action: check_branch
-      verify: 'On correct branch for story'
+      verify: "On correct branch for story"
       if_not:
         - action: checkout
-          branch: 'feat/{storyId}' # or use worktree if configured
+          branch: "feat/{storyId}" # or use worktree if configured
 
     - action: git_status
-      verify: 'Working directory clean or has only expected changes'
+      verify: "Working directory clean or has only expected changes"
 
     - action: record_state
       save:
-        - commitBefore: '{currentCommitHash}'
-        - branchName: '{currentBranch}'
-        - timestamp: '{timestamp}'
+        - commitBefore: "{currentCommitHash}"
+        - branchName: "{currentBranch}"
+        - timestamp: "{timestamp}"
 
   validation:
-    check: 'On correct branch, ready to make changes'
+    check: "On correct branch, ready to make changes"
     onFailure: ask_user
 
   output:
@@ -246,17 +246,17 @@ phase_2:
 
 ```yaml
 phase_3:
-  id: '3'
-  name: 'Fix Issues Sequentially'
-  description: 'Address each issue in priority order'
+  id: "3"
+  name: "Fix Issues Sequentially"
+  description: "Address each issue in priority order"
   criticality: CORE
 
   constraints:
     - "Fix ONLY what's in the issue list"
-    - 'Apply MINIMAL changes'
-    - 'Do NOT refactor surrounding code'
-    - 'Do NOT add new features'
-    - 'Do NOT fix issues not in the list'
+    - "Apply MINIMAL changes"
+    - "Do NOT refactor surrounding code"
+    - "Do NOT add new features"
+    - "Do NOT fix issues not in the list"
 
   actions:
     - action: for_each_issue
@@ -278,20 +278,20 @@ phase_3:
           status: fixed
 
         - action: log_change
-          format: 'Fixed {issueId}: {description}'
+          format: "Fixed {issueId}: {description}"
 
   validation:
-    check: 'All issues marked as fixed'
+    check: "All issues marked as fixed"
     onFailure: continue_with_remaining
 
   error_handling:
-    - condition: 'Cannot locate issue'
+    - condition: "Cannot locate issue"
       action: log_and_continue
-      message: 'Issue {issueId} could not be located - may already be fixed'
+      message: "Issue {issueId} could not be located - may already be fixed"
 
-    - condition: 'Fix would require major changes'
+    - condition: "Fix would require major changes"
       action: halt
-      message: 'Issue {issueId} requires scope beyond minimal fix'
+      message: "Issue {issueId} requires scope beyond minimal fix"
 
   output:
     issuesFixed: array
@@ -303,28 +303,28 @@ phase_3:
 
 ```yaml
 phase_4:
-  id: '4'
-  name: 'Run Tests'
+  id: "4"
+  name: "Run Tests"
   description: "Execute test suite to verify fixes don't break anything"
 
   actions:
     - action: run_command
-      command: 'npm run lint'
+      command: "npm run lint"
       timeout: 60000
       required: true
 
     - action: run_command
-      command: 'npm run test'
+      command: "npm run test"
       timeout: 300000
       required: true
 
     - action: run_command
-      command: 'npm run typecheck'
+      command: "npm run typecheck"
       timeout: 60000
       required: false # Only if TypeScript project
 
   validation:
-    check: 'All tests pass, no lint errors'
+    check: "All tests pass, no lint errors"
     onFailure: goto phase_3 # Fix and retry
 
   retry:
@@ -342,9 +342,9 @@ phase_4:
 
 ```yaml
 phase_5:
-  id: '5'
-  name: 'Self-Verification'
-  description: 'Run ALL verification steps from the fix request'
+  id: "5"
+  name: "Self-Verification"
+  description: "Run ALL verification steps from the fix request"
   criticality: REQUIRED
 
   actions:
@@ -367,27 +367,27 @@ phase_5:
 
   verification_types:
     command:
-      description: 'Run CLI command and check output'
-      example: 'npm run lint -- --quiet'
+      description: "Run CLI command and check output"
+      example: "npm run lint -- --quiet"
 
     api:
-      description: 'Make API call and verify response'
-      example: 'curl -X GET http://localhost:3000/api/health'
+      description: "Make API call and verify response"
+      example: "curl -X GET http://localhost:3000/api/health"
 
     browser:
-      description: 'Use playwright to verify UI'
-      example: 'Check login form renders correctly'
+      description: "Use playwright to verify UI"
+      example: "Check login form renders correctly"
 
     e2e:
-      description: 'Run end-to-end test'
+      description: "Run end-to-end test"
       example: "npm run test:e2e -- --grep 'auth'"
 
     manual:
-      description: 'Document manual verification'
-      example: 'Visually confirm button alignment'
+      description: "Document manual verification"
+      example: "Visually confirm button alignment"
 
   validation:
-    check: 'ALL verification steps pass'
+    check: "ALL verification steps pass"
     onFailure: return_to_phase_3
 
   output:
@@ -400,13 +400,13 @@ phase_5:
 
 ```yaml
 phase_6:
-  id: '6'
-  name: 'Commit Fixes'
-  description: 'Commit changes with proper issue references'
+  id: "6"
+  name: "Commit Fixes"
+  description: "Commit changes with proper issue references"
 
   actions:
     - action: git_add
-      files: '{filesModified}'
+      files: "{filesModified}"
       # Only add files that were modified for fixes
 
     - action: generate_commit_message
@@ -423,10 +423,10 @@ phase_6:
         Co-Authored-By: Claude <noreply@anthropic.com>
 
     - action: git_commit
-      message: '{generatedCommitMessage}'
+      message: "{generatedCommitMessage}"
 
   validation:
-    check: 'Commit created successfully'
+    check: "Commit created successfully"
     onFailure: retry
 
   output:
@@ -438,9 +438,9 @@ phase_6:
 
 ```yaml
 phase_7:
-  id: '7'
-  name: 'Update Plan & Signal'
-  description: 'Mark issues as fixed and signal QA for re-review'
+  id: "7"
+  name: "Update Plan & Signal"
+  description: "Mark issues as fixed and signal QA for re-review"
 
   actions:
     # Update issue status in fix request (if tracking there)
@@ -454,10 +454,10 @@ phase_7:
     # Update story file Dev Agent Record
     - action: update_story
       path: docs/stories/{storyId}.md
-      section: 'Dev Agent Record'
+      section: "Dev Agent Record"
       add:
-        - completion_note: 'QA fixes applied: {issueIds}'
-        - reference: 'QA_FIX_REQUEST.md'
+        - completion_note: "QA fixes applied: {issueIds}"
+        - reference: "QA_FIX_REQUEST.md"
 
     # Update plan tracker for dashboard integration
     - action: update_plan_tracker
@@ -499,7 +499,7 @@ phase_7:
         **Next Step:** @qa re-review with `*review-story {storyId}`
 
   validation:
-    check: 'All updates completed, signal file created'
+    check: "All updates completed, signal file created"
     onFailure: retry
 
   output:
@@ -548,33 +548,33 @@ summary:
 ```yaml
 errors:
   - id: fix-request-not-found
-    condition: 'QA_FIX_REQUEST.md does not exist'
+    condition: "QA_FIX_REQUEST.md does not exist"
     action: halt
-    message: 'No fix request found. Run QA review first.'
+    message: "No fix request found. Run QA review first."
     blocking: true
 
   - id: no-issues-found
-    condition: 'Fix request has no issues listed'
+    condition: "Fix request has no issues listed"
     action: halt
-    message: 'No issues to fix. Story may already be passing.'
+    message: "No issues to fix. Story may already be passing."
     blocking: false
 
   - id: scope-creep-detected
-    condition: 'Agent attempts changes outside issue list'
+    condition: "Agent attempts changes outside issue list"
     action: halt
-    message: 'Scope creep: Only fix issues from QA_FIX_REQUEST.md'
+    message: "Scope creep: Only fix issues from QA_FIX_REQUEST.md"
     blocking: true
 
   - id: tests-failing-after-fixes
-    condition: 'Tests fail after applying fixes'
+    condition: "Tests fail after applying fixes"
     action: escalate
-    message: 'Fixes caused test failures. Review approach.'
+    message: "Fixes caused test failures. Review approach."
     blocking: true
 
   - id: verification-failed
     condition: "Verification steps don't pass"
     action: retry_from_phase_3
-    message: 'Verification failed. Re-check fixes.'
+    message: "Verification failed. Re-check fixes."
     max_retries: 3
 ```
 
@@ -672,14 +672,23 @@ Recommend creating separate story for performance optimization.
 
 ```yaml
 metadata:
-  story: '6.4'
-  epic: 'Epic 6 - QA Evolution'
-  created: '2026-01-29'
-  author: '@dev (Dex)'
-  version: '1.0.0'
+  story: "6.4"
+  epic: "Epic 6 - QA Evolution"
+  created: "2026-01-29"
+  author: "@dev (Dex)"
+  version: "1.0.0"
   tags:
     - qa-loop
     - fix-issues
     - quality-assurance
     - development
 ```
+
+## Handoff
+
+next_agent: @qa
+next_command: \*review {story-id}
+condition: All QA_FIX_REQUEST issues resolved
+alternatives:
+
+- agent: @dev, command: \*run-tests, condition: Verify fixes pass before re-review

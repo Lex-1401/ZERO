@@ -11,21 +11,21 @@
  * @see Story SQS-7: Squad Migration Tool
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Error codes for SquadMigratorError
  * @enum {string}
  */
 const MigratorErrorCodes = {
-  SQUAD_NOT_FOUND: 'SQUAD_NOT_FOUND',
-  NO_MANIFEST: 'NO_MANIFEST',
-  BACKUP_FAILED: 'BACKUP_FAILED',
-  MIGRATION_FAILED: 'MIGRATION_FAILED',
-  VALIDATION_FAILED: 'VALIDATION_FAILED',
-  INVALID_PATH: 'INVALID_PATH',
+  SQUAD_NOT_FOUND: "SQUAD_NOT_FOUND",
+  NO_MANIFEST: "NO_MANIFEST",
+  BACKUP_FAILED: "BACKUP_FAILED",
+  MIGRATION_FAILED: "MIGRATION_FAILED",
+  VALIDATION_FAILED: "VALIDATION_FAILED",
+  INVALID_PATH: "INVALID_PATH",
 };
 
 /**
@@ -39,7 +39,7 @@ class SquadMigratorError extends Error {
    */
   constructor(code, message, details = {}) {
     super(message);
-    this.name = 'SquadMigratorError';
+    this.name = "SquadMigratorError";
     this.code = code;
     this.details = details;
   }
@@ -166,13 +166,13 @@ class SquadMigrator {
     };
 
     // Check for legacy manifest (config.yaml)
-    const hasConfigYaml = await this._pathExists(path.join(squadPath, 'config.yaml'));
-    const hasSquadYaml = await this._pathExists(path.join(squadPath, 'squad.yaml'));
+    const hasConfigYaml = await this._pathExists(path.join(squadPath, "config.yaml"));
+    const hasSquadYaml = await this._pathExists(path.join(squadPath, "squad.yaml"));
 
     if (!hasConfigYaml && !hasSquadYaml) {
       throw new SquadMigratorError(
         MigratorErrorCodes.NO_MANIFEST,
-        'No manifest found (config.yaml or squad.yaml)',
+        "No manifest found (config.yaml or squad.yaml)",
         { squadPath },
       );
     }
@@ -181,65 +181,65 @@ class SquadMigrator {
     if (hasConfigYaml && !hasSquadYaml) {
       analysis.needsMigration = true;
       analysis.issues.push({
-        type: 'LEGACY_MANIFEST',
-        message: 'Uses deprecated config.yaml manifest',
-        severity: 'warning',
+        type: "LEGACY_MANIFEST",
+        message: "Uses deprecated config.yaml manifest",
+        severity: "warning",
       });
       analysis.actions.push({
-        type: 'RENAME_MANIFEST',
-        from: 'config.yaml',
-        to: 'squad.yaml',
+        type: "RENAME_MANIFEST",
+        from: "config.yaml",
+        to: "squad.yaml",
       });
     }
 
     // Check for flat structure (missing required directories)
     // Note: Only 'tasks' and 'agents' are required for task-first architecture
     // 'config' directory is optional and not checked
-    const hasTasksDir = await this._pathExists(path.join(squadPath, 'tasks'));
-    const hasAgentsDir = await this._pathExists(path.join(squadPath, 'agents'));
+    const hasTasksDir = await this._pathExists(path.join(squadPath, "tasks"));
+    const hasAgentsDir = await this._pathExists(path.join(squadPath, "agents"));
 
     const missingDirs = [];
     if (!hasTasksDir) {
-      missingDirs.push('tasks');
+      missingDirs.push("tasks");
     }
     if (!hasAgentsDir) {
-      missingDirs.push('agents');
+      missingDirs.push("agents");
     }
 
     if (missingDirs.length > 0) {
       analysis.needsMigration = true;
       analysis.issues.push({
-        type: 'FLAT_STRUCTURE',
-        message: `Missing task-first directories: ${missingDirs.join(', ')}`,
-        severity: 'warning',
+        type: "FLAT_STRUCTURE",
+        message: `Missing task-first directories: ${missingDirs.join(", ")}`,
+        severity: "warning",
       });
       analysis.actions.push({
-        type: 'CREATE_DIRECTORIES',
+        type: "CREATE_DIRECTORIES",
         dirs: missingDirs,
       });
     }
 
     // Check manifest schema compliance
     const manifestPath = hasSquadYaml
-      ? path.join(squadPath, 'squad.yaml')
-      : path.join(squadPath, 'config.yaml');
+      ? path.join(squadPath, "squad.yaml")
+      : path.join(squadPath, "config.yaml");
 
     try {
-      const content = await fs.readFile(manifestPath, 'utf-8');
+      const content = await fs.readFile(manifestPath, "utf-8");
       const manifest = yaml.load(content);
 
       // Check for missing aios.type
       if (!manifest.aios?.type) {
         analysis.needsMigration = true;
         analysis.issues.push({
-          type: 'MISSING_AIOS_TYPE',
-          message: 'Missing required field: aios.type',
-          severity: 'error',
+          type: "MISSING_AIOS_TYPE",
+          message: "Missing required field: aios.type",
+          severity: "error",
         });
         analysis.actions.push({
-          type: 'ADD_FIELD',
-          path: 'aios.type',
-          value: 'squad',
+          type: "ADD_FIELD",
+          path: "aios.type",
+          value: "squad",
         });
       }
 
@@ -247,14 +247,14 @@ class SquadMigrator {
       if (!manifest.aios?.minVersion) {
         analysis.needsMigration = true;
         analysis.issues.push({
-          type: 'MISSING_MIN_VERSION',
-          message: 'Missing required field: aios.minVersion',
-          severity: 'error',
+          type: "MISSING_MIN_VERSION",
+          message: "Missing required field: aios.minVersion",
+          severity: "error",
         });
         analysis.actions.push({
-          type: 'ADD_FIELD',
-          path: 'aios.minVersion',
-          value: '2.1.0',
+          type: "ADD_FIELD",
+          path: "aios.minVersion",
+          value: "2.1.0",
         });
       }
 
@@ -262,15 +262,15 @@ class SquadMigrator {
       if (!manifest.name) {
         analysis.needsMigration = true;
         analysis.issues.push({
-          type: 'MISSING_NAME',
-          message: 'Missing required field: name',
-          severity: 'error',
+          type: "MISSING_NAME",
+          message: "Missing required field: name",
+          severity: "error",
         });
         // Try to infer name from directory
         const inferredName = path.basename(squadPath);
         analysis.actions.push({
-          type: 'ADD_FIELD',
-          path: 'name',
+          type: "ADD_FIELD",
+          path: "name",
           value: inferredName,
         });
       }
@@ -279,18 +279,18 @@ class SquadMigrator {
       if (!manifest.version) {
         analysis.needsMigration = true;
         analysis.issues.push({
-          type: 'MISSING_VERSION',
-          message: 'Missing required field: version',
-          severity: 'error',
+          type: "MISSING_VERSION",
+          message: "Missing required field: version",
+          severity: "error",
         });
         analysis.actions.push({
-          type: 'ADD_FIELD',
-          path: 'version',
-          value: '1.0.0',
+          type: "ADD_FIELD",
+          path: "version",
+          value: "1.0.0",
         });
       }
     } catch (error) {
-      if (error.name === 'YAMLException') {
+      if (error.name === "YAMLException") {
         throw new SquadMigratorError(
           MigratorErrorCodes.MIGRATION_FAILED,
           `Invalid YAML in manifest: ${error.message}`,
@@ -314,7 +314,7 @@ class SquadMigrator {
    */
   async createBackup(squadPath) {
     const timestamp = Date.now();
-    const backupDir = path.join(squadPath, '.backup');
+    const backupDir = path.join(squadPath, ".backup");
     const backupPath = path.join(backupDir, `pre-migration-${timestamp}`);
 
     this._log(`Creating backup at: ${backupPath}`);
@@ -325,7 +325,7 @@ class SquadMigrator {
       // Copy all files except .backup directory
       const files = await fs.readdir(squadPath);
       for (const file of files) {
-        if (file === '.backup') {
+        if (file === ".backup") {
           continue;
         }
         const src = path.join(squadPath, file);
@@ -333,7 +333,7 @@ class SquadMigrator {
         await this._copyRecursive(src, dest);
       }
 
-      this._log('Backup created successfully');
+      this._log("Backup created successfully");
       return backupPath;
     } catch (error) {
       throw new SquadMigratorError(
@@ -354,21 +354,21 @@ class SquadMigrator {
     this._log(`Executing action: ${action.type}`);
 
     switch (action.type) {
-      case 'RENAME_MANIFEST':
+      case "RENAME_MANIFEST":
         await fs.rename(path.join(squadPath, action.from), path.join(squadPath, action.to));
         break;
 
-      case 'CREATE_DIRECTORIES':
+      case "CREATE_DIRECTORIES":
         for (const dir of action.dirs) {
           await fs.mkdir(path.join(squadPath, dir), { recursive: true });
         }
         break;
 
-      case 'ADD_FIELD':
+      case "ADD_FIELD":
         await this._addManifestField(squadPath, action.path, action.value);
         break;
 
-      case 'MOVE_FILE':
+      case "MOVE_FILE":
         await fs.rename(path.join(squadPath, action.from), path.join(squadPath, action.to));
         break;
 
@@ -389,19 +389,19 @@ class SquadMigrator {
    * @private
    */
   async _addManifestField(squadPath, fieldPath, value) {
-    const manifestPath = path.join(squadPath, 'squad.yaml');
+    const manifestPath = path.join(squadPath, "squad.yaml");
 
     let content;
     let manifest;
 
     try {
-      content = await fs.readFile(manifestPath, 'utf-8');
+      content = await fs.readFile(manifestPath, "utf-8");
       manifest = yaml.load(content) || {};
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if (error.code === "ENOENT") {
         // If squad.yaml doesn't exist yet, try config.yaml
-        const configPath = path.join(squadPath, 'config.yaml');
-        content = await fs.readFile(configPath, 'utf-8');
+        const configPath = path.join(squadPath, "config.yaml");
+        content = await fs.readFile(configPath, "utf-8");
         manifest = yaml.load(content) || {};
       } else {
         throw error;
@@ -409,7 +409,7 @@ class SquadMigrator {
     }
 
     // Navigate to nested path and set value
-    const parts = fieldPath.split('.');
+    const parts = fieldPath.split(".");
     let current = manifest;
 
     for (let i = 0; i < parts.length - 1; i++) {
@@ -422,7 +422,7 @@ class SquadMigrator {
     current[parts[parts.length - 1]] = value;
 
     // Write back to manifest
-    await fs.writeFile(manifestPath, yaml.dump(manifest, { lineWidth: -1 }), 'utf-8');
+    await fs.writeFile(manifestPath, yaml.dump(manifest, { lineWidth: -1 }), "utf-8");
 
     this._log(`Added field ${fieldPath} = ${value}`);
   }
@@ -442,7 +442,7 @@ class SquadMigrator {
     if (!analysis.needsMigration) {
       return {
         success: true,
-        message: 'Squad is already up to date',
+        message: "Squad is already up to date",
         actions: [],
         validation: null,
         backupPath: null,
@@ -462,7 +462,7 @@ class SquadMigrator {
       if (this.dryRun) {
         executedActions.push({
           ...action,
-          status: 'dry-run',
+          status: "dry-run",
         });
         continue;
       }
@@ -471,19 +471,19 @@ class SquadMigrator {
         await this._executeAction(squadPath, action);
         executedActions.push({
           ...action,
-          status: 'success',
+          status: "success",
         });
       } catch (error) {
         executedActions.push({
           ...action,
-          status: 'failed',
+          status: "failed",
           error: error.message,
         });
       }
     }
 
     // Check if any actions failed
-    const hasFailures = executedActions.some((a) => a.status === 'failed');
+    const hasFailures = executedActions.some((a) => a.status === "failed");
 
     // Validate after migration (unless dry-run)
     let validation = null;
@@ -499,10 +499,10 @@ class SquadMigrator {
     const result = {
       success: !hasFailures,
       message: hasFailures
-        ? 'Migration completed with errors'
+        ? "Migration completed with errors"
         : this.dryRun
-          ? 'Dry-run completed successfully'
-          : 'Migration completed successfully',
+          ? "Dry-run completed successfully"
+          : "Migration completed successfully",
       actions: executedActions,
       validation,
       backupPath,
@@ -522,44 +522,44 @@ class SquadMigrator {
   generateReport(analysis, result = null) {
     const lines = [];
 
-    lines.push('═══════════════════════════════════════════════════════════');
-    lines.push('              SQUAD MIGRATION REPORT');
-    lines.push('═══════════════════════════════════════════════════════════');
-    lines.push('');
+    lines.push("═══════════════════════════════════════════════════════════");
+    lines.push("              SQUAD MIGRATION REPORT");
+    lines.push("═══════════════════════════════════════════════════════════");
+    lines.push("");
     lines.push(`Squad Path: ${analysis.squadPath}`);
-    lines.push(`Needs Migration: ${analysis.needsMigration ? 'Yes' : 'No'}`);
-    lines.push('');
+    lines.push(`Needs Migration: ${analysis.needsMigration ? "Yes" : "No"}`);
+    lines.push("");
 
     // Issues section
     if (analysis.issues.length > 0) {
-      lines.push('───────────────────────────────────────────────────────────');
-      lines.push('ISSUES FOUND:');
-      lines.push('───────────────────────────────────────────────────────────');
+      lines.push("───────────────────────────────────────────────────────────");
+      lines.push("ISSUES FOUND:");
+      lines.push("───────────────────────────────────────────────────────────");
       for (const issue of analysis.issues) {
-        const icon = issue.severity === 'error' ? '❌' : issue.severity === 'warning' ? '⚠️' : 'ℹ️';
+        const icon = issue.severity === "error" ? "❌" : issue.severity === "warning" ? "⚠️" : "ℹ️";
         lines.push(`  ${icon} [${issue.severity.toUpperCase()}] ${issue.message}`);
       }
-      lines.push('');
+      lines.push("");
     }
 
     // Actions section
     if (analysis.actions.length > 0) {
-      lines.push('───────────────────────────────────────────────────────────');
-      lines.push('PLANNED ACTIONS:');
-      lines.push('───────────────────────────────────────────────────────────');
+      lines.push("───────────────────────────────────────────────────────────");
+      lines.push("PLANNED ACTIONS:");
+      lines.push("───────────────────────────────────────────────────────────");
       for (let i = 0; i < analysis.actions.length; i++) {
         const action = analysis.actions[i];
         lines.push(`  ${i + 1}. ${this._formatAction(action)}`);
       }
-      lines.push('');
+      lines.push("");
     }
 
     // Result section (if migration was executed)
     if (result) {
-      lines.push('───────────────────────────────────────────────────────────');
-      lines.push('MIGRATION RESULT:');
-      lines.push('───────────────────────────────────────────────────────────');
-      lines.push(`  Status: ${result.success ? '✅ SUCCESS' : '❌ FAILED'}`);
+      lines.push("───────────────────────────────────────────────────────────");
+      lines.push("MIGRATION RESULT:");
+      lines.push("───────────────────────────────────────────────────────────");
+      lines.push(`  Status: ${result.success ? "✅ SUCCESS" : "❌ FAILED"}`);
       lines.push(`  Message: ${result.message}`);
 
       if (result.backupPath) {
@@ -567,11 +567,11 @@ class SquadMigrator {
       }
 
       if (result.actions.length > 0) {
-        lines.push('');
-        lines.push('  Executed Actions:');
+        lines.push("");
+        lines.push("  Executed Actions:");
         for (const action of result.actions) {
           const icon =
-            action.status === 'success' ? '✅' : action.status === 'dry-run' ? '🔍' : '❌';
+            action.status === "success" ? "✅" : action.status === "dry-run" ? "🔍" : "❌";
           lines.push(`    ${icon} ${this._formatAction(action)} [${action.status}]`);
           if (action.error) {
             lines.push(`       Error: ${action.error}`);
@@ -580,9 +580,9 @@ class SquadMigrator {
       }
 
       if (result.validation) {
-        lines.push('');
-        lines.push('  Post-Migration Validation:');
-        lines.push(`    Valid: ${result.validation.valid ? 'Yes' : 'No'}`);
+        lines.push("");
+        lines.push("  Post-Migration Validation:");
+        lines.push(`    Valid: ${result.validation.valid ? "Yes" : "No"}`);
         if (result.validation.errors?.length > 0) {
           lines.push(`    Errors: ${result.validation.errors.length}`);
         }
@@ -592,10 +592,10 @@ class SquadMigrator {
       }
     }
 
-    lines.push('');
-    lines.push('═══════════════════════════════════════════════════════════');
+    lines.push("");
+    lines.push("═══════════════════════════════════════════════════════════");
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -606,13 +606,13 @@ class SquadMigrator {
    */
   _formatAction(action) {
     switch (action.type) {
-      case 'RENAME_MANIFEST':
+      case "RENAME_MANIFEST":
         return `Rename ${action.from} → ${action.to}`;
-      case 'CREATE_DIRECTORIES':
-        return `Create directories: ${action.dirs.join(', ')}`;
-      case 'ADD_FIELD':
+      case "CREATE_DIRECTORIES":
+        return `Create directories: ${action.dirs.join(", ")}`;
+      case "ADD_FIELD":
         return `Add field: ${action.path} = "${action.value}"`;
-      case 'MOVE_FILE':
+      case "MOVE_FILE":
         return `Move ${action.from} → ${action.to}`;
       default:
         return `${action.type}`;

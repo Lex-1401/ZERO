@@ -18,7 +18,7 @@ function transform(agentData) {
     // Add sync footer if not present
     const syncFooter = `\n---\n*AIOS Agent - Synced from .aios-core/development/agents/${agentData.filename}*\n`;
 
-    if (!agentData.raw.includes('Synced from .aios-core/development/agents/')) {
+    if (!agentData.raw.includes("Synced from .aios-core/development/agents/")) {
       return agentData.raw.trimEnd() + syncFooter;
     }
     return agentData.raw;
@@ -37,10 +37,10 @@ function generateMinimalContent(agentData) {
   const agent = agentData.agent || {};
   const persona = agentData.persona_profile || {};
 
-  const icon = agent.icon || '🤖';
+  const icon = agent.icon || "🤖";
   const name = agent.name || agentData.id;
-  const title = agent.title || 'AIOS Agent';
-  const whenToUse = agent.whenToUse || 'Use this agent for specific tasks';
+  const title = agent.title || "AIOS Agent";
+  const whenToUse = agent.whenToUse || "Use this agent for specific tasks";
 
   let content = `# ${agentData.id}
 
@@ -56,7 +56,7 @@ ${icon} **${name}** - ${title}
 
 `;
     for (const cmd of agentData.commands) {
-      content += `- \`*${cmd.name}\` - ${cmd.description || 'No description'}\n`;
+      content += `- \`*${cmd.name}\` - ${cmd.description || "No description"}\n`;
     }
   }
 
@@ -80,5 +80,5 @@ function getFilename(agentData) {
 module.exports = {
   transform,
   getFilename,
-  format: 'full-markdown-yaml',
+  format: "full-markdown-yaml",
 };

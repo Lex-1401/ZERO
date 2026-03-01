@@ -5,18 +5,18 @@
 # Created: {{CREATEDAT}}
 # Story: {{STORYID}}
 
-name: {{COMPONENTNAME}}
+name: { { COMPONENTNAME } }
 version: 1.0.0
-description: {{DESCRIPTION}}
-squad: {{SQUADNAME}}
+description: { { DESCRIPTION } }
+squad: { { SQUADNAME } }
 
 # Metadata
 metadata:
-  created: {{CREATEDAT}}
+  created: { { CREATEDAT } }
   author: squad-creator
   tags:
     - workflow
-    - {{SQUADNAME}}
+    - { { SQUADNAME } }
 
 # Trigger conditions
 triggers:

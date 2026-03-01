@@ -33,23 +33,23 @@ console_checks:
   errors:
     severity: CRITICAL
     patterns:
-      - 'Uncaught Error'
-      - 'Uncaught TypeError'
-      - 'Uncaught ReferenceError'
-      - 'Uncaught SyntaxError'
-      - 'ChunkLoadError'
-      - 'Failed to fetch'
-      - 'NetworkError'
+      - "Uncaught Error"
+      - "Uncaught TypeError"
+      - "Uncaught ReferenceError"
+      - "Uncaught SyntaxError"
+      - "ChunkLoadError"
+      - "Failed to fetch"
+      - "NetworkError"
     action: Block approval
 
   warnings:
     severity: HIGH
     patterns:
-      - 'Warning:'
-      - 'Deprecation'
-      - 'Invalid prop'
-      - 'Each child in a list should have a unique'
-      - 'Cannot update a component'
+      - "Warning:"
+      - "Deprecation"
+      - "Invalid prop"
+      - "Each child in a list should have a unique"
+      - "Cannot update a component"
     action: Report, recommend fix
 
   failed_requests:
@@ -62,17 +62,17 @@ console_checks:
   missing_resources:
     severity: MEDIUM
     patterns:
-      - '404 Not Found'
-      - 'Failed to load resource'
-      - 'net::ERR_'
+      - "404 Not Found"
+      - "Failed to load resource"
+      - "net::ERR_"
     action: Report
 
   performance:
     severity: LOW
     patterns:
-      - 'Violation'
-      - 'Long task'
-      - 'Layout shift'
+      - "Violation"
+      - "Long task"
+      - "Layout shift"
     action: Note for optimization
 ```
 
@@ -247,22 +247,22 @@ report:
 ```yaml
 ignore_patterns:
   third_party:
-    - 'Download the React DevTools'
-    - 'Google Analytics'
-    - 'Facebook Pixel'
-    - '[HMR]'
-    - 'Fast Refresh'
+    - "Download the React DevTools"
+    - "Google Analytics"
+    - "Facebook Pixel"
+    - "[HMR]"
+    - "Fast Refresh"
 
   dev_only:
-    - 'Warning: ReactDOM.render is no longer supported'
-    - 'Compiled successfully'
-    - '[webpack-dev-server]'
+    - "Warning: ReactDOM.render is no longer supported"
+    - "Compiled successfully"
+    - "[webpack-dev-server]"
 
   known_issues:
-    - pattern: 'ResizeObserver loop'
-      reason: 'Browser bug, not actionable'
-    - pattern: 'Third-party cookie will be blocked'
-      reason: 'Browser privacy feature'
+    - pattern: "ResizeObserver loop"
+      reason: "Browser bug, not actionable"
+    - pattern: "Third-party cookie will be blocked"
+      reason: "Browser privacy feature"
 ```
 
 ---

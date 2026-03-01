@@ -209,7 +209,7 @@ describe("diagnostics-otel service", () => {
     expect(registerLogTransportMock).toHaveBeenCalledTimes(1);
     expect(registeredTransports).toHaveLength(1);
     registeredTransports[0]?.({
-      0: "{\"subsystem\":\"diagnostic\"}",
+      0: '{"subsystem":"diagnostic"}',
       1: "hello",
       _meta: { logLevelName: "INFO", date: new Date() },
     });

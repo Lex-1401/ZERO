@@ -5,6 +5,7 @@ read_when:
   - Você está depurando por que o modelo “sabe” algo (ou esqueceu)
   - Você deseja reduzir a sobrecarga de contexto (/context, /status, /compact)
 ---
+
 # Contexto
 
 “Contexto” é **tudo o que o ZERO envia para o modelo para uma execução**. Ele é limitado pela **janela de contexto** do modelo (limite de tokens).
@@ -15,7 +16,7 @@ Modelo mental para iniciantes:
 - **Histórico da conversa**: suas mensagens + as mensagens do assistente para esta sessão.
 - **Chamadas/resultados de ferramentas + anexos**: saída de comandos, leitura de arquivos, imagens/áudio, etc.
 
-Contexto *não é a mesma coisa* que “memória”: a memória pode ser armazenada no disco e recarregada depois; o contexto é o que está dentro da janela atual do modelo.
+Contexto _não é a mesma coisa_ que “memória”: a memória pode ser armazenada no disco e recarregada depois; o contexto é o que está dentro da janela atual do modelo.
 
 ## Início rápido (inspecionar contexto)
 
@@ -114,14 +115,14 @@ Arquivos grandes são truncados por arquivo usando `agents.defaults.bootstrapMax
 
 ## Habilidades: o que é injetado vs carregado sob demanda
 
-O prompt do sistema inclui uma **lista de habilidades** compacta (nome + descrição + localização). Esta lista tem uma sobrecarga real. As instruções das habilidades *não* são incluídas por padrão. Espera-se que o modelo use `read` no arquivo `SKILL.md` da habilidade **apenas quando necessário**.
+O prompt do sistema inclui uma **lista de habilidades** compacta (nome + descrição + localização). Esta lista tem uma sobrecarga real. As instruções das habilidades _não_ são incluídas por padrão. Espera-se que o modelo use `read` no arquivo `SKILL.md` da habilidade **apenas quando necessário**.
 
 ## Ferramentas: existem dois custos
 
 As ferramentas afetam o contexto de duas maneiras:
 
-1) **Texto da lista de ferramentas** no prompt do sistema (o que você vê como “Tooling”).
-2) **Esquemas de ferramentas** (JSON). Eles são enviados para o modelo para que ele possa chamar as ferramentas. Eles contam para o contexto, mesmo que você não os veja como texto simples.
+1. **Texto da lista de ferramentas** no prompt do sistema (o que você vê como “Tooling”).
+2. **Esquemas de ferramentas** (JSON). Eles são enviados para o modelo para que ele possa chamar as ferramentas. Eles contam para o contexto, mesmo que você não os veja como texto simples.
 
 O comando `/context detail` detalha os maiores esquemas de ferramentas para que você possa ver o que domina.
 
@@ -143,7 +144,7 @@ O que persiste entre as mensagens depende do mecanismo:
 
 - **O histórico normal** persiste na transcrição da sessão até ser compactado/podado por política.
 - **A compactação** persiste um resumo na transcrição e mantém as mensagens recentes intactas.
-- **A poda (pruning)** remove resultados de ferramentas antigos do prompt *em memória* para uma execução, mas não reescreve a transcrição.
+- **A poda (pruning)** remove resultados de ferramentas antigos do prompt _em memória_ para uma execução, mas não reescreve a transcrição.
 
 Documentação: [Sessão](/concepts/session), [Compactação](/concepts/compaction), [Poda de sessão](/concepts/session-pruning).
 

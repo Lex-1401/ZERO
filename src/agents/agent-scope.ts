@@ -13,8 +13,14 @@ import { DEFAULT_AGENT_WORKSPACE_DIR } from "./workspace.js";
 
 export { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 
+/**
+ * Represents a single agent entry from the configuration.
+ */
 type AgentEntry = NonNullable<NonNullable<ZEROConfig["agents"]>["list"]>[number];
 
+/**
+ * The completely resolved configuration object for an agent.
+ */
 type ResolvedAgentConfig = {
   name?: string;
   workspace?: string;
@@ -32,12 +38,19 @@ type ResolvedAgentConfig = {
 
 let defaultAgentWarned = false;
 
+/**
+ * Internal helper to safely list all valid agent config entries.
+ * Returns an empty array if no agents are configured.
+ */
 function listAgents(cfg: ZEROConfig): AgentEntry[] {
   const list = cfg.agents?.list;
   if (!Array.isArray(list)) return [];
   return list.filter((entry): entry is AgentEntry => Boolean(entry && typeof entry === "object"));
 }
 
+/**
+ * Returns a list of all agent IDs defined in the configuration.
+ */
 export function listAgentIds(cfg: ZEROConfig): string[] {
   const agents = listAgents(cfg);
   if (agents.length === 0) return [DEFAULT_AGENT_ID];
@@ -52,6 +65,9 @@ export function listAgentIds(cfg: ZEROConfig): string[] {
   return ids.length > 0 ? ids : [DEFAULT_AGENT_ID];
 }
 
+/**
+ * Resolves the primary/default agent ID from the configuration.
+ */
 export function resolveDefaultAgentId(cfg: ZEROConfig): string {
   const agents = listAgents(cfg);
   if (agents.length === 0) return DEFAULT_AGENT_ID;
@@ -64,6 +80,9 @@ export function resolveDefaultAgentId(cfg: ZEROConfig): string {
   return normalizeAgentId(chosen || DEFAULT_AGENT_ID);
 }
 
+/**
+ * Resolves both the default and session-specific agent IDs.
+ */
 export function resolveSessionAgentIds(params: { sessionKey?: string; config?: ZEROConfig }): {
   defaultAgentId: string;
   sessionAgentId: string;
@@ -76,6 +95,9 @@ export function resolveSessionAgentIds(params: { sessionKey?: string; config?: Z
   return { defaultAgentId, sessionAgentId };
 }
 
+/**
+ * Resolves the agent ID for a specific session.
+ */
 export function resolveSessionAgentId(params: {
   sessionKey?: string;
   config?: ZEROConfig;
@@ -83,11 +105,17 @@ export function resolveSessionAgentId(params: {
   return resolveSessionAgentIds(params).sessionAgentId;
 }
 
+/**
+ * Internal helper to find a specific agent entry by its ID.
+ */
 function resolveAgentEntry(cfg: ZEROConfig, agentId: string): AgentEntry | undefined {
   const id = normalizeAgentId(agentId);
   return listAgents(cfg).find((entry) => normalizeAgentId(entry.id) === id);
 }
 
+/**
+ * Resolves the full configuration for a specific agent.
+ */
 export function resolveAgentConfig(
   cfg: ZEROConfig,
   agentId: string,
@@ -114,6 +142,9 @@ export function resolveAgentConfig(
   };
 }
 
+/**
+ * Resolves the primary model ID for a specific agent.
+ */
 export function resolveAgentModelPrimary(cfg: ZEROConfig, agentId: string): string | undefined {
   const raw = resolveAgentConfig(cfg, agentId)?.model;
   if (!raw) return undefined;
@@ -122,6 +153,9 @@ export function resolveAgentModelPrimary(cfg: ZEROConfig, agentId: string): stri
   return primary || undefined;
 }
 
+/**
+ * Resolves model fallbacks for an agent, if any are explicitly defined.
+ */
 export function resolveAgentModelFallbacksOverride(
   cfg: ZEROConfig,
   agentId: string,
@@ -133,6 +167,10 @@ export function resolveAgentModelFallbacksOverride(
   return Array.isArray(raw.fallbacks) ? raw.fallbacks : undefined;
 }
 
+/**
+ * Resolves the workspace directory for an agent.
+ * Respects default agent definitions and fallback directories.
+ */
 export function resolveAgentWorkspaceDir(cfg: ZEROConfig, agentId: string) {
   const id = normalizeAgentId(agentId);
   const configured = resolveAgentConfig(cfg, id)?.workspace?.trim();
@@ -146,6 +184,9 @@ export function resolveAgentWorkspaceDir(cfg: ZEROConfig, agentId: string) {
   return path.join(os.homedir(), `zero-${id}`);
 }
 
+/**
+ * Resolves the base state directory where an agent's memory and state are persistently stored.
+ */
 export function resolveAgentDir(cfg: ZEROConfig, agentId: string) {
   const id = normalizeAgentId(agentId);
   const configured = resolveAgentConfig(cfg, id)?.agentDir?.trim();

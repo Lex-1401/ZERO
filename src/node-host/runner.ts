@@ -1,9 +1,4 @@
-import crypto from "node:crypto";
-import { spawn } from "node:child_process";
-import fs from "node:fs";
-import fsPromises from "node:fs/promises";
-import path from "node:path";
-
+import * as crypto from "node:crypto";
 import {
   addAllowlistEntry,
   analyzeArgvCommand,
@@ -18,454 +13,68 @@ import {
   readExecApprovalsSnapshot,
   resolveExecApprovalsSocketPath,
   saveExecApprovals,
-  type ExecAsk,
-  type ExecSecurity,
-  type ExecApprovalsFile,
-  type ExecAllowlistEntry,
-  type ExecCommandSegment,
 } from "../infra/exec-approvals.js";
-import {
-  requestExecHostViaSocket,
-  type ExecHostRequest,
-  type ExecHostResponse,
-  type ExecHostRunResult,
-} from "../infra/exec-host.js";
 import { getMachineDisplayName } from "../infra/machine-name.js";
 import { loadOrCreateDeviceIdentity } from "../infra/device-identity.js";
 import { loadConfig } from "../config/config.js";
 import { resolveBrowserConfig, shouldStartLocalBrowserServer } from "../browser/config.js";
-import { detectMime } from "../media/mime.js";
 import { resolveAgentConfig } from "../agents/agent-scope.js";
-import { ensureZEROCliOnPath } from "../infra/path-env.js";
 import { VERSION } from "../version.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 
 import { ensureNodeHostConfig, saveNodeHostConfig, type NodeHostGatewayConfig } from "./config.js";
 import { GatewayClient } from "../gateway/client.js";
 
-type NodeHostRunOptions = {
-  gatewayHost: string;
-  gatewayPort: number;
-  gatewayTls?: boolean;
-  gatewayTlsFingerprint?: string;
-  nodeId?: string;
-  displayName?: string;
-};
-
-type SystemRunParams = {
-  command: string[];
-  rawCommand?: string | null;
-  cwd?: string | null;
-  env?: Record<string, string>;
-  timeoutMs?: number | null;
-  needsScreenRecording?: boolean | null;
-  agentId?: string | null;
-  sessionKey?: string | null;
-  approved?: boolean | null;
-  approvalDecision?: string | null;
-  runId?: string | null;
-};
-
-type SystemWhichParams = {
-  bins: string[];
-};
-
-type BrowserProxyParams = {
-  method?: string;
-  path?: string;
-  query?: Record<string, string | number | boolean | null | undefined>;
-  body?: unknown;
-  timeoutMs?: number;
-  profile?: string;
-};
-
-type BrowserProxyFile = {
-  path: string;
-  base64: string;
-  mimeType?: string;
-};
-
-type BrowserProxyResult = {
-  result: unknown;
-  files?: BrowserProxyFile[];
-};
-
-type SystemExecApprovalsSetParams = {
-  file: ExecApprovalsFile;
-  baseHash?: string | null;
-};
-
-type ExecApprovalsSnapshot = {
-  path: string;
-  exists: boolean;
-  hash: string;
-  file: ExecApprovalsFile;
-};
-
-type RunResult = {
-  exitCode?: number;
-  timedOut: boolean;
-  success: boolean;
-  stdout: string;
-  stderr: string;
-  error?: string | null;
-  truncated: boolean;
-};
-
-function resolveExecSecurity(value?: string): ExecSecurity {
-  return value === "deny" || value === "allowlist" || value === "full" ? value : "allowlist";
-}
-
-function resolveExecAsk(value?: string): ExecAsk {
-  return value === "off" || value === "on-miss" || value === "always" ? value : "on-miss";
-}
-
-type ExecEventPayload = {
-  sessionKey: string;
-  runId: string;
-  host: string;
-  command?: string;
-  exitCode?: number;
-  timedOut?: boolean;
-  success?: boolean;
-  output?: string;
-  reason?: string;
-};
-
-type NodeInvokeRequestPayload = {
-  id: string;
-  nodeId: string;
-  command: string;
-  paramsJSON?: string | null;
-  timeoutMs?: number | null;
-  idempotencyKey?: string | null;
-};
-
-const OUTPUT_CAP = 200_000;
-const OUTPUT_EVENT_TAIL = 20_000;
-const DEFAULT_NODE_PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-const BROWSER_PROXY_MAX_FILE_BYTES = 10 * 1024 * 1024;
+import { SkillBinsCache } from "./runner/skill-cache.js";
+import {
+  sanitizeEnv,
+  formatCommand,
+  resolveExecSecurity,
+  resolveExecAsk
+} from "./runner/utils.js";
+import {
+  resolveBrowserProxyConfig,
+  ensureBrowserControlServer,
+  isProfileAllowed,
+  collectBrowserProxyPaths,
+  readBrowserProxyFile
+} from "./runner/browser-proxy.js";
+import {
+  truncateOutput,
+  buildExecEventPayload,
+  decodeParams,
+  coerceNodeInvokePayload,
+  sendInvokeResult,
+  sendNodeEvent
+} from "./runner/invoke.js";
+import {
+  redactExecApprovals,
+  requireExecApprovalsBaseHash,
+  runCommand,
+  handleSystemWhich,
+  ensureNodePathEnv,
+  runViaMacAppExecHost
+} from "./runner/commands.js";
+import type {
+  NodeHostRunOptions,
+  SystemRunParams,
+  SystemWhichParams,
+  BrowserProxyParams,
+  BrowserProxyResult,
+  SystemExecApprovalsSetParams,
+  RunResult,
+  ExecEventPayload,
+  NodeInvokeRequestPayload,
+  BrowserProxyFile
+} from "./runner/types.js";
+import type {
+  ExecApprovalsFile,
+  ExecApprovalsSnapshot,
+  ExecCommandSegment
+} from "../infra/exec-approvals.js";
 
 const execHostEnforced = process.env.ZERO_NODE_EXEC_HOST?.trim().toLowerCase() === "app";
 const execHostFallbackAllowed = process.env.ZERO_NODE_EXEC_FALLBACK?.trim().toLowerCase() !== "0";
-
-const blockedEnvKeys = new Set([
-  "NODE_OPTIONS",
-  "PYTHONHOME",
-  "PYTHONPATH",
-  "PERL5LIB",
-  "PERL5OPT",
-  "RUBYOPT",
-]);
-
-const blockedEnvPrefixes = ["DYLD_", "LD_"];
-
-class SkillBinsCache {
-  private bins = new Set<string>();
-  private lastRefresh = 0;
-  private readonly ttlMs = 90_000;
-  private readonly fetch: () => Promise<string[]>;
-
-  constructor(fetch: () => Promise<string[]>) {
-    this.fetch = fetch;
-  }
-
-  async current(force = false): Promise<Set<string>> {
-    if (force || Date.now() - this.lastRefresh > this.ttlMs) {
-      await this.refresh();
-    }
-    return this.bins;
-  }
-
-  private async refresh() {
-    try {
-      const bins = await this.fetch();
-      this.bins = new Set(bins);
-      this.lastRefresh = Date.now();
-    } catch {
-      if (!this.lastRefresh) {
-        this.bins = new Set();
-      }
-    }
-  }
-}
-
-function sanitizeEnv(
-  overrides?: Record<string, string> | null,
-): Record<string, string> | undefined {
-  if (!overrides) return undefined;
-  const merged = { ...process.env } as Record<string, string>;
-  const basePath = process.env.PATH ?? DEFAULT_NODE_PATH;
-  for (const [rawKey, value] of Object.entries(overrides)) {
-    const key = rawKey.trim();
-    if (!key) continue;
-    const upper = key.toUpperCase();
-    if (upper === "PATH") {
-      const trimmed = value.trim();
-      if (!trimmed) continue;
-      if (!basePath || trimmed === basePath) {
-        merged[key] = trimmed;
-        continue;
-      }
-      const suffix = `${path.delimiter}${basePath}`;
-      if (trimmed.endsWith(suffix)) {
-        merged[key] = trimmed;
-      }
-      continue;
-    }
-    if (blockedEnvKeys.has(upper)) continue;
-    if (blockedEnvPrefixes.some((prefix) => upper.startsWith(prefix))) continue;
-    merged[key] = value;
-  }
-  return merged;
-}
-
-function normalizeProfileAllowlist(raw?: string[]): string[] {
-  return Array.isArray(raw) ? raw.map((entry) => entry.trim()).filter(Boolean) : [];
-}
-
-function resolveBrowserProxyConfig() {
-  const cfg = loadConfig();
-  const proxy = cfg.nodeHost?.browserProxy;
-  const allowProfiles = normalizeProfileAllowlist(proxy?.allowProfiles);
-  const enabled = proxy?.enabled !== false;
-  return { enabled, allowProfiles };
-}
-
-let browserControlReady: Promise<void> | null = null;
-
-async function ensureBrowserControlServer(): Promise<void> {
-  if (browserControlReady) return browserControlReady;
-  browserControlReady = (async () => {
-    const cfg = loadConfig();
-    const resolved = resolveBrowserConfig(cfg.browser);
-    if (!resolved.enabled) {
-      throw new Error("browser control disabled");
-    }
-    if (!shouldStartLocalBrowserServer(resolved)) {
-      throw new Error("browser control URL is non-loopback");
-    }
-    const mod = await import("../browser/server.js");
-    await mod.startBrowserControlServerFromConfig();
-  })();
-  return browserControlReady;
-}
-
-function isProfileAllowed(params: { allowProfiles: string[]; profile?: string | null }) {
-  const { allowProfiles, profile } = params;
-  if (!allowProfiles.length) return true;
-  if (!profile) return false;
-  return allowProfiles.includes(profile.trim());
-}
-
-function collectBrowserProxyPaths(payload: unknown): string[] {
-  const paths = new Set<string>();
-  const obj =
-    typeof payload === "object" && payload !== null ? (payload as Record<string, unknown>) : null;
-  if (!obj) return [];
-  if (typeof obj.path === "string" && obj.path.trim()) paths.add(obj.path.trim());
-  if (typeof obj.imagePath === "string" && obj.imagePath.trim()) paths.add(obj.imagePath.trim());
-  const download = obj.download;
-  if (download && typeof download === "object") {
-    const dlPath = (download as Record<string, unknown>).path;
-    if (typeof dlPath === "string" && dlPath.trim()) paths.add(dlPath.trim());
-  }
-  return [...paths];
-}
-
-async function readBrowserProxyFile(filePath: string): Promise<BrowserProxyFile | null> {
-  const stat = await fsPromises.stat(filePath).catch(() => null);
-  if (!stat || !stat.isFile()) return null;
-  if (stat.size > BROWSER_PROXY_MAX_FILE_BYTES) {
-    throw new Error(
-      `browser proxy file exceeds ${Math.round(BROWSER_PROXY_MAX_FILE_BYTES / (1024 * 1024))}MB`,
-    );
-  }
-  const buffer = await fsPromises.readFile(filePath);
-  const mimeType = await detectMime({ buffer, filePath });
-  return { path: filePath, base64: buffer.toString("base64"), mimeType };
-}
-
-function formatCommand(argv: string[]): string {
-  return argv
-    .map((arg) => {
-      const trimmed = arg.trim();
-      if (!trimmed) return '""';
-      const needsQuotes = /\s|"/.test(trimmed);
-      if (!needsQuotes) return trimmed;
-      return `"${trimmed.replace(/"/g, '\\"')}"`;
-    })
-    .join(" ");
-}
-
-function truncateOutput(raw: string, maxChars: number): { text: string; truncated: boolean } {
-  if (raw.length <= maxChars) return { text: raw, truncated: false };
-  return { text: `... (truncated) ${raw.slice(raw.length - maxChars)}`, truncated: true };
-}
-
-function redactExecApprovals(file: ExecApprovalsFile): ExecApprovalsFile {
-  const socketPath = file.socket?.path?.trim();
-  return {
-    ...file,
-    socket: socketPath ? { path: socketPath } : undefined,
-  };
-}
-
-function requireExecApprovalsBaseHash(
-  params: SystemExecApprovalsSetParams,
-  snapshot: ExecApprovalsSnapshot,
-) {
-  if (!snapshot.exists) return;
-  if (!snapshot.hash) {
-    throw new Error("INVALID_REQUEST: exec approvals base hash unavailable; reload and retry");
-  }
-  const baseHash = typeof params.baseHash === "string" ? params.baseHash.trim() : "";
-  if (!baseHash) {
-    throw new Error("INVALID_REQUEST: exec approvals base hash required; reload and retry");
-  }
-  if (baseHash !== snapshot.hash) {
-    throw new Error("INVALID_REQUEST: exec approvals changed; reload and retry");
-  }
-}
-
-async function runCommand(
-  argv: string[],
-  cwd: string | undefined,
-  env: Record<string, string> | undefined,
-  timeoutMs: number | undefined,
-): Promise<RunResult> {
-  return await new Promise((resolve) => {
-    let stdout = "";
-    let stderr = "";
-    let outputLen = 0;
-    let truncated = false;
-    let timedOut = false;
-    let settled = false;
-
-    const child = spawn(argv[0], argv.slice(1), {
-      cwd,
-      env,
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-    });
-
-    const onChunk = (chunk: Buffer, target: "stdout" | "stderr") => {
-      if (outputLen >= OUTPUT_CAP) {
-        truncated = true;
-        return;
-      }
-      const remaining = OUTPUT_CAP - outputLen;
-      const slice = chunk.length > remaining ? chunk.subarray(0, remaining) : chunk;
-      const str = slice.toString("utf8");
-      outputLen += slice.length;
-      if (target === "stdout") stdout += str;
-      else stderr += str;
-      if (chunk.length > remaining) truncated = true;
-    };
-
-    child.stdout?.on("data", (chunk) => onChunk(chunk as Buffer, "stdout"));
-    child.stderr?.on("data", (chunk) => onChunk(chunk as Buffer, "stderr"));
-
-    let timer: NodeJS.Timeout | undefined;
-    if (timeoutMs && timeoutMs > 0) {
-      timer = setTimeout(() => {
-        timedOut = true;
-        try {
-          child.kill("SIGKILL");
-        } catch {
-          // ignore
-        }
-      }, timeoutMs);
-    }
-
-    const finalize = (exitCode?: number, error?: string | null) => {
-      if (settled) return;
-      settled = true;
-      if (timer) clearTimeout(timer);
-      resolve({
-        exitCode,
-        timedOut,
-        success: exitCode === 0 && !timedOut && !error,
-        stdout,
-        stderr,
-        error: error ?? null,
-        truncated,
-      });
-    };
-
-    child.on("error", (err) => {
-      finalize(undefined, err.message);
-    });
-    child.on("exit", (code) => {
-      finalize(code === null ? undefined : code, null);
-    });
-  });
-}
-
-function resolveEnvPath(env?: Record<string, string>): string[] {
-  const raw =
-    env?.PATH ??
-    (env as Record<string, string>)?.Path ??
-    process.env.PATH ??
-    process.env.Path ??
-    DEFAULT_NODE_PATH;
-  return raw.split(path.delimiter).filter(Boolean);
-}
-
-function ensureNodePathEnv(): string {
-  ensureZEROCliOnPath({ pathEnv: process.env.PATH ?? "" });
-  const current = process.env.PATH ?? "";
-  if (current.trim()) return current;
-  process.env.PATH = DEFAULT_NODE_PATH;
-  return DEFAULT_NODE_PATH;
-}
-
-function resolveExecutable(bin: string, env?: Record<string, string>) {
-  if (bin.includes("/") || bin.includes("\\")) return null;
-  const extensions =
-    process.platform === "win32"
-      ? (process.env.PATHEXT ?? process.env.PathExt ?? ".EXE;.CMD;.BAT;.COM")
-          .split(";")
-          .map((ext) => ext.toLowerCase())
-      : [""];
-  for (const dir of resolveEnvPath(env)) {
-    for (const ext of extensions) {
-      const candidate = path.join(dir, bin + ext);
-      if (fs.existsSync(candidate)) return candidate;
-    }
-  }
-  return null;
-}
-
-async function handleSystemWhich(params: SystemWhichParams, env?: Record<string, string>) {
-  const bins = params.bins.map((bin) => bin.trim()).filter(Boolean);
-  const found: Record<string, string> = {};
-  for (const bin of bins) {
-    const path = resolveExecutable(bin, env);
-    if (path) found[bin] = path;
-  }
-  return { bins: found };
-}
-
-function buildExecEventPayload(payload: ExecEventPayload): ExecEventPayload {
-  if (!payload.output) return payload;
-  const trimmed = payload.output.trim();
-  if (!trimmed) return payload;
-  const { text } = truncateOutput(trimmed, OUTPUT_EVENT_TAIL);
-  return { ...payload, output: text };
-}
-
-async function runViaMacAppExecHost(params: {
-  approvals: ReturnType<typeof resolveExecApprovals>;
-  request: ExecHostRequest;
-}): Promise<ExecHostResponse | null> {
-  const { approvals, request } = params;
-  return await requestExecHostViaSocket({
-    socketPath: approvals.socketPath,
-    token: approvals.token,
-    request,
-  });
-}
 
 export async function runNodeHost(opts: NodeHostRunOptions): Promise<void> {
   const config = await ensureNodeHostConfig();
@@ -505,8 +114,6 @@ export async function runNodeHost(opts: NodeHostRunOptions): Promise<void> {
   const scheme = gateway.tls ? "wss" : "ws";
   const url = `${scheme}://${host}:${port}`;
   const pathEnv = ensureNodePathEnv();
-  // eslint-disable-next-line no-console
-  console.log(`node host PATH: ${pathEnv}`);
 
   const client = new GatewayClient({
     url,
@@ -539,12 +146,9 @@ export async function runNodeHost(opts: NodeHostRunOptions): Promise<void> {
       void handleInvoke(payload, client, skillBins);
     },
     onConnectError: (err) => {
-      // keep retrying (handled by GatewayClient)
-      // eslint-disable-next-line no-console
       console.error(`node host gateway connect failed: ${err.message}`);
     },
     onClose: (code, reason) => {
-      // eslint-disable-next-line no-console
       console.error(`node host gateway closed (${code}): ${reason}`);
     },
   });
@@ -559,7 +163,7 @@ export async function runNodeHost(opts: NodeHostRunOptions): Promise<void> {
   });
 
   client.start();
-  await new Promise(() => {});
+  await new Promise(() => { });
 }
 
 async function handleInvoke(
@@ -576,6 +180,7 @@ async function handleInvoke(
         path: snapshot.path,
         exists: snapshot.exists,
         hash: snapshot.hash,
+        raw: snapshot.raw,
         file: redactExecApprovals(snapshot.file),
       };
       await sendInvokeResult(client, frame, {
@@ -619,6 +224,7 @@ async function handleInvoke(
         path: nextSnapshot.path,
         exists: nextSnapshot.exists,
         hash: nextSnapshot.hash,
+        raw: nextSnapshot.raw,
         file: redactExecApprovals(nextSnapshot.file),
       };
       await sendInvokeResult(client, frame, {
@@ -819,9 +425,9 @@ async function handleInvoke(
   const safeBins = resolveSafeBins(agentExec?.safeBins ?? cfg.tools?.exec?.safeBins);
   const bins = autoAllowSkills ? await skillBins.current() : new Set<string>();
   let analysisOk = false;
-  let allowlistMatches: ExecAllowlistEntry[] = [];
+  let allowlistMatches: any[] = [];
   let allowlistSatisfied = false;
-  let segments: ExecCommandSegment[] = [];
+  let segments: any[] = [];
   if (rawCommand) {
     const allowlistEval = evaluateShellAllowlist({
       command: rawCommand,
@@ -847,11 +453,11 @@ async function handleInvoke(
       skillBins: bins,
       autoAllowSkills,
     });
-    analysisOk = analysis.ok;
+    analysisOk = (analysis as any).ok;
     allowlistMatches = allowlistEval.allowlistMatches;
     allowlistSatisfied =
       security === "allowlist" && analysisOk ? allowlistEval.allowlistSatisfied : false;
-    segments = analysis.segments;
+    segments = (analysis as any).segments;
   }
 
   const useMacAppExec = process.platform === "darwin";
@@ -860,7 +466,7 @@ async function handleInvoke(
       params.approvalDecision === "allow-once" || params.approvalDecision === "allow-always"
         ? params.approvalDecision
         : null;
-    const execRequest: ExecHostRequest = {
+    const execRequest = {
       command: argv,
       rawCommand: rawCommand || null,
       cwd: params.cwd ?? null,
@@ -913,7 +519,7 @@ async function handleInvoke(
       });
       return;
     } else {
-      const result: ExecHostRunResult = response.payload;
+      const result = response.payload;
       const combined = [result.stdout, result.stderr, result.error].filter(Boolean).join("\n");
       await sendNodeEvent(
         client,
@@ -1089,104 +695,4 @@ async function handleInvoke(
       error: result.error ?? null,
     }),
   });
-}
-
-function decodeParams<T>(raw?: string | null): T {
-  if (!raw) {
-    throw new Error("INVALID_REQUEST: paramsJSON required");
-  }
-  return JSON.parse(raw) as T;
-}
-
-function coerceNodeInvokePayload(payload: unknown): NodeInvokeRequestPayload | null {
-  if (!payload || typeof payload !== "object") return null;
-  const obj = payload as Record<string, unknown>;
-  const id = typeof obj.id === "string" ? obj.id.trim() : "";
-  const nodeId = typeof obj.nodeId === "string" ? obj.nodeId.trim() : "";
-  const command = typeof obj.command === "string" ? obj.command.trim() : "";
-  if (!id || !nodeId || !command) return null;
-  const paramsJSON =
-    typeof obj.paramsJSON === "string"
-      ? obj.paramsJSON
-      : obj.params !== undefined
-        ? JSON.stringify(obj.params)
-        : null;
-  const timeoutMs = typeof obj.timeoutMs === "number" ? obj.timeoutMs : null;
-  const idempotencyKey = typeof obj.idempotencyKey === "string" ? obj.idempotencyKey : null;
-  return {
-    id,
-    nodeId,
-    command,
-    paramsJSON,
-    timeoutMs,
-    idempotencyKey,
-  };
-}
-
-async function sendInvokeResult(
-  client: GatewayClient,
-  frame: NodeInvokeRequestPayload,
-  result: {
-    ok: boolean;
-    payload?: unknown;
-    payloadJSON?: string | null;
-    error?: { code?: string; message?: string } | null;
-  },
-) {
-  try {
-    await client.request("node.invoke.result", buildNodeInvokeResultParams(frame, result));
-  } catch {
-    // ignore: node invoke responses are best-effort
-  }
-}
-
-export function buildNodeInvokeResultParams(
-  frame: NodeInvokeRequestPayload,
-  result: {
-    ok: boolean;
-    payload?: unknown;
-    payloadJSON?: string | null;
-    error?: { code?: string; message?: string } | null;
-  },
-): {
-  id: string;
-  nodeId: string;
-  ok: boolean;
-  payload?: unknown;
-  payloadJSON?: string;
-  error?: { code?: string; message?: string };
-} {
-  const params: {
-    id: string;
-    nodeId: string;
-    ok: boolean;
-    payload?: unknown;
-    payloadJSON?: string;
-    error?: { code?: string; message?: string };
-  } = {
-    id: frame.id,
-    nodeId: frame.nodeId,
-    ok: result.ok,
-  };
-  if (result.payload !== undefined) {
-    params.payload = result.payload;
-  }
-  if (typeof result.payloadJSON === "string") {
-    params.payloadJSON = result.payloadJSON;
-  }
-  if (result.error) {
-    params.error = result.error;
-  }
-  return params;
-}
-
-async function sendNodeEvent(client: GatewayClient, event: string, payload: unknown) {
-  try {
-    await client.request("node.event", {
-      event,
-      payloadJSON: payload ? JSON.stringify(payload) : null,
-    });
-  } catch {
-    // ignore: node events are best-effort
-  }
 }

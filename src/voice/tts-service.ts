@@ -16,9 +16,7 @@ const tts = new EdgeTTS({
 export function setVoiceEnabled(enabled: boolean) {
   voiceEnabled = enabled;
   if (enabled) {
-    console.log("🔊 [Voice] Modo de voz ativado.");
   } else {
-    console.log("🔇 [Voice] Modo de voz suspenso.");
   }
 }
 

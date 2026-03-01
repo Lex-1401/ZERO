@@ -39,7 +39,7 @@ Create a JSON file in `~/.zero/roles/`. For example `~/.zero/roles/analyst.json`
 
 Currently, you can run a role by passing the `--role` flag to the session runner (feature in progress) or by ensuring the role is loaded in your `zero.config.json` (planned).
 
-*Dev Note:* To test manually, you can inject the role in `src/agents/pi-embedded-runner/run/attempt.ts` or use the experimental `zero role run <name>` command (if implemented).
+_Dev Note:_ To test manually, you can inject the role in `src/agents/pi-embedded-runner/run/attempt.ts` or use the experimental `zero role run <name>` command (if implemented).
 
 ## 3. Active Scheduling (Cron)
 

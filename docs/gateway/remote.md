@@ -89,9 +89,9 @@ Você pode persistir um alvo remoto para que os comandos da CLI o utilizem por p
     mode: "remote",
     remote: {
       url: "ws://127.0.0.1:18789",
-      token: "seu-token"
-    }
-  }
+      token: "seu-token",
+    },
+  },
 }
 ```
 

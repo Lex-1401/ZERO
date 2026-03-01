@@ -2,7 +2,25 @@
 name: things-mac
 description: Gerencie o Things 3 via CLI 'things' no macOS (adicionar/atualizar projetos+tarefas via URL scheme; ler/pesquisar/listar do banco de dados local).
 homepage: https://github.com/ossianhempel/things3-cli
-metadata: {"zero":{"emoji":"✅","os":["darwin"],"requires":{"bins":["things"]},"install":[{"id":"go","kind":"go","module":"github.com/ossianhempel/things3-cli/cmd/things@latest","bins":["things"],"label":"Install things3-cli (go)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "✅",
+        "os": ["darwin"],
+        "requires": { "bins": ["things"] },
+        "install":
+          [
+            {
+              "id": "go",
+              "kind": "go",
+              "module": "github.com/ossianhempel/things3-cli/cmd/things@latest",
+              "bins": ["things"],
+              "label": "Install things3-cli (go)",
+            },
+          ],
+      },
+  }
 ---
 
 # Things 3 CLI

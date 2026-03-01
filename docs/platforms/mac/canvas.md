@@ -5,6 +5,7 @@ read_when:
   - Adicionando controles de agente para espaço de trabalho visual
   - Depurando carregamentos do canvas no WKWebView
 ---
+
 # Canvas (app macOS)
 
 O app macOS incorpora um **painel Canvas** controlado por agente usando `WKWebView`. É um espaço de trabalho visual leve para HTML/CSS/JS, A2UI e pequenas superfícies de interface interativa.

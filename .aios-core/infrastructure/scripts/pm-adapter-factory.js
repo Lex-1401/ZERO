@@ -10,14 +10,14 @@
  * @see Story 3.20 - PM Tool-Agnostic Integration (TR-3.20.7)
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
-const { ClickUpAdapter } = require('../integrations/pm-adapters/clickup-adapter');
-const { GitHubProjectsAdapter } = require('../integrations/pm-adapters/github-adapter');
-const { JiraAdapter } = require('../integrations/pm-adapters/jira-adapter');
-const { LocalAdapter } = require('../integrations/pm-adapters/local-adapter');
+const { ClickUpAdapter } = require("../integrations/pm-adapters/clickup-adapter");
+const { GitHubProjectsAdapter } = require("../integrations/pm-adapters/github-adapter");
+const { JiraAdapter } = require("../integrations/pm-adapters/jira-adapter");
+const { LocalAdapter } = require("../integrations/pm-adapters/local-adapter");
 
 /**
  * Cached adapter instance (singleton pattern)
@@ -48,23 +48,23 @@ function getPMAdapter() {
     return cachedAdapter;
   }
 
-  const configPath = path.join(process.cwd(), '.aios-pm-config.yaml');
+  const configPath = path.join(process.cwd(), ".aios-pm-config.yaml");
 
   // If no PM config file, use local-only adapter
   if (!fs.existsSync(configPath)) {
-    console.log('ℹ️  No PM tool configured - using local-only mode');
-    console.log('   To configure a PM tool, run: aios init');
+    console.log("ℹ️  No PM tool configured - using local-only mode");
+    console.log("   To configure a PM tool, run: aios init");
     cachedAdapter = new LocalAdapter();
     return cachedAdapter;
   }
 
   try {
     // Read and parse config file
-    const configContent = fs.readFileSync(configPath, 'utf8');
+    const configContent = fs.readFileSync(configPath, "utf8");
     const config = yaml.load(configContent);
 
     if (!config || !config.pm_tool) {
-      console.warn('⚠️  Invalid PM config file - using local-only mode');
+      console.warn("⚠️  Invalid PM config file - using local-only mode");
       cachedAdapter = new LocalAdapter();
       return cachedAdapter;
     }
@@ -74,33 +74,32 @@ function getPMAdapter() {
 
     // Create appropriate adapter based on type
     switch (toolType) {
-      case 'clickup':
-        console.log('📌 Using ClickUp adapter');
+      case "clickup":
+        console.log("📌 Using ClickUp adapter");
         cachedAdapter = new ClickUpAdapter(toolConfig);
         break;
 
-      case 'github-projects':
-        console.log('📌 Using GitHub Projects adapter');
+      case "github-projects":
+        console.log("📌 Using GitHub Projects adapter");
         cachedAdapter = new GitHubProjectsAdapter(toolConfig);
         break;
 
-      case 'jira':
-        console.log('📌 Using Jira adapter');
+      case "jira":
+        console.log("📌 Using Jira adapter");
         cachedAdapter = new JiraAdapter(toolConfig);
         break;
 
-      case 'local':
+      case "local":
       default:
-        console.log('📌 Using Local-only adapter (no PM tool)');
+        console.log("📌 Using Local-only adapter (no PM tool)");
         cachedAdapter = new LocalAdapter();
         break;
     }
 
     return cachedAdapter;
-
   } catch (error) {
-    console.error('❌ Error loading PM config:', error.message);
-    console.log('   Falling back to local-only mode');
+    console.error("❌ Error loading PM config:", error.message);
+    console.log("   Falling back to local-only mode");
     cachedAdapter = new LocalAdapter();
     return cachedAdapter;
   }
@@ -140,19 +139,19 @@ function clearAdapterCache() {
  * }
  */
 function getPMToolType() {
-  const configPath = path.join(process.cwd(), '.aios-pm-config.yaml');
+  const configPath = path.join(process.cwd(), ".aios-pm-config.yaml");
 
   if (!fs.existsSync(configPath)) {
-    return 'local';
+    return "local";
   }
 
   try {
-    const configContent = fs.readFileSync(configPath, 'utf8');
+    const configContent = fs.readFileSync(configPath, "utf8");
     const config = yaml.load(configContent);
 
-    return config?.pm_tool?.type || 'local';
+    return config?.pm_tool?.type || "local";
   } catch (error) {
-    return 'local';
+    return "local";
   }
 }
 
@@ -170,7 +169,7 @@ function getPMToolType() {
  */
 function isPMToolConfigured() {
   const toolType = getPMToolType();
-  return toolType !== 'local';
+  return toolType !== "local";
 }
 
 module.exports = {

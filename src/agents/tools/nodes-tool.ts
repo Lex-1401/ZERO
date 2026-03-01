@@ -37,6 +37,8 @@ const NODES_TOOL_ACTIONS = [
   "camera_list",
   "camera_clip",
   "screen_record",
+  "screen_snap",
+  "ui_scan",
   "location_get",
   "run",
 ] as const;
@@ -352,6 +354,105 @@ export function createNodesTool(options?: {
                 fps: payload.fps,
                 screenIndex: payload.screenIndex,
                 hasAudio: payload.hasAudio,
+              },
+            };
+          }
+          case "screen_snap": {
+            const node = readStringParam(params, "node", { required: true });
+            const nodeId = await resolveNodeId(gatewayOpts, node);
+            const screenIndex =
+              typeof params.screenIndex === "number" && Number.isFinite(params.screenIndex)
+                ? params.screenIndex
+                : 0;
+            const quality =
+              typeof params.quality === "number" && Number.isFinite(params.quality)
+                ? params.quality
+                : 80;
+            const raw = (await callGatewayTool("node.invoke", gatewayOpts, {
+              nodeId,
+              command: "screen.snap",
+              params: {
+                screenIndex,
+                quality,
+                format: "jpg",
+              },
+              idempotencyKey: crypto.randomUUID(),
+            })) as { payload?: unknown };
+            const payload = parseCameraSnapPayload(raw?.payload); // Reusing camera parser as payload structure is same (base64 + meta)
+            const filePath = cameraTempPath({
+              kind: "screen_snap",
+              facing: `screen_${screenIndex}` as any,
+              ext: "jpg",
+            });
+            await writeBase64ToFile(filePath, payload.base64);
+            return {
+              content: [
+                { type: "text", text: `SCREEN_SNAP:${filePath}` },
+                { type: "image", data: payload.base64, mimeType: "image/jpeg" },
+              ],
+              details: {
+                path: filePath,
+                width: payload.width,
+                height: payload.height,
+                screenIndex,
+              },
+            };
+          }
+          case "ui_scan": {
+            const node = readStringParam(params, "node", { required: true });
+            const nodeId = await resolveNodeId(gatewayOpts, node);
+            const screenIndex =
+              typeof params.screenIndex === "number" && Number.isFinite(params.screenIndex)
+                ? params.screenIndex
+                : 0;
+
+            // 1. Capture Screenshot (Vision Grounding)
+            const snapRaw = (await callGatewayTool("node.invoke", gatewayOpts, {
+              nodeId,
+              command: "screen.snap",
+              params: { screenIndex, quality: 80, format: "jpg" },
+              idempotencyKey: crypto.randomUUID(),
+            })) as { payload?: any };
+            const snapPayload = parseCameraSnapPayload(snapRaw?.payload);
+
+            // 2. Capture UI Tree (Accessibility Grounding - Optional Fallback)
+            let uiTree = null;
+            try {
+              const treeRaw = (await callGatewayTool("node.invoke", gatewayOpts, {
+                nodeId,
+                command: "ui.tree",
+                params: { screenIndex },
+                idempotencyKey: crypto.randomUUID(),
+              })) as { payload?: any };
+              uiTree = treeRaw?.payload;
+            } catch {
+              // Graceful fallback if node doesn't support ui.tree yet
+            }
+
+            const filePath = cameraTempPath({
+              kind: "ui_scan",
+              facing: `screen_${screenIndex}` as any,
+              ext: "jpg",
+            });
+            await writeBase64ToFile(filePath, snapPayload.base64);
+
+            return {
+              content: [
+                { type: "text", text: `UI_SCAN_COMPLETE: ${filePath}` },
+                { type: "image", data: snapPayload.base64, mimeType: "image/jpeg" },
+                uiTree
+                  ? {
+                      type: "text",
+                      text: `Accessibility Tree:\n${JSON.stringify(uiTree, null, 2)}`,
+                    }
+                  : { type: "text", text: "Accessibility Tree not available for this node." },
+              ],
+              details: {
+                path: filePath,
+                width: snapPayload.width,
+                height: snapPayload.height,
+                hasTree: !!uiTree,
+                screenIndex,
               },
             };
           }

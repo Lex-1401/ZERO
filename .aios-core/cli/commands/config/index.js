@@ -15,26 +15,51 @@
  * @story PRO-4 — Core-Config Split Implementation
  */
 
-'use strict';
+"use strict";
 
-const { Command } = require('commander');
-const path = require('path');
-const fs = require('fs');
-const yaml = require('js-yaml');
+const { Command } = require("commander");
+const path = require("path");
+const fs = require("fs");
+const yaml = require("js-yaml");
 
 // Resolve core config modules (relative from .aios-core/cli/commands/config/)
-const configResolverPath = path.resolve(__dirname, '..', '..', '..', 'core', 'config', 'config-resolver');
-const mergeUtilsPath = path.resolve(__dirname, '..', '..', '..', 'core', 'config', 'merge-utils');
-const envInterpolatorPath = path.resolve(__dirname, '..', '..', '..', 'core', 'config', 'env-interpolator');
+const configResolverPath = path.resolve(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "core",
+  "config",
+  "config-resolver",
+);
+const mergeUtilsPath = path.resolve(__dirname, "..", "..", "..", "core", "config", "merge-utils");
+const envInterpolatorPath = path.resolve(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "core",
+  "config",
+  "env-interpolator",
+);
 
 /**
  * Lazy-load config modules (avoids failing at import time if yaml not installed)
  */
 function loadModules() {
-  const { resolveConfig, isLegacyMode, getConfigAtLevel, CONFIG_FILES } = require(configResolverPath);
+  const { resolveConfig, isLegacyMode, getConfigAtLevel, CONFIG_FILES } = require(
+    configResolverPath,
+  );
   const { deepMerge } = require(mergeUtilsPath);
   const { lintEnvPatterns } = require(envInterpolatorPath);
-  return { resolveConfig, isLegacyMode, getConfigAtLevel, CONFIG_FILES, deepMerge, lintEnvPatterns };
+  return {
+    resolveConfig,
+    isLegacyMode,
+    getConfigAtLevel,
+    CONFIG_FILES,
+    deepMerge,
+    lintEnvPatterns,
+  };
 }
 
 /**
@@ -80,7 +105,7 @@ function showAction(options) {
 
     // Print warnings
     if (result.warnings && result.warnings.length > 0) {
-      console.error('');
+      console.error("");
       for (const w of result.warnings) {
         console.error(`  WARNING: ${w}`);
       }
@@ -94,19 +119,17 @@ function showAction(options) {
 /**
  * Print config with source annotations for --debug mode.
  */
-function printDebugConfig(config, sources, prefix = '') {
+function printDebugConfig(config, sources, prefix = "") {
   for (const [key, value] of Object.entries(config)) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
     const source = sources[fullKey];
-    const tag = source ? `[${source.level}: ${path.basename(source.file)}]` : '[unknown]';
+    const tag = source ? `[${source.level}: ${path.basename(source.file)}]` : "[unknown]";
 
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+    if (value !== null && typeof value === "object" && !Array.isArray(value)) {
       console.log(`${fullKey}: ${tag}`);
       printDebugConfig(value, sources, fullKey);
     } else {
-      const display = Array.isArray(value)
-        ? JSON.stringify(value)
-        : String(value);
+      const display = Array.isArray(value) ? JSON.stringify(value) : String(value);
       console.log(`  ${fullKey} = ${display}  ${tag}`);
     }
   }
@@ -121,13 +144,13 @@ function diffAction(options) {
   const root = getProjectRoot();
 
   if (!options.levels) {
-    console.error('Error: --levels is required (e.g., --levels 1,2)');
+    console.error("Error: --levels is required (e.g., --levels 1,2)");
     process.exit(1);
   }
 
-  const [levelA, levelB] = options.levels.split(',').map(l => l.trim());
+  const [levelA, levelB] = options.levels.split(",").map((l) => l.trim());
   if (!levelA || !levelB) {
-    console.error('Error: --levels requires two levels separated by comma (e.g., --levels 1,2)');
+    console.error("Error: --levels requires two levels separated by comma (e.g., --levels 1,2)");
     process.exit(1);
   }
 
@@ -143,16 +166,16 @@ function diffAction(options) {
     }
 
     console.log(`Differences: ${levelA} vs ${levelB}`);
-    console.log('='.repeat(60));
+    console.log("=".repeat(60));
     for (const entry of diff) {
       switch (entry.type) {
-        case 'added':
+        case "added":
           console.log(`  + ${entry.key}: ${formatValue(entry.valueB)}  [only in ${levelB}]`);
           break;
-        case 'removed':
+        case "removed":
           console.log(`  - ${entry.key}: ${formatValue(entry.valueA)}  [only in ${levelA}]`);
           break;
-        case 'changed':
+        case "changed":
           console.log(`  ~ ${entry.key}:`);
           console.log(`      ${levelA}: ${formatValue(entry.valueA)}`);
           console.log(`      ${levelB}: ${formatValue(entry.valueB)}`);
@@ -166,7 +189,7 @@ function diffAction(options) {
   }
 }
 
-function computeDiff(objA, objB, _labelA, _labelB, prefix = '') {
+function computeDiff(objA, objB, _labelA, _labelB, prefix = "") {
   const diff = [];
   const allKeys = new Set([...Object.keys(objA), ...Object.keys(objB)]);
 
@@ -176,24 +199,26 @@ function computeDiff(objA, objB, _labelA, _labelB, prefix = '') {
     const inB = key in objB;
 
     if (!inA) {
-      diff.push({ type: 'added', key: fullKey, valueB: objB[key] });
+      diff.push({ type: "added", key: fullKey, valueB: objB[key] });
     } else if (!inB) {
-      diff.push({ type: 'removed', key: fullKey, valueA: objA[key] });
+      diff.push({ type: "removed", key: fullKey, valueA: objA[key] });
     } else if (isObj(objA[key]) && isObj(objB[key])) {
       diff.push(...computeDiff(objA[key], objB[key], _labelA, _labelB, fullKey));
     } else if (JSON.stringify(objA[key]) !== JSON.stringify(objB[key])) {
-      diff.push({ type: 'changed', key: fullKey, valueA: objA[key], valueB: objB[key] });
+      diff.push({ type: "changed", key: fullKey, valueA: objA[key], valueB: objB[key] });
     }
   }
 
   return diff;
 }
 
-function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function isObj(v) {
+  return v !== null && typeof v === "object" && !Array.isArray(v);
+}
 
 function formatValue(v) {
-  if (v === null || v === undefined) return 'null';
-  if (typeof v === 'object') return JSON.stringify(v);
+  if (v === null || v === undefined) return "null";
+  if (typeof v === "object") return JSON.stringify(v);
   return String(v);
 }
 
@@ -207,13 +232,13 @@ function migrateAction(options) {
 
   try {
     if (!isLegacyMode(root)) {
-      console.log('Project already uses layered config (framework-config.yaml found).');
-      console.log('Nothing to migrate.');
+      console.log("Project already uses layered config (framework-config.yaml found).");
+      console.log("Nothing to migrate.");
       return;
     }
 
     const legacyPath = path.join(root, CONFIG_FILES.legacy);
-    const legacyContent = fs.readFileSync(legacyPath, 'utf8');
+    const legacyContent = fs.readFileSync(legacyPath, "utf8");
     const legacyConfig = yaml.load(legacyContent);
 
     // Section-to-level mapping per ADR-PRO-002
@@ -222,12 +247,12 @@ function migrateAction(options) {
     const l4Sections = splitL4(legacyConfig);
 
     if (options.dryRun) {
-      console.log('=== DRY RUN — no files will be written ===\n');
-      console.log('--- framework-config.yaml (L1) ---');
+      console.log("=== DRY RUN — no files will be written ===\n");
+      console.log("--- framework-config.yaml (L1) ---");
       console.log(yaml.dump(l1Sections, { lineWidth: 120 }));
-      console.log('--- project-config.yaml (L2) ---');
+      console.log("--- project-config.yaml (L2) ---");
       console.log(yaml.dump(l2Sections, { lineWidth: 120 }));
-      console.log('--- local-config.yaml (L4) ---');
+      console.log("--- local-config.yaml (L4) ---");
       console.log(yaml.dump(l4Sections, { lineWidth: 120 }));
       return;
     }
@@ -238,35 +263,40 @@ function migrateAction(options) {
     const localPath = path.join(root, CONFIG_FILES.local);
 
     if (!options.force) {
-      const exists = [fwPath, projPath, localPath].filter(p => fs.existsSync(p));
+      const exists = [fwPath, projPath, localPath].filter((p) => fs.existsSync(p));
       if (exists.length > 0) {
-        console.error('Split config files already exist:');
-        exists.forEach((p) => { console.error(`  ${p}`); });
-        console.error('Use --force to overwrite.');
+        console.error("Split config files already exist:");
+        exists.forEach((p) => {
+          console.error(`  ${p}`);
+        });
+        console.error("Use --force to overwrite.");
         process.exit(1);
       }
     }
 
     // Create backup
-    const backupPath = legacyPath + '.backup';
+    const backupPath = legacyPath + ".backup";
     fs.copyFileSync(legacyPath, backupPath);
     console.log(`Backup created: ${backupPath}`);
 
     // Write split files
-    const header1 = '# AIOS Framework Configuration (Level 1)\n# DO NOT EDIT — Part of the AIOS framework.\n# Override in project-config.yaml or local-config.yaml.\n\n';
+    const header1 =
+      "# AIOS Framework Configuration (Level 1)\n# DO NOT EDIT — Part of the AIOS framework.\n# Override in project-config.yaml or local-config.yaml.\n\n";
     fs.writeFileSync(fwPath, header1 + yaml.dump(l1Sections, { lineWidth: 120 }));
     console.log(`Created: ${CONFIG_FILES.framework}`);
 
-    const header2 = '# AIOS Project Configuration (Level 2)\n# Project-specific settings shared across the team.\n\n';
+    const header2 =
+      "# AIOS Project Configuration (Level 2)\n# Project-specific settings shared across the team.\n\n";
     fs.writeFileSync(projPath, header2 + yaml.dump(l2Sections, { lineWidth: 120 }));
     console.log(`Created: ${CONFIG_FILES.project}`);
 
-    const header4 = '# AIOS Local Configuration (Level 4)\n# Machine-specific overrides. DO NOT commit to git.\n\n';
+    const header4 =
+      "# AIOS Local Configuration (Level 4)\n# Machine-specific overrides. DO NOT commit to git.\n\n";
     fs.writeFileSync(localPath, header4 + yaml.dump(l4Sections, { lineWidth: 120 }));
     console.log(`Created: ${CONFIG_FILES.local}`);
 
     // Update .gitignore if needed
-    ensureGitignore(root, '.aios-core/local-config.yaml');
+    ensureGitignore(root, ".aios-core/local-config.yaml");
 
     // Validate: resolved config should match original
     const resolved = resolveConfig(root, { skipCache: true });
@@ -274,13 +304,15 @@ function migrateAction(options) {
     const resolvedStr = JSON.stringify(resolved.config);
 
     if (originalStr === resolvedStr) {
-      console.log('\nValidation: PASS — Resolved config matches original.');
+      console.log("\nValidation: PASS — Resolved config matches original.");
     } else {
-      console.log('\nValidation: WARNING — Resolved config differs from original.');
-      console.log('This may be expected due to key normalization. Run `aios config diff` to inspect.');
+      console.log("\nValidation: WARNING — Resolved config differs from original.");
+      console.log(
+        "This may be expected due to key normalization. Run `aios config diff` to inspect.",
+      );
     }
 
-    console.log('\nMigration complete. Original preserved at core-config.yaml.backup');
+    console.log("\nMigration complete. Original preserved at core-config.yaml.backup");
   } catch (error) {
     console.error(`Migration error: ${error.message}`);
     process.exit(1);
@@ -295,7 +327,7 @@ function splitL1(config) {
 
   // metadata (framework portion)
   if (config.markdownExploder !== undefined) l1.markdownExploder = config.markdownExploder;
-  l1.metadata = { name: 'Synkra AIOS', framework_version: '3.12.0' };
+  l1.metadata = { name: "Synkra AIOS", framework_version: "3.12.0" };
 
   // resource_locations (Section 3)
   if (config.toolsLocation) l1.resource_locations = { tools_dir: config.toolsLocation };
@@ -363,9 +395,11 @@ function splitL2(config) {
   if (config.devStoryLocation) docs.stories_dir = config.devStoryLocation;
   if (config.devDebugLog) docs.dev_debug_log = config.devDebugLog;
   if (config.slashPrefix) docs.slash_prefix = config.slashPrefix;
-  if (config.customTechnicalDocuments !== undefined) docs.custom_technical_documents = config.customTechnicalDocuments;
+  if (config.customTechnicalDocuments !== undefined)
+    docs.custom_technical_documents = config.customTechnicalDocuments;
   if (config.devLoadAlwaysFiles) docs.dev_load_always_files = config.devLoadAlwaysFiles;
-  if (config.devLoadAlwaysFilesFallback) docs.dev_load_always_files_fallback = config.devLoadAlwaysFilesFallback;
+  if (config.devLoadAlwaysFilesFallback)
+    docs.dev_load_always_files_fallback = config.devLoadAlwaysFilesFallback;
   if (Object.keys(docs).length > 0) l2.documentation_paths = docs;
 
   // github_integration (Section 8)
@@ -432,10 +466,10 @@ function splitL4(config) {
  * Ensure a path is in .gitignore
  */
 function ensureGitignore(root, entry) {
-  const gitignorePath = path.join(root, '.gitignore');
+  const gitignorePath = path.join(root, ".gitignore");
   if (!fs.existsSync(gitignorePath)) return;
 
-  const content = fs.readFileSync(gitignorePath, 'utf8');
+  const content = fs.readFileSync(gitignorePath, "utf8");
   if (!content.includes(entry)) {
     fs.appendFileSync(gitignorePath, `\n# Local config (machine-specific secrets)\n${entry}\n`);
     console.log(`.gitignore updated: added ${entry}`);
@@ -464,27 +498,27 @@ function validateAction(options) {
       validateYamlSyntax(root, options.level, issues);
     } else {
       // Validate all levels
-      const levels = ['framework', 'project', 'pro', 'local'];
+      const levels = ["framework", "project", "pro", "local"];
       for (const level of levels) {
         validateYamlSyntax(root, level, issues);
       }
 
       // Check env patterns in L1/L2
-      const l1 = getConfigAtLevel(root, 'framework');
+      const l1 = getConfigAtLevel(root, "framework");
       if (l1) {
         const l1Lint = lintEnvPatterns(l1, CONFIG_FILES.framework);
-        issues.push(...l1Lint.map(w => `[LINT WARNING] ${w}`));
+        issues.push(...l1Lint.map((w) => `[LINT WARNING] ${w}`));
       }
 
-      const l2 = getConfigAtLevel(root, 'project');
+      const l2 = getConfigAtLevel(root, "project");
       if (l2) {
         const l2Lint = lintEnvPatterns(l2, CONFIG_FILES.project);
-        issues.push(...l2Lint.map(w => `[LINT WARNING] ${w}`));
+        issues.push(...l2Lint.map((w) => `[LINT WARNING] ${w}`));
       }
     }
 
     if (issues.length === 0) {
-      console.log('Config validation: PASS');
+      console.log("Config validation: PASS");
     } else {
       console.log(`Config validation: ${issues.length} issue(s) found`);
       for (const issue of issues) {
@@ -514,7 +548,7 @@ function validateYamlSyntax(root, level, issues) {
   if (!fs.existsSync(fullPath)) return; // Optional files are OK to be missing
 
   try {
-    const content = fs.readFileSync(fullPath, 'utf8');
+    const content = fs.readFileSync(fullPath, "utf8");
     yaml.load(content);
     console.log(`  ${level}: OK (${relativePath})`);
   } catch (error) {
@@ -528,25 +562,25 @@ function validateYamlSyntax(root, level, issues) {
 
 function initLocalAction() {
   const root = getProjectRoot();
-  const templatePath = path.join(root, '.aios-core', 'local-config.yaml.template');
-  const targetPath = path.join(root, '.aios-core', 'local-config.yaml');
+  const templatePath = path.join(root, ".aios-core", "local-config.yaml.template");
+  const targetPath = path.join(root, ".aios-core", "local-config.yaml");
 
   if (!fs.existsSync(templatePath)) {
-    console.error('Template not found: .aios-core/local-config.yaml.template');
+    console.error("Template not found: .aios-core/local-config.yaml.template");
     process.exit(1);
   }
 
   if (fs.existsSync(targetPath)) {
-    console.error('local-config.yaml already exists. Remove it first or edit directly.');
+    console.error("local-config.yaml already exists. Remove it first or edit directly.");
     process.exit(1);
   }
 
   fs.copyFileSync(templatePath, targetPath);
-  console.log('Created: .aios-core/local-config.yaml (from template)');
-  console.log('Edit this file to customize your machine-specific settings.');
+  console.log("Created: .aios-core/local-config.yaml (from template)");
+  console.log("Edit this file to customize your machine-specific settings.");
 
   // Ensure gitignore
-  ensureGitignore(root, '.aios-core/local-config.yaml');
+  ensureGitignore(root, ".aios-core/local-config.yaml");
 }
 
 // ---------------------------------------------------------------------------
@@ -558,45 +592,44 @@ function initLocalAction() {
  * @returns {Command}
  */
 function createConfigCommand() {
-  const configCmd = new Command('config')
-    .description('Manage layered configuration (ADR-PRO-002)');
+  const configCmd = new Command("config").description("Manage layered configuration (ADR-PRO-002)");
 
   // aios config show
   configCmd
-    .command('show')
-    .description('Show resolved configuration')
-    .option('-l, --level <level>', 'Show specific level (1, 2, pro, 3, 4)')
-    .option('-a, --app <name>', 'Include app-specific config (L3)')
-    .option('-d, --debug', 'Show source annotations for each value')
+    .command("show")
+    .description("Show resolved configuration")
+    .option("-l, --level <level>", "Show specific level (1, 2, pro, 3, 4)")
+    .option("-a, --app <name>", "Include app-specific config (L3)")
+    .option("-d, --debug", "Show source annotations for each value")
     .action(showAction);
 
   // aios config diff
   configCmd
-    .command('diff')
-    .description('Compare configuration between two levels')
-    .requiredOption('--levels <a,b>', 'Two levels to compare (e.g., 1,2)')
-    .option('-a, --app <name>', 'Include app-specific context')
+    .command("diff")
+    .description("Compare configuration between two levels")
+    .requiredOption("--levels <a,b>", "Two levels to compare (e.g., 1,2)")
+    .option("-a, --app <name>", "Include app-specific context")
     .action(diffAction);
 
   // aios config migrate
   configCmd
-    .command('migrate')
-    .description('Migrate monolithic core-config.yaml to layered files')
-    .option('--dry-run', 'Preview without writing files')
-    .option('--force', 'Overwrite existing split files')
+    .command("migrate")
+    .description("Migrate monolithic core-config.yaml to layered files")
+    .option("--dry-run", "Preview without writing files")
+    .option("--force", "Overwrite existing split files")
     .action(migrateAction);
 
   // aios config validate
   configCmd
-    .command('validate')
-    .description('Validate YAML syntax and lint config files')
-    .option('-l, --level <level>', 'Validate specific level only')
+    .command("validate")
+    .description("Validate YAML syntax and lint config files")
+    .option("-l, --level <level>", "Validate specific level only")
     .action(validateAction);
 
   // aios config init-local
   configCmd
-    .command('init-local')
-    .description('Create local-config.yaml from template')
+    .command("init-local")
+    .description("Create local-config.yaml from template")
     .action(initLocalAction);
 
   return configCmd;

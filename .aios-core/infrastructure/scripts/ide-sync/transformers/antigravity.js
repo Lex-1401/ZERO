@@ -6,7 +6,7 @@
  * Target: .antigravity/rules/agents/*.md
  */
 
-const { getVisibleCommands, normalizeCommands } = require('../agent-parser');
+const { getVisibleCommands, normalizeCommands } = require("../agent-parser");
 
 /**
  * Transform agent data to Antigravity format
@@ -17,21 +17,21 @@ function transform(agentData) {
   const agent = agentData.agent || {};
   const persona = agentData.persona_profile || {};
 
-  const icon = agent.icon || '🤖';
+  const icon = agent.icon || "🤖";
   const name = agent.name || agentData.id;
-  const title = agent.title || 'AIOS Agent';
-  const whenToUse = agent.whenToUse || 'Use this agent for specific tasks';
-  const archetype = persona.archetype || '';
+  const title = agent.title || "AIOS Agent";
+  const whenToUse = agent.whenToUse || "Use this agent for specific tasks";
+  const archetype = persona.archetype || "";
 
   // Get quick visibility commands (normalized to consistent format)
   const allCommands = normalizeCommands(agentData.commands || []);
-  const quickCommands = getVisibleCommands(allCommands, 'quick');
-  const keyCommands = getVisibleCommands(allCommands, 'key');
+  const quickCommands = getVisibleCommands(allCommands, "quick");
+  const keyCommands = getVisibleCommands(allCommands, "key");
 
   // Build content (similar to Cursor)
   let content = `# ${name} (@${agentData.id})
 
-${icon} **${title}**${archetype ? ` | ${archetype}` : ''}
+${icon} **${title}**${archetype ? ` | ${archetype}` : ""}
 
 > ${whenToUse}
 
@@ -43,23 +43,21 @@ ${icon} **${title}**${archetype ? ` | ${archetype}` : ''}
 
 `;
     for (const cmd of quickCommands) {
-      content += `- \`*${cmd.name}\` - ${cmd.description || 'No description'}\n`;
+      content += `- \`*${cmd.name}\` - ${cmd.description || "No description"}\n`;
     }
-    content += '\n';
+    content += "\n";
   }
 
   // Add key commands if different from quick
-  const keyOnlyCommands = keyCommands.filter(
-    k => !quickCommands.some(q => q.name === k.name)
-  );
+  const keyOnlyCommands = keyCommands.filter((k) => !quickCommands.some((q) => q.name === k.name));
   if (keyOnlyCommands.length > 0) {
     content += `## Key Commands
 
 `;
     for (const cmd of keyOnlyCommands) {
-      content += `- \`*${cmd.name}\` - ${cmd.description || 'No description'}\n`;
+      content += `- \`*${cmd.name}\` - ${cmd.description || "No description"}\n`;
     }
-    content += '\n';
+    content += "\n";
   }
 
   // Add all commands for reference (allCommands already normalized above)
@@ -68,9 +66,9 @@ ${icon} **${title}**${archetype ? ` | ${archetype}` : ''}
 
 `;
     for (const cmd of allCommands) {
-      content += `- \`*${cmd.name}\` - ${cmd.description || 'No description'}\n`;
+      content += `- \`*${cmd.name}\` - ${cmd.description || "No description"}\n`;
     }
-    content += '\n';
+    content += "\n";
   }
 
   // Add collaboration section if available
@@ -101,5 +99,5 @@ function getFilename(agentData) {
 module.exports = {
   transform,
   getFilename,
-  format: 'cursor-style',
+  format: "cursor-style",
 };

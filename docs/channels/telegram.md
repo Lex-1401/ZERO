@@ -10,13 +10,13 @@ Status: pronto para produção para DMs de bot + grupos via grammY. Long-polling
 
 ## Configuração rápida (iniciante)
 
-1) Crie um bot com **@BotFather** e copie o token.
-2) Defina o token:
+1. Crie um bot com **@BotFather** e copie o token.
+2. Defina o token:
    - Env: `TELEGRAM_BOT_TOKEN=...`
    - Ou config: `channels.telegram.botToken: "..."`.
    - Se ambos estiverem definidos, a config tem precedência (fallback de env é apenas para conta padrão).
-3) Inicie o gateway.
-4) O acesso via DM é pairing (emparelhamento) por padrão; aprove o código de emparelhamento no primeiro contato.
+3. Inicie o gateway.
+4. O acesso via DM é pairing (emparelhamento) por padrão; aprove o código de emparelhamento no primeiro contato.
 
 Configuração mínima:
 
@@ -26,9 +26,9 @@ Configuração mínima:
     telegram: {
       enabled: true,
       botToken: "123:abc",
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
@@ -42,9 +42,9 @@ Configuração mínima:
 
 ### 1) Criar um token de bot (BotFather)
 
-1) Abra o Telegram e converse com **@BotFather**.
-2) Execute `/newbot`, depois siga as instruções (nome + nome de usuário terminando em `bot`).
-3) Copie o token e guarde-o com segurança.
+1. Abra o Telegram e converse com **@BotFather**.
+2. Execute `/newbot`, depois siga as instruções (nome + nome de usuário terminando em `bot`).
+3. Copie o token e guarde-o com segurança.
 
 Configurações opcionais do BotFather:
 
@@ -62,9 +62,9 @@ Exemplo:
       enabled: true,
       botToken: "123:abc",
       dmPolicy: "pairing",
-      groups: { "*": { requireMention: true } }
-    }
-  }
+      groups: { "*": { requireMention: true } },
+    },
+  },
 }
 ```
 
@@ -73,9 +73,9 @@ Se ambos env e config estiverem definidos, a config tem precedência.
 
 Suporte multi-conta: use `channels.telegram.accounts` com tokens por conta e `name` opcional. Veja [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) para o padrão compartilhado.
 
-1) Inicie o gateway. O Telegram inicia quando um token é resolvido (config primeiro, fallback de env).
-2) Acesso DM padroniza para pairing. Aprove o código quando o bot for contatado pela primeira vez.
-3) Para grupos: adicione o bot, decida comportamento de privacidade/admin (abaixo), depois defina `channels.telegram.groups` para controlar bloqueio por menção + allowlists.
+1. Inicie o gateway. O Telegram inicia quando um token é resolvido (config primeiro, fallback de env).
+2. Acesso DM padroniza para pairing. Aprove o código quando o bot for contatado pela primeira vez.
+3. Para grupos: adicione o bot, decida comportamento de privacidade/admin (abaixo), depois defina `channels.telegram.groups` para controlar bloqueio por menção + allowlists.
 
 ## Token + privacidade + permissões (lado Telegram)
 
@@ -87,7 +87,7 @@ Suporte multi-conta: use `channels.telegram.accounts` com tokens por conta e `na
 ### Visibilidade de mensagens de grupo (Privacy Mode)
 
 Bots do Telegram padronizam para **Privacy Mode**, que limita quais mensagens de grupo eles recebem.
-Se seu bot deve ver *todas* as mensagens de grupo, você tem duas opções:
+Se seu bot deve ver _todas_ as mensagens de grupo, você tem duas opções:
 
 - Desativar modo de privacidade com `/setprivacy` **ou**
 - Adicionar o bot como um **admin** do grupo (bots admin recebem todas as mensagens).
@@ -127,10 +127,10 @@ Você pode adicionar comandos personalizados ao menu via configuração:
     telegram: {
       customCommands: [
         { command: "backup", description: "Backup Git" },
-        { command: "generate", description: "Criar uma imagem" }
-      ]
-    }
-  }
+        { command: "generate", description: "Criar uma imagem" },
+      ],
+    },
+  },
 }
 ```
 
@@ -168,10 +168,10 @@ Por padrão, o bot só responde a menções em grupos (`@nomebot` ou padrões em
   channels: {
     telegram: {
       groups: {
-        "-1001234567890": { requireMention: false }  // sempre responder neste grupo
-      }
-    }
-  }
+        "-1001234567890": { requireMention: false }, // sempre responder neste grupo
+      },
+    },
+  },
 }
 ```
 
@@ -185,10 +185,10 @@ Para permitir todos os grupos com always-respond:
   channels: {
     telegram: {
       groups: {
-        "*": { requireMention: false }  // todos os grupos, sempre responder
-      }
-    }
-  }
+        "*": { requireMention: false }, // todos os grupos, sempre responder
+      },
+    },
+  },
 }
 ```
 
@@ -199,10 +199,10 @@ Para manter apenas menção para todos os grupos (comportamento padrão):
   channels: {
     telegram: {
       groups: {
-        "*": { requireMention: true }  // ou omitir groups inteiramente
-      }
-    }
-  }
+        "*": { requireMention: true }, // ou omitir groups inteiramente
+      },
+    },
+  },
 }
 ```
 
@@ -236,7 +236,7 @@ Desative com:
 
 ```json5
 {
-  channels: { telegram: { configWrites: false } }
+  channels: { telegram: { configWrites: false } },
 }
 ```
 
@@ -259,13 +259,13 @@ Telegram suporta teclados inline com botões de callback.
 
 ```json5
 {
-  "channels": {
-    "telegram": {
-      "capabilities": {
-        "inlineButtons": "allowlist"
-      }
-    }
-  }
+  channels: {
+    telegram: {
+      capabilities: {
+        inlineButtons: "allowlist",
+      },
+    },
+  },
 }
 ```
 
@@ -273,17 +273,17 @@ Para configuração por conta:
 
 ```json5
 {
-  "channels": {
-    "telegram": {
-      "accounts": {
-        "main": {
-          "capabilities": {
-            "inlineButtons": "allowlist"
-          }
-        }
-      }
-    }
-  }
+  channels: {
+    telegram: {
+      accounts: {
+        main: {
+          capabilities: {
+            inlineButtons: "allowlist",
+          },
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -304,19 +304,17 @@ Use a ferramenta de mensagem com o parâmetro `buttons`:
 
 ```json5
 {
-  "action": "send",
-  "channel": "telegram",
-  "to": "123456789",
-  "message": "Escolha uma opção:",
-  "buttons": [
+  action: "send",
+  channel: "telegram",
+  to: "123456789",
+  message: "Escolha uma opção:",
+  buttons: [
     [
-      {"text": "Sim", "callback_data": "yes"},
-      {"text": "Não", "callback_data": "no"}
+      { text: "Sim", callback_data: "yes" },
+      { text: "Não", callback_data: "no" },
     ],
-    [
-      {"text": "Cancelar", "callback_data": "cancel"}
-    ]
-  ]
+    [{ text: "Cancelar", callback_data: "cancel" }],
+  ],
 }
 ```
 
@@ -347,13 +345,13 @@ Use a configuração global quando todos os bots/contas Telegram devem se compor
 
 Mais seguro (sem bot de terceiros):
 
-1) Inicie o gateway e mande DM para seu bot.
-2) Execute `zero logs --follow` e procure por `from.id`.
+1. Inicie o gateway e mande DM para seu bot.
+2. Execute `zero logs --follow` e procure por `from.id`.
 
 Alternativo (Bot API oficial):
 
-1) Mande DM para seu bot.
-2) Busque atualizações com seu token de bot e leia `message.from.id`:
+1. Mande DM para seu bot.
+2. Busque atualizações com seu token de bot e leia `message.from.id`:
 
    ```bash
    curl "https://api.telegram.org/bot<bot_token>/getUpdates"
@@ -378,7 +376,7 @@ Dois controles independentes:
 - `"open"` = todos os remetentes em grupos permitidos podem enviar mensagem
 - `"allowlist"` = apenas remetentes em `channels.telegram.groupAllowFrom` podem enviar mensagem
 - `"disabled"` = nenhuma mensagem de grupo aceita de forma alguma
-Padrão é `groupPolicy: "allowlist"` (bloqueado a menos que você adicione `groupAllowFrom`).
+  Padrão é `groupPolicy: "allowlist"` (bloqueado a menos que você adicione `groupAllowFrom`).
 
 A maioria dos usuários quer: `groupPolicy: "allowlist"` + `groupAllowFrom` + grupos específicos listados em `channels.telegram.groups`
 
@@ -416,11 +414,11 @@ Para envios de ferramenta de mensagem, defina `asVoice: true` com uma URL de `me
 
 ```json5
 {
-  "action": "send",
-  "channel": "telegram",
-  "to": "123456789",
-  "media": "https://exemplo.com/voz.ogg",
-  "asVoice": true
+  action: "send",
+  channel: "telegram",
+  to: "123456789",
+  media: "https://exemplo.com/voz.ogg",
+  asVoice: true,
 }
 ```
 
@@ -455,7 +453,7 @@ Reasoning stream (apenas Telegram):
 - `/reasoning stream` faz stream de raciocínio no balão de rascunho enquanto a resposta está
   gerando, depois envia a resposta final sem raciocínio.
 - Se `channels.telegram.streamMode` for `off`, reasoning stream é desativado.
-Mais contexto: [Streaming + chunking](/concepts/streaming).
+  Mais contexto: [Streaming + chunking](/concepts/streaming).
 
 ## Política de repetição
 
@@ -502,10 +500,10 @@ O agente vê reações como **notificações de sistema** no histórico da conve
 {
   channels: {
     telegram: {
-      reactionNotifications: "all",  // Ver todas as reações
-      reactionLevel: "minimal"        // Agente pode reagir com moderação
-    }
-  }
+      reactionNotifications: "all", // Ver todas as reações
+      reactionLevel: "minimal", // Agente pode reagir com moderação
+    },
+  },
 }
 ```
 

@@ -16,8 +16,8 @@ O Gateway pode expor um pequeno endpoint HTTP de webhook para gatilhos externos.
   hooks: {
     enabled: true,
     token: "segredo-compartilhado",
-    path: "/hooks"
-  }
+    path: "/hooks",
+  },
 }
 ```
 
@@ -101,7 +101,7 @@ Opções de mapeamento (resumo):
 - Transformações TS exigem um carregador TS (ex: `bun` ou `tsx`) ou `.js` pré-compilado em tempo de execução.
 - Defina `deliver: true` + `channel`/`to` em mapeamentos para rotear respostas para uma superfície de chat (`channel` padrão é `last` e volta para o WhatsApp).
 - `zero webhooks gmail setup` escreve a configuração `hooks.gmail` para `zero webhooks gmail run`.
-Veja [Gmail Pub/Sub](/automation/gmail-pubsub) para o fluxo completo do Gmail watch.
+  Veja [Gmail Pub/Sub](/automation/gmail-pubsub) para o fluxo completo do Gmail watch.
 
 ## Respostas
 

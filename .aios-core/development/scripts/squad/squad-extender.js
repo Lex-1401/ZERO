@@ -11,21 +11,21 @@
  * @see Story SQS-11: Squad Analyze & Extend
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Default path for squads directory
  * @constant {string}
  */
-const DEFAULT_SQUADS_PATH = './squads';
+const DEFAULT_SQUADS_PATH = "./squads";
 
 /**
  * Default templates directory path
  * @constant {string}
  */
-const DEFAULT_TEMPLATES_PATH = './.aios-core/development/templates/squad';
+const DEFAULT_TEMPLATES_PATH = "./.aios-core/development/templates/squad";
 
 /**
  * Component types and their configurations
@@ -33,52 +33,52 @@ const DEFAULT_TEMPLATES_PATH = './.aios-core/development/templates/squad';
  */
 const COMPONENT_CONFIG = {
   agent: {
-    directory: 'agents',
-    extension: '.md',
-    template: 'agent-template.md',
-    manifestKey: 'agents',
+    directory: "agents",
+    extension: ".md",
+    template: "agent-template.md",
+    manifestKey: "agents",
   },
   task: {
-    directory: 'tasks',
-    extension: '.md',
-    template: 'task-template.md',
-    manifestKey: 'tasks',
+    directory: "tasks",
+    extension: ".md",
+    template: "task-template.md",
+    manifestKey: "tasks",
   },
   workflow: {
-    directory: 'workflows',
-    extension: '.yaml',
-    template: 'workflow-template.yaml',
-    manifestKey: 'workflows',
+    directory: "workflows",
+    extension: ".yaml",
+    template: "workflow-template.yaml",
+    manifestKey: "workflows",
   },
   checklist: {
-    directory: 'checklists',
-    extension: '.md',
-    template: 'checklist-template.md',
-    manifestKey: 'checklists',
+    directory: "checklists",
+    extension: ".md",
+    template: "checklist-template.md",
+    manifestKey: "checklists",
   },
   template: {
-    directory: 'templates',
-    extension: '.md',
-    template: 'template-template.md',
-    manifestKey: 'templates',
+    directory: "templates",
+    extension: ".md",
+    template: "template-template.md",
+    manifestKey: "templates",
   },
   tool: {
-    directory: 'tools',
-    extension: '.js',
-    template: 'tool-template.js',
-    manifestKey: 'tools',
+    directory: "tools",
+    extension: ".js",
+    template: "tool-template.js",
+    manifestKey: "tools",
   },
   script: {
-    directory: 'scripts',
-    extension: '.js',
-    template: 'script-template.js',
-    manifestKey: 'scripts',
+    directory: "scripts",
+    extension: ".js",
+    template: "script-template.js",
+    manifestKey: "scripts",
   },
   data: {
-    directory: 'data',
-    extension: '.yaml',
-    template: 'data-template.yaml',
-    manifestKey: 'data',
+    directory: "data",
+    extension: ".yaml",
+    template: "data-template.yaml",
+    manifestKey: "data",
   },
 };
 
@@ -86,23 +86,23 @@ const COMPONENT_CONFIG = {
  * Manifest file names in order of preference
  * @constant {string[]}
  */
-const MANIFEST_FILES = ['squad.yaml', 'config.yaml'];
+const MANIFEST_FILES = ["squad.yaml", "config.yaml"];
 
 /**
  * Error codes for SquadExtenderError
  * @enum {string}
  */
 const ErrorCodes = {
-  SQUAD_NOT_FOUND: 'SQUAD_NOT_FOUND',
-  MANIFEST_NOT_FOUND: 'MANIFEST_NOT_FOUND',
-  MANIFEST_UPDATE_FAILED: 'MANIFEST_UPDATE_FAILED',
-  COMPONENT_EXISTS: 'COMPONENT_EXISTS',
-  INVALID_COMPONENT_NAME: 'INVALID_COMPONENT_NAME',
-  INVALID_COMPONENT_TYPE: 'INVALID_COMPONENT_TYPE',
-  AGENT_NOT_FOUND: 'AGENT_NOT_FOUND',
-  TEMPLATE_NOT_FOUND: 'TEMPLATE_NOT_FOUND',
-  PATH_TRAVERSAL: 'PATH_TRAVERSAL',
-  CREATION_FAILED: 'CREATION_FAILED',
+  SQUAD_NOT_FOUND: "SQUAD_NOT_FOUND",
+  MANIFEST_NOT_FOUND: "MANIFEST_NOT_FOUND",
+  MANIFEST_UPDATE_FAILED: "MANIFEST_UPDATE_FAILED",
+  COMPONENT_EXISTS: "COMPONENT_EXISTS",
+  INVALID_COMPONENT_NAME: "INVALID_COMPONENT_NAME",
+  INVALID_COMPONENT_TYPE: "INVALID_COMPONENT_TYPE",
+  AGENT_NOT_FOUND: "AGENT_NOT_FOUND",
+  TEMPLATE_NOT_FOUND: "TEMPLATE_NOT_FOUND",
+  PATH_TRAVERSAL: "PATH_TRAVERSAL",
+  CREATION_FAILED: "CREATION_FAILED",
 };
 
 /**
@@ -118,9 +118,9 @@ class SquadExtenderError extends Error {
    */
   constructor(code, message, suggestion) {
     super(message);
-    this.name = 'SquadExtenderError';
+    this.name = "SquadExtenderError";
     this.code = code;
-    this.suggestion = suggestion || '';
+    this.suggestion = suggestion || "";
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SquadExtenderError);
@@ -149,7 +149,7 @@ class SquadExtenderError extends Error {
     return new SquadExtenderError(
       ErrorCodes.MANIFEST_NOT_FOUND,
       `No squad.yaml or config.yaml found in ${squadPath}`,
-      'Create squad.yaml with squad metadata',
+      "Create squad.yaml with squad metadata",
     );
   }
 
@@ -162,7 +162,7 @@ class SquadExtenderError extends Error {
     return new SquadExtenderError(
       ErrorCodes.COMPONENT_EXISTS,
       `Component already exists at ${filePath}`,
-      'Use --force to overwrite, or choose a different name',
+      "Use --force to overwrite, or choose a different name",
     );
   }
 
@@ -175,7 +175,7 @@ class SquadExtenderError extends Error {
     return new SquadExtenderError(
       ErrorCodes.INVALID_COMPONENT_NAME,
       `Invalid component name: "${name}"`,
-      'Use kebab-case (lowercase letters, numbers, and hyphens only)',
+      "Use kebab-case (lowercase letters, numbers, and hyphens only)",
     );
   }
 
@@ -185,7 +185,7 @@ class SquadExtenderError extends Error {
    * @returns {SquadExtenderError}
    */
   static invalidComponentType(type) {
-    const validTypes = Object.keys(COMPONENT_CONFIG).join(', ');
+    const validTypes = Object.keys(COMPONENT_CONFIG).join(", ");
     return new SquadExtenderError(
       ErrorCodes.INVALID_COMPONENT_TYPE,
       `Invalid component type: "${type}"`,
@@ -203,7 +203,7 @@ class SquadExtenderError extends Error {
     return new SquadExtenderError(
       ErrorCodes.AGENT_NOT_FOUND,
       `Agent "${agentId}" not found in squad`,
-      `Available agents: ${availableAgents.join(', ')}`,
+      `Available agents: ${availableAgents.join(", ")}`,
     );
   }
 
@@ -268,7 +268,7 @@ class SquadExtender {
     }
 
     // For tasks, validate agent exists
-    if (type === 'task' && agentId) {
+    if (type === "task" && agentId) {
       await this._validateAgentExists(squadPath, agentId);
     }
 
@@ -300,13 +300,13 @@ class SquadExtender {
       componentName: name,
       agentId,
       description: description || `${type} component: ${name}`,
-      storyId: storyId || '',
+      storyId: storyId || "",
       squadName,
-      createdAt: new Date().toISOString().split('T')[0],
+      createdAt: new Date().toISOString().split("T")[0],
     });
 
     // Write component file
-    await fs.writeFile(targetPath, content, 'utf8');
+    await fs.writeFile(targetPath, content, "utf8");
 
     // Update manifest
     const manifestUpdated = await this.updateManifest(squadPath, {
@@ -367,7 +367,7 @@ class SquadExtender {
       sortKeys: false,
     });
 
-    await fs.writeFile(manifestPath, yamlContent, 'utf8');
+    await fs.writeFile(manifestPath, yamlContent, "utf8");
 
     return true;
   }
@@ -378,12 +378,12 @@ class SquadExtender {
    * @returns {Promise<string[]>} List of agent IDs
    */
   async listAgents(squadPath) {
-    const agentsDir = path.join(squadPath, 'agents');
+    const agentsDir = path.join(squadPath, "agents");
     try {
       const entries = await fs.readdir(agentsDir, { withFileTypes: true });
       return entries
-        .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
-        .map((entry) => entry.name.replace('.md', ''));
+        .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
+        .map((entry) => entry.name.replace(".md", ""));
     } catch {
       return [];
     }
@@ -409,7 +409,7 @@ class SquadExtender {
    */
   _validateComponentName(name) {
     // Check for path traversal
-    if (name.includes('/') || name.includes('\\') || name.includes('..')) {
+    if (name.includes("/") || name.includes("\\") || name.includes("..")) {
       throw SquadExtenderError.pathTraversal(name);
     }
 
@@ -437,7 +437,7 @@ class SquadExtender {
    */
   _buildFileName(type, name, agentId, extension) {
     // For tasks, prepend agent ID
-    if (type === 'task' && agentId) {
+    if (type === "task" && agentId) {
       return `${agentId}-${name}${extension}`;
     }
     return `${name}${extension}`;
@@ -501,15 +501,15 @@ class SquadExtender {
     for (const manifestFile of MANIFEST_FILES) {
       const manifestPath = path.join(squadPath, manifestFile);
       try {
-        const content = await fs.readFile(manifestPath, 'utf8');
+        const content = await fs.readFile(manifestPath, "utf8");
         const manifest = yaml.load(content);
         return { manifestPath, manifest };
       } catch (error) {
-        if (error.code !== 'ENOENT') {
+        if (error.code !== "ENOENT") {
           throw new SquadExtenderError(
             ErrorCodes.MANIFEST_UPDATE_FAILED,
             `Failed to parse ${manifestFile}: ${error.message}`,
-            'Check YAML syntax - use a YAML linter',
+            "Check YAML syntax - use a YAML linter",
           );
         }
       }
@@ -528,10 +528,10 @@ class SquadExtender {
 
     try {
       // Try to load template from templates path
-      const template = await fs.readFile(templatePath, 'utf8');
+      const template = await fs.readFile(templatePath, "utf8");
       return this._interpolateTemplate(template, context);
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if (error.code === "ENOENT") {
         // Template not found, use default template
         return this._getDefaultTemplate(type, context);
       }
@@ -546,8 +546,8 @@ class SquadExtender {
   _interpolateTemplate(template, context) {
     let result = template;
     for (const [key, value] of Object.entries(context)) {
-      const placeholder = new RegExp(`\\{\\{${key.toUpperCase()}\\}\\}`, 'g');
-      result = result.replace(placeholder, value || '');
+      const placeholder = new RegExp(`\\{\\{${key.toUpperCase()}\\}\\}`, "g");
+      result = result.replace(placeholder, value || "");
     }
     return result;
   }
@@ -562,7 +562,7 @@ class SquadExtender {
 
 > Agent definition for ${context.squadName}
 > Created: ${context.createdAt}
-${context.storyId ? `> Story: ${context.storyId}` : ''}
+${context.storyId ? `> Story: ${context.storyId}` : ""}
 
 ## Description
 
@@ -593,7 +593,7 @@ dependencies:
 
       task: `---
 task: ${context.componentName}
-responsavel: "@${context.agentId || 'agent'}"
+responsavel: "@${context.agentId || "agent"}"
 responsavel_type: Agent
 atomic_layer: Task
 elicit: false
@@ -623,7 +623,7 @@ Checklist:
 
 ${context.description}
 
-${context.storyId ? `## Story Reference\n\n- **Story:** ${context.storyId}\n` : ''}
+${context.storyId ? `## Story Reference\n\n- **Story:** ${context.storyId}\n` : ""}
 
 ## Execution Steps
 
@@ -656,7 +656,7 @@ resolution: How to resolve
 ## Metadata
 
 \`\`\`yaml
-${context.storyId ? `story: ${context.storyId}` : 'story: N/A'}
+${context.storyId ? `story: ${context.storyId}` : "story: N/A"}
 version: 1.0.0
 created: ${context.createdAt}
 author: squad-creator
@@ -668,7 +668,7 @@ author: squad-creator
 name: ${context.componentName}
 description: ${context.description}
 version: 1.0.0
-${context.storyId ? `story: ${context.storyId}` : ''}
+${context.storyId ? `story: ${context.storyId}` : ""}
 created: ${context.createdAt}
 
 # Trigger conditions
@@ -701,7 +701,7 @@ completion:
 
 > ${context.description}
 > Created: ${context.createdAt}
-${context.storyId ? `> Story: ${context.storyId}` : ''}
+${context.storyId ? `> Story: ${context.storyId}` : ""}
 
 ## Pre-Conditions
 
@@ -731,7 +731,7 @@ ${context.storyId ? `> Story: ${context.storyId}` : ''}
 
 > ${context.description}
 > Created: ${context.createdAt}
-${context.storyId ? `> Story: ${context.storyId}` : ''}
+${context.storyId ? `> Story: ${context.storyId}` : ""}
 
 ## Template Content
 
@@ -762,7 +762,7 @@ Replace placeholders with actual values:
  *
  * @module ${context.componentName}
  * @version 1.0.0
- ${context.storyId ? `* @see ${context.storyId}` : ''}
+ ${context.storyId ? `* @see ${context.storyId}` : ""}
  */
 
 /**
@@ -792,7 +792,7 @@ module.exports = {
  *
  * @module ${context.componentName}
  * @version 1.0.0
- ${context.storyId ? `* @see ${context.storyId}` : ''}
+ ${context.storyId ? `* @see ${context.storyId}` : ""}
  */
 
 const fs = require('fs').promises;
@@ -827,7 +827,7 @@ module.exports = { main };
 name: ${context.componentName}
 description: ${context.description}
 version: 1.0.0
-${context.storyId ? `story: ${context.storyId}` : ''}
+${context.storyId ? `story: ${context.storyId}` : ""}
 created: ${context.createdAt}
 
 # Data schema

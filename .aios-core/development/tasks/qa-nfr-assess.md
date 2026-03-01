@@ -1,13 +1,16 @@
 <!-- Powered by AIOS™ Core -->
 
 ---
+
 tools:
-  - browser           # Performance testing and UI validation
-  - supabase          # Database reliability and data validation
-  - github-cli        # Security review and code analysis
-  - context7          # Research NFR best practices
-checklists:
-  - architect-master-checklist.md
+
+- browser # Performance testing and UI validation
+- supabase # Database reliability and data validation
+- github-cli # Security review and code analysis
+- context7 # Research NFR best practices
+  checklists:
+- architect-master-checklist.md
+
 ---
 
 # nfr-assess
@@ -104,16 +107,16 @@ nfr_validation:
   _assessed: [security, performance, reliability, maintainability]
   security:
     status: CONCERNS
-    notes: 'No rate limiting on auth endpoints'
+    notes: "No rate limiting on auth endpoints"
   performance:
     status: PASS
-    notes: 'Response times < 200ms verified'
+    notes: "Response times < 200ms verified"
   reliability:
     status: PASS
-    notes: 'Error handling and retries implemented'
+    notes: "Error handling and retries implemented"
   maintainability:
     status: CONCERNS
-    notes: 'Test coverage at 65%, target is 80%'
+    notes: "Test coverage at 65%, target is 80%"
 ```
 
 ## Deterministic Status Rules
@@ -317,16 +320,19 @@ maintainability:
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -494,6 +500,7 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -512,7 +519,6 @@ updated_at: 2025-11-17
 ```
 
 ---
-
 
 ## Appendix: ISO 25010 Reference
 
@@ -545,14 +551,13 @@ performance_deep_dive:
     p99: 350ms
   database:
     slow_queries: 2
-    missing_indexes: ['users.email', 'orders.user_id']
+    missing_indexes: ["users.email", "orders.user_id"]
   caching:
     hit_rate: 0%
-    recommendation: 'Add Redis for session data'
+    recommendation: "Add Redis for session data"
   load_test:
     max_rps: 150
     breaking_point: 200 rps
 ```
 
 </details>
- 

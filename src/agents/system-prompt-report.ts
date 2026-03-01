@@ -43,8 +43,8 @@ function buildInjectedWorkspaceFiles(params: {
     const truncated = !file.missing && rawChars > params.bootstrapMaxChars;
     return {
       name: file.name,
-      path: file.path,
-      missing: file.missing,
+      path: file.path ?? "",
+      missing: file.missing ?? false,
       rawChars,
       injectedChars,
       truncated,

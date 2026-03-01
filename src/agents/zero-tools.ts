@@ -4,6 +4,7 @@ import type { GatewayMessageChannel } from "../utils/message-channel.js";
 import { resolveSessionAgentId } from "./agent-scope.js";
 import { createAgentsListTool } from "./tools/agents-list-tool.js";
 import { createBrowserTool } from "./tools/browser-tool.js";
+import { createCdpBrowserTool } from "./tools/cdp-browser-tool.js";
 import { createCanvasTool } from "./tools/canvas-tool.js";
 import type { AnyAgentTool } from "./tools/common.js";
 import { createCronTool } from "./tools/cron-tool.js";
@@ -12,12 +13,14 @@ import { createImageTool } from "./tools/image-tool.js";
 import { createMessageTool } from "./tools/message-tool.js";
 import { createNodesTool } from "./tools/nodes-tool.js";
 import { createMonitoringTool } from "./tools/monitoring-tool.js";
+import { createTaskTool } from "./tools/task-tool.js";
+import { createHttpTool } from "./tools/http-tool.js";
 import { createSessionStatusTool } from "./tools/session-status-tool.js";
 import { createSessionsHistoryTool } from "./tools/sessions-history-tool.js";
 import { createSessionsListTool } from "./tools/sessions-list-tool.js";
 import { createSessionsSendTool } from "./tools/sessions-send-tool.js";
 import { createSessionsSpawnTool } from "./tools/sessions-spawn-tool.js";
-import { createWebFetchTool, createWebSearchTool } from "./tools/web-tools.js";
+import { createWebFetchTool, createWebSearchTool, createWebSpiderTool } from "./tools/web-tools.js";
 import { createTtsTool } from "./tools/tts-tool.js";
 import { createMemoryTools } from "./tools/memory-tool.js";
 import { createGraphTools } from "./tools/graph-tool.js";
@@ -63,11 +66,11 @@ export function createZEROTools(options?: {
 }): AnyAgentTool[] {
   const imageTool = options?.agentDir?.trim()
     ? createImageTool({
-        config: options?.config,
-        agentDir: options.agentDir,
-        sandboxRoot: options?.sandboxRoot,
-        modelHasVision: options?.modelHasVision,
-      })
+      config: options?.config,
+      agentDir: options.agentDir,
+      sandboxRoot: options?.sandboxRoot,
+      modelHasVision: options?.modelHasVision,
+    })
     : null;
   const webSearchTool = createWebSearchTool({
     config: options?.config,
@@ -77,6 +80,7 @@ export function createZEROTools(options?: {
     config: options?.config,
     sandboxed: options?.sandboxed,
   });
+  const webSpiderTool = createWebSpiderTool();
   const tools: AnyAgentTool[] = [
     createBrowserTool({
       defaultControlUrl: options?.browserControlUrl,
@@ -85,13 +89,17 @@ export function createZEROTools(options?: {
       allowedControlHosts: options?.allowedControlHosts,
       allowedControlPorts: options?.allowedControlPorts,
     }),
+    createCdpBrowserTool(),
     createCanvasTool(),
     createNodesTool({
       agentSessionKey: options?.agentSessionKey,
       config: options?.config,
     }),
     ...(options?.agentSessionKey
-      ? [createMonitoringTool({ agentSessionKey: options.agentSessionKey })]
+      ? [
+        createMonitoringTool({ agentSessionKey: options.agentSessionKey }),
+        createTaskTool({ agentSessionKey: options.agentSessionKey }),
+      ]
       : []),
     createCronTool({
       agentSessionKey: options?.agentSessionKey,
@@ -147,8 +155,13 @@ export function createZEROTools(options?: {
       agentSessionKey: options?.agentSessionKey,
       config: options?.config,
     }),
+    createHttpTool({
+      agentSessionKey: options?.agentSessionKey,
+      config: options?.config,
+    }),
     ...(webSearchTool ? [webSearchTool] : []),
     ...(webFetchTool ? [webFetchTool] : []),
+    ...(webSpiderTool ? [webSpiderTool] : []),
     ...(imageTool ? [imageTool] : []),
     ...createMemoryTools({
       config: options?.config as ZEROConfig,

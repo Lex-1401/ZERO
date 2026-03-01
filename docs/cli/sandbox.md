@@ -127,20 +127,20 @@ Configurações de sandbox vivem em `~/.zero/zero.json` sob `agents.defaults.san
   "agents": {
     "defaults": {
       "sandbox": {
-        "mode": "all",                    // off, non-main, all
-        "scope": "agent",                 // session, agent, shared
+        "mode": "all", // off, non-main, all
+        "scope": "agent", // session, agent, shared
         "docker": {
           "image": "zero-sandbox:bookworm-slim",
-          "containerPrefix": "zero-sbx-"
+          "containerPrefix": "zero-sbx-",
           // ... more Docker options
         },
         "prune": {
-          "idleHours": 24,               // Auto-prune after 24h idle
-          "maxAgeDays": 7                // Auto-prune after 7 days
-        }
-      }
-    }
-  }
+          "idleHours": 24, // Auto-prune after 24h idle
+          "maxAgeDays": 7, // Auto-prune after 7 days
+        },
+      },
+    },
+  },
 }
 ```
 

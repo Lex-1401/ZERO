@@ -16,7 +16,7 @@ Coletar e estruturar requisitos do usuário através de elicitation interativo. 
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: spec-gather
 
   elicit: true
@@ -95,84 +95,84 @@ elicitation:
 
     - id: q1-what
       category: functional
-      question: 'O que o sistema deve FAZER? (funcionalidades principais)'
+      question: "O que o sistema deve FAZER? (funcionalidades principais)"
       follow_ups:
-        - 'Quem são os usuários dessa funcionalidade?'
-        - 'Qual o trigger/gatilho para essa ação?'
+        - "Quem são os usuários dessa funcionalidade?"
+        - "Qual o trigger/gatilho para essa ação?"
 
     - id: q2-constraints
       category: constraints
-      question: 'Existem RESTRIÇÕES técnicas ou de negócio?'
+      question: "Existem RESTRIÇÕES técnicas ou de negócio?"
       examples:
-        - 'Tempo máximo de resposta'
-        - 'Integrações obrigatórias'
-        - 'Limitações de stack'
+        - "Tempo máximo de resposta"
+        - "Integrações obrigatórias"
+        - "Limitações de stack"
 
     - id: q3-nfr
       category: non-functional
-      question: 'Requisitos NÃO-FUNCIONAIS importantes?'
+      question: "Requisitos NÃO-FUNCIONAIS importantes?"
       examples:
-        - 'Performance (latência, throughput)'
-        - 'Segurança (autenticação, autorização)'
-        - 'Escalabilidade'
+        - "Performance (latência, throughput)"
+        - "Segurança (autenticação, autorização)"
+        - "Escalabilidade"
 
     - id: q4-success
       category: acceptance
-      question: 'Como sabemos que está PRONTO? (critérios de aceite)'
+      question: "Como sabemos que está PRONTO? (critérios de aceite)"
       format: given-when-then
 
     - id: q5-assumptions
       category: assumptions
-      question: 'Quais SUPOSIÇÕES estamos fazendo?'
-      note: 'Documentar para validação posterior'
+      question: "Quais SUPOSIÇÕES estamos fazendo?"
+      note: "Documentar para validação posterior"
 
     # === New 4 Categories (SDD Adoption) ===
 
     - id: q6-domain
       category: domain-model
-      question: 'Quais ENTIDADES e RELACIONAMENTOS existem?'
+      question: "Quais ENTIDADES e RELACIONAMENTOS existem?"
       follow_ups:
-        - 'Quais são os objetos principais do domínio?'
-        - 'Como eles se relacionam entre si?'
-        - 'Quais atributos são obrigatórios?'
+        - "Quais são os objetos principais do domínio?"
+        - "Como eles se relacionam entre si?"
+        - "Quais atributos são obrigatórios?"
       examples:
-        - 'User has many Orders'
-        - 'Product belongs to Category'
-        - 'Invoice references Order'
+        - "User has many Orders"
+        - "Product belongs to Category"
+        - "Invoice references Order"
 
     - id: q7-interaction
       category: interaction-ux
-      question: 'Como o USUÁRIO INTERAGE com o sistema?'
+      question: "Como o USUÁRIO INTERAGE com o sistema?"
       follow_ups:
-        - 'Qual o fluxo principal (happy path)?'
-        - 'Quais telas ou componentes estão envolvidos?'
-        - 'Existem estados de loading, erro, vazio?'
+        - "Qual o fluxo principal (happy path)?"
+        - "Quais telas ou componentes estão envolvidos?"
+        - "Existem estados de loading, erro, vazio?"
       examples:
-        - 'User clicks button → modal opens → form submits → success toast'
-        - 'Page loads → fetches data → displays list or empty state'
+        - "User clicks button → modal opens → form submits → success toast"
+        - "Page loads → fetches data → displays list or empty state"
 
     - id: q8-edge-cases
       category: edge-cases
-      question: 'O que acontece quando algo DÁ ERRADO?'
+      question: "O que acontece quando algo DÁ ERRADO?"
       follow_ups:
-        - 'E se a rede falhar?'
-        - 'E se o usuário não tiver permissão?'
-        - 'E se os dados estiverem inválidos?'
-        - 'E se o serviço externo estiver indisponível?'
+        - "E se a rede falhar?"
+        - "E se o usuário não tiver permissão?"
+        - "E se os dados estiverem inválidos?"
+        - "E se o serviço externo estiver indisponível?"
       examples:
-        - 'Timeout após 30s → retry automático → fallback para cache'
-        - 'Validação falha → mostrar erros inline → não submeter'
+        - "Timeout após 30s → retry automático → fallback para cache"
+        - "Validação falha → mostrar erros inline → não submeter"
 
     - id: q9-terminology
       category: terminology
-      question: 'Existe GLOSSÁRIO ou termos específicos do domínio?'
+      question: "Existe GLOSSÁRIO ou termos específicos do domínio?"
       follow_ups:
-        - 'Algum termo tem significado específico neste contexto?'
-        - 'Existem sinônimos que devemos padronizar?'
+        - "Algum termo tem significado específico neste contexto?"
+        - "Existem sinônimos que devemos padronizar?"
       examples:
         - '"Cliente" vs "Usuário" vs "Account" - qual usar?'
         - '"Pedido" significa Order ou Request neste contexto?'
-      note: 'Inconsistência terminológica causa bugs e confusão'
+      note: "Inconsistência terminológica causa bugs e confusão"
 ```
 
 ### Phase 3: PRD Extraction (if source=prd)
@@ -182,10 +182,10 @@ prd_extraction:
   enabled: true
 
   sections_to_extract:
-    - user_stories: 'Extract user stories as functional requirements'
-    - acceptance_criteria: 'Map to acceptance array'
-    - constraints: 'Technical and business constraints'
-    - nfrs: 'Non-functional requirements'
+    - user_stories: "Extract user stories as functional requirements"
+    - acceptance_criteria: "Map to acceptance array"
+    - constraints: "Technical and business constraints"
+    - nfrs: "Non-functional requirements"
 
   validation:
     - Ensure all extracted items have clear descriptions
@@ -338,7 +338,9 @@ structuring:
         "properties": {
           "id": { "type": "string", "pattern": "^NFR-\\d+$" },
           "description": { "type": "string", "minLength": 10 },
-          "category": { "enum": ["performance", "security", "scalability", "usability", "reliability"] }
+          "category": {
+            "enum": ["performance", "security", "scalability", "usability", "reliability"]
+          }
         }
       }
     },
@@ -442,13 +444,13 @@ structuring:
 
 ```yaml
 command:
-  name: '*gather-requirements'
-  syntax: '*gather-requirements {story-id} [--source=prd|user] [--prd=path]'
+  name: "*gather-requirements"
+  syntax: "*gather-requirements {story-id} [--source=prd|user] [--prd=path]"
   agent: pm
 
   examples:
-    - '*gather-requirements STORY-42'
-    - '*gather-requirements STORY-42 --source=prd --prd=docs/prd/feature-x.md'
+    - "*gather-requirements STORY-42"
+    - "*gather-requirements STORY-42 --source=prd --prd=docs/prd/feature-x.md"
 ```
 
 ### Pipeline Integration
@@ -471,18 +473,18 @@ pipeline:
 ```yaml
 errors:
   - id: no-requirements
-    condition: 'functional array is empty after elicitation'
-    action: 'Re-prompt user for at least one functional requirement'
+    condition: "functional array is empty after elicitation"
+    action: "Re-prompt user for at least one functional requirement"
     blocking: true
 
   - id: ambiguous-requirement
-    condition: 'requirement description < 10 characters'
-    action: 'Ask for clarification'
+    condition: "requirement description < 10 characters"
+    action: "Ask for clarification"
     blocking: false
 
   - id: missing-acceptance
-    condition: 'functional requirement has no acceptance criteria'
-    action: 'Generate suggested acceptance criteria for review'
+    condition: "functional requirement has no acceptance criteria"
+    action: "Generate suggested acceptance criteria for review"
     blocking: false
 ```
 
@@ -521,20 +523,20 @@ Q4: Como sabemos que está PRONTO?
 
 ```yaml
 metadata:
-  story: '3.1'
-  epic: 'Epic 3 - Spec Pipeline'
-  created: '2026-01-28'
-  updated: '2025-01-30'
-  author: '@architect (Aria)'
-  version: '2.0.0'
+  story: "3.1"
+  epic: "Epic 3 - Spec Pipeline"
+  created: "2026-01-28"
+  updated: "2025-01-30"
+  author: "@architect (Aria)"
+  version: "2.0.0"
   changelog:
-    - version: '2.0.0'
-      date: '2025-01-30'
+    - version: "2.0.0"
+      date: "2025-01-30"
       changes:
-        - 'Expanded elicitation from 5 to 9 categories (SDD adoption)'
-        - 'Added: Domain Model (q6), Interaction/UX (q7), Edge Cases (q8), Terminology (q9)'
-        - 'Updated JSON template with new sections'
-        - 'Added elicitationVersion field for backwards compatibility'
+        - "Expanded elicitation from 5 to 9 categories (SDD adoption)"
+        - "Added: Domain Model (q6), Interaction/UX (q7), Edge Cases (q8), Terminology (q9)"
+        - "Updated JSON template with new sections"
+        - "Added elicitationVersion field for backwards compatibility"
   tags:
     - spec-pipeline
     - requirements
@@ -543,3 +545,12 @@ metadata:
     - sdd-adoption
   inspiration: GitHub Spec-Kit 9-category taxonomy
 ```
+
+## Handoff
+
+next_agent: @architect
+next_command: \*analyze-impact
+condition: Requirements gathered (requirements.json created)
+alternatives:
+
+- agent: @pm, command: \*write-spec, condition: SIMPLE complexity, skip assessment

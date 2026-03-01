@@ -60,7 +60,7 @@ export function parseCameraClipPayload(value: unknown): CameraClipPayload {
 }
 
 export function cameraTempPath(opts: {
-  kind: "snap" | "clip";
+  kind: "snap" | "clip" | "screen_snap" | "ui_scan";
   facing?: CameraFacing;
   ext: string;
   tmpDir?: string;

@@ -4,6 +4,7 @@ read_when:
   - Você está conectando superfícies de uso/cota de provedores
   - Você precisa explicar o comportamento de rastreamento de uso ou os requisitos de autenticação
 ---
+
 # Rastreamento de uso
 
 ## O que é

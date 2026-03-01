@@ -3,6 +3,7 @@ summary: "Como o app macOS relata os estados de saúde do gateway/Baileys"
 read_when:
   - Depurando os indicadores de saúde do app mac
 ---
+
 # Verificações de Saúde no macOS
 
 Como ver se o canal vinculado está saudável a partir do app da barra de menus.

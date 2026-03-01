@@ -218,15 +218,15 @@ This task requires the following configuration keys from `core-config.yaml`:
 **Loading Config:**
 
 ```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
+const yaml = require("js-yaml");
+const fs = require("fs");
+const path = require("path");
 
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+const configPath = path.join(__dirname, "../../.aios-core/core-config.yaml");
+const config = yaml.load(fs.readFileSync(configPath, "utf8"));
 
 const dev_story_location = config.devStoryLocation;
-const qaLocation = config.qaLocation || 'docs/qa'; // qaLocation
+const qaLocation = config.qaLocation || "docs/qa"; // qaLocation
 ```
 
 ## Classification Criteria
@@ -330,6 +330,7 @@ Create comprehensive report with:
 # Framework Utilities Verification Report
 
 ## Executive Summary
+
 - Total Utilities: X
 - ✅ WORKING: Y (Z%)
 - 🔧 FIXABLE: A (B%)
@@ -338,12 +339,15 @@ Create comprehensive report with:
 ## Detailed Findings
 
 ### WORKING Utilities
+
 ...
 
 ### FIXABLE Utilities (Priority Ranked)
+
 ...
 
 ### DEPRECATED Utilities (Cleanup Candidates)
+
 ...
 ```
 

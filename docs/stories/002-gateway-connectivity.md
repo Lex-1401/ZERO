@@ -30,4 +30,5 @@ O sistema ZERO está inoperante devido a um erro de conexão (`Could not connect
 3. Forçar a reinstalação do daemon.
 
 ---
+
 — River, Scrum Master 🌊

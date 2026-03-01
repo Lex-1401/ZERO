@@ -30,7 +30,7 @@ import { shouldIncludeHook } from "./config.js";
  * const config = await loadConfig();
  * const workspaceDir = resolveAgentWorkspaceDir(config, agentId);
  * const count = await loadInternalHooks(config, workspaceDir);
- * console.log(`Loaded ${count} hook handlers`);
+ *
  * ```
  */
 export async function loadInternalHooks(cfg: ZEROConfig, workspaceDir: string): Promise<number> {

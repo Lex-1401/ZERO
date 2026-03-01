@@ -2,6 +2,21 @@
 
 Docs: <https://docs.zero.bot>
 
+## 2026.2.26 (v0.4.0)
+
+### Highlights
+
+- **Soberania Visual 2.0: O Lobo de Turing**: Lançamento da nova identidade visual agêntica. A fusão da letra "Z" com um lobo cibernético agora representa a inteligência, agilidade e autonomia do sistema.
+- **Branding Unificado**: Atualização massiva de ativos em todas as plataformas (macOS, Android, iOS, Windows, Linux e Web) com transparência alfa e alta fidelidade.
+- **Identidade Documentada**: Inclusão do manifesto sobre a simbologia da logo no README e documentação oficial.
+
+### Changes
+
+- UI: Substituição do antigo "Fluid Cyan" pelo novo logo transparente em alta resolução.
+- Docs: Atualização do README.md e docs/index.md com a explicação da nova identidade.
+- Assets: Geração automática de favicons e ícones de sistema redimensionados via pipeline de design.
+- i18n: Sincronização da nova identidade visual nas documentações internacionalizadas (README_EN, README_ES, docs/index_EN).
+
 ## 2026.2.16 (v0.3.2)
 
 ### Highlights
@@ -602,7 +617,7 @@ Thanks @AlexMikhalev, @CoreyH, @John-Rood, @KrauseFx, @MaudeBot, @Nachx639, @Nic
 - Media: add inbound media understanding (image/audio/video) with provider + CLI fallbacks. <https://docs.zero.bot/nodes/media-understanding>
 - Plugins: add Zalo Personal plugin (`@zero/zalouser`) and unify channel directory for plugins. (#1032) — thanks @suminhthanh. <https://docs.zero.bot/plugins/zalouser>
 - Models: add Vercel AI Gateway auth choice + onboarding updates. (#1016) — thanks @timolins. <https://docs.zero.bot/providers/vercel-ai-gateway>
-- Sessions: add `session.identityLinks` for cross-platform DM session li  nking. (#1033) — thanks @thewilloftheshadow. <https://docs.zero.bot/concepts/session>
+- Sessions: add `session.identityLinks` for cross-platform DM session li nking. (#1033) — thanks @thewilloftheshadow. <https://docs.zero.bot/concepts/session>
 - Web search: add `country`/`language` parameters (schema + Brave API) and docs. (#1046) — thanks @YuriNachos. <https://docs.zero.bot/tools/web>
 
 ### Breaking
@@ -1218,7 +1233,7 @@ Thanks @AlexMikhalev, @CoreyH, @John-Rood, @KrauseFx, @MaudeBot, @Nachx639, @Nic
 
 ### Maintenance
 
-- Dependencies: bump pi-* stack to 0.42.2.
+- Dependencies: bump pi-\* stack to 0.42.2.
 - Dependencies: Pi 0.40.0 bump (#543) — thanks @mcinteerj.
 - Build: Docker build cache layer (#605) — thanks @zknicker.
 
@@ -1265,7 +1280,7 @@ Thanks @AlexMikhalev, @CoreyH, @John-Rood, @KrauseFx, @MaudeBot, @Nachx639, @Nic
 ### Maintenance
 
 - Skills additions (Himalaya email, CodexBar, 1Password).
-- Dependency refreshes (pi-* stack, Slack SDK, discord-api-types, file-type, zod, Biome, Vite).
+- Dependency refreshes (pi-\* stack, Slack SDK, discord-api-types, file-type, zod, Biome, Vite).
 - Refactors: centralized group allowlist/mention policy; lint/import cleanup; switch tsx → bun for TS execution.
 
 ## 2026.1.5

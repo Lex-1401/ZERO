@@ -7,6 +7,8 @@ export type GraphEntity = {
   type: string;
   description?: string;
   updated_at: number;
+  x?: number;
+  y?: number;
 };
 
 export type GraphRelation = {
@@ -20,20 +22,37 @@ export type GraphRelation = {
 export class KnowledgeGraph {
   constructor(private db: DatabaseSync) {}
 
-  addEntity(params: { name: string; type: string; description?: string; id?: string }) {
+  addEntity(params: {
+    name: string;
+    type: string;
+    description?: string;
+    id?: string;
+    x?: number;
+    y?: number;
+  }) {
     const id = params.id || randomUUID();
     const now = Date.now();
     this.db
       .prepare(`
-      INSERT INTO entities (id, name, type, description, updated_at)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO entities (id, name, type, description, updated_at, x, y)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         type = excluded.type,
         description = excluded.description,
-        updated_at = excluded.updated_at
+        updated_at = excluded.updated_at,
+        x = COALESCE(excluded.x, entities.x),
+        y = COALESCE(excluded.y, entities.y)
     `)
-      .run(id, params.name, params.type, params.description || null, now);
+      .run(
+        id,
+        params.name,
+        params.type,
+        params.description || null,
+        now,
+        params.x ?? null,
+        params.y ?? null,
+      );
     return id;
   }
 

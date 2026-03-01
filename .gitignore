@@ -144,3 +144,12 @@ local.properties
 *.exp
 test-results.json
 dist/
+# CodeBuddy
+.codebuddy/*
+!.codebuddy/skills/
+!.codebuddy/rules/
+!.codebuddy/prompts/
+!.codebuddy/config.json
+
+# Local config (machine-specific secrets)
+.aios-core/local-config.yaml

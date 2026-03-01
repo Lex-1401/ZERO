@@ -1,5 +1,9 @@
 import type { AnyAgentTool } from "../agents/pi-tools.types.js";
 
+/**
+ * Encapsulates the runtime logic for identifying which function/tool fits
+ * a given natural language task.
+ */
 export class SemanticRouter {
   private tools: Map<string, AnyAgentTool>;
 
@@ -7,7 +11,10 @@ export class SemanticRouter {
     this.tools = new Map(tools.map((t) => [t.name, t]));
   }
 
-  // Returns the single "execute" tool definition that receives natural language tasks
+  /**
+   * Returns the single "execute" tool definition that receives natural language tasks
+   * and routes them properly.
+   */
   public getRouterToolDefinition() {
     return {
       name: "execute",
@@ -27,9 +34,11 @@ export class SemanticRouter {
     };
   }
 
-  // Routes the task to the most appropriate tool
-  // In a real implementation, this would use embeddings/similarity search.
-  // Here we use a keyword matching heuristic for the MVP.
+  /**
+   * Routes the task to the most appropriate tool
+   * In a real implementation, this would use embeddings/similarity search.
+   * Here we use a keyword matching heuristic for the MVP.
+   */
   public async route(task: string): Promise<{ toolName: string; args: any } | null> {
     const taskLower = task.toLowerCase();
 
@@ -48,6 +57,9 @@ export class SemanticRouter {
     return null;
   }
 
+  /**
+   * Executes the resolved tool plan based on the provided natural language task.
+   */
   public async execute(task: string): Promise<string> {
     const plan = await this.route(task);
     if (!plan) {

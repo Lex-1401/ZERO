@@ -77,8 +77,7 @@ function normalizeSessionKeyForDefaults(
     raw === "main" ||
     raw === mainKey ||
     (defaultAgentId &&
-      (raw === `agent:${defaultAgentId}:main` ||
-        raw === `agent:${defaultAgentId}:${mainKey}`));
+      (raw === `agent:${defaultAgentId}:main` || raw === `agent:${defaultAgentId}:${mainKey}`));
   return isAlias ? mainSessionKey : raw;
 }
 
@@ -119,27 +118,30 @@ export function connectGateway(host: GatewayHost) {
 
   host.client?.stop();
 
-  // FALLBACK: Read from window if settings is empty
-  let token = host.settings.token;
-  if (!token || !token.trim()) {
-    const injected = (window as any).__ZERO_CONTROL_UI_TOKEN__;
-    if (injected && typeof injected === "string") {
-      token = injected.trim();
-      console.log("[gateway] Used fallback injected token");
-      // Also update settings to persist it
-      if (typeof (host as any).applySettings === "function") {
-        (host as any).applySettings({ ...host.settings, token });
-      }
+  // PRIORITY: Use official system token if available (Magic Login)
+  const injected = (window as any).__ZERO_CONTROL_UI_TOKEN__;
+  let token = injected && typeof injected === "string" && injected.trim() ? injected.trim() : null;
+
+  if (token) {
+    console.log("[gateway] Using official system token");
+    // Ensure host.settings is updated to avoid persistent mismatch
+    if (typeof (host as any).applySettings === "function" && host.settings.token !== token) {
+      (host as any).applySettings({ ...host.settings, token });
     }
+  } else {
+    // Fallback to persisted settings only if no system token is provided
+    token = host.settings.token?.trim() || null;
   }
+
+  // Final fallback for dev/unconfigured environments
+  const effectiveToken = token || "admin123";
 
   host.client = new GatewayBrowserClient({
     url: host.settings.gatewayUrl,
-    token: token?.trim() || "admin123",
+    token: effectiveToken,
     password: host.password.trim() ? host.password : undefined,
     clientName: "zero-control-ui",
     mode: "ui",
-
 
     onHello: (hello) => {
       host.connected = true;
@@ -156,12 +158,12 @@ export function connectGateway(host: GatewayHost) {
 
       applySnapshot(host, hello);
 
-      void loadAssistantIdentity(host as unknown as ZEROApp);
-      void loadAgents(host as unknown as ZEROApp);
-      void loadModels(host as unknown as ZEROApp);
-      void loadNodes(host as unknown as ZEROApp, { quiet: true });
-      void loadDevices(host as unknown as ZEROApp, { quiet: true });
-      void refreshActiveTab(host as unknown as Parameters<typeof refreshActiveTab>[0]);
+      void loadAssistantIdentity(host as any);
+      void loadAgents(host as any);
+      void loadModels(host as any);
+      void loadNodes(host as any, { quiet: true });
+      void loadDevices(host as any, { quiet: true });
+      void refreshActiveTab(host as any);
     },
     onClose: ({ code, reason }) => {
       host.connected = false;
@@ -215,9 +217,7 @@ function handleGatewayEventUnsafe(host: GatewayHost, evt: GatewayEventFrame) {
     const state = handleChatEvent(host as unknown as ZEROApp, payload);
     if (state === "final" || state === "error" || state === "aborted") {
       resetToolStream(host as unknown as Parameters<typeof resetToolStream>[0]);
-      void flushChatQueueForEvent(
-        host as unknown as Parameters<typeof flushChatQueueForEvent>[0],
-      );
+      void flushChatQueueForEvent(host as unknown as Parameters<typeof flushChatQueueForEvent>[0]);
     }
     if (state === "final") void loadChatHistory(host as unknown as ZEROApp);
     return;
@@ -265,6 +265,18 @@ function handleGatewayEventUnsafe(host: GatewayHost, evt: GatewayEventFrame) {
     if (resolved) {
       host.execApprovalQueue = removeExecApproval(host.execApprovalQueue, resolved.id);
     }
+    return;
+  }
+
+  if (evt.event === "performance") {
+    const payload = evt.payload;
+    if (payload && typeof payload === "object" && "totalTokens" in payload) {
+      if ((host as any).missionControlStore) {
+        (host as any).missionControlStore.summary = payload;
+        (host as any).missionControlStore.requestUpdate();
+      }
+    }
+    return;
   }
 }
 

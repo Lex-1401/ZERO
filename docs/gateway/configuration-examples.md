@@ -17,7 +17,7 @@ Os exemplos abaixo estão alinhados com o esquema de configuração atual. Para 
 ```json5
 {
   agent: { workspace: "~/zero" },
-  channels: { whatsapp: { allowFrom: ["+15555550123"] } }
+  channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
@@ -30,18 +30,18 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
   identity: {
     name: "Zero",
     theme: "assistente prestativo",
-    emoji: "∅"
+    emoji: "∅",
   },
   agent: {
     workspace: "~/zero",
-    model: { primary: "anthropic/claude-sonnet-4-5" }
+    model: { primary: "anthropic/claude-sonnet-4-5" },
   },
   channels: {
     whatsapp: {
       allowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } }
-    }
-  }
+      groups: { "*": { requireMention: true } },
+    },
+  },
 }
 ```
 
@@ -55,12 +55,12 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
   env: {
     OPENROUTER_API_KEY: "sk-or-...",
     vars: {
-      GROQ_API_KEY: "gsk-..."
+      GROQ_API_KEY: "gsk-...",
     },
     shellEnv: {
       enabled: true,
-      timeoutMs: 15000
-    }
+      timeoutMs: 15000,
+    },
   },
 
   // Metadados do perfil de autenticação (segredos ficam em auth-profiles.json)
@@ -69,20 +69,20 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       "anthropic:eu@exemplo.com": { provider: "anthropic", mode: "oauth", email: "eu@exemplo.com" },
       "anthropic:trabalho": { provider: "anthropic", mode: "api_key" },
       "openai:padrao": { provider: "openai", mode: "api_key" },
-      "openai-codex:padrao": { provider: "openai-codex", mode: "oauth" }
+      "openai-codex:padrao": { provider: "openai-codex", mode: "oauth" },
     },
     order: {
       anthropic: ["anthropic:eu@exemplo.com", "anthropic:trabalho"],
       openai: ["openai:padrao"],
-      "openai-codex": ["openai-codex:padrao"]
-    }
+      "openai-codex": ["openai-codex:padrao"],
+    },
   },
 
   // Identidade
   identity: {
     name: "Samantha",
     theme: "preguiça prestativa",
-    emoji: "🦥"
+    emoji: "🦥",
   },
 
   // Registros (Logging)
@@ -91,7 +91,7 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
     file: "/tmp/zero/zero.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
-    redactSensitive: "tools"
+    redactSensitive: "tools",
   },
 
   // Formatação de mensagens
@@ -99,14 +99,14 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
     messagePrefix: "[zero]",
     responsePrefix: ">",
     ackReaction: "👀",
-    ackReactionScope: "group-mentions"
+    ackReactionScope: "group-mentions",
   },
 
   // Roteamento + fila
   routing: {
     groupChat: {
       mentionPatterns: ["@zero", "zero"],
-      historyLimit: 50
+      historyLimit: 50,
     },
     queue: {
       mode: "collect",
@@ -120,9 +120,9 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
         slack: "collect",
         signal: "collect",
         imessage: "collect",
-        webchat: "collect"
-      }
-    }
+        webchat: "collect",
+      },
+    },
   },
 
   // Ferramentas
@@ -136,14 +136,14 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
           // Fallback opcional por CLI (binário do Whisper):
           // { type: "cli", command: "whisper", args: ["--model", "base", "{{MediaPath}}"] }
         ],
-        timeoutSeconds: 120
+        timeoutSeconds: 120,
       },
       video: {
         enabled: true,
         maxBytes: 52428800,
-        models: [{ provider: "google", model: "gemini-3-flash-preview" }]
-      }
-    }
+        models: [{ provider: "google", model: "gemini-3-flash-preview" }],
+      },
+    },
   },
 
   // Comportamento da sessão
@@ -152,20 +152,18 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
     reset: {
       mode: "daily",
       atHour: 4,
-      idleMinutes: 60
+      idleMinutes: 60,
     },
     resetByChannel: {
-      discord: { mode: "idle", idleMinutes: 10080 }
+      discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
     store: "~/.zero/agents/default/sessions/sessions.json",
     typingIntervalSeconds: 5,
     sendPolicy: {
       default: "allow",
-      rules: [
-        { action: "deny", match: { channel: "discord", chatType: "group" } }
-      ]
-    }
+      rules: [{ action: "deny", match: { channel: "discord", chatType: "group" } }],
+    },
   },
 
   // Canais
@@ -175,7 +173,7 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       allowFrom: ["+15555550123"],
       groupPolicy: "allowlist",
       groupAllowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } }
+      groups: { "*": { requireMention: true } },
     },
 
     telegram: {
@@ -184,7 +182,7 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       allowFrom: ["123456789"],
       groupPolicy: "allowlist",
       groupAllowFrom: ["123456789"],
-      groups: { "*": { requireMention: true } }
+      groups: { "*": { requireMention: true } },
     },
 
     discord: {
@@ -197,10 +195,10 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
           requireMention: false,
           channels: {
             general: { allow: true },
-            help: { allow: true, requireMention: true }
-          }
-        }
-      }
+            help: { allow: true, requireMention: true },
+          },
+        },
+      },
     },
 
     slack: {
@@ -208,16 +206,16 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       botToken: "xoxb-SUBSTITUA_ME",
       appToken: "xapp-SUBSTITUA_ME",
       channels: {
-        "#general": { allow: true, requireMention: true }
+        "#general": { allow: true, requireMention: true },
       },
       dm: { enabled: true, allowFrom: ["U123"] },
       slashCommand: {
         enabled: true,
         name: "zero",
         sessionPrefix: "slack:slash",
-        ephemeral: true
-      }
-    }
+        ephemeral: true,
+      },
+    },
   },
 
   // Tempo de execução do agente
@@ -227,15 +225,15 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       userTimezone: "America/Sao_Paulo",
       model: {
         primary: "anthropic/claude-sonnet-4-5",
-        fallbacks: ["anthropic/claude-opus-4-5", "openai/gpt-5.2"]
+        fallbacks: ["anthropic/claude-opus-4-5", "openai/gpt-5.2"],
       },
       imageModel: {
-        primary: "openrouter/anthropic/claude-sonnet-4-5"
+        primary: "openrouter/anthropic/claude-sonnet-4-5",
       },
       models: {
         "anthropic/claude-opus-4-5": { alias: "opus" },
         "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
-        "openai/gpt-5.2": { alias: "gpt" }
+        "openai/gpt-5.2": { alias: "gpt" },
       },
       thinkingDefault: "low",
       verboseDefault: "off",
@@ -245,13 +243,13 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       blockStreamingChunk: {
         minChars: 800,
         maxChars: 1200,
-        breakPreference: "paragraph"
+        breakPreference: "paragraph",
       },
       blockStreamingCoalesce: {
-        idleMs: 1000
+        idleMs: 1000,
       },
       humanDelay: {
-        mode: "natural"
+        mode: "natural",
       },
       timeoutSeconds: 600,
       mediaMaxMb: 5,
@@ -263,14 +261,14 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
         target: "last",
         to: "+15555550123",
         prompt: "HEARTBEAT",
-        ackMaxChars: 300
+        ackMaxChars: 300,
       },
       memorySearch: {
         provider: "gemini",
         model: "gemini-embedding-001",
         remote: {
-          apiKey: "${GEMINI_API_KEY}"
-        }
+          apiKey: "${GEMINI_API_KEY}",
+        },
       },
       sandbox: {
         mode: "non-main",
@@ -282,13 +280,13 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
           network: "none",
-          user: "1000:1000"
+          user: "1000:1000",
         },
         browser: {
-          enabled: false
-        }
-      }
-    }
+          enabled: false,
+        },
+      },
+    },
   },
 
   tools: {
@@ -297,7 +295,7 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
     exec: {
       backgroundMs: 10000,
       timeoutSec: 1800,
-      cleanupMs: 1800000
+      cleanupMs: 1800000,
     },
     elevated: {
       enabled: true,
@@ -308,9 +306,9 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
         slack: ["U123"],
         signal: ["+15555550123"],
         imessage: ["usuario@exemplo.com"],
-        webchat: ["session:demo"]
-      }
-    }
+        webchat: ["session:demo"],
+      },
+    },
   },
 
   // Provedores de modelos personalizados
@@ -332,18 +330,18 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 128000,
-            maxTokens: 32000
-          }
-        ]
-      }
-    }
+            maxTokens: 32000,
+          },
+        ],
+      },
+    },
   },
 
   // Trabalhos cron (Cron jobs)
   cron: {
     enabled: true,
     store: "~/.zero/cron/cron.json",
-    maxConcurrentRuns: 2
+    maxConcurrentRuns: 2,
   },
 
   // Webhooks
@@ -368,8 +366,8 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
         to: "+15555550123",
         thinking: "low",
         timeoutSeconds: 300,
-        transform: { module: "./transforms/gmail.js", export: "transformGmail" }
-      }
+        transform: { module: "./transforms/gmail.js", export: "transformGmail" },
+      },
     ],
     gmail: {
       account: "zero@gmail.com",
@@ -382,8 +380,8 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       maxBytes: 20000,
       renewEveryMinutes: 720,
       serve: { bind: "127.0.0.1", port: 8788, path: "/" },
-      tailscale: { mode: "funnel", path: "/gmail-pubsub" }
-    }
+      tailscale: { mode: "funnel", path: "/gmail-pubsub" },
+    },
   },
 
   // Gateway + rede
@@ -395,31 +393,31 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
     auth: {
       mode: "token",
       token: "gateway-token",
-      allowTailscale: true
+      allowTailscale: true,
     },
     tailscale: { mode: "serve", resetOnExit: false },
     remote: { url: "ws://gateway.tailnet:18789", token: "remote-token" },
-    reload: { mode: "hybrid", debounceMs: 300 }
+    reload: { mode: "hybrid", debounceMs: 300 },
   },
 
   skills: {
     allowBundled: ["gemini", "peekaboo"],
     load: {
-      extraDirs: ["~/Projects/agent-scripts/skills"]
+      extraDirs: ["~/Projects/agent-scripts/skills"],
     },
     install: {
       preferBrew: true,
-      nodeManager: "npm"
+      nodeManager: "npm",
     },
     entries: {
       "nano-banana-pro": {
         enabled: true,
         apiKey: "CHAVE_GEMINI_AQUI",
-        env: { GEMINI_API_KEY: "CHAVE_GEMINI_AQUI" }
+        env: { GEMINI_API_KEY: "CHAVE_GEMINI_AQUI" },
       },
-      peekaboo: { enabled: true }
-    }
-  }
+      peekaboo: { enabled: true },
+    },
+  },
 }
 ```
 
@@ -435,14 +433,14 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
     telegram: {
       enabled: true,
       botToken: "SEU_TOKEN",
-      allowFrom: ["123456789"]
+      allowFrom: ["123456789"],
     },
     discord: {
       enabled: true,
       token: "SEU_TOKEN",
-      dm: { allowFrom: ["seunome"] }
-    }
-  }
+      dm: { allowFrom: ["seunome"] },
+    },
+  },
 }
 ```
 
@@ -455,24 +453,24 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       "anthropic:assinatura": {
         provider: "anthropic",
         mode: "oauth",
-        email: "eu@exemplo.com"
+        email: "eu@exemplo.com",
       },
       "anthropic:api": {
         provider: "anthropic",
-        mode: "api_key"
-      }
+        mode: "api_key",
+      },
     },
     order: {
-      anthropic: ["anthropic:assinatura", "anthropic:api"]
-    }
+      anthropic: ["anthropic:assinatura", "anthropic:api"],
+    },
   },
   agent: {
     workspace: "~/zero",
     model: {
       primary: "anthropic/claude-sonnet-4-5",
-      fallbacks: ["anthropic/claude-opus-4-5"]
-    }
-  }
+      fallbacks: ["anthropic/claude-opus-4-5"],
+    },
+  },
 }
 ```
 
@@ -485,33 +483,33 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       "anthropic:assinatura": {
         provider: "anthropic",
         mode: "oauth",
-        email: "usuario@exemplo.com"
+        email: "usuario@exemplo.com",
       },
       "anthropic:api": {
         provider: "anthropic",
-        mode: "api_key"
-      }
+        mode: "api_key",
+      },
     },
     order: {
-      anthropic: ["anthropic:assinatura", "anthropic:api"]
-    }
+      anthropic: ["anthropic:assinatura", "anthropic:api"],
+    },
   },
   models: {
     providers: {
       minimax: {
         baseUrl: "https://api.minimax.io/anthropic",
         api: "anthropic-messages",
-        apiKey: "${MINIMAX_API_KEY}"
-      }
-    }
+        apiKey: "${MINIMAX_API_KEY}",
+      },
+    },
   },
   agent: {
     workspace: "~/zero",
     model: {
       primary: "anthropic/claude-opus-4-5",
-      fallbacks: ["minimax/MiniMax-M2.1"]
-    }
-  }
+      fallbacks: ["minimax/MiniMax-M2.1"],
+    },
+  },
 }
 ```
 
@@ -521,11 +519,11 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
 {
   identity: {
     name: "BotTrabalho",
-    theme: "assistente profissional"
+    theme: "assistente profissional",
   },
   agent: {
     workspace: "~/work-zero",
-    elevated: { enabled: false }
+    elevated: { enabled: false },
   },
   channels: {
     slack: {
@@ -533,10 +531,10 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
       botToken: "xoxb-...",
       channels: {
         "#engineering": { allow: true, requireMention: true },
-        "#general": { allow: true, requireMention: true }
-      }
-    }
-  }
+        "#general": { allow: true, requireMention: true },
+      },
+    },
+  },
 }
 ```
 
@@ -546,7 +544,7 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
 {
   agent: {
     workspace: "~/zero",
-    model: { primary: "lmstudio/minimax-m2.1-gs32" }
+    model: { primary: "lmstudio/minimax-m2.1-gs32" },
   },
   models: {
     mode: "merge",
@@ -563,12 +561,12 @@ Salve em `~/.zero/zero.json` e você poderá enviar DMs para o bot a partir dess
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 

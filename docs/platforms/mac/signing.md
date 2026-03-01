@@ -3,6 +3,7 @@ summary: "Etapas de assinatura para builds de depuração (debug) do macOS gerad
 read_when:
   - Compilando ou assinando builds de depuração do mac
 ---
+
 # Assinatura mac (builds de depuração)
 
 Este app é geralmente compilado a partir do [`scripts/package-mac-app.sh`](https://github.com/zero/zero/blob/main/scripts/package-mac-app.sh), que agora:
@@ -42,4 +43,4 @@ A guia Sobre lê essas chaves para mostrar a versão, data de compilação, comm
 
 ## Por que
 
-As permissões do TCC estão vinculadas ao identificador do pacote *e* à assinatura do código. Builds de depuração não assinados com UUIDs variáveis faziam com que o macOS esquecesse as concessões após cada recompilação. Assinar os binários (ad-hoc por padrão) e manter um ID/caminho de pacote fixo (`dist/ZERO.app`) preserva as concessões entre builds, seguindo a abordagem do VibeTunnel.
+As permissões do TCC estão vinculadas ao identificador do pacote _e_ à assinatura do código. Builds de depuração não assinados com UUIDs variáveis faziam com que o macOS esquecesse as concessões após cada recompilação. Assinar os binários (ad-hoc por padrão) e manter um ID/caminho de pacote fixo (`dist/ZERO.app`) preserva as concessões entre builds, seguindo a abordagem do VibeTunnel.

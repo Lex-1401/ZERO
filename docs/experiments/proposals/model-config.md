@@ -3,6 +3,7 @@ summary: "Exploração: configuração de modelos, perfis de autenticação e co
 read_when:
   - Explorando ideias futuras para seleção de modelos + perfis de autenticação
 ---
+
 # Configuração de Modelos (Exploração)
 
 Este documento captura **ideias** para a configuração futura de modelos. Não é uma especificação definitiva. Para ver o comportamento atual, consulte:

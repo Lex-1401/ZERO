@@ -152,14 +152,10 @@ const voiceCallPlugin = {
       const raw = api.pluginConfig as Record<string, unknown>;
       const twilio = raw.twilio as Record<string, unknown> | undefined;
       if (raw.provider === "log") {
-        api.logger.warn(
-          "[voice-call] provider \"log\" is deprecated; use \"mock\" instead",
-        );
+        api.logger.warn('[voice-call] provider "log" is deprecated; use "mock" instead');
       }
       if (typeof twilio?.from === "string") {
-        api.logger.warn(
-          "[voice-call] twilio.from is deprecated; use fromNumber instead",
-        );
+        api.logger.warn("[voice-call] twilio.from is deprecated; use fromNumber instead");
       }
     }
 
@@ -192,8 +188,7 @@ const voiceCallPlugin = {
 
     api.registerGatewayMethod("voicecall.initiate", async ({ params, respond }) => {
       try {
-        const message =
-          typeof params?.message === "string" ? params.message.trim() : "";
+        const message = typeof params?.message === "string" ? params.message.trim() : "";
         if (!message) {
           respond(false, { error: "message required" });
           return;
@@ -208,9 +203,7 @@ const voiceCallPlugin = {
           return;
         }
         const mode =
-          params?.mode === "notify" || params?.mode === "conversation"
-            ? params.mode
-            : undefined;
+          params?.mode === "notify" || params?.mode === "conversation" ? params.mode : undefined;
         const result = await rt.manager.initiateCall(to, undefined, {
           message,
           mode,
@@ -227,10 +220,8 @@ const voiceCallPlugin = {
 
     api.registerGatewayMethod("voicecall.continue", async ({ params, respond }) => {
       try {
-        const callId =
-          typeof params?.callId === "string" ? params.callId.trim() : "";
-        const message =
-          typeof params?.message === "string" ? params.message.trim() : "";
+        const callId = typeof params?.callId === "string" ? params.callId.trim() : "";
+        const message = typeof params?.message === "string" ? params.message.trim() : "";
         if (!callId || !message) {
           respond(false, { error: "callId and message required" });
           return;
@@ -249,10 +240,8 @@ const voiceCallPlugin = {
 
     api.registerGatewayMethod("voicecall.speak", async ({ params, respond }) => {
       try {
-        const callId =
-          typeof params?.callId === "string" ? params.callId.trim() : "";
-        const message =
-          typeof params?.message === "string" ? params.message.trim() : "";
+        const callId = typeof params?.callId === "string" ? params.callId.trim() : "";
+        const message = typeof params?.message === "string" ? params.message.trim() : "";
         if (!callId || !message) {
           respond(false, { error: "callId and message required" });
           return;
@@ -271,8 +260,7 @@ const voiceCallPlugin = {
 
     api.registerGatewayMethod("voicecall.end", async ({ params, respond }) => {
       try {
-        const callId =
-          typeof params?.callId === "string" ? params.callId.trim() : "";
+        const callId = typeof params?.callId === "string" ? params.callId.trim() : "";
         if (!callId) {
           respond(false, { error: "callId required" });
           return;
@@ -302,8 +290,7 @@ const voiceCallPlugin = {
           return;
         }
         const rt = await ensureRuntime();
-        const call =
-          rt.manager.getCall(raw) || rt.manager.getCallByProviderCallId(raw);
+        const call = rt.manager.getCall(raw) || rt.manager.getCallByProviderCallId(raw);
         if (!call) {
           respond(true, { found: false });
           return;
@@ -317,8 +304,7 @@ const voiceCallPlugin = {
     api.registerGatewayMethod("voicecall.start", async ({ params, respond }) => {
       try {
         const to = typeof params?.to === "string" ? params.to.trim() : "";
-        const message =
-          typeof params?.message === "string" ? params.message.trim() : "";
+        const message = typeof params?.message === "string" ? params.message.trim() : "";
         if (!to) {
           respond(false, { error: "to required" });
           return;
@@ -340,14 +326,11 @@ const voiceCallPlugin = {
     api.registerTool({
       name: "voice_call",
       label: "Voice Call",
-      description:
-        "Make phone calls and have voice conversations via the voice-call plugin.",
+      description: "Make phone calls and have voice conversations via the voice-call plugin.",
       parameters: VoiceCallToolSchema,
       async execute(_toolCallId, params) {
         const json = (payload: unknown) => ({
-          content: [
-            { type: "text", text: JSON.stringify(payload, null, 2) },
-          ],
+          content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
           details: payload,
         });
 
@@ -413,8 +396,7 @@ const voiceCallPlugin = {
                 const callId = String(params.callId || "").trim();
                 if (!callId) throw new Error("callId required");
                 const call =
-                  rt.manager.getCall(callId) ||
-                  rt.manager.getCallByProviderCallId(callId);
+                  rt.manager.getCall(callId) || rt.manager.getCallByProviderCallId(callId);
                 return json(call ? { found: true, call } : { found: false });
               }
             }
@@ -422,11 +404,9 @@ const voiceCallPlugin = {
 
           const mode = params?.mode ?? "call";
           if (mode === "status") {
-            const sid =
-              typeof params.sid === "string" ? params.sid.trim() : "";
+            const sid = typeof params.sid === "string" ? params.sid.trim() : "";
             if (!sid) throw new Error("sid required for status");
-            const call =
-              rt.manager.getCall(sid) || rt.manager.getCallByProviderCallId(sid);
+            const call = rt.manager.getCall(sid) || rt.manager.getCallByProviderCallId(sid);
             return json(call ? { found: true, call } : { found: false });
           }
 

@@ -27,6 +27,7 @@ description: Uma habilidade simples que diz olá.
 ---
 
 # Habilidade Olá Mundo
+
 Quando o usuário pedir uma saudação, use a ferramenta `echo` para dizer "Olá da sua habilidade personalizada!".
 ```
 
@@ -40,7 +41,7 @@ Peça ao seu agente para "atualizar habilidades" ou reinicie o gateway. O ZERO d
 
 ## Melhores Práticas
 
-- **Seja Conciso**: Instrua o modelo sobre *o que* fazer, não como ser uma IA.
+- **Seja Conciso**: Instrua o modelo sobre _o que_ fazer, não como ser uma IA.
 - **Segurança Primeiro**: Se sua habilidade usar `bash`, certifique-se de que os prompts não permitem injeção de comandos arbitrários a partir de entradas de usuários não confiáveis.
 - **Teste Localmente**: Use `zero agent --message "use my new skill"` para testar.
 

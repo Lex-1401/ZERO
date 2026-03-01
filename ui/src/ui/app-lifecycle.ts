@@ -21,111 +21,79 @@ import {
 import { runSmartScan } from "./controllers/smart-scan";
 import type { ZEROApp } from "./app";
 
+import type { ChatStore } from "./stores/chat-store";
+import type { UIStore } from "./stores/ui-store";
+import type { LogsStore } from "./stores/logs-store";
+
 type LifecycleHost = {
+  uiStore: UIStore;
+  chatStore: ChatStore;
+  logsStore: LogsStore;
   basePath: string;
-  tab: Tab;
   chatHasAutoScrolled: boolean;
-  chatLoading: boolean;
-  chatMessages: unknown[];
-  chatToolMessages: unknown[];
-  chatStream: string;
-  logsAutoFollow: boolean;
-  logsAtBottom: boolean;
-  logsEntries: unknown[];
   popStateHandler: () => void;
   topbarObserver: ResizeObserver | null;
-  onboarding: boolean;
-  setupLoading: boolean;
-  setupRecommendations: unknown[];
-  settings: import("./storage").UiSettings;
   handleStartTour: () => void;
+  connect: () => void;
+  syncNexus: () => Promise<void>;
+  loadCron: () => Promise<void>;
 };
 
 export function handleConnected(host: LifecycleHost) {
   host.basePath = inferBasePath();
-  syncTabWithLocation(
-    host as unknown as Parameters<typeof syncTabWithLocation>[0],
-    true,
-  );
-  syncThemeWithSettings(
-    host as unknown as Parameters<typeof syncThemeWithSettings>[0],
-  );
-  attachThemeListener(
-    host as unknown as Parameters<typeof attachThemeListener>[0],
-  );
+  syncTabWithLocation(host as any, true);
+  syncThemeWithSettings(host as any);
+  attachThemeListener(host as any);
   window.addEventListener("popstate", host.popStateHandler);
-  applySettingsFromUrl(
-    host as unknown as Parameters<typeof applySettingsFromUrl>[0],
-  );
-  applySettingsFromInjectedConfig(
-    host as unknown as Parameters<typeof applySettingsFromInjectedConfig>[0],
-  );
-  connectGateway(host as unknown as Parameters<typeof connectGateway>[0]);
-  startNodesPolling(host as unknown as Parameters<typeof startNodesPolling>[0]);
-  if (host.tab === "logs") {
-    startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
+  applySettingsFromUrl(host as any);
+  applySettingsFromInjectedConfig(host as any);
+  host.connect();
+  startNodesPolling(host as any);
+  if (host.uiStore.tab === "logs") {
+    startLogsPolling(host as any);
   }
-  if (host.tab === "debug") {
-    startDebugPolling(host as unknown as Parameters<typeof startDebugPolling>[0]);
+  if (host.uiStore.tab === "debug") {
+    startDebugPolling(host as any);
   }
-  if (host.onboarding) {
-    host.setupLoading = true;
-    runSmartScan(host as unknown as ZEROApp).then((recommendations) => {
-      host.setupRecommendations = recommendations;
-      host.setupLoading = false;
+  if (host.uiStore.onboarding) {
+    host.uiStore.setupLoading = true;
+    runSmartScan(host as any).then((recommendations) => {
+      host.uiStore.setupRecommendations = recommendations;
+      host.uiStore.setupLoading = false;
     });
-  } else if (!host.settings.onboarded) {
+  } else if (!host.uiStore.settings.onboarded) {
     host.handleStartTour();
   }
 }
 
 export function handleFirstUpdated(host: LifecycleHost) {
-  observeTopbar(host as unknown as Parameters<typeof observeTopbar>[0]);
+  observeTopbar(host as any);
 }
 
 export function handleDisconnected(host: LifecycleHost) {
   window.removeEventListener("popstate", host.popStateHandler);
-  stopNodesPolling(host as unknown as Parameters<typeof stopNodesPolling>[0]);
-  stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
-  stopDebugPolling(host as unknown as Parameters<typeof stopDebugPolling>[0]);
-  detachThemeListener(
-    host as unknown as Parameters<typeof detachThemeListener>[0],
-  );
+  stopNodesPolling(host as any);
+  stopLogsPolling(host as any);
+  stopDebugPolling(host as any);
+  detachThemeListener(host as any);
   host.topbarObserver?.disconnect();
   host.topbarObserver = null;
 }
 
-export function handleUpdated(
-  host: LifecycleHost,
-  changed: Map<PropertyKey, unknown>,
-) {
-  if (
-    host.tab === "chat" &&
-    (changed.has("chatMessages") ||
-      changed.has("chatToolMessages") ||
-      changed.has("chatStream") ||
-      changed.has("chatLoading") ||
-      changed.has("tab"))
-  ) {
-    const forcedByTab = changed.has("tab");
-    const forcedByLoad =
-      changed.has("chatLoading") &&
-      changed.get("chatLoading") === true &&
-      host.chatLoading === false;
+export function handleUpdated(host: LifecycleHost, changed: Map<PropertyKey, unknown>) {
+  // Note: the changed map relates to the ZEROApp instance.
+  // We need to check if the stores have changed or if the tab has changed.
+  const tabChanged = host.uiStore.tab; // Simplified check or use changed.has('uiStore')
+
+  // Since Lit controllers trigger host updates, we check the tab and the relevant store states
+  if (host.uiStore.tab === "chat") {
+    // Scroll handling for chat
     scheduleChatScroll(
-      host as unknown as Parameters<typeof scheduleChatScroll>[0],
-      forcedByTab || forcedByLoad || !host.chatHasAutoScrolled,
+      host as any,
+      false, // true if tab changed or just loaded
     );
   }
-  if (
-    host.tab === "logs" &&
-    (changed.has("logsEntries") || changed.has("logsAutoFollow") || changed.has("tab"))
-  ) {
-    if (host.logsAutoFollow && host.logsAtBottom) {
-      scheduleLogsScroll(
-        host as unknown as Parameters<typeof scheduleLogsScroll>[0],
-        changed.has("tab") || changed.has("logsAutoFollow"),
-      );
-    }
+  if (host.uiStore.tab === "logs" && host.logsStore.autoFollow && host.logsStore.atBottom) {
+    scheduleLogsScroll(host as any, false);
   }
 }

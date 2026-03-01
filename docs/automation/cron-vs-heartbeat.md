@@ -5,20 +5,21 @@ read_when:
   - Configurando monitoramento ou notificações em segundo plano
   - Otimizando o uso de tokens para verificações periódicas
 ---
+
 # Cron vs Heartbeat: Quando usar cada um
 
 Tanto os heartbeats quanto as tarefas cron permitem que você execute tarefas em um agendamento. Este guia ajuda você a escolher o mecanismo certo para o seu caso de uso.
 
 ## Guia Rápido de Decisão
 
-| Caso de Uso | Recomendado | Por que |
-|-------------|-------------|---------|
-| Verificar caixa de entrada a cada 30 min | Heartbeat | Agrupa com outras verificações, ciente do contexto |
-| Enviar relatório diário às 9h em ponto | Cron (isolado) | Precisão de tempo necessária |
-| Monitorar calendário para eventos futuros | Heartbeat | Ajuste natural para consciência periódica |
-| Executar análise profunda semanal | Cron (isolado) | Tarefa independente, pode usar modelo diferente |
-| Me lembre em 20 minutos | Cron (principal, `--at`) | Execução única com tempo preciso |
-| Verificação de saúde de projeto em segundo plano | Heartbeat | Aproveita o ciclo existente |
+| Caso de Uso                                      | Recomendado              | Por que                                            |
+| ------------------------------------------------ | ------------------------ | -------------------------------------------------- |
+| Verificar caixa de entrada a cada 30 min         | Heartbeat                | Agrupa com outras verificações, ciente do contexto |
+| Enviar relatório diário às 9h em ponto           | Cron (isolado)           | Precisão de tempo necessária                       |
+| Monitorar calendário para eventos futuros        | Heartbeat                | Ajuste natural para consciência periódica          |
+| Executar análise profunda semanal                | Cron (isolado)           | Tarefa independente, pode usar modelo diferente    |
+| Me lembre em 20 minutos                          | Cron (principal, `--at`) | Execução única com tempo preciso                   |
+| Verificação de saúde de projeto em segundo plano | Heartbeat                | Aproveita o ciclo existente                        |
 
 ## Heartbeat: Consciência Periódica
 
@@ -59,12 +60,12 @@ O agente lê isso em cada heartbeat e lida com todos os itens em um único turno
   agents: {
     defaults: {
       heartbeat: {
-        every: "30m",        // intervalo
-        target: "last",      // para onde entregar alertas
-        activeHours: { start: "08:00", end: "22:00" }  // opcional
-      }
-    }
-  }
+        every: "30m", // intervalo
+        target: "last", // para onde entregar alertas
+        activeHours: { start: "08:00", end: "22:00" }, // opcional
+      },
+    },
+  },
 }
 ```
 
@@ -160,6 +161,7 @@ A configuração mais eficiente utiliza **ambos**:
 
 ```md
 # Checklist de Heartbeat
+
 - Escanear caixa de entrada para e-mails urgentes
 - Verificar calendário para eventos nas próximas 2h
 - Revisar quaisquer tarefas pendentes
@@ -192,8 +194,8 @@ Use-o quando a tarefa for mais do que um único turno de agente e você quiser u
 
 ### Como ele se emparelha com heartbeat e cron
 
-- **Heartbeat/cron** decidem *quando* uma execução acontece.
-- **VOID** define *quais etapas* acontecem assim que a execução inicia.
+- **Heartbeat/cron** decidem _quando_ uma execução acontece.
+- **VOID** define _quais etapas_ acontecem assim que a execução inicia.
 
 Para fluxos de trabalho agendados, use o cron ou heartbeat para disparar um turno de agente que chama o VOID.
 Para fluxos de trabalho ad-hoc, chame o VOID diretamente.
@@ -211,13 +213,13 @@ Veja [VOID](/tools/void) para uso completo e exemplos.
 
 Tanto o heartbeat quanto o cron podem interagir com a sessão principal, mas de formas diferentes:
 
-| | Heartbeat | Cron (principal) | Cron (isolado) |
-|---|---|---|---|
-| Sessão | Principal | Principal (via evento de sistema) | `cron:<jobId>` |
-| Histórico | Compartilhado | Compartilhado | Novo em cada execução |
-| Contexto | Completo | Completo | Nenhum (começa limpo) |
-| Modelo | Modelo da sessão principal | Modelo da sessão principal | Pode substituir |
-| Saída | Entregue se não for `HEARTBEAT_OK` | Prompt de Heartbeat + evento | Resumo postado no principal |
+|           | Heartbeat                          | Cron (principal)                  | Cron (isolado)              |
+| --------- | ---------------------------------- | --------------------------------- | --------------------------- |
+| Sessão    | Principal                          | Principal (via evento de sistema) | `cron:<jobId>`              |
+| Histórico | Compartilhado                      | Compartilhado                     | Novo em cada execução       |
+| Contexto  | Completo                           | Completo                          | Nenhum (começa limpo)       |
+| Modelo    | Modelo da sessão principal         | Modelo da sessão principal        | Pode substituir             |
+| Saída     | Entregue se não for `HEARTBEAT_OK` | Prompt de Heartbeat + evento      | Resumo postado no principal |
 
 ### Quando usar cron na sessão principal
 
@@ -258,11 +260,11 @@ zero cron add \
 
 ## Considerações de Custo
 
-| Mecanismo | Perfil de Custo |
-|-----------|-----------------|
-| Heartbeat | Um turno a cada N minutos; escala com o tamanho do HEARTBEAT.md |
-| Cron (principal) | Adiciona evento ao próximo heartbeat (sem turno isolado) |
-| Cron (isolado) | Turno de agente completo por tarefa; pode usar modelo mais barato |
+| Mecanismo        | Perfil de Custo                                                   |
+| ---------------- | ----------------------------------------------------------------- |
+| Heartbeat        | Um turno a cada N minutos; escala com o tamanho do HEARTBEAT.md   |
+| Cron (principal) | Adiciona evento ao próximo heartbeat (sem turno isolado)          |
+| Cron (isolado)   | Turno de agente completo por tarefa; pode usar modelo mais barato |
 
 **Dicas**:
 

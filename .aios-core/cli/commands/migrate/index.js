@@ -8,25 +8,25 @@
  * @story 2.14 - Migration Script v2.0 → v4.0.4
  */
 
-const { Command } = require('commander');
-const path = require('path');
-const readline = require('readline');
+const { Command } = require("commander");
+const path = require("path");
+const readline = require("readline");
 
-const { createBackup, verifyBackup, listBackups } = require('./backup');
-const { detectV2Structure, analyzeMigrationPlan, formatMigrationPlan } = require('./analyze');
-const { executeMigration, saveMigrationState, clearMigrationState } = require('./execute');
-const { updateAllImports } = require('./update-imports');
-const { runFullValidation, generateSummary } = require('./validate');
-const { executeRollback, formatRollbackSummary, canRollback } = require('./rollback');
+const { createBackup, verifyBackup, listBackups } = require("./backup");
+const { detectV2Structure, analyzeMigrationPlan, formatMigrationPlan } = require("./analyze");
+const { executeMigration, saveMigrationState, clearMigrationState } = require("./execute");
+const { updateAllImports } = require("./update-imports");
+const { runFullValidation, generateSummary } = require("./validate");
+const { executeRollback, formatRollbackSummary, canRollback } = require("./rollback");
 
 /**
  * Print styled header
  */
 function printHeader(fromVersion, toVersion) {
-  console.log('');
+  console.log("");
   console.log(`🔄 AIOS Migration v${fromVersion} → v${toVersion}`);
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('');
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("");
 }
 
 /**
@@ -44,7 +44,7 @@ async function askConfirmation(message) {
     rl.question(`${message} [Y/n]: `, (answer) => {
       rl.close();
       const normalized = answer.trim().toLowerCase();
-      resolve(normalized === '' || normalized === 'y' || normalized === 'yes');
+      resolve(normalized === "" || normalized === "y" || normalized === "yes");
     });
   });
 }
@@ -56,7 +56,7 @@ async function askConfirmation(message) {
  */
 function createProgressReporter(verbose) {
   return (event) => {
-    if (verbose || ['start', 'module', 'complete', 'verify', 'scan'].includes(event.phase)) {
+    if (verbose || ["start", "module", "complete", "verify", "scan"].includes(event.phase)) {
       if (event.message) {
         console.log(event.message);
       }
@@ -70,8 +70,8 @@ function createProgressReporter(verbose) {
  */
 async function runMigration(options) {
   const {
-    from = '2.0',
-    to = '2.1',
+    from = "2.0",
+    to = "2.1",
     dryRun = false,
     verbose = false,
     skipTests = false,
@@ -86,19 +86,19 @@ async function runMigration(options) {
   printHeader(from, to);
 
   // Phase 1: Detect current version
-  console.log('Phase 1: Analysis');
+  console.log("Phase 1: Analysis");
   const versionInfo = await detectV2Structure(projectRoot);
 
   if (!versionInfo.isV2) {
     if (versionInfo.isV21) {
-      console.log('ℹ️  Project already has v4.0.4 structure. No migration needed.');
+      console.log("ℹ️  Project already has v4.0.4 structure. No migration needed.");
       return;
     }
-    console.error(`❌ ${versionInfo.error || 'Cannot detect AIOS version'}`);
+    console.error(`❌ ${versionInfo.error || "Cannot detect AIOS version"}`);
     process.exit(1);
   }
 
-  console.log('  ✓ Detected v2.0 structure');
+  console.log("  ✓ Detected v2.0 structure");
 
   // Analyze migration plan
   const plan = await analyzeMigrationPlan(projectRoot, { verbose });
@@ -110,20 +110,20 @@ async function runMigration(options) {
 
   console.log(`  ✓ Found ${plan.totalFiles} files to migrate`);
   console.log(`  ✓ Identified ${Object.keys(plan.modules).length} target modules`);
-  console.log('');
+  console.log("");
 
   // Show migration plan
   console.log(formatMigrationPlan(plan));
 
   // Check for conflicts
   if (plan.conflicts.length > 0) {
-    console.log('');
-    console.log('⚠️  Conflicts detected. Some v4.0.4 directories already exist.');
+    console.log("");
+    console.log("⚠️  Conflicts detected. Some v4.0.4 directories already exist.");
 
     if (!yes) {
-      const proceed = await askConfirmation('Continue anyway?');
+      const proceed = await askConfirmation("Continue anyway?");
       if (!proceed) {
-        console.log('Migration cancelled.');
+        console.log("Migration cancelled.");
         return;
       }
     }
@@ -131,39 +131,39 @@ async function runMigration(options) {
 
   // Dry run mode
   if (dryRun) {
-    console.log('');
-    console.log('📋 Dry run mode - no changes will be made.');
-    console.log('');
-    console.log('What would happen:');
+    console.log("");
+    console.log("📋 Dry run mode - no changes will be made.");
+    console.log("");
+    console.log("What would happen:");
     console.log(`  • ${plan.totalFiles} files would be migrated`);
 
     for (const [name, stats] of Object.entries(plan.stats)) {
-      if (name !== 'total' && name !== 'uncategorized' && stats.files > 0) {
+      if (name !== "total" && name !== "uncategorized" && stats.files > 0) {
         console.log(`    - ${name}: ${stats.files} files`);
       }
     }
 
-    console.log('  • Import paths would be updated');
-    console.log('  • Lint and tests would run');
-    console.log('');
-    console.log('Run without --dry-run to execute migration.');
+    console.log("  • Import paths would be updated");
+    console.log("  • Lint and tests would run");
+    console.log("");
+    console.log("Run without --dry-run to execute migration.");
     return;
   }
 
   // Confirm before proceeding
   if (!yes) {
-    console.log('');
-    const proceed = await askConfirmation('Proceed with migration?');
+    console.log("");
+    const proceed = await askConfirmation("Proceed with migration?");
     if (!proceed) {
-      console.log('Migration cancelled.');
+      console.log("Migration cancelled.");
       return;
     }
   }
 
-  console.log('');
+  console.log("");
 
   // Phase 2: Backup
-  console.log('Phase 2: Backup');
+  console.log("Phase 2: Backup");
 
   try {
     const backupResult = await createBackup(projectRoot, { verbose, onProgress });
@@ -172,72 +172,69 @@ async function runMigration(options) {
     // Verify backup
     const verification = await verifyBackup(backupResult.backupDir);
     if (verification.valid) {
-      console.log('  ✓ Backup verified (checksum match)');
+      console.log("  ✓ Backup verified (checksum match)");
     } else {
-      console.error('  ❌ Backup verification failed');
+      console.error("  ❌ Backup verification failed");
       process.exit(1);
     }
 
     // Save state
     await saveMigrationState(projectRoot, {
-      phase: 'backup',
+      phase: "backup",
       backup: backupResult.backupDir,
       plan: { totalFiles: plan.totalFiles },
     });
-
   } catch (error) {
     console.error(`  ❌ Backup failed: ${error.message}`);
     process.exit(1);
   }
 
-  console.log('');
+  console.log("");
 
   // Phase 3: Migration
-  console.log('Phase 3: Migration');
+  console.log("Phase 3: Migration");
 
   try {
     const migrationResult = await executeMigration(plan, { verbose, onProgress });
 
     if (!migrationResult.success) {
-      console.error('  ❌ Migration failed');
-      console.log('  Run: aios migrate --rollback');
+      console.error("  ❌ Migration failed");
+      console.log("  Run: aios migrate --rollback");
       process.exit(1);
     }
 
     console.log(`  ✓ Migrated ${migrationResult.totalFiles} files`);
 
     await saveMigrationState(projectRoot, {
-      phase: 'migrated',
+      phase: "migrated",
       files: migrationResult.totalFiles,
     });
-
   } catch (error) {
     console.error(`  ❌ Migration error: ${error.message}`);
-    console.log('  Run: aios migrate --rollback');
+    console.log("  Run: aios migrate --rollback");
     process.exit(1);
   }
 
-  console.log('');
+  console.log("");
 
   // Phase 4: Import Updates
-  console.log('Phase 4: Import Updates');
+  console.log("Phase 4: Import Updates");
 
   try {
-    const aiosCoreDir = path.join(projectRoot, '.aios-core');
+    const aiosCoreDir = path.join(projectRoot, ".aios-core");
     const importResult = await updateAllImports(aiosCoreDir, plan, { verbose, onProgress });
 
     console.log(`  ✓ Scanned ${importResult.totalFiles} files`);
     console.log(`  ✓ Updated ${importResult.importsUpdated} imports`);
-
   } catch (error) {
     console.error(`  ⚠️  Import update warning: ${error.message}`);
     // Non-fatal - continue
   }
 
-  console.log('');
+  console.log("");
 
   // Phase 5: Validation
-  console.log('Phase 5: Validation');
+  console.log("Phase 5: Validation");
 
   const validationResult = await runFullValidation(projectRoot, {
     onProgress,
@@ -250,14 +247,15 @@ async function runMigration(options) {
 
   // Generate and print summary
   const duration = formatDuration(Date.now() - startTime);
-  const backupDir = `.aios-backup-${new Date().toISOString().split('T')[0]}`;
+  const backupDir = `.aios-backup-${new Date().toISOString().split("T")[0]}`;
 
-  console.log('');
-  console.log(generateSummary(
-    { totalFiles: plan.totalFiles, modules: plan.stats },
-    validationResult,
-    { backupLocation: backupDir, duration },
-  ));
+  console.log("");
+  console.log(
+    generateSummary({ totalFiles: plan.totalFiles, modules: plan.stats }, validationResult, {
+      backupLocation: backupDir,
+      duration,
+    }),
+  );
 }
 
 /**
@@ -269,10 +267,10 @@ async function runRollbackCommand(options) {
   const projectRoot = process.cwd();
   const onProgress = createProgressReporter(verbose);
 
-  console.log('');
-  console.log('🔙 AIOS Migration Rollback');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('');
+  console.log("");
+  console.log("🔙 AIOS Migration Rollback");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("");
 
   // Check if rollback is possible
   const status = await canRollback(projectRoot);
@@ -285,18 +283,18 @@ async function runRollbackCommand(options) {
   console.log(`Found backup: ${path.basename(status.backup.path)}`);
   console.log(`  Created: ${new Date(status.backup.date).toLocaleString()}`);
   console.log(`  Files: ${status.backup.files}`);
-  console.log('');
+  console.log("");
 
   // Confirm
   if (!yes) {
-    const proceed = await askConfirmation('Restore from this backup?');
+    const proceed = await askConfirmation("Restore from this backup?");
     if (!proceed) {
-      console.log('Rollback cancelled.');
+      console.log("Rollback cancelled.");
       return;
     }
   }
 
-  console.log('');
+  console.log("");
 
   // Execute rollback
   const result = await executeRollback(projectRoot, { onProgress, backupPath });
@@ -316,17 +314,17 @@ async function showBackupStatus(_options) {
   const projectRoot = process.cwd();
   const backups = await listBackups(projectRoot);
 
-  console.log('');
-  console.log('📦 AIOS Migration Backups');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log("");
+  console.log("📦 AIOS Migration Backups");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
   if (backups.length === 0) {
-    console.log('');
-    console.log('No backups found.');
+    console.log("");
+    console.log("No backups found.");
     return;
   }
 
-  console.log('');
+  console.log("");
 
   for (const backup of backups) {
     console.log(`${backup.name}`);
@@ -334,8 +332,8 @@ async function showBackupStatus(_options) {
       console.log(`  Created: ${new Date(backup.created).toLocaleString()}`);
     }
     console.log(`  Files: ${backup.fileCount}`);
-    console.log(`  Valid manifest: ${backup.hasManifest ? 'Yes' : 'No'}`);
-    console.log('');
+    console.log(`  Valid manifest: ${backup.hasManifest ? "Yes" : "No"}`);
+    console.log("");
   }
 }
 
@@ -360,21 +358,23 @@ function formatDuration(ms) {
  * @returns {Command} Commander command instance
  */
 function createMigrateCommand() {
-  const migrate = new Command('migrate');
+  const migrate = new Command("migrate");
 
   migrate
-    .description('Migrate AIOS from v2.0 to v4.0.4 modular structure')
-    .option('--from <version>', 'Source version', '2.0')
-    .option('--to <version>', 'Target version', '2.1')
-    .option('--dry-run', 'Show migration plan without executing')
-    .option('--verbose', 'Show detailed progress')
-    .option('--skip-tests', 'Skip test execution after migration')
-    .option('--skip-lint', 'Skip lint check after migration')
-    .option('-y, --yes', 'Skip confirmation prompts')
-    .option('--rollback', 'Rollback to pre-migration state')
-    .option('--backup <path>', 'Specify backup path for rollback')
-    .option('--status', 'Show backup status')
-    .addHelpText('after', `
+    .description("Migrate AIOS from v2.0 to v4.0.4 modular structure")
+    .option("--from <version>", "Source version", "2.0")
+    .option("--to <version>", "Target version", "2.1")
+    .option("--dry-run", "Show migration plan without executing")
+    .option("--verbose", "Show detailed progress")
+    .option("--skip-tests", "Skip test execution after migration")
+    .option("--skip-lint", "Skip lint check after migration")
+    .option("-y, --yes", "Skip confirmation prompts")
+    .option("--rollback", "Rollback to pre-migration state")
+    .option("--backup <path>", "Specify backup path for rollback")
+    .option("--status", "Show backup status")
+    .addHelpText(
+      "after",
+      `
 Migration Flow:
   Phase 1: Backup
     - Creates .aios-backup-{date}/ with all files
@@ -413,7 +413,8 @@ Rollback:
 
   Manual rollback:
   $ cp -r .aios-backup-{date}/* .aios-core/
-`);
+`,
+    );
 
   migrate.action(async (options) => {
     try {

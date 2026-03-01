@@ -5,13 +5,14 @@ read_when:
   - Criando automações que devem rodar com ou ao lado de heartbeats
   - Decidindo entre heartbeat e cron para tarefas agendadas
 ---
+
 # Tarefas Cron (Agendador do Gateway)
 
 > **Cron vs Heartbeat?** Veja [Cron vs Heartbeat](/automation/cron-vs-heartbeat) para orientação sobre quando usar cada um.
 
 O Cron é o agendador embutido no Gateway. Ele persiste tarefas, acorda o agente no momento certo e pode, opcionalmente, entregar a saída de volta em um chat.
 
-Se você quer *“rodar isso toda manhã”* ou *“cutucar o agente em 20 minutos”*, o cron é o mecanismo.
+Se você quer _“rodar isso toda manhã”_ ou _“cutucar o agente em 20 minutos”_, o cron é o mecanismo.
 
 ## TL;DR
 
@@ -26,16 +27,16 @@ Se você quer *“rodar isso toda manhã”* ou *“cutucar o agente em 20 minut
 
 Pense em uma tarefa cron como: **quando** rodar + **o que** fazer.
 
-1) **Escolha um agendamento**
+1. **Escolha um agendamento**
    - Lembrete único → `schedule.kind = "at"` (CLI: `--at`)
    - Tarefa repetitiva → `schedule.kind = "every"` ou `schedule.kind = "cron"`
    - Se o seu carimbo de data/hora ISO omitir o fuso horário, ele será tratado como **UTC**.
 
-2) **Escolha onde rodar**
+2. **Escolha onde rodar**
    - `sessionTarget: "main"` → roda durante o próximo heartbeat com o contexto principal.
    - `sessionTarget: "isolated"` → roda um turno de agente dedicado em `cron:<jobId>`.
 
-3) **Escolha o payload**
+3. **Escolha o payload**
    - Sessão principal → `payload.kind = "systemEvent"`
    - Sessão isolada → `payload.kind = "agentTurn"`
 
@@ -176,8 +177,8 @@ Alvos prefixados como `telegram:...` / `telegram:group:...` também são aceitos
   cron: {
     enabled: true, // padrão true
     store: "~/.zero/cron/jobs.json",
-    maxConcurrentRuns: 1 // padrão 1
-  }
+    maxConcurrentRuns: 1, // padrão 1
+  },
 }
 ```
 
@@ -297,7 +298,7 @@ zero system event --mode now --text "Próximo heartbeat: verificar bateria."
 
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
 - `cron.run` (forçado ou devido), `cron.runs`
-Para eventos de sistema imediatos sem uma tarefa, use [`zero system event`](/cli/system).
+  Para eventos de sistema imediatos sem uma tarefa, use [`zero system event`](/cli/system).
 
 ## Resolução de Problemas
 

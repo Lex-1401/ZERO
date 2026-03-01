@@ -335,13 +335,12 @@ export async function getHealthSnapshot(params?: {
   timeoutMs?: number;
   probe?: boolean;
 }): Promise<HealthSummary> {
-  console.log("[debug-health] getHealthSnapshot called");
   const timeoutMs = params?.timeoutMs;
   const cfg = loadConfig();
   const { defaultAgentId, ordered } = resolveAgentOrder(cfg);
   const channelBindings = buildChannelAccountBindings(cfg);
   const sessionCache = new Map<string, HealthSummary["sessions"]>();
-  console.log("[debug-health] resolving agents...");
+
   const agents: AgentHealthSummary[] = ordered.map((entry) => {
     const storePath = resolveStorePath(cfg.session?.store, { agentId: entry.id });
     const sessions = sessionCache.get(storePath) ?? buildSessionSummary(storePath);
@@ -365,14 +364,13 @@ export async function getHealthSnapshot(params?: {
   const start = Date.now();
   const cappedTimeout = Math.max(1000, timeoutMs ?? DEFAULT_TIMEOUT_MS);
   const doProbe = params?.probe !== false;
-  console.log("[debug-health] starting snapshot build");
+
   const channels: Record<string, ChannelHealthSummary> = {};
   const channelOrder = listChannelPlugins().map((plugin) => plugin.id);
-  console.log("[debug-health] channel order resolved", channelOrder.length);
+
   const channelLabels: Record<string, string> = {};
 
   for (const plugin of listChannelPlugins()) {
-    console.log("[debug-health] processing plugin", plugin.id);
     channelLabels[plugin.id] = plugin.meta.label ?? plugin.id;
     const accountIds = plugin.config.listAccountIds(cfg);
     const defaultAccountId = resolveChannelDefaultAccountId({
@@ -486,7 +484,6 @@ export async function getHealthSnapshot(params?: {
       } satisfies ChannelHealthSummary;
     }
   }
-  console.log("[debug-health] loop finished");
 
   const summary: HealthSummary = {
     ok: true,
@@ -505,7 +502,6 @@ export async function getHealthSnapshot(params?: {
     },
   };
 
-  console.log("[debug-health] returning summary");
   return summary;
 }
 

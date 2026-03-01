@@ -18,7 +18,6 @@
   backdrop-filter: var(--glass-blur);
 }
 
-
 /* Sidebar */
 .config-sidebar {
   display: flex;
@@ -262,7 +261,6 @@
   background: linear-gradient(to bottom, var(--glass-background), transparent);
 }
 
-
 .config-section-hero__icon {
   width: 42px;
   height: 42px;
@@ -344,7 +342,6 @@
   background: var(--glass-background);
   border-bottom: 1px solid var(--glass-border);
 }
-
 
 .config-section-card__content {
   padding: var(--s-6);
@@ -553,7 +550,7 @@
   bottom: 0;
   background-color: var(--bg-input);
   /* Inactive dark glass */
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 34px;
   border: 1px solid var(--glass-border);
 }
@@ -566,18 +563,18 @@
   left: 2px;
   bottom: 2px;
   background-color: white;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.cfg-toggle input:checked+.cfg-toggle__track {
+.cfg-toggle input:checked + .cfg-toggle__track {
   background-color: var(--success);
   /* Apple Green */
   border-color: var(--success);
 }
 
-.cfg-toggle input:checked+.cfg-toggle__track:before {
+.cfg-toggle input:checked + .cfg-toggle__track:before {
   transform: translateX(20px);
 }
 
@@ -601,7 +598,6 @@
   background: var(--glass-background);
   border-bottom: 1px solid var(--glass-border);
 }
-
 
 .cfg-array__label,
 .cfg-map__label {
@@ -672,7 +668,7 @@
 
 .cfg-array__empty::before,
 .cfg-map__empty::before {
-  content: '⊡';
+  content: "⊡";
   font-size: 24px;
   opacity: 0.2;
 }
@@ -711,7 +707,6 @@
   background: var(--danger);
   color: white;
 }
-
 
 .cfg-array__item {
   border: 1px solid var(--glass-border);
@@ -773,7 +768,6 @@
   border-bottom: 1px solid var(--glass-border);
   transition: background var(--duration-fast) ease;
 }
-
 
 .cfg-object__header:hover {
   background: rgba(255, 255, 255, 0.05);
@@ -919,7 +913,7 @@
 }
 
 .appearance-card.active::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;

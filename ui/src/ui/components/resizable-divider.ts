@@ -89,7 +89,7 @@ export class ResizableDivider extends LitElement {
         detail: { splitRatio: newRatio },
         bubbles: true,
         composed: true,
-      })
+      }),
     );
   };
 

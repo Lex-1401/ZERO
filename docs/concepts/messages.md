@@ -5,6 +5,7 @@ read_when:
   - Esclarecendo sessões, modos de enfileiramento ou comportamento de streaming
   - Documentando a visibilidade do raciocínio e as implicações de uso
 ---
+
 # Mensagens
 
 Esta página mostra como o ZERO lida com mensagens de entrada, sessões, enfileiramento, streaming e visibilidade do raciocínio.
@@ -45,10 +46,10 @@ Configuração (padrão global + sobrescritas por canal):
       byChannel: {
         whatsapp: 5000,
         slack: 1500,
-        discord: 1500
-      }
-    }
-  }
+        discord: 1500,
+      },
+    },
+  },
 }
 ```
 
@@ -84,7 +85,7 @@ Quando um canal fornece histórico, ele usa um invólucro compartilhado:
 
 Para **chats que não são diretos** (grupos/canais/salas), o **corpo da mensagem atual** é prefixado com o rótulo do remetente (mesmo estilo usado para entradas de histórico). Isso mantém as mensagens em tempo real e as mensagens enfileiradas/históricas consistentes no prompt do agente.
 
-Os buffers de histórico são **apenas pendentes**: eles incluem mensagens de grupo que *não* acionaram uma execução (por exemplo, mensagens controladas por menção) e **excluem** mensagens que já estão na transcrição da sessão.
+Os buffers de histórico são **apenas pendentes**: eles incluem mensagens de grupo que _não_ acionaram uma execução (por exemplo, mensagens controladas por menção) e **excluem** mensagens que já estão na transcrição da sessão.
 
 A remoção de diretivas aplica-se apenas à seção da **mensagem atual**, para que o histórico permaneça intacto. Canais que envolvem o histórico devem definir `CommandBody` (ou `RawBody`) como o texto original da mensagem e manter `Body` como o prompt combinado. Os buffers de histórico são configuráveis via `messages.groupChat.historyLimit` (padrão global) e sobrescritas por canal, como `channels.slack.historyLimit` ou `channels.telegram.accounts.<id>.historyLimit` (defina `0` para desativar).
 

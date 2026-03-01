@@ -5,6 +5,7 @@ read_when:
   - Você está adicionando um novo formatador de canal ou mapeamento de estilo
   - Você está depurando regressões de formatação entre canais
 ---
+
 # Formatação Markdown
 
 O ZERO formata o Markdown de saída convertendo-o em uma representação intermediária (IR) compartilhada antes de renderizar a saída específica do canal. A IR mantém o texto original intacto enquanto carrega extensões de estilo/link para que a divisão (chunking) e a renderização permaneçam consistentes em todos os canais.
@@ -42,12 +43,8 @@ IR (esquemático):
 ```json
 {
   "text": "Olá mundo — veja as docs.",
-  "styles": [
-    { "start": 4, "end": 9, "style": "bold" }
-  ],
-  "links": [
-    { "start": 19, "end": 23, "href": "https://github.com/Lex-1401/ZERO/tree/main/docs" }
-  ]
+  "styles": [{ "start": 4, "end": 9, "style": "bold" }],
+  "links": [{ "start": 19, "end": 23, "href": "https://github.com/Lex-1401/ZERO/tree/main/docs" }]
 }
 ```
 

@@ -26,7 +26,7 @@ Enhanced PR validation workflow:
 
 Release automation workflow:
 
-- Triggered on version tags (v*)
+- Triggered on version tags (v\*)
 - Automatic changelog generation
 - GitHub Release creation
 - Asset upload (tar.gz distribution)
@@ -35,15 +35,15 @@ Release automation workflow:
 
 Variables are replaced during installation by the `*setup-github` task:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `{{NODE_VERSION}}` | Node.js version | `20` |
-| `{{PYTHON_VERSION}}` | Python version | `3.11` |
-| `{{PROJECT_NAME}}` | Project name | From package.json |
-| `{{LINT_COMMAND}}` | Lint command | `npm run lint` |
-| `{{TEST_COMMAND}}` | Test command | `npm run test:coverage` |
-| `{{TYPECHECK_COMMAND}}` | TypeCheck command | `npm run typecheck` |
-| `{{BUILD_COMMAND}}` | Build command | `npm run build` |
+| Variable                | Description       | Default                 |
+| ----------------------- | ----------------- | ----------------------- |
+| `{{NODE_VERSION}}`      | Node.js version   | `20`                    |
+| `{{PYTHON_VERSION}}`    | Python version    | `3.11`                  |
+| `{{PROJECT_NAME}}`      | Project name      | From package.json       |
+| `{{LINT_COMMAND}}`      | Lint command      | `npm run lint`          |
+| `{{TEST_COMMAND}}`      | Test command      | `npm run test:coverage` |
+| `{{TYPECHECK_COMMAND}}` | TypeCheck command | `npm run typecheck`     |
+| `{{BUILD_COMMAND}}`     | Build command     | `npm run build`         |
 
 ## Usage
 
@@ -90,7 +90,7 @@ For Python projects, use `setup-python@v5`:
   uses: actions/setup-python@v5
   with:
     python-version: ${{ env.PYTHON_VERSION }}
-    cache: 'pip'
+    cache: "pip"
 ```
 
 For Go projects, use `setup-go@v5`:
@@ -99,7 +99,7 @@ For Go projects, use `setup-go@v5`:
 - name: Setup Go
   uses: actions/setup-go@v5
   with:
-    go-version: '1.21'
+    go-version: "1.21"
 ```
 
 ## Related

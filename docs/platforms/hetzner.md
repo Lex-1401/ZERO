@@ -37,14 +37,14 @@ Para o fluxo genérico do Docker, consulte [Docker](/install/docker).
 
 ## Caminho rápido (operadores experientes)
 
-1) Provisionar VPS Hetzner
-2) Instalar Docker
-3) Clonar o repositório do ZERO
-4) Criar diretórios persistentes no host
-5) Configurar `.env` e `docker-compose.yml`
-6) Integrar (bake) os binários necessários na imagem
-7) `docker compose up -d`
-8) Verificar a persistência e o acesso ao Gateway
+1. Provisionar VPS Hetzner
+2. Instalar Docker
+3. Clonar o repositório do ZERO
+4. Criar diretórios persistentes no host
+5. Configurar `.env` e `docker-compose.yml`
+6. Integrar (bake) os binários necessários na imagem
+7. `docker compose up -d`
+8. Verificar a persistência e o acesso ao Gateway
 
 ---
 
@@ -190,7 +190,7 @@ services:
         "--bind",
         "${ZERO_GATEWAY_BIND}",
         "--port",
-        "${ZERO_GATEWAY_PORT}"
+        "${ZERO_GATEWAY_PORT}",
       ]
 ```
 
@@ -315,15 +315,15 @@ Cole o seu token do gateway.
 O ZERO roda no Docker, mas o Docker não é a fonte da verdade.
 Todo o estado de longa duração deve sobreviver a reinicializações, reconstruções e reboots.
 
-| Componente | Localização | Mecanismo de persistência | Notas |
-|---|---|---|---|
-| Config do Gateway | `/home/node/.zero/` | Montagem de volume do host | Inclui `zero.json`, tokens |
-| Perfis de autenticação | `/home/node/.zero/` | Montagem de volume do host | Tokens OAuth, chaves de API |
-| Configurações de habilidades | `/home/node/.zero/skills/` | Montagem de volume do host | Estado ao nível da habilidade |
-| Workspace do agente | `/home/node/zero/` | Montagem de volume do host | Código e artefatos do agente |
-| Sessão do WhatsApp | `/home/node/.zero/` | Montagem de volume do host | Preserva o login por QR |
-| Keyring do Gmail | `/home/node/.zero/` | Volume do host + senha | Requer `GOG_KEYRING_PASSWORD` |
-| Binários externos | `/usr/local/bin/` | Imagem Docker | Devem ser integrados no build |
-| Runtime do Node | Sistema de arquivos do contêiner | Imagem Docker | Reconstruído a cada build da imagem |
-| Pacotes do SO | Sistema de arquivos do contêiner | Imagem Docker | Não instale em tempo de execução |
-| Contêiner Docker | Efêmero | Reiniciável | Seguro para destruir |
+| Componente                   | Localização                      | Mecanismo de persistência  | Notas                               |
+| ---------------------------- | -------------------------------- | -------------------------- | ----------------------------------- |
+| Config do Gateway            | `/home/node/.zero/`              | Montagem de volume do host | Inclui `zero.json`, tokens          |
+| Perfis de autenticação       | `/home/node/.zero/`              | Montagem de volume do host | Tokens OAuth, chaves de API         |
+| Configurações de habilidades | `/home/node/.zero/skills/`       | Montagem de volume do host | Estado ao nível da habilidade       |
+| Workspace do agente          | `/home/node/zero/`               | Montagem de volume do host | Código e artefatos do agente        |
+| Sessão do WhatsApp           | `/home/node/.zero/`              | Montagem de volume do host | Preserva o login por QR             |
+| Keyring do Gmail             | `/home/node/.zero/`              | Volume do host + senha     | Requer `GOG_KEYRING_PASSWORD`       |
+| Binários externos            | `/usr/local/bin/`                | Imagem Docker              | Devem ser integrados no build       |
+| Runtime do Node              | Sistema de arquivos do contêiner | Imagem Docker              | Reconstruído a cada build da imagem |
+| Pacotes do SO                | Sistema de arquivos do contêiner | Imagem Docker              | Não instale em tempo de execução    |
+| Contêiner Docker             | Efêmero                          | Reiniciável                | Seguro para destruir                |

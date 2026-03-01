@@ -9,17 +9,17 @@
 ```yaml
 preset:
   id: technology-name
-  name: 'Technology Name Preset'
+  name: "Technology Name Preset"
   version: 1.0.0
-  description: 'Brief description of when to use this preset'
+  description: "Brief description of when to use this preset"
   technologies:
     - tech1
     - tech2
   suitable_for:
-    - 'Type of project 1'
-    - 'Type of project 2'
+    - "Type of project 1"
+    - "Type of project 2"
   not_suitable_for:
-    - 'Type of project to avoid'
+    - "Type of project to avoid"
 ```
 
 ---

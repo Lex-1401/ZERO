@@ -201,11 +201,9 @@ export function createDiagnosticsOtelService(): ZeroPluginService {
         });
         logProvider = new LoggerProvider({ resource });
         logProvider.addLogRecordProcessor(
-          new BatchLogRecordProcessor(logExporter, {
-            ...(typeof otel.flushIntervalMs === "number"
+          new BatchLogRecordProcessor(logExporter, (typeof otel.flushIntervalMs === "number"
               ? { scheduledDelayMillis: Math.max(1000, otel.flushIntervalMs) }
-              : {}),
-          }),
+              : {})),
         );
         const otelLogger = logProvider.getLogger("zero");
 
@@ -273,7 +271,11 @@ export function createDiagnosticsOtelService(): ZeroPluginService {
           }
           if (bindings) {
             for (const [key, value] of Object.entries(bindings)) {
-              if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+              if (
+                typeof value === "string" ||
+                typeof value === "number" ||
+                typeof value === "boolean"
+              ) {
                 attributes[`zero.${key}`] = value;
               } else if (value != null) {
                 attributes[`zero.${key}`] = safeStringify(value);

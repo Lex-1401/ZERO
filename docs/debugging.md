@@ -59,13 +59,13 @@ Se você ainda não tiver uma instalação global, execute a CLI via `pnpm zero 
 
 O que isso faz:
 
-1) **Isolamento de perfil** (`--dev` global)
+1. **Isolamento de perfil** (`--dev` global)
    - `ZERO_PROFILE=dev`
    - `ZERO_STATE_DIR=~/.zero-dev`
    - `ZERO_CONFIG_PATH=~/.zero-dev/zero.json`
    - `ZERO_GATEWAY_PORT=19001` (o navegador/canvas muda de acordo)
 
-2) **Bootstrap de Desenvolvimento** (`gateway --dev`)
+2. **Bootstrap de Desenvolvimento** (`gateway --dev`)
    - Grava uma configuração mínima se estiver ausente (`gateway.mode=local`, vincula ao loopback).
    - Define `agent.workspace` como o workspace de desenvolvimento.
    - Define `agent.skipBootstrap=true` (ignora o `BOOTSTRAP.md`).

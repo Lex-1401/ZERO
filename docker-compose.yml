@@ -41,7 +41,7 @@ services:
         "--bind",
         "${ZERO_GATEWAY_BIND:-lan}",
         "--port",
-        "${ZERO_GATEWAY_PORT:-18789}"
+        "${ZERO_GATEWAY_PORT:-18789}",
       ]
 
   zero-cli:
@@ -71,4 +71,3 @@ secrets:
     file: ${ZERO_SECRETS_DIR:-./secrets}/claude_web_session_key.txt
   claude_web_cookie:
     file: ${ZERO_SECRETS_DIR:-./secrets}/claude_web_cookie.txt
-

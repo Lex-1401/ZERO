@@ -45,25 +45,25 @@ inputs:
   created_component:
     type: string
     required: true
-    description: 'Path to created component'
-    example: 'squads/my-squad/'
+    description: "Path to created component"
+    example: "squads/my-squad/"
 
   component_type:
     type: enum
     required: true
-    values: ['squad', 'agent', 'task', 'workflow', 'template']
-    description: 'Type of component created'
+    values: ["squad", "agent", "task", "workflow", "template"]
+    description: "Type of component created"
 
   creation_task:
     type: string
     required: false
-    description: 'Task that triggered this QA'
-    example: 'create-squad'
+    description: "Task that triggered this QA"
+    example: "create-squad"
 
   auto_fix:
     type: boolean
     default: false
-    description: 'Attempt to auto-fix minor issues'
+    description: "Attempt to auto-fix minor issues"
 ```
 
 ---
@@ -114,29 +114,29 @@ OUTPUT: QA Report + Pass/Fail
 
 ```yaml
 quick_checks:
-  - id: 'QC-001'
-    check: 'Component file/directory exists'
-    action: 'ls {created_component}'
-    on_fail: 'ABORT - Component not found at path'
+  - id: "QC-001"
+    check: "Component file/directory exists"
+    action: "ls {created_component}"
+    on_fail: "ABORT - Component not found at path"
 
-  - id: 'QC-002'
-    check: 'Valid YAML syntax (if .yaml/.yml)'
+  - id: "QC-002"
+    check: "Valid YAML syntax (if .yaml/.yml)"
     action: 'python -c ''import yaml; yaml.safe_load(open("{file}"))'''
-    on_fail: 'ABORT - Invalid YAML syntax'
+    on_fail: "ABORT - Invalid YAML syntax"
 
-  - id: 'QC-003'
-    check: 'Valid Markdown syntax (if .md)'
-    action: 'Check for unclosed code blocks, broken headers'
-    on_fail: 'WARN - Markdown formatting issues'
+  - id: "QC-003"
+    check: "Valid Markdown syntax (if .md)"
+    action: "Check for unclosed code blocks, broken headers"
+    on_fail: "WARN - Markdown formatting issues"
 
-  - id: 'QC-004'
-    check: 'Required metadata present'
+  - id: "QC-004"
+    check: "Required metadata present"
     fields:
-      squad: ['name', 'version', 'description', 'entry_agent']
-      agent: ['agent.name', 'agent.id', 'persona', 'commands']
-      task: ['Task ID', 'Version', 'Purpose', 'Inputs', 'Outputs']
-      workflow: ['Workflow ID', 'Version', 'Phases']
-    on_fail: 'ABORT - Missing required field: {field}'
+      squad: ["name", "version", "description", "entry_agent"]
+      agent: ["agent.name", "agent.id", "persona", "commands"]
+      task: ["Task ID", "Version", "Purpose", "Inputs", "Outputs"]
+      workflow: ["Workflow ID", "Version", "Phases"]
+    on_fail: "ABORT - Missing required field: {field}"
 ```
 
 ---
@@ -148,25 +148,25 @@ quick_checks:
 
 ```yaml
 security_scan:
-  description: 'Run comprehensive security checks'
-  reference: 'qa-security-checklist.md'
+  description: "Run comprehensive security checks"
+  reference: "qa-security-checklist.md"
 
   checks:
     # HIGH severity - BLOCKING
     high_severity:
-      - 'SEC-001 to SEC-004: API keys & tokens'
-      - 'SEC-005 to SEC-008: Cloud credentials'
-      - 'SEC-009 to SEC-010: Private keys'
-      - 'SEC-011 to SEC-012: Database URLs'
-      - 'SEC-013 to SEC-015: Sensitive files'
+      - "SEC-001 to SEC-004: API keys & tokens"
+      - "SEC-005 to SEC-008: Cloud credentials"
+      - "SEC-009 to SEC-010: Private keys"
+      - "SEC-011 to SEC-012: Database URLs"
+      - "SEC-013 to SEC-015: Sensitive files"
 
     # MEDIUM severity - WARNING
     medium_severity:
-      - 'SEC-016 to SEC-018: Code vulnerabilities'
+      - "SEC-016 to SEC-018: Code vulnerabilities"
 
   actions:
-    on_high_found: 'ABORT - Security vulnerability found'
-    on_medium_found: 'WARN - Review recommended'
+    on_high_found: "ABORT - Security vulnerability found"
+    on_medium_found: "WARN - Review recommended"
 
   scan_command: |
     # Run all security patterns
@@ -187,32 +187,32 @@ security_scan:
 ```yaml
 structure_validation:
   for_squad:
-    - check: 'config.yaml exists'
-    - check: 'Entry agent exists'
-    - check: 'All handoff_to targets exist'
-    - check: 'All task references valid'
-    - check: 'All template references valid'
-    - check: 'All checklist references valid'
-    - check: 'No orphan files (optional)'
+    - check: "config.yaml exists"
+    - check: "Entry agent exists"
+    - check: "All handoff_to targets exist"
+    - check: "All task references valid"
+    - check: "All template references valid"
+    - check: "All checklist references valid"
+    - check: "No orphan files (optional)"
 
   for_agent:
-    - check: 'activation-instructions present'
-    - check: 'commands section present'
-    - check: 'All dependencies exist'
-    - check: 'handoff_to targets exist (if any)'
+    - check: "activation-instructions present"
+    - check: "commands section present"
+    - check: "All dependencies exist"
+    - check: "handoff_to targets exist (if any)"
 
   for_task:
-    - check: 'All 8 Task Anatomy fields present'
-    - check: 'Referenced templates exist'
-    - check: 'Referenced checklists exist'
-    - check: 'Inputs have types defined'
-    - check: 'Outputs have paths defined'
+    - check: "All 8 Task Anatomy fields present"
+    - check: "Referenced templates exist"
+    - check: "Referenced checklists exist"
+    - check: "Inputs have types defined"
+    - check: "Outputs have paths defined"
 
   for_workflow:
-    - check: 'All phases have tasks'
-    - check: 'Task references valid'
-    - check: 'No sequence collisions'
-    - check: 'Output→Input chain valid'
+    - check: "All phases have tasks"
+    - check: "Task references valid"
+    - check: "No sequence collisions"
+    - check: "Output→Input chain valid"
 ```
 
 ---
@@ -225,7 +225,7 @@ structure_validation:
 ```yaml
 quality_scoring:
   for_squad:
-    action: 'Run validate-squad {squad_name}'
+    action: "Run validate-squad {squad_name}"
     extract:
       - tier_1_result
       - tier_2_result
@@ -236,72 +236,72 @@ quality_scoring:
 
   for_agent:
     criteria:
-      - name: 'Persona completeness'
+      - name: "Persona completeness"
         weight: 0.15
-        checks: ['role', 'style', 'identity', 'focus']
+        checks: ["role", "style", "identity", "focus"]
 
-      - name: 'Commands functionality'
+      - name: "Commands functionality"
         weight: 0.15
-        checks: ['*help exists', 'commands map to capabilities']
+        checks: ["*help exists", "commands map to capabilities"]
 
-      - name: 'Voice consistency'
+      - name: "Voice consistency"
         weight: 0.10
-        checks: ['voice_dna present (if Expert)', 'vocabulary used']
+        checks: ["voice_dna present (if Expert)", "vocabulary used"]
 
-      - name: 'Examples quality'
+      - name: "Examples quality"
         weight: 0.10
-        checks: ['output_examples present', 'realistic']
+        checks: ["output_examples present", "realistic"]
 
-      - name: 'Dependencies valid'
+      - name: "Dependencies valid"
         weight: 0.10
-        checks: ['all references exist']
+        checks: ["all references exist"]
 
-      - name: 'Documentation'
+      - name: "Documentation"
         weight: 0.10
-        checks: ['whenToUse clear', 'description helpful']
+        checks: ["whenToUse clear", "description helpful"]
 
-      - name: 'Operational completeness (SC_AGT_004)'
+      - name: "Operational completeness (SC_AGT_004)"
         weight: 0.30
         checks:
-          - 'command_loader exists and maps all operational commands'
-          - 'Task file exists for each command in command_loader.requires'
-          - 'Each task file has 3+ steps and 1+ veto conditions'
-          - 'At least 1 checklist with blocking items exists'
-          - 'All files in dependencies exist on disk'
-          - 'CRITICAL_LOADER_RULE present in agent'
-        reference: 'aprendizado/32-ANATOMIA-AGENTE-100-PORCENTO-REPLICAVEL.md'
+          - "command_loader exists and maps all operational commands"
+          - "Task file exists for each command in command_loader.requires"
+          - "Each task file has 3+ steps and 1+ veto conditions"
+          - "At least 1 checklist with blocking items exists"
+          - "All files in dependencies exist on disk"
+          - "CRITICAL_LOADER_RULE present in agent"
+        reference: "aprendizado/32-ANATOMIA-AGENTE-100-PORCENTO-REPLICAVEL.md"
         maturity_levels:
-          nivel_1: 'Score 0-4 — Persona only (decorative)'
-          nivel_2: 'Score 4-7 — Frameworks (functional but inconsistent)'
-          nivel_3: 'Score 7-9 — Complete (deterministic)'
-          nivel_3_plus: 'Score 9-10 — Complete + integrated'
+          nivel_1: "Score 0-4 — Persona only (decorative)"
+          nivel_2: "Score 4-7 — Frameworks (functional but inconsistent)"
+          nivel_3: "Score 7-9 — Complete (deterministic)"
+          nivel_3_plus: "Score 9-10 — Complete + integrated"
 
   for_task:
     criteria:
-      - name: 'Task Anatomy complete'
+      - name: "Task Anatomy complete"
         weight: 0.25
-        checks: ['8 required fields']
+        checks: ["8 required fields"]
 
-      - name: 'Prompt quality'
+      - name: "Prompt quality"
         weight: 0.25
-        checks: ['specific', 'examples', 'anti-patterns']
+        checks: ["specific", "examples", "anti-patterns"]
 
-      - name: 'Validation defined'
+      - name: "Validation defined"
         weight: 0.20
-        checks: ['success criteria', 'failure handling']
+        checks: ["success criteria", "failure handling"]
 
-      - name: 'Integration'
+      - name: "Integration"
         weight: 0.15
-        checks: ['references valid', 'outputs defined']
+        checks: ["references valid", "outputs defined"]
 
-      - name: 'Documentation'
+      - name: "Documentation"
         weight: 0.15
-        checks: ['purpose clear', 'usage examples']
+        checks: ["purpose clear", "usage examples"]
 
   thresholds:
-    pass: '>=7.0'
-    conditional: '>=5.0 and <7.0'
-    fail: '<5.0'
+    pass: ">=7.0"
+    conditional: ">=5.0 and <7.0"
+    fail: "<5.0"
 ```
 
 ---
@@ -380,34 +380,34 @@ qa_report:
 ```yaml
 actions:
   on_pass:
-    score: '>= 7.0'
-    security: '0 HIGH'
-    maturity: '>= Nivel 3'
+    score: ">= 7.0"
+    security: "0 HIGH"
+    maturity: ">= Nivel 3"
     action:
-      - 'Log success'
-      - 'Mark component as validated'
+      - "Log success"
+      - "Mark component as validated"
       - "Report: '✅ QA PASSED: {component} (Score: {score}, Maturity: Nivel {N})'"
 
   on_conditional:
-    score: '>= 5.0 and < 7.0'
-    security: '0 HIGH'
-    maturity: 'Nivel 2'
+    score: ">= 5.0 and < 7.0"
+    security: "0 HIGH"
+    maturity: "Nivel 2"
     action:
-      - 'Log warnings'
+      - "Log warnings"
       - "Report: '⚠️ QA CONDITIONAL: {component} (Score: {score}, Maturity: Nivel {N})'"
-      - 'List issues to fix'
-      - 'List missing operational files (tasks, templates, checklists)'
+      - "List issues to fix"
+      - "List missing operational files (tasks, templates, checklists)"
       - "Ask: 'Proceed anyway? Issues found: {count}. Missing operational files: {list}'"
 
   on_fail:
-    score: '< 5.0'
-    or_security: '>= 1 HIGH'
-    or_maturity: 'Nivel 1'
+    score: "< 5.0"
+    or_security: ">= 1 HIGH"
+    or_maturity: "Nivel 1"
     action:
-      - 'Log failure'
+      - "Log failure"
       - "Report: '❌ QA FAILED: {component} (Maturity: Nivel {N} — persona only)'"
-      - 'List blocking issues'
-      - 'List missing operational infrastructure'
+      - "List blocking issues"
+      - "List missing operational infrastructure"
       - "Block: 'Cannot proceed. Agent is Nivel {N} (target: Nivel 3). Fix {count} blocking issues.'"
       - "Offer: 'Return to create-agent Phase 5 to generate operational infrastructure'"
 ```
@@ -423,12 +423,12 @@ Add to end of creation tasks:
 ```yaml
 # In create-squad.md, create-agent.md, etc.
 post_creation:
-  - action: 'Run QA'
-    task: 'qa-after-creation'
+  - action: "Run QA"
+    task: "qa-after-creation"
     params:
-      created_component: '{output_path}'
-      component_type: 'squad' # or agent, task, etc.
-      creation_task: '{current_task}'
+      created_component: "{output_path}"
+      component_type: "squad" # or agent, task, etc.
+      creation_task: "{current_task}"
 ```
 
 ### Example Flow

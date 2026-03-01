@@ -3,10 +3,10 @@
  * @story 6.19 - IDE Command Auto-Sync System
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const crypto = require('crypto');
-const { getRedirectFilenames } = require('./redirect-generator');
+const fs = require("fs-extra");
+const path = require("path");
+const crypto = require("crypto");
+const { getRedirectFilenames } = require("./redirect-generator");
 
 /**
  * Calculate content hash for comparison
@@ -15,8 +15,8 @@ const { getRedirectFilenames } = require('./redirect-generator');
  */
 function hashContent(content) {
   // Normalize line endings for cross-platform consistency
-  const normalized = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-  return crypto.createHash('sha256').update(normalized, 'utf8').digest('hex');
+  const normalized = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  return crypto.createHash("sha256").update(normalized, "utf8").digest("hex");
 }
 
 /**
@@ -36,7 +36,7 @@ function fileExists(filePath) {
 function readFileIfExists(filePath) {
   try {
     if (fs.existsSync(filePath)) {
-      return fs.readFileSync(filePath, 'utf8');
+      return fs.readFileSync(filePath, "utf8");
     }
   } catch (error) {
     // Ignore read errors
@@ -68,7 +68,7 @@ function validateIdeSync(expectedFiles, targetDir, redirectsConfig) {
   };
 
   // Track expected filenames
-  const expectedFilenames = new Set(expectedFiles.map(f => f.filename));
+  const expectedFilenames = new Set(expectedFiles.map((f) => f.filename));
 
   // Add redirect filenames to expected
   const redirectFilenames = getRedirectFilenames(redirectsConfig);
@@ -116,7 +116,7 @@ function validateIdeSync(expectedFiles, targetDir, redirectsConfig) {
   // Check for orphaned files (files in target not in expected)
   if (fs.existsSync(targetDir)) {
     try {
-      const actualFiles = fs.readdirSync(targetDir).filter(f => f.endsWith('.md'));
+      const actualFiles = fs.readdirSync(targetDir).filter((f) => f.endsWith(".md"));
 
       for (const file of actualFiles) {
         if (!expectedFilenames.has(file)) {
@@ -155,11 +155,7 @@ function validateAllIdes(ideConfigs, redirectsConfig) {
   };
 
   for (const [ideName, config] of Object.entries(ideConfigs)) {
-    const ideResult = validateIdeSync(
-      config.expectedFiles,
-      config.targetDir,
-      redirectsConfig
-    );
+    const ideResult = validateIdeSync(config.expectedFiles, config.targetDir, redirectsConfig);
 
     results.ides[ideName] = ideResult;
 
@@ -172,8 +168,7 @@ function validateAllIdes(ideConfigs, redirectsConfig) {
   }
 
   // Pass if no missing or drift
-  results.summary.pass =
-    results.summary.missing === 0 && results.summary.drift === 0;
+  results.summary.pass = results.summary.missing === 0 && results.summary.drift === 0;
 
   return results;
 }
@@ -187,12 +182,12 @@ function validateAllIdes(ideConfigs, redirectsConfig) {
 function formatValidationReport(results, verbose = false) {
   const lines = [];
 
-  lines.push('# IDE Sync Validation Report');
-  lines.push('');
+  lines.push("# IDE Sync Validation Report");
+  lines.push("");
 
   // Summary
-  lines.push('## Summary');
-  lines.push('');
+  lines.push("## Summary");
+  lines.push("");
   lines.push(`| Metric | Count |`);
   lines.push(`|--------|-------|`);
   lines.push(`| Total Expected | ${results.summary.total} |`);
@@ -200,67 +195,67 @@ function formatValidationReport(results, verbose = false) {
   lines.push(`| Missing | ${results.summary.missing} |`);
   lines.push(`| Drift | ${results.summary.drift} |`);
   lines.push(`| Orphaned | ${results.summary.orphaned} |`);
-  lines.push('');
+  lines.push("");
 
-  const status = results.summary.pass ? '✅ PASS' : '❌ FAIL';
+  const status = results.summary.pass ? "✅ PASS" : "❌ FAIL";
   lines.push(`**Status:** ${status}`);
-  lines.push('');
+  lines.push("");
 
   // Per-IDE details
   if (verbose) {
-    lines.push('## IDE Details');
-    lines.push('');
+    lines.push("## IDE Details");
+    lines.push("");
 
     for (const [ideName, ideResult] of Object.entries(results.ides)) {
       lines.push(`### ${ideName}`);
-      lines.push('');
+      lines.push("");
       lines.push(`- Target: \`${ideResult.targetDir}\``);
       lines.push(`- Synced: ${ideResult.total.synced}`);
       lines.push(`- Missing: ${ideResult.total.missing}`);
       lines.push(`- Drift: ${ideResult.total.drift}`);
       lines.push(`- Orphaned: ${ideResult.total.orphaned}`);
-      lines.push('');
+      lines.push("");
 
       if (ideResult.missing.length > 0) {
-        lines.push('**Missing Files:**');
+        lines.push("**Missing Files:**");
         for (const f of ideResult.missing) {
           lines.push(`- ${f.filename}`);
         }
-        lines.push('');
+        lines.push("");
       }
 
       if (ideResult.drift.length > 0) {
-        lines.push('**Drifted Files:**');
+        lines.push("**Drifted Files:**");
         for (const f of ideResult.drift) {
           lines.push(`- ${f.filename}`);
         }
-        lines.push('');
+        lines.push("");
       }
 
       if (ideResult.orphaned.length > 0) {
-        lines.push('**Orphaned Files:**');
+        lines.push("**Orphaned Files:**");
         for (const f of ideResult.orphaned) {
           lines.push(`- ${f.filename}`);
         }
-        lines.push('');
+        lines.push("");
       }
     }
   }
 
   // Fix instructions
   if (!results.summary.pass) {
-    lines.push('## How to Fix');
-    lines.push('');
-    lines.push('Run the following command to sync IDE files:');
-    lines.push('');
-    lines.push('```bash');
-    lines.push('npm run sync:ide');
-    lines.push('```');
-    lines.push('');
-    lines.push('Then commit the generated files.');
+    lines.push("## How to Fix");
+    lines.push("");
+    lines.push("Run the following command to sync IDE files:");
+    lines.push("");
+    lines.push("```bash");
+    lines.push("npm run sync:ide");
+    lines.push("```");
+    lines.push("");
+    lines.push("Then commit the generated files.");
   }
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 module.exports = {

@@ -11,9 +11,9 @@
  * @module story-worktree-hooks
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 // Lazy load WorktreeManager to avoid circular deps
 let WorktreeManager = null;
@@ -22,9 +22,9 @@ let WorktreeManager = null;
  * Load configuration from core-config.yaml
  */
 async function loadConfig(rootPath) {
-  const configPath = path.join(rootPath, '.aios-core', 'core-config.yaml');
+  const configPath = path.join(rootPath, ".aios-core", "core-config.yaml");
   try {
-    const content = await fs.readFile(configPath, 'utf-8');
+    const content = await fs.readFile(configPath, "utf-8");
     return yaml.load(content);
   } catch (e) {
     return {};
@@ -37,8 +37,8 @@ async function loadConfig(rootPath) {
 function getWorktreeSettings(config) {
   const defaults = {
     enabled: true,
-    autoCreate: 'on_story_start', // on_story_start | manual | never
-    autoCleanup: 'manual', // on_story_done | manual | never
+    autoCreate: "on_story_start", // on_story_start | manual | never
+    autoCleanup: "manual", // on_story_done | manual | never
     maxWorktrees: 10,
     staleDays: 30,
   };
@@ -64,7 +64,7 @@ function extractStoryId(storyPath, content) {
   }
 
   // Fallback to sanitized filename
-  return path.basename(storyPath, '.md').replace(/[^a-z0-9-]/gi, '-');
+  return path.basename(storyPath, ".md").replace(/[^a-z0-9-]/gi, "-");
 }
 
 /**
@@ -75,7 +75,7 @@ function getStoryStatus(content) {
   if (statusMatch) {
     return statusMatch[1].trim().toLowerCase();
   }
-  return 'unknown';
+  return "unknown";
 }
 
 /**
@@ -92,20 +92,20 @@ async function onStoryStart(rootPath, storyPath, options = {}) {
 
   // Check if worktree auto-creation is enabled
   if (!settings.enabled) {
-    return { skipped: true, reason: 'Worktree feature disabled in config' };
+    return { skipped: true, reason: "Worktree feature disabled in config" };
   }
 
-  if (settings.autoCreate === 'never') {
-    return { skipped: true, reason: 'autoCreate set to never' };
+  if (settings.autoCreate === "never") {
+    return { skipped: true, reason: "autoCreate set to never" };
   }
 
-  if (settings.autoCreate === 'manual' && !options.force) {
-    return { skipped: true, reason: 'autoCreate set to manual (use --force to override)' };
+  if (settings.autoCreate === "manual" && !options.force) {
+    return { skipped: true, reason: "autoCreate set to manual (use --force to override)" };
   }
 
   // Load WorktreeManager
   if (!WorktreeManager) {
-    WorktreeManager = require('./worktree-manager');
+    WorktreeManager = require("./worktree-manager");
   }
 
   const manager = new WorktreeManager(rootPath, {
@@ -114,7 +114,7 @@ async function onStoryStart(rootPath, storyPath, options = {}) {
   });
 
   // Read story to get ID
-  const content = await fs.readFile(storyPath, 'utf-8');
+  const content = await fs.readFile(storyPath, "utf-8");
   const storyId = extractStoryId(storyPath, content);
 
   // Check if worktree already exists
@@ -123,7 +123,7 @@ async function onStoryStart(rootPath, storyPath, options = {}) {
     const existing = await manager.get(storyId);
     return {
       skipped: true,
-      reason: 'Worktree already exists',
+      reason: "Worktree already exists",
       warning: true,
       worktree: existing,
     };
@@ -134,7 +134,7 @@ async function onStoryStart(rootPath, storyPath, options = {}) {
     const worktree = await manager.create(storyId);
     return {
       success: true,
-      action: 'created',
+      action: "created",
       storyId,
       worktree,
     };
@@ -160,12 +160,12 @@ async function onStoryDone(rootPath, storyPath, options = {}) {
   const settings = getWorktreeSettings(config);
 
   if (!settings.enabled) {
-    return { skipped: true, reason: 'Worktree feature disabled in config' };
+    return { skipped: true, reason: "Worktree feature disabled in config" };
   }
 
   // Load WorktreeManager
   if (!WorktreeManager) {
-    WorktreeManager = require('./worktree-manager');
+    WorktreeManager = require("./worktree-manager");
   }
 
   const manager = new WorktreeManager(rootPath, {
@@ -174,7 +174,7 @@ async function onStoryDone(rootPath, storyPath, options = {}) {
   });
 
   // Read story to get ID
-  const content = await fs.readFile(storyPath, 'utf-8');
+  const content = await fs.readFile(storyPath, "utf-8");
   const storyId = extractStoryId(storyPath, content);
 
   // Check if worktree exists
@@ -182,7 +182,7 @@ async function onStoryDone(rootPath, storyPath, options = {}) {
   if (!exists) {
     return {
       skipped: true,
-      reason: 'No worktree found for this story',
+      reason: "No worktree found for this story",
       storyId,
     };
   }
@@ -190,15 +190,15 @@ async function onStoryDone(rootPath, storyPath, options = {}) {
   const worktree = await manager.get(storyId);
 
   // Auto-cleanup if configured
-  if (settings.autoCleanup === 'on_story_done' && !options.keepWorktree) {
+  if (settings.autoCleanup === "on_story_done" && !options.keepWorktree) {
     // Check for uncommitted changes
     if (worktree.uncommittedChanges > 0) {
       return {
         success: false,
-        action: 'cleanup_blocked',
+        action: "cleanup_blocked",
         reason: `Worktree has ${worktree.uncommittedChanges} uncommitted changes`,
         worktree,
-        availableActions: ['merge', 'cleanup --force'],
+        availableActions: ["merge", "cleanup --force"],
       };
     }
 
@@ -206,7 +206,7 @@ async function onStoryDone(rootPath, storyPath, options = {}) {
       await manager.remove(storyId);
       return {
         success: true,
-        action: 'cleaned_up',
+        action: "cleaned_up",
         storyId,
       };
     } catch (error) {
@@ -221,15 +221,15 @@ async function onStoryDone(rootPath, storyPath, options = {}) {
   // Return available actions for manual handling
   return {
     success: true,
-    action: 'pending_decision',
+    action: "pending_decision",
     storyId,
     worktree,
     availableActions:
-      worktree.uncommittedChanges > 0 ? ['merge', 'cleanup --force'] : ['merge', 'cleanup'],
+      worktree.uncommittedChanges > 0 ? ["merge", "cleanup --force"] : ["merge", "cleanup"],
     suggestion:
       worktree.uncommittedChanges > 0
-        ? 'Worktree has uncommitted changes. Consider merging first.'
-        : 'Worktree is clean. You can merge or cleanup.',
+        ? "Worktree has uncommitted changes. Consider merging first."
+        : "Worktree is clean. You can merge or cleanup.",
   };
 }
 
@@ -250,13 +250,13 @@ async function getWorktreeStatus(rootPath, storyPath) {
 
   // Load WorktreeManager
   if (!WorktreeManager) {
-    WorktreeManager = require('./worktree-manager');
+    WorktreeManager = require("./worktree-manager");
   }
 
   const manager = new WorktreeManager(rootPath);
 
   // Read story to get ID
-  const content = await fs.readFile(storyPath, 'utf-8');
+  const content = await fs.readFile(storyPath, "utf-8");
   const storyId = extractStoryId(storyPath, content);
 
   const exists = await manager.exists(storyId);
@@ -290,16 +290,16 @@ async function getWorktreeStatus(rootPath, storyPath) {
  */
 function formatWorktreeStatus(status) {
   if (!status.enabled) {
-    return '⚫ Worktree: Disabled';
+    return "⚫ Worktree: Disabled";
   }
 
   if (!status.hasWorktree) {
-    return '○ Worktree: None';
+    return "○ Worktree: None";
   }
 
   const w = status.worktree;
-  const statusIcon = w.status === 'active' ? '🟢' : '🟡';
-  const changesInfo = w.uncommittedChanges > 0 ? ` (${w.uncommittedChanges} changes)` : ' (clean)';
+  const statusIcon = w.status === "active" ? "🟢" : "🟡";
+  const changesInfo = w.uncommittedChanges > 0 ? ` (${w.uncommittedChanges} changes)` : " (clean)";
 
   return `${statusIcon} Worktree: ${w.branch}${changesInfo}`;
 }
@@ -310,7 +310,7 @@ function formatWorktreeStatus(status) {
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args.includes('--help')) {
+  if (args.length === 0 || args.includes("--help")) {
     console.log(`
 Story-Worktree Integration Hooks
 
@@ -334,18 +334,18 @@ Options:
 
   const command = args[0];
   const storyPath = args[1];
-  const jsonOutput = args.includes('--json');
+  const jsonOutput = args.includes("--json");
 
   if (!storyPath) {
-    console.error('Error: Story path required');
+    console.error("Error: Story path required");
     process.exit(1);
   }
 
   // Find project root
   let rootPath = process.cwd();
-  while (rootPath !== '/') {
+  while (rootPath !== "/") {
     try {
-      await fs.access(path.join(rootPath, '.aios-core'));
+      await fs.access(path.join(rootPath, ".aios-core"));
       break;
     } catch {
       rootPath = path.dirname(rootPath);
@@ -355,19 +355,19 @@ Options:
   let result;
 
   switch (command) {
-    case 'start':
+    case "start":
       result = await onStoryStart(rootPath, path.resolve(storyPath), {
-        force: args.includes('--force'),
+        force: args.includes("--force"),
       });
       break;
 
-    case 'done':
+    case "done":
       result = await onStoryDone(rootPath, path.resolve(storyPath), {
-        keepWorktree: args.includes('--keep-worktree'),
+        keepWorktree: args.includes("--keep-worktree"),
       });
       break;
 
-    case 'status':
+    case "status":
       result = await getWorktreeStatus(rootPath, path.resolve(storyPath));
       if (!jsonOutput) {
         console.log(formatWorktreeStatus(result));
@@ -390,7 +390,7 @@ Options:
         console.log(`   Path: ${result.worktree.path}`);
       }
     } else if (result.skipped) {
-      const icon = result.warning ? '⚠️' : 'ℹ️';
+      const icon = result.warning ? "⚠️" : "ℹ️";
       console.log(`${icon} Skipped: ${result.reason}`);
     } else {
       console.error(`❌ Error: ${result.error}`);
@@ -398,7 +398,7 @@ Options:
     }
 
     if (result.availableActions) {
-      console.log(`\nAvailable actions: ${result.availableActions.join(', ')}`);
+      console.log(`\nAvailable actions: ${result.availableActions.join(", ")}`);
     }
     if (result.suggestion) {
       console.log(`\n💡 ${result.suggestion}`);
@@ -419,7 +419,7 @@ module.exports = {
 // Run CLI if called directly
 if (require.main === module) {
   main().catch((error) => {
-    console.error('Error:', error.message);
+    console.error("Error:", error.message);
     process.exit(1);
   });
 }

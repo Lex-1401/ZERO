@@ -26,8 +26,8 @@ Exemplo de configuração de hook (habilita o mapeamento pré-definido do Gmail)
     enabled: true,
     token: "ZERO_HOOK_TOKEN",
     path: "/hooks",
-    presets: ["gmail"]
-  }
+    presets: ["gmail"],
+  },
 }
 ```
 
@@ -46,15 +46,14 @@ Para entregar o resumo do Gmail em uma superfície de chat, sobrescreva a pré-d
         wakeMode: "now",
         name: "Gmail",
         sessionKey: "hook:gmail:{{messages[0].id}}",
-        messageTemplate:
-          "Novo e-mail de {{messages[0].from}}\nAssunto: {{messages[0].subject}}\n{{messages[0].snippet}}\n{{messages[0].body}}",
+        messageTemplate: "Novo e-mail de {{messages[0].from}}\nAssunto: {{messages[0].subject}}\n{{messages[0].snippet}}\n{{messages[0].body}}",
         model: "openai/gpt-5.2-mini",
         deliver: true,
-        channel: "last"
+        channel: "last",
         // to: "+15551234567"
-      }
-    ]
-  }
+      },
+    ],
+  },
 }
 ```
 
@@ -69,9 +68,9 @@ Para configurar um modelo padrão e um nível de pensamento especificamente para
   hooks: {
     gmail: {
       model: "openrouter/meta-llama/llama-3.3-70b-instruct:free",
-      thinking: "off"
-    }
-  }
+      thinking: "off",
+    },
+  },
 }
 ```
 
@@ -119,7 +118,7 @@ zero webhooks gmail run
 
 ## Configuração única
 
-1) Selecione o projeto GCP **que possui o cliente OAuth** usado pelo `gog`.
+1. Selecione o projeto GCP **que possui o cliente OAuth** usado pelo `gog`.
 
 ```bash
 gcloud auth login
@@ -128,19 +127,19 @@ gcloud config set project <id-do-projeto>
 
 Nota: O watch do Gmail exige que o tópico do Pub/Sub resida no mesmo projeto que o cliente OAuth.
 
-1) Habilite as APIs:
+1. Habilite as APIs:
 
 ```bash
 gcloud services enable gmail.googleapis.com pubsub.googleapis.com
 ```
 
-1) Crie um tópico:
+1. Crie um tópico:
 
 ```bash
 gcloud pubsub topics create gog-gmail-watch
 ```
 
-1) Permita que o push do Gmail publique:
+1. Permita que o push do Gmail publique:
 
 ```bash
 gcloud pubsub topics add-iam-policy-binding gog-gmail-watch \

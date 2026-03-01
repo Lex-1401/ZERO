@@ -2,7 +2,7 @@
 name: weather
 description: Obtenha a previsão do tempo atual (não requer chave de API).
 homepage: https://wttr.in/:help
-metadata: {"zero":{"emoji":"🌤️","requires":{"bins":["curl"]}}}
+metadata: { "zero": { "emoji": "🌤️", "requires": { "bins": ["curl"] } } }
 ---
 
 # Weather

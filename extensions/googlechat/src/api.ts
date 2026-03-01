@@ -18,7 +18,7 @@ async function fetchJson<T>(
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
-      ...(init.headers ?? {}),
+      ...init.headers,
     },
   });
   if (!res.ok) {
@@ -38,7 +38,7 @@ async function fetchOk(
     ...init,
     headers: {
       Authorization: `Bearer ${token}`,
-      ...(init.headers ?? {}),
+      ...init.headers,
     },
   });
   if (!res.ok) {
@@ -58,7 +58,7 @@ async function fetchBuffer(
     ...init,
     headers: {
       Authorization: `Bearer ${token}`,
-      ...(init?.headers ?? {}),
+      ...init?.headers,
     },
   });
   if (!res.ok) {

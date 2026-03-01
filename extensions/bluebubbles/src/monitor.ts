@@ -11,7 +11,11 @@ import {
 import { markBlueBubblesChatRead, sendBlueBubblesTyping } from "./chat.js";
 import { resolveChatGuidForTarget, sendMessageBlueBubbles } from "./send.js";
 import { downloadBlueBubblesAttachment } from "./attachments.js";
-import { formatBlueBubblesChatTarget, isAllowedBlueBubblesSender, normalizeBlueBubblesHandle } from "./targets.js";
+import {
+  formatBlueBubblesChatTarget,
+  isAllowedBlueBubblesSender,
+  normalizeBlueBubblesHandle,
+} from "./targets.js";
 import { sendBlueBubblesMedia } from "./media-send.js";
 import type { BlueBubblesAccountConfig, BlueBubblesAttachment } from "./types.js";
 import type { ResolvedBlueBubblesAccount } from "./accounts.js";
@@ -194,7 +198,12 @@ function resolveReplyContextFromCache(params: {
 
   // Avoid cross-chat collisions if we have identifiers.
   if (chatGuid && cachedChatGuid && chatGuid !== cachedChatGuid) return null;
-  if (!chatGuid && chatIdentifier && cachedChatIdentifier && chatIdentifier !== cachedChatIdentifier) {
+  if (
+    !chatGuid &&
+    chatIdentifier &&
+    cachedChatIdentifier &&
+    chatIdentifier !== cachedChatIdentifier
+  ) {
     return null;
   }
   if (!chatGuid && !chatIdentifier && chatId && cachedChatId && chatId !== cachedChatId) {
@@ -206,7 +215,11 @@ function resolveReplyContextFromCache(params: {
 
 type BlueBubblesCoreRuntime = ReturnType<typeof getBlueBubblesRuntime>;
 
-function logVerbose(core: BlueBubblesCoreRuntime, runtime: BlueBubblesRuntimeEnv, message: string): void {
+function logVerbose(
+  core: BlueBubblesCoreRuntime,
+  runtime: BlueBubblesRuntimeEnv,
+  message: string,
+): void {
   if (core.logging.shouldLogVerbose()) {
     runtime.log?.(`[bluebubbles] ${message}`);
   }
@@ -391,10 +404,7 @@ function buildMessagePlaceholder(message: NormalizedWebhookMessage): string {
 }
 
 // Returns inline reply tag like "[[reply_to:4]]" for prepending to message body
-function formatReplyTag(message: {
-  replyToId?: string;
-  replyToShortId?: string;
-}): string | null {
+function formatReplyTag(message: { replyToId?: string; replyToShortId?: string }): string | null {
   // Prefer short ID
   const rawId = message.replyToShortId || message.replyToId;
   if (!rawId) return null;
@@ -427,7 +437,8 @@ function extractReplyMetadata(message: Record<string, unknown>): {
     message["associatedMessage"] ??
     message["reply"];
   const replyRecord = asRecord(replyRaw);
-  const replyHandle = asRecord(replyRecord?.["handle"]) ?? asRecord(replyRecord?.["sender"]) ?? null;
+  const replyHandle =
+    asRecord(replyRecord?.["handle"]) ?? asRecord(replyRecord?.["sender"]) ?? null;
   const replySenderRaw =
     readString(replyHandle, "address") ??
     readString(replyHandle, "handle") ??
@@ -555,9 +566,7 @@ function formatGroupMembers(params: {
     ordered.push(params.fallback);
   }
   if (ordered.length === 0) return undefined;
-  return ordered
-    .map((entry) => (entry.name ? `${entry.name} (${entry.id})` : entry.id))
-    .join(", ");
+  return ordered.map((entry) => (entry.name ? `${entry.name} (${entry.id})` : entry.id)).join(", ");
 }
 
 function resolveGroupFlagFromChatGuid(chatGuid?: string | null): boolean | undefined {
@@ -805,7 +814,9 @@ function extractMessagePayload(payload: Record<string, unknown>): Record<string,
   return message;
 }
 
-function normalizeWebhookMessage(payload: Record<string, unknown>): NormalizedWebhookMessage | null {
+function normalizeWebhookMessage(
+  payload: Record<string, unknown>,
+): NormalizedWebhookMessage | null {
   const message = extractMessagePayload(payload);
   if (!message) return null;
 
@@ -817,8 +828,7 @@ function normalizeWebhookMessage(payload: Record<string, unknown>): NormalizedWe
 
   const handleValue = message.handle ?? message.sender;
   const handle =
-    asRecord(handleValue) ??
-    (typeof handleValue === "string" ? { address: handleValue } : null);
+    asRecord(handleValue) ?? (typeof handleValue === "string" ? { address: handleValue } : null);
   const senderId =
     readString(handle, "address") ??
     readString(handle, "handle") ??
@@ -893,7 +903,7 @@ function normalizeWebhookMessage(payload: Record<string, unknown>): NormalizedWe
   const isGroup =
     typeof groupFromChatGuid === "boolean"
       ? groupFromChatGuid
-      : explicitIsGroup ?? (participantsCount > 2 ? true : false);
+      : (explicitIsGroup ?? (participantsCount > 2 ? true : false));
 
   const fromMe = readBoolean(message, "isFromMe") ?? readBoolean(message, "is_from_me");
   const messageId =
@@ -962,7 +972,9 @@ function normalizeWebhookMessage(payload: Record<string, unknown>): NormalizedWe
   };
 }
 
-function normalizeWebhookReaction(payload: Record<string, unknown>): NormalizedWebhookReaction | null {
+function normalizeWebhookReaction(
+  payload: Record<string, unknown>,
+): NormalizedWebhookReaction | null {
   const message = extractMessagePayload(payload);
   if (!message) return null;
 
@@ -986,8 +998,7 @@ function normalizeWebhookReaction(payload: Record<string, unknown>): NormalizedW
 
   const handleValue = message.handle ?? message.sender;
   const handle =
-    asRecord(handleValue) ??
-    (typeof handleValue === "string" ? { address: handleValue } : null);
+    asRecord(handleValue) ?? (typeof handleValue === "string" ? { address: handleValue } : null);
   const senderId =
     readString(handle, "address") ??
     readString(handle, "handle") ??
@@ -1060,7 +1071,7 @@ function normalizeWebhookReaction(payload: Record<string, unknown>): NormalizedW
   const isGroup =
     typeof groupFromChatGuid === "boolean"
       ? groupFromChatGuid
-      : explicitIsGroup ?? (participantsCount > 2 ? true : false);
+      : (explicitIsGroup ?? (participantsCount > 2 ? true : false));
 
   const fromMe = readBoolean(message, "isFromMe") ?? readBoolean(message, "is_from_me");
   const timestampRaw =
@@ -1177,8 +1188,7 @@ export async function handleBlueBubblesWebhookRequest(
       req.headers["x-password"] ??
       req.headers["x-bluebubbles-guid"] ??
       req.headers["authorization"];
-    const guid =
-      (Array.isArray(headerToken) ? headerToken[0] : headerToken) ?? guidParam ?? "";
+    const guid = (Array.isArray(headerToken) ? headerToken[0] : headerToken) ?? guidParam ?? "";
     if (guid && guid.trim() === token) return true;
     const remote = req.socket?.remoteAddress ?? "";
     if (remote === "127.0.0.1" || remote === "::1" || remote === "::ffff:127.0.0.1") {
@@ -1440,7 +1450,7 @@ async function processMessage(
   const chatGuid = message.chatGuid ?? undefined;
   const chatIdentifier = message.chatIdentifier ?? undefined;
   const peerId = isGroup
-    ? chatGuid ?? chatIdentifier ?? (chatId ? String(chatId) : "group")
+    ? (chatGuid ?? chatIdentifier ?? (chatId ? String(chatId) : "group"))
     : message.senderId;
 
   const route = core.channel.routing.resolveAgentRoute({
@@ -1515,11 +1525,7 @@ async function processMessage(
 
   // Allow control commands to bypass mention gating when authorized (parity with iMessage)
   const shouldBypassMention =
-    isGroup &&
-    requireMention &&
-    !wasMentioned &&
-    commandAuthorized &&
-    hasControlCmd;
+    isGroup && requireMention && !wasMentioned && commandAuthorized && hasControlCmd;
   const effectiveWasMentioned = wasMentioned || shouldBypassMention;
 
   // Skip group messages that require mention but weren't mentioned
@@ -1682,16 +1688,16 @@ async function processMessage(
   const shouldAckReaction = () =>
     Boolean(
       ackReactionValue &&
-        core.channel.reactions.shouldAckReaction({
-          scope: ackReactionScope,
-          isDirect: !isGroup,
-          isGroup,
-          isMentionableGroup: isGroup,
-          requireMention: Boolean(requireMention),
-          canDetectMention,
-          effectiveWasMentioned,
-          shouldBypassMention,
-        }),
+      core.channel.reactions.shouldAckReaction({
+        scope: ackReactionScope,
+        isDirect: !isGroup,
+        isGroup,
+        isMentionableGroup: isGroup,
+        requireMention: Boolean(requireMention),
+        canDetectMention,
+        effectiveWasMentioned,
+        shouldBypassMention,
+      }),
     );
   const ackMessageId = message.messageId?.trim() || "";
   const ackReactionPromise =
@@ -1810,7 +1816,8 @@ async function processMessage(
       cfg: config,
       dispatcherOptions: {
         deliver: async (payload) => {
-          const rawReplyToId = typeof payload.replyToId === "string" ? payload.replyToId.trim() : "";
+          const rawReplyToId =
+            typeof payload.replyToId === "string" ? payload.replyToId.trim() : "";
           // Resolve short ID (e.g., "5") to full UUID
           const replyToMessageGuid = rawReplyToId
             ? resolveBlueBubblesMessageId(rawReplyToId, { requireKnownShortId: true })
@@ -2020,7 +2027,7 @@ async function processReaction(
   const chatGuid = reaction.chatGuid ?? undefined;
   const chatIdentifier = reaction.chatIdentifier ?? undefined;
   const peerId = reaction.isGroup
-    ? chatGuid ?? chatIdentifier ?? (chatId ? String(chatId) : "group")
+    ? (chatGuid ?? chatIdentifier ?? (chatId ? String(chatId) : "group"))
     : reaction.senderId;
 
   const route = core.channel.routing.resolveAgentRoute({

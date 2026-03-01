@@ -64,8 +64,8 @@ Mais notas de depuração: [Bonjour](/gateway/bonjour).
 
 O descobrimento NSD/mDNS do Android não atravessa redes. Se o seu nó Android e o gateway estiverem em redes diferentes, mas conectados via Tailscale, use Wide-Area Bonjour / DNS-SD unicast em vez disso:
 
-1) Configure uma zona DNS-SD (exemplo `zero.internal.`) no host do gateway e publique os registros `_zero-gw._tcp`.
-2) Configure o DNS split do Tailscale para `zero.internal` apontando para esse servidor DNS.
+1. Configure uma zona DNS-SD (exemplo `zero.internal.`) no host do gateway e publique os registros `_zero-gw._tcp`.
+2. Configure o DNS split do Tailscale para `zero.internal` apontando para esse servidor DNS.
 
 Detalhes e exemplo de configuração do CoreDNS: [Bonjour](/gateway/bonjour).
 
@@ -124,9 +124,9 @@ Se você quer que o nó mostre conteúdo HTML/CSS/JS real que o agente pode edit
 
 Nota: os nós usam o host de canvas independente na porta `canvasHost.port` (padrão `18793`).
 
-1) Crie `~/zero/canvas/index.html` no host do gateway.
+1. Crie `~/zero/canvas/index.html` no host do gateway.
 
-2) Navegue o nó até ele (LAN):
+2. Navegue o nó até ele (LAN):
 
 ```bash
 zero nodes invoke --node "<No Android>" --command canvas.navigate --params '{"url":"http://<hostname-do-gateway>.local:18793/__zero__/canvas/"}'

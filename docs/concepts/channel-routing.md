@@ -3,6 +3,7 @@ summary: "Regras de roteamento por canal (WhatsApp, Telegram, Discord, Slack) e 
 read_when:
   - Alterando o roteamento entre canais ou o comportamento da caixa de entrada (inbox)
 ---
+
 # Canais e Roteamento
 
 O ZERO roteia as respostas **de volta para o canal de onde veio a mensagem**. O modelo não escolhe o canal; o roteamento é determinístico e controlado pela configuração do host.
@@ -59,8 +60,8 @@ Configuração:
   broadcast: {
     strategy: "parallel",
     "120363403215116621@g.us": ["alfred", "baerbel"],
-    "+15555550123": ["suporte", "logger"]
-  }
+    "+15555550123": ["suporte", "logger"],
+  },
 }
 ```
 
@@ -76,14 +77,12 @@ Exemplo:
 ```json5
 {
   agents: {
-    list: [
-      { id: "suporte", name: "Suporte", workspace: "~/zero-suporte" }
-    ]
+    list: [{ id: "suporte", name: "Suporte", workspace: "~/zero-suporte" }],
   },
   bindings: [
     { match: { channel: "slack", teamId: "T123" }, agentId: "suporte" },
-    { match: { channel: "telegram", peer: { kind: "group", id: "-100123" } }, agentId: "suporte" }
-  ]
+    { match: { channel: "telegram", peer: { kind: "group", id: "-100123" } }, agentId: "suporte" },
+  ],
 }
 ```
 

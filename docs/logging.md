@@ -105,9 +105,7 @@ Toda a configuração de logs reside sob `logging` em `~/.zero/zero.json`.
     "consoleLevel": "info",
     "consoleStyle": "pretty",
     "redactSensitive": "tools",
-    "redactPatterns": [
-      "sk-.*"
-    ]
+    "redactPatterns": ["sk-.*"]
   }
 }
 ```

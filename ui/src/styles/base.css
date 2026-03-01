@@ -19,7 +19,9 @@ body {
   color: var(--text-main);
   line-height: var(--line-height-base);
   -webkit-font-smoothing: antialiased;
-  transition: background var(--duration-normal) var(--ease-premium), color var(--duration-normal) var(--ease-premium);
+  transition:
+    background var(--duration-normal) var(--ease-premium),
+    color var(--duration-normal) var(--ease-premium);
 }
 
 /* --- UTILITIES (Disciplined 8pt Scale) --- */

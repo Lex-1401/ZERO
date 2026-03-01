@@ -1,4 +1,5 @@
 import { LitElement, html, css, nothing } from "lit";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { customElement, property, state } from "lit/decorators.js";
 import { icons } from "../icons";
 import { t } from "../i18n";
@@ -7,7 +8,7 @@ import { t } from "../i18n";
 export class ZeroZenDashboard extends LitElement {
   @property({ type: Object }) app: any;
 
-  // We don't use Shadow DOM here to inherit the global styles (card--welcome, btn, etc.) 
+  // We don't use Shadow DOM here to inherit the global styles (card--welcome, btn, etc.)
   // and maintain absolute consistency with the main chat view.
   createRenderRoot() {
     return this;
@@ -15,10 +16,30 @@ export class ZeroZenDashboard extends LitElement {
 
   render() {
     const zenItems = [
-      { label: t("zen.config_persona" as any), desc: t("zen.config_persona_desc" as any), tab: "config", icon: icons.user },
-      { label: t("tab.skills" as any), desc: t("zen.skills_desc" as any), tab: "skills", icon: icons.zap },
-      { label: t("zen.new_chat" as any), desc: t("zen.new_chat_desc" as any), action: () => this.app.handleSendChat("/new"), icon: icons.messageSquare },
-      { label: t("zen.settings" as any), desc: t("zen.settings_desc" as any), action: () => this.showSettings = true, icon: icons.settings },
+      {
+        label: t("zen.config_persona" as any),
+        desc: t("zen.config_persona_desc" as any),
+        tab: "config",
+        icon: icons.user,
+      },
+      {
+        label: t("tab.skills" as any),
+        desc: t("zen.skills_desc" as any),
+        tab: "skills",
+        icon: icons.zap,
+      },
+      {
+        label: t("zen.new_chat" as any),
+        desc: t("zen.new_chat_desc" as any),
+        action: () => this.app.handleSendChat("/new"),
+        icon: icons.messageSquare,
+      },
+      {
+        label: t("zen.settings" as any),
+        desc: t("zen.settings_desc" as any),
+        action: () => (this.showSettings = true),
+        icon: icons.settings,
+      },
     ];
 
     return html`
@@ -32,11 +53,12 @@ export class ZeroZenDashboard extends LitElement {
               ${t("zen.description" as any)}
           </p>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            ${zenItems.map(item => html`
+            ${zenItems.map(
+      (item) => html`
               <button 
                 class="btn btn--chip hover-lift active-push" 
                 style="justify-content: flex-start; padding: 12px 16px; height: auto; border-radius: var(--radius-lg); width: 100%;"
-                @click=${() => item.tab ? this.app.setTab(item.tab) : item.action?.()}
+                @click=${() => (item.tab ? this.app.setTab(item.tab) : item.action?.())}
               >
                 <div style="display: flex; align-items: center; gap: 12px; text-align: left; width: 100%;">
                     <div style="color: var(--brand-primary); opacity: 0.9;">${item.icon}</div>
@@ -46,7 +68,8 @@ export class ZeroZenDashboard extends LitElement {
                     </div>
                 </div>
               </button>
-            `)}
+            `,
+    )}
           </div>
       </div>
 
@@ -62,13 +85,15 @@ export class ZeroZenDashboard extends LitElement {
     if (!this.showSettings) return nothing;
 
     return html`
-            <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;" @click=${(e: Event) => {
+            <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;" @click=${(
+      e: Event,
+    ) => {
         if (e.target === e.currentTarget) this.showSettings = false;
       }}>
                 <div class="card" style="width: 100%; max-width: 400px; padding: 24px; border-radius: var(--radius-xl); box-shadow: var(--shadow-deep); background: var(--bg-surface); border: 1px solid var(--border-subtle);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                         <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main);">${t("zen.settings_title" as any)}</h3>
-                        <button class="btn btn--icon" @click=${() => this.showSettings = false}>${icons.x}</button>
+                        <button class="btn btn--icon" @click=${() => (this.showSettings = false)}>${icons.x}</button>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 20px;">
@@ -91,9 +116,9 @@ export class ZeroZenDashboard extends LitElement {
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">${t("zen.settings.theme_label" as any)}</label>
                             <div style="display: flex; gap: 8px;">
-                                <button class="btn ${this.app.settings.theme === 'light' ? 'primary' : ''}" style="flex: 1;" @click=${() => this.app.setTheme("light")}>${icons.sun}</button>
-                                <button class="btn ${this.app.settings.theme === 'dark' ? 'primary' : ''}" style="flex: 1;" @click=${() => this.app.setTheme("dark")}>${icons.moon}</button>
-                                <button class="btn ${this.app.settings.theme === 'system' ? 'primary' : ''}" style="flex: 1;" @click=${() => this.app.setTheme("system")}>${icons.monitor}</button>
+                                <button class="btn ${this.app.settings.theme === "light" ? "primary" : ""}" style="flex: 1;" @click=${() => this.app.setTheme("light")}>${icons.sun}</button>
+                                <button class="btn ${this.app.settings.theme === "dark" ? "primary" : ""}" style="flex: 1;" @click=${() => this.app.setTheme("dark")}>${icons.moon}</button>
+                                <button class="btn ${this.app.settings.theme === "system" ? "primary" : ""}" style="flex: 1;" @click=${() => this.app.setTheme("system")}>${icons.monitor}</button>
                             </div>
                         </div>
 
@@ -107,11 +132,14 @@ export class ZeroZenDashboard extends LitElement {
                                     placeholder="sk-..." 
                                     style="flex: 1; padding: 8px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: var(--bg-input); color: var(--text-main);"
                                     .value=${this.apiKeyInput}
-                                    @input=${(e: Event) => this.apiKeyInput = (e.target as HTMLInputElement).value}
+                                    @input=${(e: Event) => (this.apiKeyInput = (e.target as HTMLInputElement).value)}
                                 />
                                 <button class="btn primary" ?disabled=${!this.apiKeyInput} @click=${async () => {
         // Optimistic update
-        await this.app.handleConfigFormUpdate(["models", "providers", "openai", "apiKey"], this.apiKeyInput);
+        await this.app.handleConfigFormUpdate(
+          ["models", "providers", "openai", "apiKey"],
+          this.apiKeyInput,
+        );
         await this.app.handleConfigSave();
         this.apiKeyInput = "";
         this.showSettings = false;
@@ -119,7 +147,7 @@ export class ZeroZenDashboard extends LitElement {
       }}>${t("zen.settings.save" as any)}</button>
                              </div>
                              <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
-                                ${html([t("zen.settings.advanced" as any, { tab: `<strong>${t("nav.config" as any)}</strong>` })])}
+                                ${unsafeHTML(t("zen.settings.advanced" as any, { tab: `<strong>${t("nav.config" as any)}</strong>` }))}
                              </p>
                         </div>
                     </div>

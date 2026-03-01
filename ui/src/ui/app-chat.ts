@@ -63,14 +63,14 @@ function enqueueChatMessage(host: ChatHost, text: string) {
 async function sendChatMessageNow(
   host: ChatHost,
   message: string,
-  opts?: { previousDraft?: string; restoreDraft?: boolean, attachments?: File[] },
+  opts?: { previousDraft?: string; restoreDraft?: boolean; attachments?: File[] },
 ) {
   resetToolStream(host as unknown as Parameters<typeof resetToolStream>[0]);
   const ok = await sendChatMessage(host as unknown as ZEROApp, message, opts?.attachments);
   if (!ok && opts?.previousDraft != null) {
     host.chatMessage = opts.previousDraft;
-    // Restore attachments if failed? 
-    // Usually host.chatAttachments is already cleared. 
+    // Restore attachments if failed?
+    // Usually host.chatAttachments is already cleared.
     // If we want to restore, we need to pass them back or store them in opts.
     if (opts.attachments) {
       host.chatAttachments = opts.attachments;
@@ -78,7 +78,10 @@ async function sendChatMessageNow(
   }
   if (ok) {
     HapticService.success();
-    setLastActiveSessionKey(host as unknown as Parameters<typeof setLastActiveSessionKey>[0], host.sessionKey);
+    setLastActiveSessionKey(
+      host as unknown as Parameters<typeof setLastActiveSessionKey>[0],
+      host.sessionKey,
+    );
   }
   if (ok && opts?.restoreDraft && opts.previousDraft?.trim()) {
     host.chatMessage = opts.previousDraft;
@@ -144,7 +147,7 @@ export async function handleSendChat(
   await sendChatMessageNow(host, message, {
     previousDraft: messageOverride == null ? previousDraft : undefined,
     restoreDraft: Boolean(messageOverride && opts?.restoreDraft),
-    attachments
+    attachments,
   });
 }
 
@@ -186,7 +189,9 @@ type SessionDefaultsSnapshot = {
 function resolveAgentIdForSession(host: ChatHost): string | null {
   const parsed = parseAgentSessionKey(host.sessionKey);
   if (parsed?.agentId) return parsed.agentId;
-  const snapshot = host.hello?.snapshot as { sessionDefaults?: SessionDefaultsSnapshot } | undefined;
+  const snapshot = host.hello?.snapshot as
+    | { sessionDefaults?: SessionDefaultsSnapshot }
+    | undefined;
   const fallback = snapshot?.sessionDefaults?.defaultAgentId?.trim();
   return fallback || "main";
 }

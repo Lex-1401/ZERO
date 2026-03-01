@@ -57,4 +57,5 @@ O ZERO é projetado para ser compatível com padrões globais de privacidade (**
 - **Higiene de Dados**: Para evitar o "viés de confirmação" e a exposição acidental de superfícies de ataque, os relatórios de integridade (`.json.enc`) são armazenados exclusivamente no diretório local `STATE_DIR` (padrão `~/.zero/integrity-reports`) e são explicitamente excluídos dos sistemas de controle de versão. É estritamente proibido armazenar relatórios de verificação no repositório.
 
 ---
-*“Vazio que contém o Infinito. Soberania que define o Futuro.”* ∅
+
+_“Vazio que contém o Infinito. Soberania que define o Futuro.”_ ∅

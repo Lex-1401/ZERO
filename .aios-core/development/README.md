@@ -15,41 +15,41 @@ development/
 
 ## Agents (11 files)
 
-| Agent | ID | Description |
-|-------|-----|------------|
-| AIOS Master | `aios-master` | Framework orchestrator |
-| Analyst | `analyst` | Business analyst |
-| Architect | `architect` | Technical architect |
-| Data Engineer | `data-engineer` | Data engineering |
-| Developer | `dev` | Full-stack developer |
-| DevOps | `devops` | DevOps engineer |
-| Product Manager | `pm` | Product manager |
-| Product Owner | `po` | Product owner |
-| QA | `qa` | Quality assurance |
-| Scrum Master | `sm` | Scrum master |
-| UX Expert | `ux-design-expert` | UX designer |
+| Agent           | ID                 | Description            |
+| --------------- | ------------------ | ---------------------- |
+| AIOS Master     | `aios-master`      | Framework orchestrator |
+| Analyst         | `analyst`          | Business analyst       |
+| Architect       | `architect`        | Technical architect    |
+| Data Engineer   | `data-engineer`    | Data engineering       |
+| Developer       | `dev`              | Full-stack developer   |
+| DevOps          | `devops`           | DevOps engineer        |
+| Product Manager | `pm`               | Product manager        |
+| Product Owner   | `po`               | Product owner          |
+| QA              | `qa`               | Quality assurance      |
+| Scrum Master    | `sm`               | Scrum master           |
+| UX Expert       | `ux-design-expert` | UX designer            |
 
 ### Activation
 
 Agents are activated via IDE commands (`@agent-name`) or by loading the Markdown definition file.
 
 ```javascript
-const { AgentConfigLoader } = require('./scripts/agent-config-loader');
-const loader = new AgentConfigLoader('dev');
-const config = await loader.loadAgent('dev');
+const { AgentConfigLoader } = require("./scripts/agent-config-loader");
+const loader = new AgentConfigLoader("dev");
+const config = await loader.loadAgent("dev");
 ```
 
 ## Agent Teams (5 files)
 
 Pre-configured agent team compositions:
 
-| Team | Agents | Use Case |
-|------|--------|----------|
-| `team-all` | All 11 agents | Full development team |
-| `team-fullstack` | dev, qa, architect, devops | Full-stack projects |
-| `team-ide-minimal` | dev, qa | Minimal IDE setup |
-| `team-no-ui` | dev, architect, devops, data-engineer | Backend/API projects |
-| `team-qa-focused` | qa, dev, architect | Quality-focused work |
+| Team               | Agents                                | Use Case              |
+| ------------------ | ------------------------------------- | --------------------- |
+| `team-all`         | All 11 agents                         | Full development team |
+| `team-fullstack`   | dev, qa, architect, devops            | Full-stack projects   |
+| `team-ide-minimal` | dev, qa                               | Minimal IDE setup     |
+| `team-no-ui`       | dev, architect, devops, data-engineer | Backend/API projects  |
+| `team-qa-focused`  | qa, dev, architect                    | Quality-focused work  |
 
 ## Tasks (115+ files)
 
@@ -65,8 +65,8 @@ Task definitions for agent workflows. Each task is a Markdown file with YAML fro
 ### Example Usage
 
 ```javascript
-const fs = require('fs');
-const task = fs.readFileSync('./tasks/create-story.md', 'utf-8');
+const fs = require("fs");
+const task = fs.readFileSync("./tasks/create-story.md", "utf-8");
 // Parse and execute task workflow
 ```
 
@@ -74,45 +74,46 @@ const task = fs.readFileSync('./tasks/create-story.md', 'utf-8');
 
 Multi-step development workflows:
 
-| Workflow | Description |
-|----------|-------------|
-| `greenfield-fullstack.yaml` | New full-stack project |
-| `greenfield-service.yaml` | New backend service |
-| `greenfield-ui.yaml` | New frontend project |
+| Workflow                    | Description                     |
+| --------------------------- | ------------------------------- |
+| `greenfield-fullstack.yaml` | New full-stack project          |
+| `greenfield-service.yaml`   | New backend service             |
+| `greenfield-ui.yaml`        | New frontend project            |
 | `brownfield-fullstack.yaml` | Existing full-stack enhancement |
-| `brownfield-service.yaml` | Existing backend enhancement |
-| `brownfield-ui.yaml` | Existing frontend enhancement |
+| `brownfield-service.yaml`   | Existing backend enhancement    |
+| `brownfield-ui.yaml`        | Existing frontend enhancement   |
 
 ## Scripts (24 files)
 
 Supporting JavaScript modules:
 
-| Script | Purpose |
-|--------|---------|
-| `agent-config-loader.js` | Load and parse agent definitions |
-| `greeting-builder.js` | Build contextual agent greetings |
-| `story-manager.js` | Manage story files and updates |
-| `decision-recorder.js` | Record agent decisions |
-| `workflow-navigator.js` | Navigate between workflow steps |
-| `task-identifier-resolver.js` | Resolve task references |
+| Script                        | Purpose                          |
+| ----------------------------- | -------------------------------- |
+| `agent-config-loader.js`      | Load and parse agent definitions |
+| `greeting-builder.js`         | Build contextual agent greetings |
+| `story-manager.js`            | Manage story files and updates   |
+| `decision-recorder.js`        | Record agent decisions           |
+| `workflow-navigator.js`       | Navigate between workflow steps  |
+| `task-identifier-resolver.js` | Resolve task references          |
 
 ### Key APIs
 
 ```javascript
 // Greeting Builder
-const GreetingBuilder = require('./scripts/greeting-builder');
+const GreetingBuilder = require("./scripts/greeting-builder");
 const builder = new GreetingBuilder();
 const greeting = await builder.buildGreeting(agentDef, context);
 
 // Story Manager
-const StoryManager = require('./scripts/story-manager');
+const StoryManager = require("./scripts/story-manager");
 const story = await StoryManager.loadStory(storyId);
-await story.updateTask(taskId, { status: 'completed' });
+await story.updateTask(taskId, { status: "completed" });
 ```
 
 ## Dependencies
 
 This module depends on:
+
 - `../core/` - Configuration, session management, elicitation
 - `../scripts/` - Infrastructure utilities (git, PM tools)
 
@@ -131,6 +132,7 @@ npm test -- --grep "DEVELOPMENT"
 ```
 
 Smoke tests:
+
 - DEV-01: Agent Load
 - DEV-02: Agent Config Parse
 - DEV-03: Greeting Build

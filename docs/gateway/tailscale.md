@@ -33,8 +33,8 @@ Para exigir credenciais explícitas, defina `gateway.auth.allowTailscale: false`
 {
   gateway: {
     bind: "loopback",
-    tailscale: { mode: "serve" }
-  }
+    tailscale: { mode: "serve" },
+  },
 }
 ```
 
@@ -48,8 +48,8 @@ Use isso quando quiser que o Gateway escute diretamente no IP da Tailnet (sem Se
 {
   gateway: {
     bind: "tailnet",
-    auth: { mode: "token", token: "seu-token" }
-  }
+    auth: { mode: "token", token: "seu-token" },
+  },
 }
 ```
 
@@ -67,8 +67,8 @@ Nota: loopback (`http://127.0.0.1:18789`) **não** funcionará neste modo.
   gateway: {
     bind: "loopback",
     tailscale: { mode: "funnel" },
-    auth: { mode: "password", password: "substitua-me" }
-  }
+    auth: { mode: "password", password: "substitua-me" },
+  },
 }
 ```
 
@@ -106,8 +106,8 @@ Então aponte a config do Gateway para a URL HTTPS:
 {
   browser: {
     enabled: true,
-    controlUrl: "https://<magicdns>/"
-  }
+    controlUrl: "https://<magicdns>/",
+  },
 }
 ```
 

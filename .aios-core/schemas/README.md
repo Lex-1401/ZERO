@@ -68,7 +68,7 @@ dependencies:
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   migratedAt: datetime
 
   # Spec Pipeline capabilities
@@ -295,8 +295,8 @@ Add the appropriate `autoClaude` section based on agent role:
 ```yaml
 # Example for @dev agent
 autoClaude:
-  version: '3.0'
-  migratedAt: '2026-01-28T10:00:00Z'
+  version: "3.0"
+  migratedAt: "2026-01-28T10:00:00Z"
 
   execution:
     canExecute: true
@@ -376,7 +376,7 @@ node validate-v3-schema.js .aios-core/development/agents/dev.md --strict
    - command {arg}: description
 
    # CORRECT
-   - 'command {arg}': description
+   - "command {arg}": description
    ```
 
 ### Story 2.3 Acceptance Criteria Status

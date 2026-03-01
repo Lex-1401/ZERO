@@ -11,29 +11,29 @@
  * @see Story SQS-11: Squad Analyze & Extend
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Default path for squads directory
  * @constant {string}
  */
-const DEFAULT_SQUADS_PATH = './squads';
+const DEFAULT_SQUADS_PATH = "./squads";
 
 /**
  * Component directories in a squad (from squad-schema.json)
  * @constant {string[]}
  */
 const COMPONENT_DIRECTORIES = [
-  'agents',
-  'tasks',
-  'workflows',
-  'checklists',
-  'templates',
-  'tools',
-  'scripts',
-  'data',
+  "agents",
+  "tasks",
+  "workflows",
+  "checklists",
+  "templates",
+  "tools",
+  "scripts",
+  "data",
 ];
 
 /**
@@ -41,28 +41,28 @@ const COMPONENT_DIRECTORIES = [
  * @constant {string[]}
  */
 const CONFIG_FILES = [
-  'README.md',
-  'config/coding-standards.md',
-  'config/tech-stack.md',
-  'config/source-tree.md',
+  "README.md",
+  "config/coding-standards.md",
+  "config/tech-stack.md",
+  "config/source-tree.md",
 ];
 
 /**
  * Manifest file names in order of preference
  * @constant {string[]}
  */
-const MANIFEST_FILES = ['squad.yaml', 'config.yaml'];
+const MANIFEST_FILES = ["squad.yaml", "config.yaml"];
 
 /**
  * Error codes for SquadAnalyzerError
  * @enum {string}
  */
 const ErrorCodes = {
-  SQUAD_NOT_FOUND: 'SQUAD_NOT_FOUND',
-  MANIFEST_NOT_FOUND: 'MANIFEST_NOT_FOUND',
-  YAML_PARSE_ERROR: 'YAML_PARSE_ERROR',
-  PERMISSION_DENIED: 'PERMISSION_DENIED',
-  ANALYSIS_FAILED: 'ANALYSIS_FAILED',
+  SQUAD_NOT_FOUND: "SQUAD_NOT_FOUND",
+  MANIFEST_NOT_FOUND: "MANIFEST_NOT_FOUND",
+  YAML_PARSE_ERROR: "YAML_PARSE_ERROR",
+  PERMISSION_DENIED: "PERMISSION_DENIED",
+  ANALYSIS_FAILED: "ANALYSIS_FAILED",
 };
 
 /**
@@ -78,9 +78,9 @@ class SquadAnalyzerError extends Error {
    */
   constructor(code, message, suggestion) {
     super(message);
-    this.name = 'SquadAnalyzerError';
+    this.name = "SquadAnalyzerError";
     this.code = code;
-    this.suggestion = suggestion || '';
+    this.suggestion = suggestion || "";
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SquadAnalyzerError);
@@ -109,7 +109,7 @@ class SquadAnalyzerError extends Error {
     return new SquadAnalyzerError(
       ErrorCodes.MANIFEST_NOT_FOUND,
       `No squad.yaml or config.yaml found in ${squadPath}`,
-      'Create squad.yaml with squad metadata',
+      "Create squad.yaml with squad metadata",
     );
   }
 }
@@ -184,14 +184,14 @@ class SquadAnalyzer {
     for (const manifestFile of MANIFEST_FILES) {
       const manifestPath = path.join(squadPath, manifestFile);
       try {
-        const content = await fs.readFile(manifestPath, 'utf8');
+        const content = await fs.readFile(manifestPath, "utf8");
         return yaml.load(content);
       } catch (error) {
-        if (error.code !== 'ENOENT') {
+        if (error.code !== "ENOENT") {
           throw new SquadAnalyzerError(
             ErrorCodes.YAML_PARSE_ERROR,
             `Failed to parse ${manifestFile}: ${error.message}`,
-            'Check YAML syntax - use a YAML linter',
+            "Check YAML syntax - use a YAML linter",
           );
         }
       }
@@ -277,30 +277,30 @@ class SquadAnalyzer {
     if (coverage.agents.withTasks < coverage.agents.total) {
       const agentsWithoutTasks = coverage.agents.total - coverage.agents.withTasks;
       suggestions.push({
-        priority: 'high',
-        category: 'tasks',
+        priority: "high",
+        category: "tasks",
         message: `Add tasks for ${agentsWithoutTasks} agent(s) without tasks`,
-        action: '*extend-squad --add task',
+        action: "*extend-squad --add task",
       });
     }
 
     // Suggest workflows if none exist
     if (inventory.workflows.length === 0 && inventory.tasks.length >= 3) {
       suggestions.push({
-        priority: 'medium',
-        category: 'workflows',
-        message: 'Create workflows to combine related tasks',
-        action: '*extend-squad --add workflow',
+        priority: "medium",
+        category: "workflows",
+        message: "Create workflows to combine related tasks",
+        action: "*extend-squad --add workflow",
       });
     }
 
     // Suggest checklists if none exist
     if (inventory.checklists.length === 0) {
       suggestions.push({
-        priority: 'medium',
-        category: 'checklists',
-        message: 'Add validation checklists for quality assurance',
-        action: '*extend-squad --add checklist',
+        priority: "medium",
+        category: "checklists",
+        message: "Add validation checklists for quality assurance",
+        action: "*extend-squad --add checklist",
       });
     }
 
@@ -309,10 +309,10 @@ class SquadAnalyzer {
       const missing = coverage.config.missing || [];
       if (missing.length > 0) {
         suggestions.push({
-          priority: 'low',
-          category: 'config',
-          message: `Add missing config files: ${missing.join(', ')}`,
-          action: 'Create files in config/ directory',
+          priority: "low",
+          category: "config",
+          message: `Add missing config files: ${missing.join(", ")}`,
+          action: "Create files in config/ directory",
         });
       }
     }
@@ -320,20 +320,20 @@ class SquadAnalyzer {
     // Suggest tools if none exist and agents have complex tasks
     if (inventory.tools.length === 0 && inventory.tasks.length >= 5) {
       suggestions.push({
-        priority: 'low',
-        category: 'tools',
-        message: 'Consider adding custom tools for automation',
-        action: '*extend-squad --add tool',
+        priority: "low",
+        category: "tools",
+        message: "Consider adding custom tools for automation",
+        action: "*extend-squad --add tool",
       });
     }
 
     // Suggest templates if none exist
     if (inventory.templates.length === 0) {
       suggestions.push({
-        priority: 'low',
-        category: 'templates',
-        message: 'Add document templates for consistent output',
-        action: '*extend-squad --add template',
+        priority: "low",
+        category: "templates",
+        message: "Add document templates for consistent output",
+        action: "*extend-squad --add template",
       });
     }
 
@@ -346,12 +346,12 @@ class SquadAnalyzer {
    * @param {string} [format='console'] - Output format
    * @returns {string} Formatted report
    */
-  formatReport(analysis, format = 'console') {
-    if (format === 'json') {
+  formatReport(analysis, format = "console") {
+    if (format === "json") {
       return JSON.stringify(analysis, null, 2);
     }
 
-    if (format === 'markdown') {
+    if (format === "markdown") {
       return this._formatMarkdown(analysis);
     }
 
@@ -383,7 +383,7 @@ class SquadAnalyzer {
     try {
       const entries = await fs.readdir(dirPath, { withFileTypes: true });
       const files = entries
-        .filter((entry) => entry.isFile() && !entry.name.startsWith('.'))
+        .filter((entry) => entry.isFile() && !entry.name.startsWith("."))
         .map((entry) => entry.name);
 
       if (verbose) {
@@ -406,11 +406,11 @@ class SquadAnalyzer {
   _buildOverview(manifest, squadName) {
     return {
       name: manifest.name || squadName,
-      version: manifest.version || '0.0.0',
-      author: manifest.author || 'Unknown',
-      license: manifest.license || 'MIT',
-      description: manifest.description || '',
-      aiosMinVersion: manifest.aios?.minVersion || '2.1.0',
+      version: manifest.version || "0.0.0",
+      author: manifest.author || "Unknown",
+      license: manifest.license || "MIT",
+      description: manifest.description || "",
+      aiosMinVersion: manifest.aios?.minVersion || "2.1.0",
     };
   }
 
@@ -420,15 +420,15 @@ class SquadAnalyzer {
    */
   _countAgentsWithTasks(inventory) {
     const agentIds = inventory.agents.map((file) => {
-      const name = typeof file === 'string' ? file : file.name;
-      return name.replace(/\.md$/, '');
+      const name = typeof file === "string" ? file : file.name;
+      return name.replace(/\.md$/, "");
     });
 
     let count = 0;
     for (const agentId of agentIds) {
       const hasTask = inventory.tasks.some((task) => {
-        const taskName = typeof task === 'string' ? task : task.name;
-        return taskName.startsWith(agentId + '-');
+        const taskName = typeof task === "string" ? task : task.name;
+        return taskName.startsWith(agentId + "-");
       });
       if (hasTask) {
         count++;
@@ -449,9 +449,9 @@ class SquadAnalyzer {
     // Check README
     const hasReadme = inventory.agents.length > 0; // Simplified check
     if (hasReadme) {
-      found.push('README.md');
+      found.push("README.md");
     } else {
-      missing.push('README.md');
+      missing.push("README.md");
     }
 
     // For now, simplified - just check if config directory has files
@@ -474,10 +474,10 @@ class SquadAnalyzer {
 
     // Header
     lines.push(`=== Squad Analysis: ${overview.name} ===`);
-    lines.push('');
+    lines.push("");
 
     // Overview
-    lines.push('Overview');
+    lines.push("Overview");
     lines.push(`  Name: ${overview.name}`);
     lines.push(`  Version: ${overview.version}`);
     lines.push(`  Author: ${overview.author}`);
@@ -486,35 +486,35 @@ class SquadAnalyzer {
     if (overview.description) {
       lines.push(`  Description: ${overview.description}`);
     }
-    lines.push('');
+    lines.push("");
 
     // Components
-    lines.push('Components');
+    lines.push("Components");
     for (const dir of COMPONENT_DIRECTORIES) {
       const files = inventory[dir];
       const count = files.length;
-      const emptyIndicator = count === 0 ? ' <- Empty' : '';
+      const emptyIndicator = count === 0 ? " <- Empty" : "";
 
       lines.push(`  ${dir}/ (${count})${emptyIndicator}`);
 
       if (count > 0 && count <= 5) {
         for (const file of files) {
-          const fileName = typeof file === 'string' ? file : file.name;
+          const fileName = typeof file === "string" ? file : file.name;
           lines.push(`    - ${fileName}`);
         }
       } else if (count > 5) {
         for (let i = 0; i < 3; i++) {
           const file = files[i];
-          const fileName = typeof file === 'string' ? file : file.name;
+          const fileName = typeof file === "string" ? file : file.name;
           lines.push(`    - ${fileName}`);
         }
         lines.push(`    ... and ${count - 3} more`);
       }
     }
-    lines.push('');
+    lines.push("");
 
     // Coverage
-    lines.push('Coverage');
+    lines.push("Coverage");
     lines.push(
       `  Agents: ${this._formatBar(coverage.agents.percentage)} ${coverage.agents.percentage}% ` +
         `(${coverage.agents.withTasks}/${coverage.agents.total} with tasks)`,
@@ -530,23 +530,23 @@ class SquadAnalyzer {
     lines.push(
       `  Config: ${this._formatBar(coverage.config.percentage)} ${coverage.config.percentage}%`,
     );
-    lines.push('');
+    lines.push("");
 
     // Suggestions
     if (suggestions.length > 0) {
-      lines.push('Suggestions');
+      lines.push("Suggestions");
       suggestions.forEach((suggestion, index) => {
         const priorityIcon =
-          suggestion.priority === 'high' ? '!' : suggestion.priority === 'medium' ? '*' : '-';
+          suggestion.priority === "high" ? "!" : suggestion.priority === "medium" ? "*" : "-";
         lines.push(`  ${index + 1}. [${priorityIcon}] ${suggestion.message}`);
       });
-      lines.push('');
+      lines.push("");
     }
 
     // Next steps
     lines.push(`Next: *extend-squad ${overview.name}`);
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -558,41 +558,41 @@ class SquadAnalyzer {
     const lines = [];
 
     lines.push(`# Squad Analysis: ${overview.name}`);
-    lines.push('');
+    lines.push("");
     lines.push(`**Generated:** ${new Date().toISOString()}`);
-    lines.push('');
+    lines.push("");
 
-    lines.push('## Overview');
-    lines.push('');
-    lines.push('| Property | Value |');
-    lines.push('|----------|-------|');
+    lines.push("## Overview");
+    lines.push("");
+    lines.push("| Property | Value |");
+    lines.push("|----------|-------|");
     lines.push(`| Name | ${overview.name} |`);
     lines.push(`| Version | ${overview.version} |`);
     lines.push(`| Author | ${overview.author} |`);
     lines.push(`| License | ${overview.license} |`);
     lines.push(`| AIOS Min Version | ${overview.aiosMinVersion} |`);
-    lines.push('');
+    lines.push("");
 
-    lines.push('## Components');
-    lines.push('');
+    lines.push("## Components");
+    lines.push("");
     for (const dir of COMPONENT_DIRECTORIES) {
       const files = inventory[dir];
       lines.push(`### ${dir}/ (${files.length})`);
       if (files.length > 0) {
         files.forEach((file) => {
-          const fileName = typeof file === 'string' ? file : file.name;
+          const fileName = typeof file === "string" ? file : file.name;
           lines.push(`- ${fileName}`);
         });
       } else {
-        lines.push('*Empty*');
+        lines.push("*Empty*");
       }
-      lines.push('');
+      lines.push("");
     }
 
-    lines.push('## Coverage');
-    lines.push('');
-    lines.push('| Category | Percentage | Details |');
-    lines.push('|----------|------------|---------|');
+    lines.push("## Coverage");
+    lines.push("");
+    lines.push("| Category | Percentage | Details |");
+    lines.push("|----------|------------|---------|");
     lines.push(
       `| Agents | ${coverage.agents.percentage}% | ${coverage.agents.withTasks}/${coverage.agents.total} with tasks |`,
     );
@@ -601,20 +601,20 @@ class SquadAnalyzer {
       `| Directories | ${coverage.directories.percentage}% | ${coverage.directories.populated}/${coverage.directories.total} populated |`,
     );
     lines.push(`| Config | ${coverage.config.percentage}% | - |`);
-    lines.push('');
+    lines.push("");
 
     if (suggestions.length > 0) {
-      lines.push('## Suggestions');
-      lines.push('');
+      lines.push("## Suggestions");
+      lines.push("");
       suggestions.forEach((suggestion, index) => {
         lines.push(
           `${index + 1}. **[${suggestion.priority.toUpperCase()}]** ${suggestion.message}`,
         );
       });
-      lines.push('');
+      lines.push("");
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -624,7 +624,7 @@ class SquadAnalyzer {
   _formatBar(percentage) {
     const filled = Math.round(percentage / 10);
     const empty = 10 - filled;
-    return '[' + '#'.repeat(filled) + '-'.repeat(empty) + ']';
+    return "[" + "#".repeat(filled) + "-".repeat(empty) + "]";
   }
 }
 

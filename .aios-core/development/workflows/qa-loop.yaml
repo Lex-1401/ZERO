@@ -72,8 +72,8 @@ workflow:
     legacyStatusPath: .aios/status.json
 
     # Timeout per phase (milliseconds)
-    reviewTimeout: 1800000  # 30 minutes
-    fixTimeout: 3600000     # 60 minutes
+    reviewTimeout: 1800000 # 30 minutes
+    fixTimeout: 3600000 # 60 minutes
 
     # Retry configuration
     maxRetries: 2
@@ -97,14 +97,13 @@ workflow:
         issuesFound: number
         fixedAt: ISO-8601 | null
         issuesFixed: number | null
-        duration: number  # milliseconds
+        duration: number # milliseconds
 
   # ═══════════════════════════════════════════════════════════════════════════════════
   #                              WORKFLOW SEQUENCE
   # ═══════════════════════════════════════════════════════════════════════════════════
 
   sequence:
-
     # ═════════════════════════════════════════════════════════════════════════════════
     # STEP 1: REVIEW (QA Agent)
     # ═════════════════════════════════════════════════════════════════════════════════

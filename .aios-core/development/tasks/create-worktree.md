@@ -216,7 +216,7 @@ git rev-parse --is-inside-work-tree 2>/dev/null
 **Action:** Verify worktree doesn't already exist
 
 ```javascript
-const WorktreeManager = require('./.aios-core/infrastructure/scripts/worktree-manager.js');
+const WorktreeManager = require("./.aios-core/infrastructure/scripts/worktree-manager.js");
 const manager = new WorktreeManager();
 const exists = await manager.exists(storyId);
 ```
@@ -307,7 +307,7 @@ interface WorktreeInfo {
   branch: string; // 'auto-claude/STORY-42'
   createdAt: Date; // Creation timestamp
   uncommittedChanges: number; // 0 (new worktree)
-  status: 'active' | 'stale'; // 'active'
+  status: "active" | "stale"; // 'active'
 }
 ```
 
@@ -427,7 +427,7 @@ This task is exposed as CLI command `*create-worktree` in @devops agent:
 
 ```yaml
 commands:
-  - 'create-worktree {storyId}': Create isolated worktree for story development
+  - "create-worktree {storyId}": Create isolated worktree for story development
 ```
 
 ---

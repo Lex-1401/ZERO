@@ -67,12 +67,12 @@ workflow:
     worktreeIsolation: true
 
     # Timeouts
-    storyTimeout: 7200000       # 2 hours per story (development-cycle total)
-    gateTimeout: 1800000        # 30 min per wave gate
-    totalTimeout: 43200000      # 12 hours total
+    storyTimeout: 7200000 # 2 hours per story (development-cycle total)
+    gateTimeout: 1800000 # 30 min per wave gate
+    totalTimeout: 43200000 # 12 hours total
 
     # Quality gates
-    gatePolicy: strict          # strict | lenient | skip
+    gatePolicy: strict # strict | lenient | skip
     requireIntegrationReview: true
 
   # ═══════════════════════════════════════════════════════════════════════════════════
@@ -94,8 +94,8 @@ workflow:
     ref: development-cycle
     per_story: true
     checkpoint_mode:
-      in_wave: auto_go           # Don't pause between parallel stories
-      between_waves: interactive  # Pause for human decision between waves
+      in_wave: auto_go # Don't pause between parallel stories
+      between_waves: interactive # Pause for human decision between waves
 
   # ═══════════════════════════════════════════════════════════════════════════════════
   #                              WAVE EXECUTION PATTERN
@@ -115,7 +115,6 @@ workflow:
   #   └─────────────────────────────────────────────────────┘
 
   wave_pattern:
-
     # Step 1: Per-story development (parallel within wave)
     story_execution:
       parallel: true
@@ -133,7 +132,6 @@ workflow:
     wave_gate:
       description: "Integration review after wave completes"
       steps:
-
         - id: integration-review
           agent: "${wave.gate_agent}"
           action: review_wave_integration

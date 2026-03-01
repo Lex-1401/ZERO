@@ -29,6 +29,7 @@ Notes:
   ```
 
   The installer will `git pull --rebase` **only** if the repo is clean.
+
 - For **global installs**, the script uses `npm install -g zero@latest` under the hood.
 
 ## Before you update
@@ -103,9 +104,9 @@ If you installed via **npm/pnpm** (no git metadata), `zero update` will try to u
 
 The Control UI has **Update & Restart** (RPC: `update.run`). It:
 
-1) Runs the same source-update flow as `zero update` (git checkout only).
-2) Writes a restart sentinel with a structured report (stdout/stderr tail).
-3) Restarts the gateway and pings the last active session with the report.
+1. Runs the same source-update flow as `zero update` (git checkout only).
+2. Writes a restart sentinel with a structured report (stdout/stderr tail).
+3. Restarts the gateway and pings the last active session with the report.
 
 If the rebase fails, the gateway aborts and restarts without applying the update.
 

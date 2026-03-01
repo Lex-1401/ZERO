@@ -5,7 +5,7 @@ Adds the `void` agent tool as an **optional** plugin tool.
 ## What this is
 
 - VOID is a standalone workflow shell (typed JSON-first pipelines + approvals/resume).
-- This plugin integrates VOID with Zero *without core changes*.
+- This plugin integrates VOID with Zero _without core changes_.
 
 ## Enable
 
@@ -53,22 +53,17 @@ Example (allow only a small set of tools):
       {
         "id": "main",
         "tools": {
-          "allow": [
-            "void",
-            "web_fetch",
-            "web_search",
-            "gog",
-            "gh"
-          ],
-          "deny": ["gateway"]
-        }
-      }
-    ]
-  }
+          "allow": ["void", "web_fetch", "web_search", "gog", "gh"],
+          "deny": ["gateway"],
+        },
+      },
+    ],
+  },
 }
 ```
 
 Notes:
+
 - If `tools.allow` is omitted or empty, it behaves like "allow everything (except denied)". For a real allowlist, set a **non-empty** `allow`.
 - Tool names depend on which plugins you have installed/enabled.
 

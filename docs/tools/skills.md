@@ -13,9 +13,9 @@ O ZERO usa pastas de habilidades **compatíveis com [AgentSkills](https://agents
 
 Habilidades são carregadas de **três** lugares:
 
-1) **Habilidades empacotadas**: enviadas com a instalação (pacote npm ou ZERO.app)
-2) **Habilidades gerenciadas/locais**: `~/.zero/skills`
-3) **Habilidades de workspace**: `<workspace>/skills`
+1. **Habilidades empacotadas**: enviadas com a instalação (pacote npm ou ZERO.app)
+2. **Habilidades gerenciadas/locais**: `~/.zero/skills`
+3. **Habilidades de workspace**: `<workspace>/skills`
 
 Se um nome de habilidade conflitar, a precedência é:
 
@@ -101,7 +101,14 @@ O ZERO **filtra habilidades em tempo de carga** usando `metadata` (JSON de linha
 ---
 name: nano-banana-pro
 description: Generate or edit images via Gemini 3 Pro Image
-metadata: {"zero":{"requires":{"bins":["uv"],"env":["GEMINI_API_KEY"],"config":["browser.enabled"]},"primaryEnv":"GEMINI_API_KEY"}}
+metadata:
+  {
+    "zero":
+      {
+        "requires": { "bins": ["uv"], "env": ["GEMINI_API_KEY"], "config": ["browser.enabled"] },
+        "primaryEnv": "GEMINI_API_KEY",
+      },
+  }
 ---
 ```
 
@@ -134,7 +141,24 @@ Exemplo de instalador:
 ---
 name: gemini
 description: Use Gemini CLI for coding assistance and Google search lookups.
-metadata: {"zero":{"emoji":"♊️","requires":{"bins":["gemini"]},"install":[{"id":"brew","kind":"brew","formula":"gemini-cli","bins":["gemini"],"label":"Install Gemini CLI (brew)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "♊️",
+        "requires": { "bins": ["gemini"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "gemini-cli",
+              "bins": ["gemini"],
+              "label": "Install Gemini CLI (brew)",
+            },
+          ],
+      },
+  }
 ---
 ```
 
@@ -164,17 +188,17 @@ Habilidades empacotadas/gerenciadas podem ser alternadas e supridas com valores 
         enabled: true,
         apiKey: "GEMINI_KEY_HERE",
         env: {
-          GEMINI_API_KEY: "GEMINI_KEY_HERE"
+          GEMINI_API_KEY: "GEMINI_KEY_HERE",
         },
         config: {
           endpoint: "https://example.invalid",
-          model: "nano-pro"
-        }
+          model: "nano-pro",
+        },
       },
       peekaboo: { enabled: true },
-      sag: { enabled: false }
-    }
-  }
+      sag: { enabled: false },
+    },
+  },
 }
 ```
 
@@ -196,11 +220,11 @@ Regras:
 
 Quando uma execução de agente começa, o ZERO:
 
-1) Lê metadados de habilidade.
-2) Aplica qualquer `skills.entries.<key>.env` ou `skills.entries.<key>.apiKey` ao
+1. Lê metadados de habilidade.
+2. Aplica qualquer `skills.entries.<key>.env` ou `skills.entries.<key>.apiKey` ao
    `process.env`.
-3) Constrói o prompt do sistema com habilidades **elegíveis**.
-4) Restaura o ambiente original após o fim da execução.
+3. Constrói o prompt do sistema com habilidades **elegíveis**.
+4. Restaura o ambiente original após o fim da execução.
 
 Isso é **escopado para a execução do agente**, não um ambiente shell global.
 
@@ -225,9 +249,9 @@ Por padrão, o ZERO observa pastas de habilidades e atualiza o snapshot de habil
   skills: {
     load: {
       watch: true,
-      watchDebounceMs: 250
-    }
-  }
+      watchDebounceMs: 250,
+    },
+  },
 }
 ```
 

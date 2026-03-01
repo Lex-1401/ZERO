@@ -3,6 +3,7 @@ summary: "Guia de configuração para desenvolvedores que trabalham no app ZERO 
 read_when:
   - Configurando o ambiente de desenvolvimento macOS
 ---
+
 # Configuração do Desenvolvedor macOS
 
 Este guia abrange as etapas necessárias para compilar e executar o aplicativo ZERO para macOS a partir do código-fonte.

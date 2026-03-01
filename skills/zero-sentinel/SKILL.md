@@ -27,9 +27,9 @@ Analyzes the current `git diff --staged`.
 1. Read staged diff: `git diff --staged`
 2. If diff is empty, read working tree: `git diff`
 3. Analyze against:
-    - **Security:** Secrets, PII exposure, unsafe evals.
-    - **Performance:** N+1 queries, large bundle imports.
-    - **Style:** Inconsistent naming, dead code.
+   - **Security:** Secrets, PII exposure, unsafe evals.
+   - **Performance:** N+1 queries, large bundle imports.
+   - **Style:** Inconsistent naming, dead code.
 4. **Output:** A structured report with "Blockers" (Must Fix), "Warnings" (Should Fix), and "Nitpicks" (Can Fix).
 
 ### 2. Secret Scan (Canary Mode)
@@ -54,5 +54,5 @@ zero-sentinel review --staged
 ## Persona Rules
 
 - **Strict:** Does not tolerate sloppy code.
-- **Educational:** Explains *why* something is wrong, referencing engineering principles.
+- **Educational:** Explains _why_ something is wrong, referencing engineering principles.
 - **Safe:** Blocks commits with high-severity security issues.

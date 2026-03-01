@@ -27,7 +27,6 @@ workflow:
   # ═══════════════════════════════════════════════════════════════════════════════════════
 
   sequence:
-
     # ═════════════════════════════════════════════════════════════════════════════════════
     # FASE 1-3: COLETA DE DADOS (pode ser paralelo)
     # ═════════════════════════════════════════════════════════════════════════════════════
@@ -66,7 +65,7 @@ workflow:
       phase: 2
       phase_name: "Coleta: Database"
       agent: data-engineer
-      action: db-schema-audit  # task-reference: db-schema-audit.md + security-audit.md
+      action: db-schema-audit # task-reference: db-schema-audit.md + security-audit.md
       creates:
         - supabase/docs/SCHEMA.md
         - supabase/docs/DB-AUDIT.md
@@ -106,7 +105,7 @@ workflow:
       phase: 3
       phase_name: "Coleta: Frontend/UX"
       agent: ux-design-expert
-      action: create-front-end-spec  # agent-command: @ux-design-expert → *create-front-end-spec
+      action: create-front-end-spec # agent-command: @ux-design-expert → *create-front-end-spec
       creates: docs/frontend/frontend-spec.md
       elicit: true
       duration_estimate: "30-45 min"
@@ -144,7 +143,7 @@ workflow:
       phase: 4
       phase_name: "Consolidação Inicial"
       agent: architect
-      action: consolidate_findings_draft  # workflow-action: manual prompt
+      action: consolidate_findings_draft # workflow-action: manual prompt
       creates: docs/prd/technical-debt-DRAFT.md
       requires:
         - docs/architecture/system-architecture.md
@@ -208,7 +207,7 @@ workflow:
       phase: 5
       phase_name: "Validação: Database"
       agent: data-engineer
-      action: review_and_validate  # workflow-action: manual prompt
+      action: review_and_validate # workflow-action: manual prompt
       creates: docs/reviews/db-specialist-review.md
       requires: docs/prd/technical-debt-DRAFT.md
       elicit: true
@@ -274,7 +273,7 @@ workflow:
       phase: 6
       phase_name: "Validação: UX/Frontend"
       agent: ux-design-expert
-      action: review_and_validate  # workflow-action: manual prompt
+      action: review_and_validate # workflow-action: manual prompt
       creates: docs/reviews/ux-specialist-review.md
       requires: docs/prd/technical-debt-DRAFT.md
       elicit: true
@@ -340,7 +339,7 @@ workflow:
       phase: 7
       phase_name: "Validação: QA Review"
       agent: qa
-      action: review_assessment  # workflow-action: manual prompt
+      action: review_assessment # workflow-action: manual prompt
       creates: docs/reviews/qa-review.md
       requires:
         - docs/prd/technical-debt-DRAFT.md
@@ -426,7 +425,7 @@ workflow:
       phase: 8
       phase_name: "Assessment Final"
       agent: architect
-      action: finalize_assessment  # workflow-action: manual prompt
+      action: finalize_assessment # workflow-action: manual prompt
       creates: docs/prd/technical-debt-assessment.md
       requires:
         - docs/prd/technical-debt-DRAFT.md
@@ -491,7 +490,7 @@ workflow:
       phase: 9
       phase_name: "Relatório Executivo"
       agent: analyst
-      action: create_awareness_report  # workflow-action: manual prompt
+      action: create_awareness_report # workflow-action: manual prompt
       creates: docs/reports/TECHNICAL-DEBT-REPORT.md
       requires: docs/prd/technical-debt-assessment.md
       elicit: true
@@ -651,7 +650,7 @@ workflow:
       phase: 10
       phase_name: "Planning: Epic"
       agent: pm
-      action: brownfield-create-epic  # task-reference: brownfield-create-epic.md
+      action: brownfield-create-epic # task-reference: brownfield-create-epic.md
       creates: docs/stories/epic-technical-debt.md
       requires:
         - docs/prd/technical-debt-assessment.md
@@ -679,7 +678,7 @@ workflow:
       phase: 10
       phase_name: "Planning: Stories"
       agent: pm
-      action: brownfield-create-story  # task-reference: brownfield-create-story.md
+      action: brownfield-create-story # task-reference: brownfield-create-story.md
       creates: docs/stories/story-X.X-*.md
       requires: docs/stories/epic-technical-debt.md
       repeats: for_each_prioritized_debt

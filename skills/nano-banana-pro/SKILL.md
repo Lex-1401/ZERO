@@ -2,7 +2,25 @@
 name: nano-banana-pro
 description: Gere ou edite imagens via Gemini 3 Pro Image (Nano Banana Pro).
 homepage: https://ai.google.dev/
-metadata: {"zero":{"emoji":"🍌","requires":{"bins":["uv"],"env":["GEMINI_API_KEY"]},"primaryEnv":"GEMINI_API_KEY","install":[{"id":"uv-brew","kind":"brew","formula":"uv","bins":["uv"],"label":"Instalar uv (brew)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "🍌",
+        "requires": { "bins": ["uv"], "env": ["GEMINI_API_KEY"] },
+        "primaryEnv": "GEMINI_API_KEY",
+        "install":
+          [
+            {
+              "id": "uv-brew",
+              "kind": "brew",
+              "formula": "uv",
+              "bins": ["uv"],
+              "label": "Instalar uv (brew)",
+            },
+          ],
+      },
+  }
 ---
 
 # Nano Banana Pro (Gemini 3 Pro Image)

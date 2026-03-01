@@ -319,101 +319,89 @@ export async function listChannelPairingRequests(
   );
 }
 
+/**
+ * Internal helper to handle the logic of updating or creating a pairing request.
+ */
+function processUpsert(
+  reqs: PairingRequest[],
+  id: string,
+  now: string,
+  meta?: Record<string, string>,
+): { nextReqs: PairingRequest[]; code: string; created: boolean } {
+  const existingIdx = reqs.findIndex((r) => r.id === id);
+  const existingCodes = new Set(
+    reqs.map((r) =>
+      String(r.code ?? "")
+        .trim()
+        .toUpperCase(),
+    ),
+  );
+
+  if (existingIdx >= 0) {
+    const existing = reqs[existingIdx];
+    const code = existing?.code?.trim() || generateUniqueCode(existingCodes);
+    const next: PairingRequest = {
+      id,
+      code,
+      createdAt: existing?.createdAt ?? now,
+      lastSeenAt: now,
+      meta: meta ?? existing?.meta,
+    };
+    const updated = [...reqs];
+    updated[existingIdx] = next;
+    return { nextReqs: updated, code, created: false };
+  }
+
+  const code = generateUniqueCode(existingCodes);
+  const next: PairingRequest = {
+    id,
+    code,
+    createdAt: now,
+    lastSeenAt: now,
+    ...(meta ? { meta } : {}),
+  };
+  return { nextReqs: [...reqs, next], code, created: true };
+}
+
+/**
+ * Upserts a pairing request for a specific channel.
+ * Ensures strict complexity limits (PhD Standard).
+ */
 export async function upsertChannelPairingRequest(params: {
   channel: PairingChannel;
   id: string | number;
   meta?: Record<string, string | undefined | null>;
   env?: NodeJS.ProcessEnv;
-  /** Extension channels can pass their adapter directly to bypass registry lookup. */
   pairingAdapter?: ChannelPairingAdapter;
 }): Promise<{ code: string; created: boolean }> {
   const env = params.env ?? process.env;
   const filePath = resolvePairingPath(params.channel, env);
-  return await withFileLock(
-    filePath,
-    { version: 1, requests: [] } satisfies PairingStore,
-    async () => {
-      const { value } = await readJsonFile<PairingStore>(filePath, {
-        version: 1,
-        requests: [],
-      });
-      const now = new Date().toISOString();
-      const nowMs = Date.now();
-      const id = normalizeId(params.id);
-      const meta =
-        params.meta && typeof params.meta === "object"
-          ? Object.fromEntries(
-              Object.entries(params.meta)
-                .map(([k, v]) => [k, String(v ?? "").trim()] as const)
-                .filter(([_, v]) => Boolean(v)),
-            )
-          : undefined;
 
-      let reqs = Array.isArray(value.requests) ? value.requests : [];
-      const { requests: prunedExpired, removed: expiredRemoved } = pruneExpiredRequests(
-        reqs,
-        nowMs,
-      );
-      reqs = prunedExpired;
-      const existingIdx = reqs.findIndex((r) => r.id === id);
-      const existingCodes = new Set(
-        reqs.map((req) =>
-          String(req.code ?? "")
-            .trim()
-            .toUpperCase(),
-        ),
-      );
+  return await withFileLock(filePath, { version: 1, requests: [] }, async () => {
+    const { value } = await readJsonFile<PairingStore>(filePath, { version: 1, requests: [] });
+    const now = new Date().toISOString();
+    const id = normalizeId(params.id);
+    const meta = params.meta
+      ? Object.fromEntries(
+        Object.entries(params.meta)
+          .map(([k, v]) => [k, String(v ?? "").trim()] as const)
+          .filter(([_, v]) => Boolean(v)),
+      )
+      : undefined;
 
-      if (existingIdx >= 0) {
-        const existing = reqs[existingIdx];
-        const existingCode =
-          existing && typeof existing.code === "string" ? existing.code.trim() : "";
-        const code = existingCode || generateUniqueCode(existingCodes);
-        const next: PairingRequest = {
-          id,
-          code,
-          createdAt: existing?.createdAt ?? now,
-          lastSeenAt: now,
-          meta: meta ?? existing?.meta,
-        };
-        reqs[existingIdx] = next;
-        const { requests: capped } = pruneExcessRequests(reqs, PAIRING_PENDING_MAX);
-        await writeJsonFile(filePath, {
-          version: 1,
-          requests: capped,
-        } satisfies PairingStore);
-        return { code, created: false };
-      }
+    const { requests: pruned } = pruneExpiredRequests(value.requests ?? [], Date.now());
 
-      const { requests: capped, removed: cappedRemoved } = pruneExcessRequests(
-        reqs,
-        PAIRING_PENDING_MAX,
-      );
-      reqs = capped;
-      if (PAIRING_PENDING_MAX > 0 && reqs.length >= PAIRING_PENDING_MAX) {
-        if (expiredRemoved || cappedRemoved) {
-          await writeJsonFile(filePath, {
-            version: 1,
-            requests: reqs,
-          } satisfies PairingStore);
-        }
-        return { code: "", created: false };
-      }
-      const code = generateUniqueCode(existingCodes);
-      const next: PairingRequest = {
-        id,
-        code,
-        createdAt: now,
-        lastSeenAt: now,
-        ...(meta ? { meta } : {}),
-      };
-      await writeJsonFile(filePath, {
-        version: 1,
-        requests: [...reqs, next],
-      } satisfies PairingStore);
-      return { code, created: true };
-    },
-  );
+    // Block new requests if we are at capacity
+    if (pruned.length >= PAIRING_PENDING_MAX && !pruned.find(r => r.id === id)) {
+      return { code: "", created: false };
+    }
+
+    const { nextReqs, code, created } = processUpsert(pruned, id, now, meta);
+    const { requests: capped } = pruneExcessRequests(nextReqs, PAIRING_PENDING_MAX);
+
+    await writeJsonFile(filePath, { version: 1, requests: capped });
+    return { code, created };
+  });
 }
 
 export async function approveChannelPairingCode(params: {

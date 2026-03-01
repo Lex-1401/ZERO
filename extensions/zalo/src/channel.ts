@@ -16,7 +16,12 @@ import {
   setAccountEnabledInConfigSection,
 } from "zero/plugin-sdk";
 
-import { listZaloAccountIds, resolveDefaultZaloAccountId, resolveZaloAccount, type ResolvedZaloAccount } from "./accounts.js";
+import {
+  listZaloAccountIds,
+  resolveDefaultZaloAccountId,
+  resolveZaloAccount,
+  type ResolvedZaloAccount,
+} from "./accounts.js";
 import { zaloMessageActions } from "./actions.js";
 import { ZaloConfigSchema } from "./config-schema.js";
 import { zaloOnboardingAdapter } from "./onboarding.js";
@@ -240,9 +245,9 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
             ...next.channels?.zalo,
             enabled: true,
             accounts: {
-              ...(next.channels?.zalo?.accounts ?? {}),
+              ...next.channels?.zalo?.accounts,
               [accountId]: {
-                ...(next.channels?.zalo?.accounts?.[accountId] ?? {}),
+                ...next.channels?.zalo?.accounts?.[accountId],
                 enabled: true,
                 ...(input.tokenFile
                   ? { tokenFile: input.tokenFile }

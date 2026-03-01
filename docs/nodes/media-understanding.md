@@ -4,6 +4,7 @@ read_when:
   - Projetando ou refatorando o entendimento de mídia
   - Ajustando o pré-processamento de áudio/vídeo/imagem de entrada
 ---
+
 # Entendimento de Mídia (Entrada) — 17-01-2026
 
 O ZERO pode **resumir mídias de entrada** (imagem/áudio/vídeo) antes que o pipeline de resposta seja executado. Ele auto-detecta quando ferramentas locais ou chaves de provedores estão disponíveis e pode ser desativado ou personalizado. Se o entendimento estiver desligado, os modelos ainda recebem os arquivos/URLs originais normalmente.
@@ -17,11 +18,11 @@ O ZERO pode **resumir mídias de entrada** (imagem/áudio/vídeo) antes que o pi
 
 ## Comportamento de alto nível
 
-1) Coleta os anexos de entrada (`MediaPaths`, `MediaUrls`, `MediaTypes`).
-2) Para cada capacidade habilitada (imagem/áudio/vídeo), seleciona os anexos por política (padrão: **primeiro**).
-3) Escolhe a primeira entrada de modelo elegível (tamanho + capacidade + autenticação).
-4) Se um modelo falhar ou a mídia for muito grande, **recorre (fallback) à próxima entrada**.
-5) Em caso de sucesso:
+1. Coleta os anexos de entrada (`MediaPaths`, `MediaUrls`, `MediaTypes`).
+2. Para cada capacidade habilitada (imagem/áudio/vídeo), seleciona os anexos por política (padrão: **primeiro**).
+3. Escolhe a primeira entrada de modelo elegível (tamanho + capacidade + autenticação).
+4. Se um modelo falhar ou a mídia for muito grande, **recorre (fallback) à próxima entrada**.
+5. Em caso de sucesso:
    - O `Body` torna-se um bloco `[Image]`, `[Audio]` ou `[Video]`.
    - Áudio define `{{Transcript}}`; a análise de comandos usa o texto da legenda quando presente, caso contrário, a transcrição.
    - Legendas são preservadas como `User text:` dentro do bloco.
@@ -46,12 +47,20 @@ Se o entendimento falhar ou estiver desativado, **o fluxo de resposta continua**
 {
   tools: {
     media: {
-      models: [ /* lista compartilhada */ ],
-      image: { /* sobrescritas opcionais */ },
-      audio: { /* sobrescritas opcionais */ },
-      video: { /* sobrescritas opcionais */ }
-    }
-  }
+      models: [
+        /* lista compartilhada */
+      ],
+      image: {
+        /* sobrescritas opcionais */
+      },
+      audio: {
+        /* sobrescritas opcionais */
+      },
+      video: {
+        /* sobrescritas opcionais */
+      },
+    },
+  },
 }
 ```
 
@@ -61,7 +70,7 @@ Cada entrada em `models[]` pode ser um **provedor** ou **CLI**:
 
 ```json5
 {
-  type: "provider",        // padrão se omitido
+  type: "provider", // padrão se omitido
   provider: "openai",
   model: "gpt-5.2",
   prompt: "Descreva a imagem em <= 500 caracteres.",
@@ -70,7 +79,7 @@ Cada entrada em `models[]` pode ser um **provedor** ou **CLI**:
   timeoutSeconds: 60,
   capabilities: ["image"], // opcional, usado para entradas multi-modais
   profile: "vision-profile",
-  preferredProfile: "vision-fallback"
+  preferredProfile: "vision-fallback",
 }
 ```
 
@@ -83,12 +92,12 @@ Cada entrada em `models[]` pode ser um **provedor** ou **CLI**:
     "gemini-3-flash",
     "--allowed-tools",
     "read_file",
-    "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres."
+    "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres.",
   ],
   maxChars: 500,
   maxBytes: 52428800,
   timeoutSeconds: 120,
-  capabilities: ["video", "image"]
+  capabilities: ["video", "image"],
 }
 ```
 
@@ -120,12 +129,12 @@ Regras:
 
 Se `tools.media.<capability>.enabled` **não** estiver definido como `false` e você não configurou modelos, o ZERO auto-detecta nesta ordem e **para na primeira opção que funcionar**:
 
-1) **CLIs Locais** (apenas áudio; se instaladas)
+1. **CLIs Locais** (apenas áudio; se instaladas)
    - `sherpa-onnx-offline` (exige `SHERPA_ONNX_MODEL_DIR` com encoder/decoder/joiner/tokens)
    - `whisper-cli` (`whisper-cpp`; usa `WHISPER_CPP_MODEL` ou o modelo tiny embutido)
    - `whisper` (CLI Python; baixa modelos automaticamente)
-2) **Gemini CLI** (`gemini`) usando `read_many_files`
-3) **Chaves de provedores**
+2. **Gemini CLI** (`gemini`) usando `read_many_files`
+3. **Chaves de provedores**
    - Áudio: OpenAI → Groq → Deepgram → Google
    - Imagem: OpenAI → Anthropic → Google → MiniMax
    - Vídeo: Google
@@ -137,10 +146,10 @@ Para desativar a auto-detecção, defina:
   tools: {
     media: {
       audio: {
-        enabled: false
-      }
-    }
-  }
+        enabled: false,
+      },
+    },
+  },
 }
 ```
 
@@ -159,11 +168,11 @@ Para entradas de CLI, **defina o `capabilities` explicitamente** para evitar cor
 
 ## Matriz de suporte de provedores (integrações ZERO)
 
-| Capacidade | Integração de Provedor | Notas |
-|------------|------------------------|-------|
-| Imagem | OpenAI / Anthropic / Google / outros via `pi-ai` | Qualquer modelo capaz de imagem no registro funciona. |
-| Áudio | OpenAI, Groq, Deepgram, Google | Transcrição de provedor (Whisper/Deepgram/Gemini). |
-| Vídeo | Google (API Gemini) | Entendimento de vídeo do provedor. |
+| Capacidade | Integração de Provedor                           | Notas                                                 |
+| ---------- | ------------------------------------------------ | ----------------------------------------------------- |
+| Imagem     | OpenAI / Anthropic / Google / outros via `pi-ai` | Qualquer modelo capaz de imagem no registro funciona. |
+| Áudio      | OpenAI, Groq, Deepgram, Google                   | Transcrição de provedor (Whisper/Deepgram/Gemini).    |
+| Vídeo      | Google (API Gemini)                              | Entendimento de vídeo do provedor.                    |
 
 ## Provedores recomendados
 
@@ -203,7 +212,11 @@ Quando `mode: "all"`, as saídas são rotuladas como `[Image 1/2]`, `[Audio 2/2]
     media: {
       models: [
         { provider: "openai", model: "gpt-5.2", capabilities: ["image"] },
-        { provider: "google", model: "gemini-3-flash-preview", capabilities: ["image", "audio", "video"] },
+        {
+          provider: "google",
+          model: "gemini-3-flash-preview",
+          capabilities: ["image", "audio", "video"],
+        },
         {
           type: "cli",
           command: "gemini",
@@ -212,19 +225,19 @@ Quando `mode: "all"`, as saídas são rotuladas como `[Image 1/2]`, `[Audio 2/2]
             "gemini-3-flash",
             "--allowed-tools",
             "read_file",
-            "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres."
+            "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres.",
           ],
-          capabilities: ["image", "video"]
-        }
+          capabilities: ["image", "video"],
+        },
       ],
       audio: {
-        attachments: { mode: "all", maxAttachments: 2 }
+        attachments: { mode: "all", maxAttachments: 2 },
       },
       video: {
-        maxChars: 500
-      }
-    }
-  }
+        maxChars: 500,
+      },
+    },
+  },
 }
 ```
 
@@ -241,9 +254,9 @@ Quando `mode: "all"`, as saídas são rotuladas como `[Image 1/2]`, `[Audio 2/2]
           {
             type: "cli",
             command: "whisper",
-            args: ["--model", "base", "{{MediaPath}}"]
-          }
-        ]
+            args: ["--model", "base", "{{MediaPath}}"],
+          },
+        ],
       },
       video: {
         enabled: true,
@@ -258,13 +271,13 @@ Quando `mode: "all"`, as saídas são rotuladas como `[Image 1/2]`, `[Audio 2/2]
               "gemini-3-flash",
               "--allowed-tools",
               "read_file",
-              "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres."
-            ]
-          }
-        ]
-      }
-    }
-  }
+              "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres.",
+            ],
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -289,13 +302,13 @@ Quando `mode: "all"`, as saídas são rotuladas como `[Image 1/2]`, `[Audio 2/2]
               "gemini-3-flash",
               "--allowed-tools",
               "read_file",
-              "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres."
-            ]
-          }
-        ]
-      }
-    }
-  }
+              "Leia a mídia em {{MediaPath}} e descreva-a em <= {{MaxChars}} caracteres.",
+            ],
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -305,11 +318,35 @@ Quando `mode: "all"`, as saídas são rotuladas como `[Image 1/2]`, `[Audio 2/2]
 {
   tools: {
     media: {
-      image: { models: [{ provider: "google", model: "gemini-3-pro-preview", capabilities: ["image", "video", "audio"] }] },
-      audio: { models: [{ provider: "google", model: "gemini-3-pro-preview", capabilities: ["image", "video", "audio"] }] },
-      video: { models: [{ provider: "google", model: "gemini-3-pro-preview", capabilities: ["image", "video", "audio"] }] }
-    }
-  }
+      image: {
+        models: [
+          {
+            provider: "google",
+            model: "gemini-3-pro-preview",
+            capabilities: ["image", "video", "audio"],
+          },
+        ],
+      },
+      audio: {
+        models: [
+          {
+            provider: "google",
+            model: "gemini-3-pro-preview",
+            capabilities: ["image", "video", "audio"],
+          },
+        ],
+      },
+      video: {
+        models: [
+          {
+            provider: "google",
+            model: "gemini-3-pro-preview",
+            capabilities: ["image", "video", "audio"],
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 

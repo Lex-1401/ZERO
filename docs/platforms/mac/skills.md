@@ -4,6 +4,7 @@ read_when:
   - Atualizando a interface de configurações de Skills no macOS
   - Alterando o comportamento de gating ou instalação de skills
 ---
+
 # Skills (macOS)
 
 O app macOS exibe as skills do ZERO via gateway; ele não analisa as skills localmente.

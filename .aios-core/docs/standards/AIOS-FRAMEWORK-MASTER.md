@@ -5,10 +5,12 @@
 > This document describes **v2.0.0** of the AIOS Framework.
 >
 > **For the current version (v2.1), see:**
+>
 > - [AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md](./AIOS-LIVRO-DE-OURO-V2.1-COMPLETE.md) - Complete v2.1 framework guide
 > - [STANDARDS-INDEX.md](./STANDARDS-INDEX.md) - Navigation for all standards
 >
 > **Key changes in v2.1:**
+>
 > - 4-module architecture (core, development, product, infrastructure)
 > - Squad System (replaces "Expansion Packs")
 > - Multi-repo strategy (3 public + 2 private repos)
@@ -27,43 +29,51 @@
 ## 📋 Table of Contents
 
 ### Part I: Framework Overview
+
 1. [What is AIOS?](#what-is-aios)
 2. [Core Philosophy](#core-philosophy)
 3. [Framework Architecture](#framework-architecture)
 4. [Getting Started](#getting-started)
 
 ### Part II: Framework Structure
+
 5. [Directory Structure](#directory-structure)
 6. [File Organization](#file-organization)
 7. [Naming Conventions](#naming-conventions)
 
 ### Part III: Agent System
+
 8. [Agent Architecture](#agent-architecture)
 9. [Agent Personalization](#agent-personalization)
 10. [Agent Roles & Specializations](#agent-roles--specializations)
 11. [Greeting System](#greeting-system)
 
 ### Part IV: Task & Workflow System
+
 12. [Task Format Specification](#task-format-specification)
 13. [Execution Modes](#execution-modes)
 14. [Workflow Orchestration](#workflow-orchestration)
 15. [Fork/Join & Organizer-Worker Patterns](#forkjoin--organizer-worker-patterns)
 
 ### Part V: Executor Types
+
 16. [The Four Executor Types](#the-four-executor-types)
 17. [Executor Decision Tree](#executor-decision-tree)
 
 ### Part VI: Standards & Best Practices
+
 18. [Coding Standards](#coding-standards)
 19. [Technology Stack](#technology-stack)
 20. [Quality Gates & CodeRabbit Integration](#quality-gates--coderabbit-integration)
 
 ### Part VII: Migration & Roadmap
+
 21. [Current Migration Status](#current-migration-status)
 22. [Future Architecture (Q2 2026)](#future-architecture-q2-2026)
 23. [Subdirectory Migration Plan](#subdirectory-migration-plan)
 
 ### Part VIII: Appendices
+
 24. [Glossary](#glossary)
 25. [Decision History](#decision-history)
 26. [References](#references)
@@ -97,6 +107,7 @@ AIOS follows a fundamental principle:
 > "Quando as informações estão sempre nas mesmas posições, nosso cérebro sabe onde buscar rápido."
 
 **FIXED:**
+
 - Template positions
 - Section order
 - Metric formats
@@ -104,6 +115,7 @@ AIOS follows a fundamental principle:
 - Task workflows
 
 **FLEXIBLE:**
+
 - Status messages
 - Vocabulary choices
 - Emoji usage
@@ -381,26 +393,28 @@ npm install
 
 ### File Types & Purposes
 
-| Type | Location | Purpose | Format |
-|------|----------|---------|--------|
-| **Agents** | `.aios-core/agents/*.md` | Agent definitions with persona | Markdown + YAML |
-| **Tasks** | `.aios-core/tasks/*.md` | Executable workflows | Markdown + YAML |
-| **Templates** | `.aios-core/templates/*.yaml` | Document generators | YAML |
-| **Workflows** | `.aios-core/workflows/*.yaml` | Multi-agent orchestration | YAML |
-| **Checklists** | `.aios-core/checklists/*.md` | Validation processes | Markdown + Checklist |
-| **Data/KB** | `.aios-core/data/*.md` | Knowledge base, references | Markdown/YAML |
-| **Scripts** | `.aios-core/scripts/*.js` | Utilities, automation | JavaScript |
-| **Tools** | `.aios-core/tools/*/*.yaml` | Tool integrations | YAML |
+| Type           | Location                      | Purpose                        | Format               |
+| -------------- | ----------------------------- | ------------------------------ | -------------------- |
+| **Agents**     | `.aios-core/agents/*.md`      | Agent definitions with persona | Markdown + YAML      |
+| **Tasks**      | `.aios-core/tasks/*.md`       | Executable workflows           | Markdown + YAML      |
+| **Templates**  | `.aios-core/templates/*.yaml` | Document generators            | YAML                 |
+| **Workflows**  | `.aios-core/workflows/*.yaml` | Multi-agent orchestration      | YAML                 |
+| **Checklists** | `.aios-core/checklists/*.md`  | Validation processes           | Markdown + Checklist |
+| **Data/KB**    | `.aios-core/data/*.md`        | Knowledge base, references     | Markdown/YAML        |
+| **Scripts**    | `.aios-core/scripts/*.js`     | Utilities, automation          | JavaScript           |
+| **Tools**      | `.aios-core/tools/*/*.yaml`   | Tool integrations              | YAML                 |
 
 ### Framework vs. Project Files
 
 **Framework Files (.aios-core/):**
+
 - ✅ Portable across projects
 - ✅ Version controlled in framework repo
 - ✅ Shared by all AIOS projects
 - ✅ Changes require framework approval
 
 **Project Files (root/):**
+
 - ✅ Project-specific implementation
 - ✅ Version controlled in project repo
 - ✅ Unique to each project
@@ -429,6 +443,7 @@ npm install
 ### Variable Names
 
 **JavaScript/JSON:** `camelCase`
+
 ```javascript
 ✅ CORRECT:
 const agentConfig = { ... }
@@ -440,17 +455,21 @@ const task-definition = { ... }
 ```
 
 **CSS:** `kebab-case`
+
 ```css
 ✅ CORRECT:
-.content-area { }
+.content-area {
+}
 --spacing-md: 200px;
 
 ❌ WRONG:
-.contentArea { }
+.contentArea {
+}
 --spacing_md: 200px;
 ```
 
 **Database:** `snake_case`
+
 ```sql
 ✅ CORRECT:
 tasks.responsavel_type
@@ -537,48 +556,55 @@ dependencies:
 
 ### The 11 Archetypes
 
-| Archetype | Name | Icon | Zodiac | Tone | Examples |
-|-----------|------|------|--------|------|----------|
-| **Builder** | Dex | 💻 | ♒ Aquarius | Pragmatic | Dev |
-| **Guardian** | Quinn | 🛡️ | ♍ Virgo | Protective | QA |
-| **Balancer** | Pax, Morgan | 📋 📊 | ♎ Libra | Diplomatic | PO, PM |
-| **Visionary** | Aria | 🏛️ | ♐ Sagittarius | Conceptual | Architect |
-| **Flow Master** | Sage | 🌊 | ♓ Pisces | Adaptive | SM |
-| **Explorer** | Scout | 🔍 | ♊ Gemini | Curious | Analyst |
-| **Engineer** | Dara | 🔧 | ♉ Taurus | Methodical | Data Engineer |
-| **Operator** | Gage | ⚙️ | ♑ Capricorn | Efficient | DevOps |
-| **Empathizer** | Uma | 🎨 | ♋ Cancer | Empathetic | UX Expert |
-| **Orchestrator** | Orion | ⭐ | ♌ Leo | Commanding | AIOS Master |
-| **Architect** | (Various) | 🏗️ | (Various) | Systematic | DB Sage |
+| Archetype        | Name        | Icon  | Zodiac         | Tone       | Examples      |
+| ---------------- | ----------- | ----- | -------------- | ---------- | ------------- |
+| **Builder**      | Dex         | 💻    | ♒ Aquarius    | Pragmatic  | Dev           |
+| **Guardian**     | Quinn       | 🛡️    | ♍ Virgo       | Protective | QA            |
+| **Balancer**     | Pax, Morgan | 📋 📊 | ♎ Libra       | Diplomatic | PO, PM        |
+| **Visionary**    | Aria        | 🏛️    | ♐ Sagittarius | Conceptual | Architect     |
+| **Flow Master**  | Sage        | 🌊    | ♓ Pisces      | Adaptive   | SM            |
+| **Explorer**     | Scout       | 🔍    | ♊ Gemini      | Curious    | Analyst       |
+| **Engineer**     | Dara        | 🔧    | ♉ Taurus      | Methodical | Data Engineer |
+| **Operator**     | Gage        | ⚙️    | ♑ Capricorn   | Efficient  | DevOps        |
+| **Empathizer**   | Uma         | 🎨    | ♋ Cancer      | Empathetic | UX Expert     |
+| **Orchestrator** | Orion       | ⭐    | ♌ Leo         | Commanding | AIOS Master   |
+| **Architect**    | (Various)   | 🏗️    | (Various)      | Systematic | DB Sage       |
 
 ### Vocabulary System
 
 Each archetype has specific vocabulary:
 
 **Builder (Dex):**
+
 - construir, implementar, refatorar, resolver, otimizar
 - debuggar, testar, deployar, commitar, mergear
 
 **Guardian (Quinn):**
+
 - validar, verificar, proteger, garantir, auditar
 - revisar, inspecionar, certificar, assegurar
 
 **Balancer (Pax, Morgan):**
+
 - equilibrar, harmonizar, priorizar, alinhar, integrar
 - negociar, mediar, sincronizar, coordenar
 
 ### Emoji Palette System
 
 **High Frequency:**
+
 - ✅ ❌ ⚠️ 🎯 🚀 ⭐ 💡 🔥
 
 **Medium Frequency:**
+
 - 📊 📋 📝 🔍 💻 🛡️ 🏛️ 🌊
 
 **Low Frequency:**
+
 - Agent-specific emojis only
 
 **Minimal:**
+
 - Status indicators only (✅ ❌ ⚠️)
 
 ---
@@ -588,16 +614,19 @@ Each archetype has specific vocabulary:
 ### Development Team
 
 **💻 Dex (Builder) - Developer**
+
 - **Role:** Full-stack implementation
 - **Commands:** `*develop-story`, `*apply-qa-fixes`, `*improve-code-quality`
 - **When to Use:** Code implementation, debugging, refactoring
 
 **🛡️ Quinn (Guardian) - QA Engineer**
+
 - **Role:** Quality assurance and testing
 - **Commands:** `*review`, `*code-review`, `*gate`, `*nfr-assess`
 - **When to Use:** Testing, quality validation, acceptance criteria
 
 **🏛️ Aria (Visionary) - Architect**
+
 - **Role:** System architecture and design
 - **Commands:** `*create-full-stack-architecture`, `*document-project`
 - **When to Use:** Architecture decisions, system design, tech stack
@@ -607,16 +636,19 @@ Each archetype has specific vocabulary:
 ### Product & Agile Team
 
 **📋 Pax (Balancer) - Product Owner**
+
 - **Role:** Story management and backlog
 - **Commands:** `*create-next-story`, `*validate-story-draft`, `*sync-story`
 - **When to Use:** Story creation, backlog prioritization, acceptance
 
 **📊 Morgan (Balancer) - Product Manager**
+
 - **Role:** Product strategy and roadmap
 - **Commands:** `*create-doc`, `*brownfield-create-epic`
 - **When to Use:** PRDs, product strategy, stakeholder management
 
 **🌊 Sage (Flow Master) - Scrum Master**
+
 - **Role:** Process facilitation and flow
 - **Commands:** `*execute-checklist`, `*correct-course`
 - **When to Use:** Sprint planning, retrospectives, flow optimization
@@ -626,21 +658,25 @@ Each archetype has specific vocabulary:
 ### Specialized Agents
 
 **🔍 Scout (Explorer) - Business Analyst**
+
 - **Role:** Requirements analysis and research
 - **Commands:** `*facilitate-brainstorming-session`, `*create-deep-research-prompt`
 - **When to Use:** Requirements elicitation, market research, analysis
 
 **🔧 Dara (Engineer) - Data Engineer**
+
 - **Role:** Data modeling and pipelines
 - **Commands:** `*setup-database`, `*domain-modeling`
 - **When to Use:** Database design, ETL pipelines, data architecture
 
 **⚙️ Gage (Operator) - DevOps Engineer**
+
 - **Role:** Deployment and operations
 - **Commands:** `*version-management`, `*github-pr-automation`, `*ci-cd-configuration`
 - **When to Use:** CI/CD, deployment, infrastructure, monitoring
 
 **🎨 Uma (Empathizer) - UX Design Expert**
+
 - **Role:** User experience and design systems
 - **Commands:** `*ux-user-research`, `*ux-create-wireframe`, `*audit-codebase`
 - **When to Use:** UX research, design systems, accessibility
@@ -650,15 +686,18 @@ Each archetype has specific vocabulary:
 ### Framework Agents
 
 **⭐ Orion (Orchestrator) - AIOS Master**
+
 - **Role:** Framework orchestration and agent coordination
 - **Commands:** `*create-agent`, `*create-task`, `*create-workflow`
 - **When to Use:** Framework development, agent creation, workflow design
 
 **🗄️ DB Sage - Database Architect**
+
 - **Role:** Database schema design and optimization
 - **When to Use:** Complex database design, query optimization
 
 **🐙 GitHub DevOps - Git Operations**
+
 - **Role:** Git push operations and PR management
 - **When to Use:** Git push, PR creation (not available for local operations)
 
@@ -669,16 +708,19 @@ Each archetype has specific vocabulary:
 ### Three Greeting Levels
 
 **1. Minimal** (Quick activation)
+
 ```
 💻 dev Agent ready
 ```
 
 **2. Named** (Standard, personalized)
+
 ```
 💻 Dex (Builder) pronto. Vamos construir isso!
 ```
 
 **3. Archetypal** (Full personality)
+
 ```
 💻 Dex the Builder (♒ Aquarius) ready to implement!
 ```
@@ -712,6 +754,7 @@ Type *guide for comprehensive usage instructions.
 ### Context Intelligence
 
 The greeting system analyzes:
+
 - **Previous Agent:** Who was active before
 - **Modified Files:** What files were changed
 - **Current Story:** What story is being worked on
@@ -719,11 +762,12 @@ The greeting system analyzes:
 - **Session Type:** New, existing, or workflow session
 
 **Example Context:**
+
 ```
-💡 **Context:** Vejo que @Dex finalizou a implementação do 
-   **`greeting-builder.js`** no **`story-6.1.4.md`**. 
+💡 **Context:** Vejo que @Dex finalizou a implementação do
+   **`greeting-builder.js`** no **`story-6.1.4.md`**.
    Agora podemos revisar a qualidade dessa implementação
-   
+
    **Recommended:** Use `*review story-6.1.4.md` para continuar
 ```
 
@@ -764,13 +808,13 @@ atomic_layer: {Layer}              # Optional for open-source
       tipo: pre-condition
       blocker: {true|false}
       validação: {validation_logic}
-  
+
   post-conditions:
     - [ ] {condition}
       tipo: post-condition
       blocker: {true|false}
       validação: {validation_logic}
-  
+
   acceptance-criteria:
     - [ ] {criterion}
       tipo: acceptance
@@ -793,29 +837,34 @@ atomic_layer: {Layer}              # Optional for open-source
 ### Task Components Explained
 
 **Entrada (Input):**
+
 - Defines all required and optional inputs
 - Specifies data types and validation rules
 - Documents default values
 - Tracks data origin (previous step, user, config)
 
 **Saída (Output):**
+
 - Defines all outputs produced
 - Specifies destination (next step, state, file)
 - Indicates persistence (temporary or permanent)
 - Enables caching when appropriate
 
 **Checklist:**
+
 - **Pre-conditions:** Validated BEFORE execution (blocking)
 - **Post-conditions:** Validated AFTER execution (quality gates)
 - **Acceptance Criteria:** Manual verification steps
 
 **Performance:**
+
 - Expected duration for tracking
 - Cost estimation (for AI executors)
 - Cacheability for optimization
 - Parallelizability for concurrency
 
 **Error Handling:**
+
 - Strategy: retry, fallback, or abort
 - Retry configuration with backoff
 - Fallback values or alternative flows
@@ -832,25 +881,30 @@ Every task supports three execution modes to balance automation, education, and 
 #### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
 
 **Characteristics:**
+
 - ✅ Autonomous decision making
 - ✅ All decisions logged to `.ai/decision-log-{task-id}.md`
 - ✅ Minimal user interaction
 - ✅ Fast execution
 
 **Best For:**
+
 - Experienced developers
 - Simple, well-defined tasks
 - Time-sensitive work
 - Repetitive operations
 
 **Example:**
+
 ```yaml
 mode: yolo
 ```
 
 **Decision Logging:**
+
 ```markdown
 ## Decision: Use TypeScript for API layer
+
 **Context:** Need to define type-safe API contracts
 **Options:** [TypeScript, JavaScript with JSDoc]
 **Selected:** TypeScript
@@ -863,27 +917,32 @@ mode: yolo
 #### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
 
 **Characteristics:**
+
 - ✅ Explicit decision checkpoints
 - ✅ Educational explanations
 - ✅ Collaborative decision making
 - ✅ Context preservation
 
 **Best For:**
+
 - Learning new patterns
 - Complex decisions
 - Collaborative work
 - Code reviews
 
 **Example:**
+
 ```yaml
 mode: interactive
 ```
 
 **Checkpoint Example:**
+
 ```markdown
 🤔 **Decision Point:** Database Technology Selection
 
 **Options:**
+
 1. PostgreSQL (Relational, ACID, complex queries)
 2. MongoDB (Document, flexible schema, horizontal scaling)
 3. Supabase (PostgreSQL + Auth + Storage + Realtime)
@@ -899,27 +958,32 @@ mode: interactive
 #### 3. Pre-Flight Planning - Comprehensive Upfront (1 questionnaire)
 
 **Characteristics:**
+
 - ✅ Task analysis phase (identify ambiguities)
 - ✅ Comprehensive questionnaire
 - ✅ Zero ambiguity execution
 - ✅ Plan approval before work
 
 **Best For:**
+
 - Ambiguous requirements
 - Critical work (production, security)
 - Team consensus needed
 - Large-scale changes
 
 **Example:**
+
 ```yaml
 mode: preflight
 ```
 
 **Pre-Flight Questionnaire:**
+
 ```markdown
 📋 **Pre-Flight Planning: Implement User Authentication**
 
 **Identified Ambiguities:**
+
 1. Authentication Method: Social login or email/password?
 2. Session Management: JWT or session cookies?
 3. Password Requirements: Complexity rules?
@@ -939,14 +1003,14 @@ mode: preflight
 
 ### Mode Selection Guidelines
 
-| Scenario | YOLO | Interactive | Pre-Flight |
-|----------|------|-------------|------------|
-| **Simple CRUD** | ✅ Perfect | ⚠️ Overkill | ❌ Too much |
-| **Learning new tech** | ❌ Miss details | ✅ Perfect | ⚠️ Good |
-| **Security feature** | ❌ Risky | ⚠️ Good | ✅ Perfect |
-| **Time pressure** | ✅ Perfect | ⚠️ Slower | ❌ Slow |
-| **Team project** | ❌ Solo | ⚠️ Good | ✅ Perfect |
-| **Experimental** | ✅ Perfect | ✅ Good | ❌ Overhead |
+| Scenario              | YOLO            | Interactive | Pre-Flight  |
+| --------------------- | --------------- | ----------- | ----------- |
+| **Simple CRUD**       | ✅ Perfect      | ⚠️ Overkill | ❌ Too much |
+| **Learning new tech** | ❌ Miss details | ✅ Perfect  | ⚠️ Good     |
+| **Security feature**  | ❌ Risky        | ⚠️ Good     | ✅ Perfect  |
+| **Time pressure**     | ✅ Perfect      | ⚠️ Slower   | ❌ Slow     |
+| **Team project**      | ❌ Solo         | ⚠️ Good     | ✅ Perfect  |
+| **Experimental**      | ✅ Perfect      | ✅ Good     | ❌ Overhead |
 
 ---
 
@@ -966,23 +1030,23 @@ AIOS supports multiple workflow patterns:
 
 ```yaml
 workflow:
-  id: {workflow-id}
-  name: {WorkflowName}
-  version: {X.Y.Z}
-  type: {sequential|fork-join|organizer-worker|conditional|loop}
-  
+  id: { workflow-id }
+  name: { WorkflowName }
+  version: { X.Y.Z }
+  type: { sequential|fork-join|organizer-worker|conditional|loop }
+
   steps:
     - id: step-1
-      task: {task-name}
-      agent: {agent-id}
+      task: { task-name }
+      agent: { agent-id }
       dependencies: []
-      condition: {optional}
-      
+      condition: { optional }
+
     - id: step-2
-      task: {task-name}
-      agent: {agent-id}
+      task: { task-name }
+      agent: { agent-id }
       dependencies: [step-1]
-      
+
     - id: step-3
       type: fork
       branches:
@@ -991,20 +1055,22 @@ workflow:
         - id: branch-b
           steps: [...]
       join: step-4
-      
+
     - id: step-4
       type: join
-      merge_strategy: {combine|first|last|custom}
+      merge_strategy: { combine|first|last|custom }
 ```
 
 ### Built-in Workflows
 
 **Greenfield Workflows:**
+
 - `greenfield-fullstack.yaml` - Complete full-stack project
 - `greenfield-service.yaml` - Backend service only
 - `greenfield-ui.yaml` - Frontend UI only
 
 **Brownfield Workflows:**
+
 - `brownfield-fullstack.yaml` - Add features to existing full-stack
 - `brownfield-service.yaml` - Extend existing backend
 - `brownfield-ui.yaml` - Enhance existing frontend
@@ -1018,6 +1084,7 @@ workflow:
 **Purpose:** Execute tasks in parallel and synchronize results
 
 **Use Cases:**
+
 - Parallel test execution
 - Multi-agent analysis
 - Concurrent API calls
@@ -1032,15 +1099,15 @@ workflow:
     - id: frontend-analysis
       agent: architect
       task: analyze-frontend-architecture
-      
+
     - id: backend-analysis
       agent: architect
       task: analyze-backend-architecture
-      
+
     - id: database-analysis
       agent: db-sage
       task: analyze-database-schema
-      
+
   join: merge-analysis
   merge_strategy: combine_reports
 
@@ -1051,6 +1118,7 @@ workflow:
 ```
 
 **Merge Strategies:**
+
 - `combine` - Combine all results
 - `first` - Use first completed result
 - `last` - Use last completed result
@@ -1063,6 +1131,7 @@ workflow:
 **Purpose:** Intelligent work distribution across agents
 
 **Use Cases:**
+
 - Dynamic task distribution
 - Load balancing
 - Skill-based assignment
@@ -1105,17 +1174,20 @@ agent:
 **Distribution Strategies:**
 
 1. **Round Robin** - Distribute evenly
+
 ```yaml
 distribution_strategy: round_robin
 ```
 
 2. **Load Balanced** - Consider current workload
+
 ```yaml
 distribution_strategy: load_balanced
 max_concurrent_tasks: 3
 ```
 
 3. **Skill Based** - Match skills to requirements
+
 ```yaml
 distribution_strategy: skill_based
 required_skills: [coding, frontend]
@@ -1129,7 +1201,7 @@ required_skills: [coding, frontend]
   organizer: aios-master
   workers: [dev-1, dev-2, dev-3]
   distribution_strategy: skill_based
-  
+
   work_items:
     - feature: user-authentication
       required_skills: [backend, security]
@@ -1137,7 +1209,7 @@ required_skills: [coding, frontend]
       required_skills: [frontend, react]
     - feature: data-pipeline
       required_skills: [data, etl]
-  
+
   merge_strategy: combine
   failure_strategy: reassign
 ```
@@ -1153,12 +1225,14 @@ required_skills: [coding, frontend]
 **Definition:** AI agent using Large Language Models for creative/analytical tasks
 
 **When to Use:**
+
 - ✅ Requires creativity or subjective judgment
 - ✅ Natural language understanding/generation
 - ✅ Contextual analysis
 - ✅ No deterministic algorithm
 
 **Examples:**
+
 - Analyze requirements and extract insights
 - Generate code from specifications
 - Design system architecture
@@ -1166,6 +1240,7 @@ required_skills: [coding, frontend]
 - Create documentation
 
 **Characteristics:**
+
 - **Cost:** $$$$ High ($0.001 - $0.01 per execution)
 - **Speed:** Slow (3-10 seconds)
 - **Deterministic:** ❌ No (stochastic outputs)
@@ -1177,12 +1252,14 @@ required_skills: [coding, frontend]
 **Definition:** Deterministic script/function with predefined logic
 
 **When to Use:**
+
 - ✅ Deterministic (same input → same output)
 - ✅ Data transformation or validation
 - ✅ File/database operations
 - ✅ External API calls (no AI)
 
 **Examples:**
+
 - Load configuration from JSON
 - Validate HTML structure
 - Export PNG from HTML
@@ -1190,6 +1267,7 @@ required_skills: [coding, frontend]
 - Run migrations
 
 **Characteristics:**
+
 - **Cost:** $ Low ($0 - $0.001 per execution)
 - **Speed:** Fast (< 1 second)
 - **Deterministic:** ✅ Yes (repeatable)
@@ -1201,12 +1279,14 @@ required_skills: [coding, frontend]
 **Definition:** Human operator for subjective judgment or approval
 
 **When to Use:**
+
 - ✅ Requires human subjective judgment
 - ✅ Quality gate or approval step
 - ✅ Sensitive decisions
 - ✅ Cannot be automated (yet)
 
 **Examples:**
+
 - Review and approve/reject work
 - Make strategic decisions
 - Handle edge cases
@@ -1214,6 +1294,7 @@ required_skills: [coding, frontend]
 - Security review
 
 **Characteristics:**
+
 - **Cost:** $$$ Medium ($5 - $50 per execution)
 - **Speed:** Very Slow (minutes to hours)
 - **Deterministic:** ❌ No (subjective)
@@ -1225,18 +1306,21 @@ required_skills: [coding, frontend]
 **Definition:** AI agent with personality heuristics and domain axioms
 
 **When to Use:**
+
 - ✅ Requires specific domain expertise
 - ✅ Must follow specific methodology
 - ✅ Needs validation against established principles
 - ✅ Benefits from "personality-driven" execution
 
 **Examples:**
+
 - Validate components (Atomic Design - Brad Frost)
 - Review copy (Alex Hormozi methodology)
 - Evaluate design consistency
 - Apply mental models
 
 **Characteristics:**
+
 - **Cost:** $$$$ High ($0.002 - $0.015 per execution)
 - **Speed:** Slow (5-15 seconds)
 - **Deterministic:** ⚠️ Partial (heuristics guide AI)
@@ -1273,14 +1357,14 @@ Requires Creativity/Subjectivity?
 
 ### Decision Criteria
 
-| Criterion | Worker | Agente | Humano | Clone |
-|-----------|--------|--------|--------|-------|
-| **Creativity Required** | ❌ | ✅ | ✅ | ✅ |
-| **Deterministic** | ✅ | ❌ | ❌ | ⚠️ |
-| **Cost** | $ | $$$$ | $$$ | $$$$ |
-| **Speed** | Fast | Slow | Very Slow | Slow |
-| **Human Judgment** | ❌ | ❌ | ✅ | ❌ |
-| **Methodology** | ❌ | ❌ | ⚠️ | ✅ |
+| Criterion               | Worker | Agente | Humano    | Clone |
+| ----------------------- | ------ | ------ | --------- | ----- |
+| **Creativity Required** | ❌     | ✅     | ✅        | ✅    |
+| **Deterministic**       | ✅     | ❌     | ❌        | ⚠️    |
+| **Cost**                | $      | $$$$   | $$$       | $$$$  |
+| **Speed**               | Fast   | Slow   | Very Slow | Slow  |
+| **Human Judgment**      | ❌     | ❌     | ✅        | ❌    |
+| **Methodology**         | ❌     | ❌     | ⚠️        | ✅    |
 
 ---
 
@@ -1291,42 +1375,46 @@ Requires Creativity/Subjectivity?
 ### JavaScript/TypeScript Standards
 
 **Naming Conventions:**
+
 - `camelCase` for variables, functions, methods
 - `PascalCase` for classes, components, interfaces
 - `UPPER_CASE` for constants
 - `kebab-case` for file names
 
 **Code Structure:**
+
 ```javascript
 // ✅ GOOD
 const userProfile = {
-  firstName: 'John',
-  lastName: 'Doe',
-  isActive: true
+  firstName: "John",
+  lastName: "Doe",
+  isActive: true,
 };
 
 // ❌ BAD
 const user_profile = {
-  first_name: 'John',
-  last_name: 'Doe',
-  is_active: true
+  first_name: "John",
+  last_name: "Doe",
+  is_active: true,
 };
 ```
 
 **Function Design:**
+
 - Keep functions small (<50 lines)
 - Single responsibility
 - Pure functions when possible
 - Document with JSDoc
 
 **Error Handling:**
+
 ```javascript
 // ✅ GOOD
 try {
   const result = await operation();
   return { success: true, data: result };
 } catch (error) {
-  logger.error('Operation failed:', error);
+  logger.error("Operation failed:", error);
   return { success: false, error: error.message };
 }
 
@@ -1356,6 +1444,7 @@ const result = await operation(); // No error handling
 ```
 
 **CSS Organization:**
+
 1. Layout properties
 2. Box model properties
 3. Visual properties
@@ -1393,17 +1482,20 @@ CREATE TABLE workflowExecutions (
 ### Frontend Stack
 
 **Core:**
+
 - **Framework:** Next.js 14 (App Router)
 - **UI Library:** React 18
 - **Language:** TypeScript 5
 - **Styling:** Tailwind CSS 3
 
 **State Management:**
+
 - **Global:** Zustand or React Context
 - **Server:** React Server Components
 - **Forms:** React Hook Form + Zod
 
 **UI Components:**
+
 - **Library:** shadcn/ui (Radix UI)
 - **Icons:** Lucide React
 - **Animations:** Framer Motion
@@ -1413,20 +1505,24 @@ CREATE TABLE workflowExecutions (
 ### Backend Stack
 
 **Core:**
+
 - **Framework:** NestJS
 - **Language:** TypeScript 5
 - **Runtime:** Node.js 18+ (LTS)
 
 **Database:**
+
 - **Primary:** Supabase (PostgreSQL)
 - **ORM:** Prisma or TypeORM
 - **Migrations:** Prisma Migrate
 
 **Authentication:**
+
 - **Provider:** Supabase Auth
 - **Strategy:** JWT + Row Level Security (RLS)
 
 **API:**
+
 - **Type:** REST + tRPC (type-safe)
 - **Validation:** Zod
 - **Documentation:** OpenAPI/Swagger
@@ -1436,16 +1532,19 @@ CREATE TABLE workflowExecutions (
 ### DevOps & Infrastructure
 
 **Version Control:**
+
 - **Platform:** GitHub
 - **Workflow:** Feature branches + PRs
 - **CI/CD:** GitHub Actions
 
 **Deployment:**
+
 - **Platform:** Railway (recommended) or Vercel
 - **Strategy:** Zero-downtime deployment
 - **Environments:** dev, staging, production
 
 **Monitoring:**
+
 - **Logs:** Structured logging (Winston/Pino)
 - **Metrics:** Custom dashboards
 - **Errors:** Error tracking service
@@ -1464,6 +1563,7 @@ AIOS uses **CodeRabbit** for automated code review at three key checkpoints:
 **Command:** `*code-review uncommitted`
 
 **Focus:**
+
 - Syntax errors
 - Basic code quality
 - Linting violations
@@ -1479,6 +1579,7 @@ AIOS uses **CodeRabbit** for automated code review at three key checkpoints:
 **Command:** `*code-review --base main`
 
 **Focus:**
+
 - Architecture patterns
 - Error handling
 - Performance issues
@@ -1494,6 +1595,7 @@ AIOS uses **CodeRabbit** for automated code review at three key checkpoints:
 **Command:** `*code-review --base main --full`
 
 **Focus:**
+
 - Complete code quality
 - Test coverage
 - Documentation
@@ -1506,12 +1608,12 @@ AIOS uses **CodeRabbit** for automated code review at three key checkpoints:
 
 ### Severity Levels
 
-| Severity | Action | Examples |
-|----------|--------|----------|
-| **CRITICAL** | ❌ Block | Security vulnerabilities, data loss risks |
-| **HIGH** | ⚠️ Fix before PR | Performance issues, error handling gaps |
-| **MEDIUM** | 📋 Document as debt | Code maintainability, design patterns |
-| **LOW** | ℹ️ Optional | Style inconsistencies, minor optimizations |
+| Severity     | Action              | Examples                                   |
+| ------------ | ------------------- | ------------------------------------------ |
+| **CRITICAL** | ❌ Block            | Security vulnerabilities, data loss risks  |
+| **HIGH**     | ⚠️ Fix before PR    | Performance issues, error handling gaps    |
+| **MEDIUM**   | 📋 Document as debt | Code maintainability, design patterns      |
+| **LOW**      | ℹ️ Optional         | Style inconsistencies, minor optimizations |
 
 ---
 
@@ -1549,6 +1651,7 @@ focus_areas:
 **Waves:**
 
 **Wave 1 - Foundation (In Progress):**
+
 - ✅ Story 6.1.1: Agent Personalization Implementation
 - ✅ Story 6.1.2: Persona Profile Integration
 - ✅ Story 6.1.3: Greeting Levels Implementation
@@ -1565,6 +1668,7 @@ focus_areas:
 - 📋 Story 6.1.13: Organizer-Worker Pattern (Ready)
 
 **Wave 2 - Enhancement (Pending):**
+
 - ❌ Story 6.1.14: Expansion Pack Framework (REJECTED - Architecture conflict)
 - ❌ Story 6.1.14.1-3: Expansion Pack Extraction (REJECTED - Architecture conflict)
 - 📋 Story 6.1.15: Subdirectory Architecture Validation (PROPOSED)
@@ -1577,6 +1681,7 @@ focus_areas:
 ### Repository Restructuring (Decision 005)
 
 **Current State:**
+
 ```
 @synkra/aios-core/
 ├── .aios-core/              # Framework embedded in project
@@ -1586,6 +1691,7 @@ focus_areas:
 ```
 
 **Future State (Q2 2026):**
+
 ```
 aios/
 ├── aios-core/               # Framework repository (standalone)
@@ -1601,12 +1707,14 @@ aios/
 ```
 
 **Benefits:**
+
 - ✅ Framework versioning independent of project
 - ✅ Easier framework updates
 - ✅ Cleaner project structure
 - ✅ Multiple projects share same framework
 
 **Migration Timeline:**
+
 - **Q1 2026:** Prepare for separation
 - **Q2 2026:** Execute repository split
 - **Q3 2026:** Complete migration
@@ -1618,6 +1726,7 @@ aios/
 ### The Challenge (Story 6.1.15+)
 
 **Current Structure:** Flat files in `.aios-core/{type}/`
+
 ```
 .aios-core/
 ├── tasks/
@@ -1628,6 +1737,7 @@ aios/
 ```
 
 **Proposed Structure:** Organized subdirectories
+
 ```
 .aios-core/
 ├── tasks/
@@ -1647,30 +1757,35 @@ aios/
 ### Migration Phases
 
 **Phase 0: Validation (Story 6.1.15)**
+
 - Duration: 2-3 days
 - Investment: $100-150
 - Goal: Test subdirectory architecture works
 - Deliverable: GO/NO-GO decision
 
 **Phase 1: Core Infrastructure (Story 6.1.16)**
+
 - Duration: 1.5 days
 - Investment: $75
 - Goal: Update file resolution logic
 - Deliverable: Scripts support subdirectories
 
 **Phase 2: File Migration (Stories 6.1.17-19)**
+
 - Duration: 10-15 days
 - Investment: $500-750
 - Goal: Move files to subdirectories
 - Deliverable: Organized framework structure
 
 **Phase 3: Reference Updates (Story 6.1.20)**
+
 - Duration: 1 day
 - Investment: $50
 - Goal: Update all agent references
 - Deliverable: All references correct
 
 **Phase 4: Cleanup (Story 6.1.21)**
+
 - Duration: 0.5 day
 - Investment: $25
 - Goal: Remove backward compatibility
@@ -1683,6 +1798,7 @@ aios/
 ### Proposed Subdirectory Organization
 
 **data/ subdirectories:**
+
 ```
 data/
 ├── agile/                   # Agile/Scrum knowledge
@@ -1695,6 +1811,7 @@ data/
 ```
 
 **tasks/ subdirectories:**
+
 ```
 tasks/
 ├── agile/                   # Story management
@@ -1711,6 +1828,7 @@ tasks/
 ```
 
 **templates/ subdirectories:**
+
 ```
 templates/
 ├── agile/                   # Story, epic templates
@@ -1726,12 +1844,14 @@ templates/
 ### Risk Mitigation
 
 **Risks:**
+
 1. ❌ Breaking agent loading
 2. ❌ Performance degradation
 3. ❌ Incomplete migration
 4. ❌ Script path resolution failures
 
 **Mitigations:**
+
 1. ✅ Test in isolated environment first (Phase 0)
 2. ✅ Benchmark performance during validation
 3. ✅ Automated migration scripts + validation
@@ -1820,36 +1940,43 @@ templates/
 ### Major Architectural Decisions
 
 **Decision 001:** Agent Personalization Standard (2025-01-14)
+
 - **Status:** Implemented
 - **Decision:** Three-layer personality system (persona → formatter → output)
 - **Rationale:** Familiaridade + Personalização = Produtividade
 
 **Decision 002:** Unified Greeting System (2025-01-16)
+
 - **Status:** Implemented
 - **Decision:** Single greeting generator for all agents
 - **Rationale:** Consistency, performance, maintainability
 
 **Decision 003:** Task Format v2.0 (2025-11-13)
+
 - **Status:** Implemented
 - **Decision:** Universal task specification with execution modes
 - **Rationale:** Scalability, reusability, clarity
 
 **Decision 004:** Open Source vs Service (2025-01-14)
+
 - **Status:** Defined
 - **Decision:** Open-source = Agente-only, Service = All executors
 - **Rationale:** Community vs commercial differentiation
 
 **Decision 005:** Repository Restructuring (2025-01-15)
+
 - **Status:** Planned (Q2 2026)
 - **Decision:** Split framework and project repositories
 - **Rationale:** Independent versioning, cleaner structure
 
 **Decision 006:** Subdirectory Migration (2025-01-18)
+
 - **Status:** Approved (Pending validation)
 - **Decision:** Organize framework files in domain subdirectories
 - **Rationale:** Scalability, better organization, expansion packs support
 
 **Decision 007:** Expansion Pack Architecture (2025-01-18)
+
 - **Status:** REJECTED (Conflict with AIOS principles)
 - **Decision:** NO new directory types (methodologies/, patterns/)
 - **Rationale:** Violates 7-type framework structure
@@ -1904,9 +2031,11 @@ templates/
 
 ```markdown
 ## Story Reference
+
 [Story 6.1.X] {Story Title}
 
 ## Changes
+
 - [ ] Agent definitions updated
 - [ ] Task files created/modified
 - [ ] Templates added/changed
@@ -1914,16 +2043,19 @@ templates/
 - [ ] Documentation updated
 
 ## Testing
+
 - [ ] Unit tests pass
 - [ ] Integration tests pass
 - [ ] Manual testing complete
 
 ## CodeRabbit Review
+
 - [ ] Pre-commit review passed
 - [ ] All CRITICAL issues resolved
 - [ ] HIGH issues addressed or documented
 
 ## Checklist
+
 - [ ] Follows coding standards
 - [ ] Naming conventions correct
 - [ ] No breaking changes (or documented)
@@ -1957,7 +2089,6 @@ templates/
 
 ---
 
-*This document consolidates all AIOS framework documentation into a single, comprehensive reference. It is a living document and will be updated as the framework evolves.*
+_This document consolidates all AIOS framework documentation into a single, comprehensive reference. It is a living document and will be updated as the framework evolves._
 
 — Aria, arquitetando o futuro 🏗️
-

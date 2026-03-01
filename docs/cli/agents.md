@@ -65,10 +65,10 @@ Exemplo de config:
           name: "Zero",
           theme: "space void",
           emoji: "∅",
-          avatar: "avatars/zero.png"
-        }
-      }
-    ]
-  }
+          avatar: "avatars/zero.png",
+        },
+      },
+    ],
+  },
 }
 ```

@@ -4,11 +4,6 @@ import type { GatewayLockHandle } from "../infra/gateway-lock.js";
 
 declare const __ZERO_VERSION__: string;
 
-const BUNDLED_VERSION =
-  (typeof __ZERO_VERSION__ === "string" && __ZERO_VERSION__) ||
-  process.env.ZERO_BUNDLED_VERSION ||
-  "0.0.0";
-
 function argValue(args: string[], flag: string): string | undefined {
   const idx = args.indexOf(flag);
   if (idx < 0) return undefined;
@@ -28,7 +23,7 @@ async function main() {
   if (hasFlag(args, "--version") || hasFlag(args, "-v")) {
     // Match `zero --version` behavior for Swift env/version checks.
     // Keep output a single line.
-    console.log(BUNDLED_VERSION);
+
     process.exit(0);
   }
 
@@ -88,10 +83,10 @@ async function main() {
     argValue(args, "--bind") ?? process.env.ZERO_GATEWAY_BIND ?? cfg.gateway?.bind ?? "loopback";
   const bind =
     bindRaw === "loopback" ||
-    bindRaw === "lan" ||
-    bindRaw === "auto" ||
-    bindRaw === "custom" ||
-    bindRaw === "tailnet"
+      bindRaw === "lan" ||
+      bindRaw === "auto" ||
+      bindRaw === "custom" ||
+      bindRaw === "tailnet"
       ? bindRaw
       : null;
   if (!bind) {

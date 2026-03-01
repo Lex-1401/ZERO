@@ -5,8 +5,8 @@
  * Syncs "Always Allow" policies between CLIs.
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 class PolicySync {
   constructor(config = {}) {
@@ -17,18 +17,18 @@ class PolicySync {
    * Get AIOS permission policies
    */
   async getAIOSPolicies() {
-    const policiesPath = path.join(this.projectDir, '.aios', 'policies.json');
+    const policiesPath = path.join(this.projectDir, ".aios", "policies.json");
 
     if (fs.existsSync(policiesPath)) {
       try {
-        return JSON.parse(fs.readFileSync(policiesPath, 'utf8'));
+        return JSON.parse(fs.readFileSync(policiesPath, "utf8"));
       } catch (_err) {
         // Return default on parse error
-        return { rules: [], version: '1.0' };
+        return { rules: [], version: "1.0" };
       }
     }
 
-    return { rules: [], version: '1.0' };
+    return { rules: [], version: "1.0" };
   }
 
   /**

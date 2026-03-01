@@ -2,7 +2,25 @@
 name: bear-notes
 description: Crie, pesquise e gerencie notas do Bear via CLI grizzly.
 homepage: https://bear.app
-metadata: {"zero":{"emoji":"🐻","os":["darwin"],"requires":{"bins":["grizzly"]},"install":[{"id":"go","kind":"go","module":"github.com/tylerwince/grizzly/cmd/grizzly@latest","bins":["grizzly"],"label":"Instalar grizzly (go)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "🐻",
+        "os": ["darwin"],
+        "requires": { "bins": ["grizzly"] },
+        "install":
+          [
+            {
+              "id": "go",
+              "kind": "go",
+              "module": "github.com/tylerwince/grizzly/cmd/grizzly@latest",
+              "bins": ["grizzly"],
+              "label": "Instalar grizzly (go)",
+            },
+          ],
+      },
+  }
 ---
 
 # Bear Notes

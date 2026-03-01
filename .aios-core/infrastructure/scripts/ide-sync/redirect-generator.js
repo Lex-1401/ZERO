@@ -3,18 +3,18 @@
  * @story 6.19 - IDE Command Auto-Sync System
  */
 
-const fs = require('fs-extra');
-const path = require('path');
+const fs = require("fs-extra");
+const path = require("path");
 
 /**
  * Default redirects configuration
  * Maps deprecated agent IDs to their new target IDs
  */
 const DEFAULT_REDIRECTS = {
-  'aios-developer': 'aios-master',
-  'aios-orchestrator': 'aios-master',
-  'db-sage': 'data-engineer',
-  'github-devops': 'devops',
+  "aios-developer": "aios-master",
+  "aios-orchestrator": "aios-master",
+  "db-sage": "data-engineer",
+  "github-devops": "devops",
 };
 
 /**
@@ -32,7 +32,7 @@ function generateRedirectContent(oldId, newId, format) {
   };
 
   switch (format) {
-    case 'full-markdown-yaml':
+    case "full-markdown-yaml":
       // Claude Code format
       return `${baseContent.header}
 
@@ -54,7 +54,7 @@ ${baseContent.instruction}
 *AIOS Redirect - Synced automatically*
 `;
 
-    case 'xml-tagged-markdown':
+    case "xml-tagged-markdown":
       // Generic markdown format
       return `${baseContent.header}
 
@@ -73,8 +73,8 @@ ${baseContent.instruction}
 *AIOS Redirect - Synced automatically*
 `;
 
-    case 'condensed-rules':
-    case 'cursor-style':
+    case "condensed-rules":
+    case "cursor-style":
     default:
       // Cursor/Antigravity format
       return `${baseContent.header}
@@ -144,7 +144,7 @@ function writeRedirects(redirects, dryRun = false) {
     try {
       if (!dryRun) {
         fs.ensureDirSync(path.dirname(redirect.path));
-        fs.writeFileSync(redirect.path, redirect.content, 'utf8');
+        fs.writeFileSync(redirect.path, redirect.content, "utf8");
       }
       results.written.push(redirect.path);
     } catch (error) {
@@ -165,7 +165,7 @@ function writeRedirects(redirects, dryRun = false) {
  */
 function getRedirectFilenames(redirectsConfig) {
   const redirects = redirectsConfig || DEFAULT_REDIRECTS;
-  return Object.keys(redirects).map(id => `${id}.md`);
+  return Object.keys(redirects).map((id) => `${id}.md`);
 }
 
 module.exports = {

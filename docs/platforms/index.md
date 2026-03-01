@@ -4,6 +4,7 @@ read_when:
   - Procurando suporte a SO ou caminhos de instalação
   - Decidindo onde executar o Gateway
 ---
+
 # Plataformas
 
 O núcleo do ZERO é escrito em TypeScript. **Node é o runtime recomendado**.

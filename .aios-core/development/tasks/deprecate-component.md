@@ -182,6 +182,7 @@ token_usage: ~1,000-3,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Parallelize independent operations; reuse atom results; implement early exits
 
 ---
@@ -202,28 +203,37 @@ updated_at: 2025-11-17
 ---
 
 tools:
-  - github-cli
+
+- github-cli
+
 # TODO: Create deprecation-checklist.md for validation (follow-up story needed)
+
 # checklists:
-#   - deprecation-checklist.md
+
+# - deprecation-checklist.md
+
 ---
 
 # Deprecate Component - AIOS Developer Task
 
 ## Purpose
+
 Mark framework components as deprecated with timeline management and migration path generation.
 
 ## Command Pattern
+
 ```
 *deprecate-component <component-type> <component-name> [options]
 ```
 
 ## Parameters
+
 - `component-type`: Type of component (agent, task, workflow, util)
 - `component-name`: Name/ID of the component to deprecate
 - `options`: Deprecation configuration and timeline
 
 ### Options
+
 - `--removal-version <version>`: Target version for removal (default: next major)
 - `--replacement <name>`: Replacement component name
 - `--reason <text>`: Deprecation reason
@@ -233,6 +243,7 @@ Mark framework components as deprecated with timeline management and migration p
 - `--severity <level>`: Deprecation severity (low, medium, high, critical)
 
 ## Examples
+
 ```bash
 # Deprecate an agent with replacement
 *deprecate-component agent weather-fetcher --replacement weather-service --reason "Performance optimization" --timeline 3
@@ -250,15 +261,15 @@ Mark framework components as deprecated with timeline management and migration p
 ## Implementation
 
 ```javascript
-const fs = require('fs').promises;
-const path = require('path');
-const chalk = require('chalk');
-const inquirer = require('inquirer');
+const fs = require("fs").promises;
+const path = require("path");
+const chalk = require("chalk");
+const inquirer = require("inquirer");
 
 class DeprecateComponentTask {
   constructor() {
-    this.taskName = 'deprecate-component';
-    this.description = 'Mark framework components as deprecated with timeline management';
+    this.taskName = "deprecate-component";
+    this.description = "Mark framework components as deprecated with timeline management";
     this.rootPath = process.cwd();
     this.deprecationManager = null;
     this.usageTracker = null;
@@ -267,12 +278,12 @@ class DeprecateComponentTask {
 
   async execute(params) {
     try {
-      console.log(chalk.blue('🚫 AIOS Component Deprecation'));
-      console.log(chalk.gray('Marking component as deprecated with timeline management\n'));
+      console.log(chalk.blue("🚫 AIOS Component Deprecation"));
+      console.log(chalk.gray("Marking component as deprecated with timeline management\n"));
 
       // Parse and validate parameters
       const config = await this.parseParameters(params);
-      
+
       // Initialize dependencies
       await this.initializeDependencies();
 
@@ -286,31 +297,33 @@ class DeprecateComponentTask {
       const currentStatus = await this.checkDeprecationStatus(component);
       if (currentStatus.deprecated && !config.force) {
         console.log(chalk.yellow(`⚠️  Component ${component.name} is already deprecated`));
-        
-        const { action } = await inquirer.prompt([{
-          type: 'list',
-          name: 'action',
-          message: 'Component is already deprecated. What would you like to do?',
-          choices: [
-            { name: 'Update deprecation details', value: 'update' },
-            { name: 'View current deprecation info', value: 'view' },
-            { name: 'Cancel operation', value: 'cancel' }
-          ]
-        }]);
 
-        if (action === 'cancel') {
-          console.log(chalk.gray('Operation cancelled'));
+        const { action } = await inquirer.prompt([
+          {
+            type: "list",
+            name: "action",
+            message: "Component is already deprecated. What would you like to do?",
+            choices: [
+              { name: "Update deprecation details", value: "update" },
+              { name: "View current deprecation info", value: "view" },
+              { name: "Cancel operation", value: "cancel" },
+            ],
+          },
+        ]);
+
+        if (action === "cancel") {
+          console.log(chalk.gray("Operation cancelled"));
           return;
-        } else if (action === 'view') {
+        } else if (action === "view") {
           await this.displayDeprecationInfo(component, currentStatus);
           return;
         }
       }
 
       // Analyze component usage
-      console.log(chalk.gray('Analyzing component usage...'));
+      console.log(chalk.gray("Analyzing component usage..."));
       const usageAnalysis = await this.analyzeComponentUsage(component);
-      
+
       // Generate deprecation plan
       const deprecationPlan = await this.generateDeprecationPlan(component, config, usageAnalysis);
 
@@ -320,7 +333,7 @@ class DeprecateComponentTask {
       // Request confirmation
       const confirmed = await this.requestConfirmation(deprecationPlan);
       if (!confirmed) {
-        console.log(chalk.gray('Deprecation cancelled'));
+        console.log(chalk.gray("Deprecation cancelled"));
         return;
       }
 
@@ -339,14 +352,16 @@ class DeprecateComponentTask {
       await this.scheduleDeprecationTasks(component, deprecationPlan);
 
       // Display success summary
-      console.log(chalk.green('\n✅ Component deprecation completed successfully'));
+      console.log(chalk.green("\n✅ Component deprecation completed successfully"));
       console.log(chalk.gray(`   Component: ${component.type}/${component.name}`));
       console.log(chalk.gray(`   Deprecation ID: ${deprecationResult.deprecationId}`));
       console.log(chalk.gray(`   Timeline: ${deprecationPlan.timeline} months`));
       console.log(chalk.gray(`   Removal planned: ${deprecationPlan.removalVersion}`));
-      
+
       if (deprecationPlan.usageCount > 0) {
-        console.log(chalk.yellow(`   ⚠️  Found ${deprecationPlan.usageCount} usage(s) that need migration`));
+        console.log(
+          chalk.yellow(`   ⚠️  Found ${deprecationPlan.usageCount} usage(s) that need migration`),
+        );
       }
 
       return {
@@ -355,9 +370,8 @@ class DeprecateComponentTask {
         component: component,
         timeline: deprecationPlan.timeline,
         usageCount: deprecationPlan.usageCount,
-        migrationRequired: deprecationPlan.migrationRequired
+        migrationRequired: deprecationPlan.migrationRequired,
       };
-
     } catch (error) {
       console.error(chalk.red(`\n❌ Component deprecation failed: ${error.message}`));
       throw error;
@@ -366,7 +380,7 @@ class DeprecateComponentTask {
 
   async parseParameters(params) {
     if (params.length < 2) {
-      throw new Error('Usage: *deprecate-component <component-type> <component-name> [options]');
+      throw new Error("Usage: *deprecate-component <component-type> <component-name> [options]");
     }
 
     const config = {
@@ -378,43 +392,47 @@ class DeprecateComponentTask {
       migrationGuide: null,
       immediate: false,
       timeline: 6,
-      severity: 'medium',
-      force: false
+      severity: "medium",
+      force: false,
     };
 
     // Parse options
     for (let i = 2; i < params.length; i++) {
       const param = params[i];
-      
-      if (param === '--immediate') {
+
+      if (param === "--immediate") {
         config.immediate = true;
-      } else if (param === '--force') {
+      } else if (param === "--force") {
         config.force = true;
-      } else if (param.startsWith('--removal-version') && params[i + 1]) {
+      } else if (param.startsWith("--removal-version") && params[i + 1]) {
         config.removalVersion = params[++i];
-      } else if (param.startsWith('--replacement') && params[i + 1]) {
+      } else if (param.startsWith("--replacement") && params[i + 1]) {
         config.replacement = params[++i];
-      } else if (param.startsWith('--reason') && params[i + 1]) {
+      } else if (param.startsWith("--reason") && params[i + 1]) {
         config.reason = params[++i];
-      } else if (param.startsWith('--migration-guide') && params[i + 1]) {
+      } else if (param.startsWith("--migration-guide") && params[i + 1]) {
         config.migrationGuide = params[++i];
-      } else if (param.startsWith('--timeline') && params[i + 1]) {
+      } else if (param.startsWith("--timeline") && params[i + 1]) {
         config.timeline = parseInt(params[++i]) || 6;
-      } else if (param.startsWith('--severity') && params[i + 1]) {
+      } else if (param.startsWith("--severity") && params[i + 1]) {
         config.severity = params[++i];
       }
     }
 
     // Validate component type
-    const validTypes = ['agent', 'task', 'workflow', 'util'];
+    const validTypes = ["agent", "task", "workflow", "util"];
     if (!validTypes.includes(config.componentType)) {
-      throw new Error(`Invalid component type: ${config.componentType}. Must be one of: ${validTypes.join(', ')}`);
+      throw new Error(
+        `Invalid component type: ${config.componentType}. Must be one of: ${validTypes.join(", ")}`,
+      );
     }
 
     // Validate severity
-    const validSeverities = ['low', 'medium', 'high', 'critical'];
+    const validSeverities = ["low", "medium", "high", "critical"];
     if (!validSeverities.includes(config.severity)) {
-      throw new Error(`Invalid severity: ${config.severity}. Must be one of: ${validSeverities.join(', ')}`);
+      throw new Error(
+        `Invalid severity: ${config.severity}. Must be one of: ${validSeverities.join(", ")}`,
+      );
     }
 
     return config;
@@ -432,9 +450,8 @@ class DeprecateComponentTask {
       // this.usageTracker = new UsageTracker({ rootPath: this.rootPath });
 
       // Initialize component search
-      const ComponentSearch = require('../scripts/component-search');
+      const ComponentSearch = require("../scripts/component-search");
       this.componentSearch = new ComponentSearch({ rootPath: this.rootPath });
-
     } catch (error) {
       throw new Error(`Failed to initialize dependencies: ${error.message}`);
     }
@@ -442,13 +459,16 @@ class DeprecateComponentTask {
 
   async findComponent(componentType, componentName) {
     const component = await this.componentSearch.findComponent(componentType, componentName);
-    
+
     if (!component) {
       // Suggest similar components
-      const suggestions = await this.componentSearch.findSimilarComponents(componentType, componentName);
+      const suggestions = await this.componentSearch.findSimilarComponents(
+        componentType,
+        componentName,
+      );
       if (suggestions.length > 0) {
-        console.log(chalk.yellow('\nDid you mean one of these?'));
-        suggestions.forEach(suggestion => {
+        console.log(chalk.yellow("\nDid you mean one of these?"));
+        suggestions.forEach((suggestion) => {
           console.log(chalk.gray(`  - ${suggestion.type}/${suggestion.name}`));
         });
       }
@@ -466,14 +486,14 @@ class DeprecateComponentTask {
     const usageAnalysis = await this.usageTracker.analyzeComponentUsage(component.id, {
       includeTests: false,
       includeDocs: false,
-      scanDepth: 'full'
+      scanDepth: "full",
     });
 
     return {
       usageCount: usageAnalysis.total_references,
       usageLocations: usageAnalysis.usage_locations,
       dependentComponents: usageAnalysis.dependent_components,
-      externalReferences: usageAnalysis.external_references
+      externalReferences: usageAnalysis.external_references,
     };
   }
 
@@ -483,9 +503,10 @@ class DeprecateComponentTask {
       componentType: component.type,
       componentName: component.name,
       deprecationTimestamp: new Date().toISOString(),
-      removalVersion: config.removalVersion || await this.calculateRemovalVersion(config.timeline),
+      removalVersion:
+        config.removalVersion || (await this.calculateRemovalVersion(config.timeline)),
       replacement: config.replacement,
-      reason: config.reason || 'Component deprecated',
+      reason: config.reason || "Component deprecated",
       migrationGuide: config.migrationGuide,
       immediate: config.immediate,
       timeline: config.timeline,
@@ -494,7 +515,7 @@ class DeprecateComponentTask {
       migrationRequired: usageAnalysis.usageCount > 0,
       affectedComponents: usageAnalysis.dependentComponents,
       deprecationActions: [],
-      notifications: []
+      notifications: [],
     };
 
     // Generate deprecation actions
@@ -509,14 +530,14 @@ class DeprecateComponentTask {
   async calculateRemovalVersion(timelineMonths) {
     // Get current version from package.json or version tracker
     try {
-      const packagePath = path.join(this.rootPath, 'package.json');
-      const packageContent = await fs.readFile(packagePath, 'utf-8');
+      const packagePath = path.join(this.rootPath, "package.json");
+      const packageContent = await fs.readFile(packagePath, "utf-8");
       const packageInfo = JSON.parse(packageContent);
-      const currentVersion = packageInfo.version || '1.0.0';
-      
+      const currentVersion = packageInfo.version || "1.0.0";
+
       // Calculate removal version based on timeline
-      const [major, minor, patch] = currentVersion.split('.').map(Number);
-      
+      const [major, minor, patch] = currentVersion.split(".").map(Number);
+
       if (timelineMonths >= 12) {
         return `${major + 1}.0.0`;
       } else if (timelineMonths >= 6) {
@@ -525,7 +546,7 @@ class DeprecateComponentTask {
         return `${major}.${minor}.${patch + 10}`;
       }
     } catch (error) {
-      return '2.0.0'; // Fallback version
+      return "2.0.0"; // Fallback version
     }
   }
 
@@ -534,33 +555,33 @@ class DeprecateComponentTask {
 
     // Add deprecation metadata
     actions.push({
-      type: 'add_deprecation_metadata',
-      description: 'Add deprecation metadata to component',
+      type: "add_deprecation_metadata",
+      description: "Add deprecation metadata to component",
       target: component.filePath,
       metadata: {
         deprecated: true,
         deprecatedSince: plan.deprecationTimestamp,
         removalPlanned: plan.removalVersion,
         replacement: plan.replacement,
-        reason: plan.reason
-      }
+        reason: plan.reason,
+      },
     });
 
     // Add deprecation comments/warnings
     actions.push({
-      type: 'add_deprecation_warnings',
-      description: 'Add deprecation warnings to component code',
+      type: "add_deprecation_warnings",
+      description: "Add deprecation warnings to component code",
       target: component.filePath,
-      warningType: component.type === 'agent' ? 'yaml_comment' : 'code_comment'
+      warningType: component.type === "agent" ? "yaml_comment" : "code_comment",
     });
 
     // Update component registration
     if (component.registrationFile) {
       actions.push({
-        type: 'update_component_registry',
-        description: 'Mark component as deprecated in registry',
+        type: "update_component_registry",
+        description: "Mark component as deprecated in registry",
         target: component.registrationFile,
-        deprecationStatus: true
+        deprecationStatus: true,
       });
     }
 
@@ -568,11 +589,11 @@ class DeprecateComponentTask {
     if (usageAnalysis.usageCount > 0) {
       for (const usage of usageAnalysis.usageLocations) {
         actions.push({
-          type: 'add_usage_warning',
+          type: "add_usage_warning",
           description: `Add deprecation warning at usage site: ${usage.file}`,
           target: usage.file,
           line: usage.line,
-          warningMessage: this.generateUsageWarning(component, plan)
+          warningMessage: this.generateUsageWarning(component, plan),
         });
       }
     }
@@ -582,15 +603,15 @@ class DeprecateComponentTask {
 
   generateUsageWarning(component, plan) {
     let warning = `DEPRECATED: ${component.type}/${component.name} is deprecated`;
-    
+
     if (plan.replacement) {
       warning += ` - use ${plan.replacement} instead`;
     }
-    
+
     if (plan.removalVersion) {
       warning += ` (removal planned in ${plan.removalVersion})`;
     }
-    
+
     return warning;
   }
 
@@ -598,54 +619,56 @@ class DeprecateComponentTask {
     const notifications = [];
 
     // Immediate notification for high/critical severity
-    if (plan.severity === 'high' || plan.severity === 'critical') {
+    if (plan.severity === "high" || plan.severity === "critical") {
       notifications.push({
-        type: 'immediate_alert',
+        type: "immediate_alert",
         message: `High priority deprecation: ${plan.componentType}/${plan.componentName}`,
-        channels: ['console', 'log']
+        channels: ["console", "log"],
       });
     }
 
     // Timeline-based notifications
     if (plan.timeline >= 6) {
       notifications.push({
-        type: 'scheduled_reminder',
-        schedule: 'monthly',
-        message: `Reminder: ${plan.componentName} deprecation (${plan.timeline} months remaining)`
+        type: "scheduled_reminder",
+        schedule: "monthly",
+        message: `Reminder: ${plan.componentName} deprecation (${plan.timeline} months remaining)`,
       });
     }
 
     // Pre-removal warning
     notifications.push({
-      type: 'pre_removal_warning',
-      schedule: '1_month_before_removal',
-      message: `Final warning: ${plan.componentName} will be removed in ${plan.removalVersion}`
+      type: "pre_removal_warning",
+      schedule: "1_month_before_removal",
+      message: `Final warning: ${plan.componentName} will be removed in ${plan.removalVersion}`,
     });
 
     return notifications;
   }
 
   async displayDeprecationSummary(component, plan) {
-    console.log(chalk.blue('\n📋 Deprecation Summary'));
-    console.log(chalk.gray('━'.repeat(50)));
-    
+    console.log(chalk.blue("\n📋 Deprecation Summary"));
+    console.log(chalk.gray("━".repeat(50)));
+
     console.log(`Component: ${chalk.white(component.type)}/${chalk.white(component.name)}`);
     console.log(`Location: ${chalk.gray(component.filePath)}`);
     console.log(`Reason: ${chalk.yellow(plan.reason)}`);
     console.log(`Severity: ${this.getSeverityColor(plan.severity)(plan.severity)}`);
     console.log(`Timeline: ${chalk.white(plan.timeline)} months`);
     console.log(`Removal Version: ${chalk.white(plan.removalVersion)}`);
-    
+
     if (plan.replacement) {
       console.log(`Replacement: ${chalk.green(plan.replacement)}`);
     }
-    
+
     if (plan.usageCount > 0) {
-      console.log(`\n${chalk.yellow('⚠️  Usage Analysis:')}`);
-      console.log(`  Found ${chalk.white(plan.usageCount)} usage(s) across ${plan.affectedComponents.length} component(s)`);
+      console.log(`\n${chalk.yellow("⚠️  Usage Analysis:")}`);
+      console.log(
+        `  Found ${chalk.white(plan.usageCount)} usage(s) across ${plan.affectedComponents.length} component(s)`,
+      );
     }
-    
-    console.log(`\n${chalk.blue('Planned Actions:')}`);
+
+    console.log(`\n${chalk.blue("Planned Actions:")}`);
     plan.deprecationActions.forEach((action, index) => {
       console.log(`  ${index + 1}. ${action.description}`);
     });
@@ -656,32 +679,34 @@ class DeprecateComponentTask {
       low: chalk.green,
       medium: chalk.yellow,
       high: chalk.orange || chalk.yellow,
-      critical: chalk.red
+      critical: chalk.red,
     };
     return colors[severity] || chalk.white;
   }
 
   async requestConfirmation(plan) {
-    const { confirmed } = await inquirer.prompt([{
-      type: 'confirm',
-      name: 'confirmed',
-      message: `Proceed with deprecating ${plan.componentType}/${plan.componentName}?`,
-      default: false
-    }]);
+    const { confirmed } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "confirmed",
+        message: `Proceed with deprecating ${plan.componentType}/${plan.componentName}?`,
+        default: false,
+      },
+    ]);
 
     return confirmed;
   }
 
   async executeDeprecation(component, plan) {
     const deprecationId = `dep-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
-    
-    console.log(chalk.gray('\nExecuting deprecation actions...'));
+
+    console.log(chalk.gray("\nExecuting deprecation actions..."));
 
     const results = {
       deprecationId,
       actionsExecuted: 0,
       actionsFailed: 0,
-      errors: []
+      errors: [],
     };
 
     for (const action of plan.deprecationActions) {
@@ -693,7 +718,7 @@ class DeprecateComponentTask {
         results.actionsFailed++;
         results.errors.push({
           action: action.type,
-          error: error.message
+          error: error.message,
         });
         console.log(chalk.red(`  ✗ ${action.description}: ${error.message}`));
       }
@@ -704,7 +729,7 @@ class DeprecateComponentTask {
       deprecationId,
       timestamp: plan.deprecationTimestamp,
       plan: plan,
-      results: results
+      results: results,
     });
 
     return results;
@@ -712,18 +737,18 @@ class DeprecateComponentTask {
 
   async executeDeprecationAction(action) {
     switch (action.type) {
-      case 'add_deprecation_metadata':
+      case "add_deprecation_metadata":
         return await this.addDeprecationMetadata(action.target, action.metadata);
-      
-      case 'add_deprecation_warnings':
+
+      case "add_deprecation_warnings":
         return await this.addDeprecationWarnings(action.target, action.warningType);
-      
-      case 'update_component_registry':
+
+      case "update_component_registry":
         return await this.updateComponentRegistry(action.target, action.deprecationStatus);
-      
-      case 'add_usage_warning':
+
+      case "add_usage_warning":
         return await this.addUsageWarning(action.target, action.line, action.warningMessage);
-      
+
       default:
         throw new Error(`Unknown deprecation action type: ${action.type}`);
     }
@@ -732,32 +757,34 @@ class DeprecateComponentTask {
   async addDeprecationMetadata(filePath, metadata) {
     // Implementation depends on file type
     // For now, add to a separate metadata file
-    const metadataPath = path.join(path.dirname(filePath), '.deprecation-metadata.json');
-    
+    const metadataPath = path.join(path.dirname(filePath), ".deprecation-metadata.json");
+
     let existingMetadata = {};
     try {
-      const content = await fs.readFile(metadataPath, 'utf-8');
+      const content = await fs.readFile(metadataPath, "utf-8");
       existingMetadata = JSON.parse(content);
     } catch (error) {
       // File doesn't exist, start fresh
     }
 
     existingMetadata[path.basename(filePath)] = metadata;
-    
+
     await fs.writeFile(metadataPath, JSON.stringify(existingMetadata, null, 2));
   }
 
   async addDeprecationWarnings(filePath, warningType) {
-    const content = await fs.readFile(filePath, 'utf-8');
-    
-    if (warningType === 'yaml_comment') {
+    const content = await fs.readFile(filePath, "utf-8");
+
+    if (warningType === "yaml_comment") {
       // Add YAML comment for agent files
-      const warningComment = '# DEPRECATED: This agent is deprecated and will be removed in a future version\n';
+      const warningComment =
+        "# DEPRECATED: This agent is deprecated and will be removed in a future version\n";
       const updatedContent = warningComment + content;
       await fs.writeFile(filePath, updatedContent);
     } else {
       // Add code comment for other files
-      const warningComment = '// DEPRECATED: This component is deprecated and will be removed in a future version\n';
+      const warningComment =
+        "// DEPRECATED: This component is deprecated and will be removed in a future version\n";
       const updatedContent = warningComment + content;
       await fs.writeFile(filePath, updatedContent);
     }
@@ -788,14 +815,14 @@ class DeprecateComponentTask {
 
     // Generate migration guide
     const migrationGuidePath = path.join(
-      this.rootPath, 
-      'docs', 
-      'migrations', 
-      `${component.name}-to-${plan.replacement}.md`
+      this.rootPath,
+      "docs",
+      "migrations",
+      `${component.name}-to-${plan.replacement}.md`,
     );
 
     const migrationGuideContent = this.generateMigrationGuideContent(component, plan);
-    
+
     await fs.mkdir(path.dirname(migrationGuidePath), { recursive: true });
     await fs.writeFile(migrationGuidePath, migrationGuideContent);
 
@@ -831,17 +858,17 @@ If you encounter issues during migration, please refer to the documentation or c
     // Schedule future tasks for deprecation timeline
     const tasks = [
       {
-        type: 'deprecation_reminder',
+        type: "deprecation_reminder",
         scheduledFor: this.calculateReminderDate(plan.timeline),
         component: component.id,
-        message: `Deprecation reminder for ${component.name}`
+        message: `Deprecation reminder for ${component.name}`,
       },
       {
-        type: 'removal_preparation',
+        type: "removal_preparation",
         scheduledFor: this.calculateRemovalDate(plan.timeline),
         component: component.id,
-        message: `Prepare for removal of ${component.name}`
-      }
+        message: `Prepare for removal of ${component.name}`,
+      },
     ];
 
     for (const task of tasks) {
@@ -867,14 +894,16 @@ If you encounter issues during migration, please refer to the documentation or c
   }
 
   async displayDeprecationInfo(component, deprecationStatus) {
-    console.log(chalk.blue('\n📋 Current Deprecation Status'));
-    console.log(chalk.gray('━'.repeat(50)));
-    
+    console.log(chalk.blue("\n📋 Current Deprecation Status"));
+    console.log(chalk.gray("━".repeat(50)));
+
     console.log(`Component: ${component.type}/${component.name}`);
-    console.log(`Deprecated Since: ${new Date(deprecationStatus.deprecatedSince).toLocaleDateString()}`);
+    console.log(
+      `Deprecated Since: ${new Date(deprecationStatus.deprecatedSince).toLocaleDateString()}`,
+    );
     console.log(`Removal Planned: ${deprecationStatus.removalVersion}`);
     console.log(`Reason: ${deprecationStatus.reason}`);
-    
+
     if (deprecationStatus.replacement) {
       console.log(`Replacement: ${deprecationStatus.replacement}`);
     }
@@ -887,17 +916,20 @@ module.exports = DeprecateComponentTask;
 ## Validation Rules
 
 ### Input Validation
+
 - Component type must be valid (agent, task, workflow, util)
 - Component must exist in the framework
 - Severity must be valid level
 - Timeline must be positive number
 
 ### Safety Checks
+
 - Warn if component has high usage
 - Require confirmation for critical components
 - Prevent accidental deprecation of core components
 
 ### Deprecation Requirements
+
 - Must specify removal timeline
 - Should provide replacement when available
 - Must include deprecation reason
@@ -906,18 +938,21 @@ module.exports = DeprecateComponentTask;
 ## Integration Points
 
 ### Deprecation Manager
+
 - Records deprecation metadata
 - Tracks deprecation timeline
 - Manages scheduled tasks
 - Provides deprecation status
 
 ### Usage Tracker
+
 - Analyzes component usage across codebase
 - Identifies dependent components
 - Tracks usage patterns over time
 - Provides impact analysis
 
 ### Migration Generator
+
 - Creates migration guides
 - Generates replacement suggestions
 - Provides automated migration scripts
@@ -926,6 +961,7 @@ module.exports = DeprecateComponentTask;
 ## Output Structure
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -942,6 +978,7 @@ module.exports = DeprecateComponentTask;
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -951,7 +988,8 @@ module.exports = DeprecateComponentTask;
 ```
 
 ## Security Considerations
+
 - Validate all file paths to prevent directory traversal
 - Sanitize user input for deprecation reasons
 - Require appropriate permissions for component modification
-- Log all deprecation actions for audit trail 
+- Log all deprecation actions for audit trail

@@ -5,6 +5,7 @@ read_when:
   - Executando o app iOS a partir do código-fonte
   - Depurando o descobrimento do gateway ou comandos de canvas
 ---
+
 # Aplicativo iOS (Nó)
 
 Disponibilidade: prévia interna. O aplicativo iOS ainda não é distribuído publicamente.
@@ -25,22 +26,22 @@ Disponibilidade: prévia interna. O aplicativo iOS ainda não é distribuído pu
 
 ## Início rápido (emparelhar + conectar)
 
-1) Inicie o Gateway:
+1. Inicie o Gateway:
 
 ```bash
 zero gateway --port 18789
 ```
 
-1) No app iOS, abra as Configurações e escolha um gateway descoberto (ou habilite Manual Host e insira o host/porta).
+1. No app iOS, abra as Configurações e escolha um gateway descoberto (ou habilite Manual Host e insira o host/porta).
 
-2) Aprove a solicitação de emparelhamento no host do gateway:
+2. Aprove a solicitação de emparelhamento no host do gateway:
 
 ```bash
 zero nodes pending
 zero nodes approve <requestId>
 ```
 
-1) Verifique a conexão:
+1. Verifique a conexão:
 
 ```bash
 zero nodes status

@@ -3,6 +3,7 @@ summary: "Modos de ativação por voz e push-to-talk, além de detalhes de rotea
 read_when:
   - Trabalhando nos caminhos de ativação por voz ou PTT
 ---
+
 # Ativação por Voz e Push-to-Talk
 
 ## Modos

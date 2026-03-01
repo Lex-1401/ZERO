@@ -21,8 +21,8 @@ O ZERO controla um **perfil dedicado do Chrome** (chamado `zero`, UI com colora�
 
 Duas maneiras fáceis de acessá-lo:
 
-1) **Peça ao agente para abrir o navegador** e então faça o login você mesmo.
-2) **Abra via CLI**:
+1. **Peça ao agente para abrir o navegador** e então faça o login você mesmo.
+2. **Abra via CLI**:
 
 ```bash
 zero browser start
@@ -50,11 +50,11 @@ Se o agente estiver em sandbox, a ferramenta de navegador padroniza para a sandb
       sandbox: {
         mode: "non-main",
         browser: {
-          allowHostControl: true
-        }
-      }
-    }
-  }
+          allowHostControl: true,
+        },
+      },
+    },
+  },
 }
 ```
 

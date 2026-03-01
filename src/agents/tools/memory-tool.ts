@@ -6,6 +6,8 @@ import type { ZEROConfig } from "../../config/config.js";
 import { jsonResult, readStringParam, readNumberParam } from "./common.js";
 import type { AnyAgentTool } from "./common.js";
 import { resolveAgentWorkspaceDir } from "../agent-scope.js";
+import { resolveStateDir } from "../../config/paths.js";
+import { once } from "node:events";
 
 const MEMORY_CATEGORIES = ["preference", "fact", "decision", "entity", "other"] as const;
 
@@ -59,12 +61,28 @@ export function createMemoryStoreTool(options: {
       const memoryDir = path.join(workspaceDir, "memory");
       await fs.mkdir(memoryDir, { recursive: true });
 
-      // We append to category-based files for organization
       const filename = `${category}.md`;
       const filePath = path.join(memoryDir, filename);
 
       const entry = `\n- [${new Date().toISOString()}] ${content}`;
       await fs.appendFile(filePath, entry, "utf-8");
+
+      if (category === "fact" || category === "preference") {
+        try {
+          const zeroDir = resolveStateDir();
+          await fs.mkdir(zeroDir, { recursive: true });
+          const factsFile = path.join(zeroDir, "USER_FACTS.md");
+          // Initialize if it doesn't exist
+          try {
+            await fs.access(factsFile);
+          } catch {
+            await fs.writeFile(factsFile, "# USER FACTS (Zero)\n\n", "utf-8");
+          }
+          await fs.appendFile(factsFile, entry, "utf-8");
+        } catch (ignored) {
+          // Ignore failures trying to write to global facts
+        }
+      }
 
       // Trigger sync if manager is active
       const manager = await MemoryIndexManager.get({

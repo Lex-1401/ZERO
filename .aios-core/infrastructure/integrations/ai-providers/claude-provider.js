@@ -7,8 +7,8 @@
  * @see Epic GEMINI-INT - Story 2: AI Provider Factory Pattern
  */
 
-const { spawn, execSync } = require('child_process');
-const { AIProvider } = require('./ai-provider');
+const { spawn, execSync } = require("child_process");
+const { AIProvider } = require("./ai-provider");
 
 /**
  * Claude Code provider implementation
@@ -26,12 +26,12 @@ class ClaudeProvider extends AIProvider {
    */
   constructor(config = {}) {
     super({
-      name: 'claude',
-      command: 'claude',
+      name: "claude",
+      command: "claude",
       timeout: config.timeout || 300000,
       maxRetries: config.maxRetries || 3,
       options: {
-        model: config.model || 'claude-3-5-sonnet',
+        model: config.model || "claude-3-5-sonnet",
         dangerouslySkipPermissions: config.dangerouslySkipPermissions || false,
         ...config,
       },
@@ -44,8 +44,8 @@ class ClaudeProvider extends AIProvider {
    */
   async checkAvailability() {
     try {
-      const version = execSync('claude --version', {
-        encoding: 'utf8',
+      const version = execSync("claude --version", {
+        encoding: "utf8",
         timeout: 5000,
         windowsHide: true,
       }).trim();
@@ -72,26 +72,26 @@ class ClaudeProvider extends AIProvider {
     const timeout = options.timeout || this.timeout;
 
     // Build command arguments
-    const args = ['--print'];
+    const args = ["--print"];
 
     if (this.options.dangerouslySkipPermissions || options.dangerouslySkipPermissions) {
-      args.push('--dangerously-skip-permissions');
+      args.push("--dangerously-skip-permissions");
     }
 
     if (options.model || this.options.model) {
-      args.push('--model', options.model || this.options.model);
+      args.push("--model", options.model || this.options.model);
     }
 
     return new Promise((resolve, reject) => {
-      let stdout = '';
-      let stderr = '';
+      let stdout = "";
+      let stderr = "";
 
       // Spawn claude directly without shell interpolation (safer)
       const child = spawn(this.command, args, {
         cwd: workingDir,
         env: { ...process.env, ...options.env },
         windowsHide: true,
-        stdio: ['pipe', 'pipe', 'pipe'],
+        stdio: ["pipe", "pipe", "pipe"],
       });
 
       // Write prompt via stdin to avoid shell injection
@@ -99,19 +99,19 @@ class ClaudeProvider extends AIProvider {
       child.stdin.end();
 
       const timeoutId = setTimeout(() => {
-        child.kill('SIGTERM');
+        child.kill("SIGTERM");
         reject(new Error(`Claude execution timed out after ${timeout}ms`));
       }, timeout);
 
-      child.stdout.on('data', (data) => {
+      child.stdout.on("data", (data) => {
         stdout += data.toString();
       });
 
-      child.stderr.on('data', (data) => {
+      child.stderr.on("data", (data) => {
         stderr += data.toString();
       });
 
-      child.on('close', (code) => {
+      child.on("close", (code) => {
         clearTimeout(timeoutId);
         const duration = Date.now() - startTime;
 
@@ -121,7 +121,7 @@ class ClaudeProvider extends AIProvider {
             output: stdout.trim(),
             metadata: {
               duration,
-              provider: 'claude',
+              provider: "claude",
               model: options.model || this.options.model,
             },
           });
@@ -130,7 +130,7 @@ class ClaudeProvider extends AIProvider {
         }
       });
 
-      child.on('error', (error) => {
+      child.on("error", (error) => {
         clearTimeout(timeoutId);
         reject(new Error(`Claude spawn error: ${error.message}`));
       });
@@ -156,7 +156,7 @@ class ClaudeProvider extends AIProvider {
           data: JSON.parse(jsonMatch[0]),
         };
       }
-      throw new Error('No valid JSON found in response');
+      throw new Error("No valid JSON found in response");
     } catch (parseError) {
       return {
         ...response,

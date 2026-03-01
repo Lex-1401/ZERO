@@ -3,6 +3,7 @@ summary: "Esquemas TypeBox como a única fonte da verdade para o protocolo do ga
 read_when:
   - Atualizando esquemas de protocolo ou geração de código (codegen)
 ---
+
 # TypeBox como fonte da verdade do protocolo
 
 Última atualização: 10-01-2026
@@ -34,14 +35,14 @@ Cliente                    Gateway
 
 Métodos e eventos comuns:
 
-| Categoria | Exemplos | Notas |
-| --- | --- | --- |
-| Core | `connect`, `health`, `status` | `connect` deve ser o primeiro |
-| Mensagens | `send`, `poll`, `agent`, `agent.wait` | efeitos colaterais precisam de `idempotencyKey` |
-| Chat | `chat.history`, `chat.send`, `chat.abort`, `chat.inject` | O WebChat usa estes |
-| Sessões | `sessions.list`, `sessions.patch`, `sessions.delete` | administração de sessão |
-| Nós (Nodes) | `node.list`, `node.invoke`, `node.pair.*` | Ações de WS do Gateway + nó |
-| Eventos | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | push do servidor |
+| Categoria   | Exemplos                                                  | Notas                                           |
+| ----------- | --------------------------------------------------------- | ----------------------------------------------- |
+| Core        | `connect`, `health`, `status`                             | `connect` deve ser o primeiro                   |
+| Mensagens   | `send`, `poll`, `agent`, `agent.wait`                     | efeitos colaterais precisam de `idempotencyKey` |
+| Chat        | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | O WebChat usa estes                             |
+| Sessões     | `sessions.list`, `sessions.patch`, `sessions.delete`      | administração de sessão                         |
+| Nós (Nodes) | `node.list`, `node.invoke`, `node.pair.*`                 | Ações de WS do Gateway + nó                     |
+| Eventos     | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | push do servidor                                |
 
 A lista oficial reside em `src/gateway/server.ts` (`METHODS`, `EVENTS`).
 
@@ -105,7 +106,12 @@ Resposta hello-ok:
     "protocol": 2,
     "server": { "version": "dev", "connId": "ws-1" },
     "features": { "methods": ["health"], "events": ["tick"] },
-    "snapshot": { "presence": [], "health": {}, "stateVersion": { "presence": 0, "health": 0 }, "uptimeMs": 0 },
+    "snapshot": {
+      "presence": [],
+      "health": {},
+      "stateVersion": { "presence": 0, "health": 0 },
+      "uptimeMs": 0
+    },
     "policy": { "maxPayload": 1048576, "maxBufferedBytes": 1048576, "tickIntervalMs": 30000 }
   }
 }
@@ -137,22 +143,24 @@ import { WebSocket } from "ws";
 const ws = new WebSocket("ws://127.0.0.1:18789");
 
 ws.on("open", () => {
-  ws.send(JSON.stringify({
-    type: "req",
-    id: "c1",
-    method: "connect",
-    params: {
-      minProtocol: 3,
-      maxProtocol: 3,
-      client: {
-        id: "cli",
-        displayName: "exemplo",
-        version: "dev",
-        platform: "node",
-        mode: "cli"
-      }
-    }
-  }));
+  ws.send(
+    JSON.stringify({
+      type: "req",
+      id: "c1",
+      method: "connect",
+      params: {
+        minProtocol: 3,
+        maxProtocol: 3,
+        client: {
+          id: "cli",
+          displayName: "exemplo",
+          version: "dev",
+          platform: "node",
+          mode: "cli",
+        },
+      },
+    }),
+  );
 });
 
 ws.on("message", (data) => {
@@ -171,7 +179,7 @@ ws.on("message", (data) => {
 
 Exemplo: adicionar uma nova requisição `system.echo` que retorna `{ ok: true, text }`.
 
-1) **Esquema (fonte da verdade)**
+1. **Esquema (fonte da verdade)**
 
 Adicione ao arquivo `src/gateway/protocol/schema.ts`:
 
@@ -199,16 +207,15 @@ export type SystemEchoParams = Static<typeof SystemEchoParamsSchema>;
 export type SystemEchoResult = Static<typeof SystemEchoResultSchema>;
 ```
 
-1) **Validação**
+1. **Validação**
 
 No arquivo `src/gateway/protocol/index.ts`, exporte um validador AJV:
 
 ```ts
-export const validateSystemEchoParams =
-  ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
+export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
 ```
 
-1) **Comportamento do servidor**
+1. **Comportamento do servidor**
 
 Adicione um manipulador (handler) em `src/gateway/server-methods/system.ts`:
 
@@ -223,13 +230,13 @@ export const systemHandlers: GatewayRequestHandlers = {
 
 Registre-o em `src/gateway/server-methods.ts` (já mescla o `systemHandlers`) e, em seguida, adicione `"system.echo"` aos `METHODS` em `src/gateway/server.ts`.
 
-1) **Regerar**
+1. **Regerar**
 
 ```bash
 pnpm protocol:check
 ```
 
-1) **Testes + documentação**
+1. **Testes + documentação**
 
 Adicione um teste de servidor em `src/gateway/server.*.test.ts` e anote o método na documentação.
 
@@ -264,6 +271,6 @@ O JSON Schema gerado está no repositório em `dist/protocol.schema.json`. O arq
 
 ## Quando você altera esquemas
 
-1) Atualize os esquemas TypeBox.
-2) Execute `pnpm protocol:check`.
-3) Envie o esquema regenerado + os modelos Swift.
+1. Atualize os esquemas TypeBox.
+2. Execute `pnpm protocol:check`.
+3. Envie o esquema regenerado + os modelos Swift.

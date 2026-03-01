@@ -26,14 +26,14 @@ inputs:
     tipo: enum
     origem: User Input
     obrigatório: false
-    validação: 'table | json | minimal'
+    validação: "table | json | minimal"
     default: table
 
   - campo: filter
     tipo: enum
     origem: User Input
     obrigatório: false
-    validação: 'all | active | stale'
+    validação: "all | active | stale"
     default: all
 
 outputs:
@@ -124,7 +124,7 @@ git rev-parse --is-inside-work-tree 2>/dev/null
 **Action:** Get all AIOS-managed worktrees
 
 ```javascript
-const WorktreeManager = require('./.aios-core/infrastructure/scripts/worktree-manager.js');
+const WorktreeManager = require("./.aios-core/infrastructure/scripts/worktree-manager.js");
 const manager = new WorktreeManager();
 const worktrees = await manager.list();
 ```
@@ -137,10 +137,10 @@ const worktrees = await manager.list();
 
 ```javascript
 let filtered = worktrees;
-if (filter === 'active') {
-  filtered = worktrees.filter((w) => w.status === 'active');
-} else if (filter === 'stale') {
-  filtered = worktrees.filter((w) => w.status === 'stale');
+if (filter === "active") {
+  filtered = worktrees.filter((w) => w.status === "active");
+} else if (filter === "stale") {
+  filtered = worktrees.filter((w) => w.status === "stale");
 }
 ```
 
@@ -330,9 +330,9 @@ This task is exposed as CLI command `*list-worktrees` in @devops agent:
 
 ```yaml
 commands:
-  - 'list-worktrees': List all active worktrees with status
-  - 'list-worktrees --json': Output as JSON
-  - 'list-worktrees --stale': Show only stale worktrees
+  - "list-worktrees": List all active worktrees with status
+  - "list-worktrees --json": Output as JSON
+  - "list-worktrees --stale": Show only stale worktrees
 ```
 
 ---

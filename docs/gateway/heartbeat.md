@@ -30,9 +30,9 @@ Exemplo de configuração:
         target: "last",
         // activeHours: { start: "08:00", end: "24:00" },
         // includeReasoning: true, // opcional: envia também uma mensagem separada "Reasoning:"
-      }
-    }
-  }
+      },
+    },
+  },
 }
 ```
 
@@ -69,16 +69,16 @@ Fora dos heartbeats, um `HEARTBEAT_OK` avulso no início/fim de uma mensagem é 
   agents: {
     defaults: {
       heartbeat: {
-        every: "30m",           // padrão: 30m (0m desativa)
+        every: "30m", // padrão: 30m (0m desativa)
         model: "anthropic/claude-opus-4-5",
         includeReasoning: false, // padrão: false (entrega mensagem Reasoning: separada quando disponível)
-        target: "last",         // last | none | <id do canal> (core ou plugin, ex: "bluebubbles")
-        to: "+15551234567",     // sobrescrita opcional específica por canal
+        target: "last", // last | none | <id do canal> (core ou plugin, ex: "bluebubbles")
+        to: "+15551234567", // sobrescrita opcional específica por canal
         prompt: "Leia HEARTBEAT.md se ele existir (contexto do espaço de trabalho). Siga-o rigorosamente. Não infira ou repita tarefas antigas de chats anteriores. Se nada precisar de atenção, responda HEARTBEAT_OK.",
-        ackMaxChars: 300         // máximo de caracteres permitidos após HEARTBEAT_OK
-      }
-    }
-  }
+        ackMaxChars: 300, // máximo de caracteres permitidos após HEARTBEAT_OK
+      },
+    },
+  },
 }
 ```
 
@@ -102,8 +102,8 @@ Exemplo: dois agentes, apenas o segundo agente executa heartbeats.
     defaults: {
       heartbeat: {
         every: "30m",
-        target: "last"
-      }
+        target: "last",
+      },
     },
     list: [
       { id: "main", default: true },
@@ -113,11 +113,11 @@ Exemplo: dois agentes, apenas o segundo agente executa heartbeats.
           every: "1h",
           target: "whatsapp",
           to: "+15551234567",
-          prompt: "Leia HEARTBEAT.md se ele existir (contexto do espaço de trabalho). Siga-o rigorosamente. Não infira ou repita tarefas antigas de chats anteriores. Se nada precisar de atenção, responda HEARTBEAT_OK."
-        }
-      }
-    ]
-  }
+          prompt: "Leia HEARTBEAT.md se ele existir (contexto do espaço de trabalho). Siga-o rigorosamente. Não infira ou repita tarefas antigas de chats anteriores. Se nada precisar de atenção, responda HEARTBEAT_OK.",
+        },
+      },
+    ],
+  },
 }
 ```
 
@@ -155,12 +155,12 @@ Por padrão, os reconhecimentos `HEARTBEAT_OK` são suprimidos enquanto o conte�
 channels:
   defaults:
     heartbeat:
-      showOk: false      # Ocultar HEARTBEAT_OK (padrão)
-      showAlerts: true   # Mostrar mensagens de alerta (padrão)
+      showOk: false # Ocultar HEARTBEAT_OK (padrão)
+      showAlerts: true # Mostrar mensagens de alerta (padrão)
       useIndicator: true # Emitir eventos de indicador (padrão)
   telegram:
     heartbeat:
-      showOk: true       # Mostrar reconhecimentos OK no Telegram
+      showOk: true # Mostrar reconhecimentos OK no Telegram
   whatsapp:
     accounts:
       work:
@@ -201,12 +201,12 @@ channels:
 
 ### Padrões comuns
 
-| Objetivo | Configuração |
-| --- | --- |
-| Comportamento padrão (OKs silenciosos, alertas ligados) | *(nenhuma configuração necessária)* |
-| Totalmente silencioso (sem mensagens, sem indicador) | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
-| Apenas indicador (sem mensagens) | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }` |
-| OKs em apenas um canal | `channels.telegram.heartbeat: { showOk: true }` |
+| Objetivo                                                | Configuração                                                                             |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Comportamento padrão (OKs silenciosos, alertas ligados) | _(nenhuma configuração necessária)_                                                      |
+| Totalmente silencioso (sem mensagens, sem indicador)    | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
+| Apenas indicador (sem mensagens)                        | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }`  |
+| OKs em apenas um canal                                  | `channels.telegram.heartbeat: { showOk: true }`                                          |
 
 ## HEARTBEAT.md (opcional)
 
@@ -223,7 +223,7 @@ Exemplo de `HEARTBEAT.md`:
 
 - Verificação rápida: algo urgente nas caixas de entrada?
 - Se for dia, faça um check-in leve se nada mais estiver pendente.
-- Se uma tarefa estiver bloqueada, anote *o que está faltando* e pergunte ao Peter na próxima vez.
+- Se uma tarefa estiver bloqueada, anote _o que está faltando_ e pergunte ao Peter na próxima vez.
 ```
 
 ### O agente pode atualizar o HEARTBEAT.md?

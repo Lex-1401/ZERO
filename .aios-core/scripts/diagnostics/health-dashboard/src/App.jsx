@@ -1,9 +1,9 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import DomainDetail from './pages/DomainDetail';
-import Header from './components/shared/Header';
-import './styles/App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import DomainDetail from "./pages/DomainDetail";
+import Header from "./components/shared/Header";
+import "./styles/App.css";
 
 function App() {
   return (

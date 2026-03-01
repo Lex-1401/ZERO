@@ -8,6 +8,7 @@ read_when:
 # exe.dev
 
 Goal: ZERO Gateway running on an exe.dev VM, reachable from your laptop via:
+
 - **exe.dev HTTPS proxy** (easy, no tunnel) or
 - **SSH tunnel** (most secure; loopback-only Gateway)
 
@@ -17,10 +18,10 @@ If you’re on any other Linux VPS, the same steps apply — you just won’t us
 
 ## Beginner quick path
 
-1) Create VM → install Node 22 → install ZERO  
-2) Run `zero onboard --install-daemon`  
-3) Tunnel from laptop (`ssh -N -L 18789:127.0.0.1:18789 …`)  
-4) Open `http://127.0.0.1:18789/` and paste your token
+1. Create VM → install Node 22 → install ZERO
+2. Run `zero onboard --install-daemon`
+3. Tunnel from laptop (`ssh -N -L 18789:127.0.0.1:18789 …`)
+4. Open `http://127.0.0.1:18789/` and paste your token
 
 ## What you need
 
@@ -93,6 +94,7 @@ zero onboard --install-daemon
 ```
 
 It can set up:
+
 - `~/zero` workspace bootstrap
 - `~/.zero/zero.json` config
 - model auth profiles
@@ -112,6 +114,7 @@ ssh -N -L 18789:127.0.0.1:18789 zero.exe.xyz
 ```
 
 Open locally:
+
 - `http://127.0.0.1:18789/` (Control UI)
 
 Runbook: [Remote access](/gateway/remote)
@@ -133,12 +136,13 @@ For service runs, persist it in `~/.zero/zero.json`:
     mode: "local",
     port: 8080,
     bind: "lan",
-    auth: { mode: "token", token: "YOUR_TOKEN" }
-  }
+    auth: { mode: "token", token: "YOUR_TOKEN" },
+  },
 }
 ```
 
 Notes:
+
 - Non-loopback binds require `gateway.auth.token` (or `ZERO_GATEWAY_TOKEN`).
 - `gateway.remote.token` is only for remote CLI calls; it does not enable local auth.
 
@@ -149,11 +153,13 @@ ssh exe.dev share port zero 8080
 ```
 
 Open:
+
 - `https://zero.exe.xyz/`
 
 In the Control UI, paste the token (UI → Settings → token). The UI sends it as `connect.params.auth.token`.
 
 Notes:
+
 - Prefer a **non-default** port (like `8080`) if your proxy expects an app port.
 - Treat the token like a password.
 

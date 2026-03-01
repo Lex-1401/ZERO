@@ -11,7 +11,9 @@
  * - Graceful error handling
  */
 
-const { execSync } = require('child_process');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
 const DEFAULT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const GIT_TIMEOUT = 1000; // 1 second
@@ -113,30 +115,84 @@ class GitConfigDetector {
    * @returns {boolean} True if git repository
    */
   _isGitRepository() {
+    // NOG-18: Replace execSync (~34ms) with synchronous fs check (~0.05ms).
+    // .git/HEAD exists in normal repos AND worktrees (as file or via gitdir link).
     try {
-      const output = execSync('git rev-parse --is-inside-work-tree', {
-        encoding: 'utf8',
-        timeout: GIT_TIMEOUT,
-        stdio: ['pipe', 'pipe', 'ignore'], // Suppress stderr
-      }).trim();
-
-      return output === 'true';
-    } catch (error) {
+      const gitPath = path.join(process.cwd(), ".git");
+      // .git can be a directory (normal repo) or a file (worktree with "gitdir:" pointer)
+      return fs.existsSync(gitPath);
+    } catch {
       return false;
     }
   }
 
   /**
-   * Get current git branch name
+   * Get current git branch name via direct .git/HEAD file read.
+   * Fallback chain: .git/HEAD read → worktree/gitfile resolution → execSync.
    * @private
    * @returns {string|null} Branch name or null
    */
   _getCurrentBranch() {
+    const direct = this._detectBranchDirect();
+    if (direct !== undefined) return direct;
+
+    // Fallback: execSync (slow but reliable)
+    return this._getCurrentBranchExec();
+  }
+
+  /**
+   * Read branch directly from .git/HEAD file (~0.06ms vs ~52ms for execSync).
+   * Handles: normal branch, detached HEAD, worktree/gitfile.
+   * @private
+   * @returns {string|null|undefined} Branch name, null (detached/no-git), or undefined (needs fallback)
+   */
+  _detectBranchDirect() {
     try {
-      const branch = execSync('git branch --show-current', {
-        encoding: 'utf8',
+      const gitPath = path.join(process.cwd(), ".git");
+      const stat = fs.statSync(gitPath);
+
+      let headPath;
+      if (stat.isFile()) {
+        // Worktree/gitfile: .git is a file with "gitdir: <path>"
+        const gitContent = fs.readFileSync(gitPath, "utf8").trim();
+        const match = gitContent.match(/^gitdir:\s*(.+)$/);
+        if (!match) return undefined;
+        const gitDir = path.resolve(process.cwd(), match[1]);
+        headPath = path.join(gitDir, "HEAD");
+      } else {
+        headPath = path.join(gitPath, "HEAD");
+      }
+
+      const headContent = fs.readFileSync(headPath, "utf8").trim();
+
+      // Normal branch: "ref: refs/heads/feat/my-branch"
+      const refMatch = headContent.match(/^ref:\s*refs\/heads\/(.+)$/);
+      if (refMatch) return refMatch[1];
+
+      // Detached HEAD: raw commit hash
+      if (/^[0-9a-f]{40}$/.test(headContent)) {
+        return headContent.substring(0, 7) + " (detached)";
+      }
+
+      return undefined; // Unexpected format — fallback
+    } catch (_err) {
+      // File not found or permission error — could be no .git dir
+      if (_err.code === "ENOENT") return null;
+      return undefined; // Other error — fallback
+    }
+  }
+
+  /**
+   * Fallback: get branch via execSync (original method).
+   * @private
+   * @returns {string|null} Branch name or null
+   */
+  _getCurrentBranchExec() {
+    try {
+      const branch = execSync("git branch --show-current", {
+        encoding: "utf8",
         timeout: GIT_TIMEOUT,
-        stdio: ['pipe', 'pipe', 'ignore'],
+        stdio: ["pipe", "pipe", "ignore"],
       }).trim();
 
       return branch || null;
@@ -152,10 +208,10 @@ class GitConfigDetector {
    */
   _getRemoteUrl() {
     try {
-      const url = execSync('git config --get remote.origin.url', {
-        encoding: 'utf8',
+      const url = execSync("git config --get remote.origin.url", {
+        encoding: "utf8",
         timeout: GIT_TIMEOUT,
-        stdio: ['pipe', 'pipe', 'ignore'],
+        stdio: ["pipe", "pipe", "ignore"],
       }).trim();
 
       return url || null;
@@ -177,20 +233,20 @@ class GitConfigDetector {
 
     const url = remoteUrl.toLowerCase();
 
-    if (url.includes('github.com')) {
-      return 'github';
+    if (url.includes("github.com")) {
+      return "github";
     }
 
-    if (url.includes('gitlab.com') || url.includes('gitlab')) {
-      return 'gitlab';
+    if (url.includes("gitlab.com") || url.includes("gitlab")) {
+      return "gitlab";
     }
 
-    if (url.includes('bitbucket.org') || url.includes('bitbucket')) {
-      return 'bitbucket';
+    if (url.includes("bitbucket.org") || url.includes("bitbucket")) {
+      return "bitbucket";
     }
 
     // Has remote but unknown type
-    return 'other';
+    return "other";
   }
 
   /**
@@ -233,10 +289,10 @@ class GitConfigDetector {
       }
 
       // Get additional details
-      const userName = this._execGitCommand('git config user.name');
-      const userEmail = this._execGitCommand('git config user.email');
+      const userName = this._execGitCommand("git config user.name");
+      const userEmail = this._execGitCommand("git config user.email");
       const remoteUrl = this._getRemoteUrl();
-      const lastCommit = this._execGitCommand('git log -1 --format=%H');
+      const lastCommit = this._execGitCommand("git log -1 --format=%H");
       const hasUncommittedChanges = this._hasUncommittedChanges();
 
       return {
@@ -261,9 +317,9 @@ class GitConfigDetector {
   _execGitCommand(command) {
     try {
       return execSync(command, {
-        encoding: 'utf8',
+        encoding: "utf8",
         timeout: GIT_TIMEOUT,
-        stdio: ['pipe', 'pipe', 'ignore'],
+        stdio: ["pipe", "pipe", "ignore"],
       }).trim();
     } catch (error) {
       return null;
@@ -277,10 +333,10 @@ class GitConfigDetector {
    */
   _hasUncommittedChanges() {
     try {
-      const status = execSync('git status --porcelain', {
-        encoding: 'utf8',
+      const status = execSync("git status --porcelain", {
+        encoding: "utf8",
         timeout: GIT_TIMEOUT,
-        stdio: ['pipe', 'pipe', 'ignore'],
+        stdio: ["pipe", "pipe", "ignore"],
       }).trim();
 
       return status.length > 0;

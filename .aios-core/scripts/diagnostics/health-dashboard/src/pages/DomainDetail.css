@@ -215,7 +215,7 @@
 }
 
 .autofix-available::before {
-  content: '\u2699';
+  content: "\u2699";
 }
 
 .na {

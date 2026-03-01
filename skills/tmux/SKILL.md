@@ -1,7 +1,7 @@
 ---
 name: tmux
 description: Controle remotamente sessões tmux para CLIs interativas enviando comandos de teclado e capturando a saída dos painéis.
-metadata: {"zero":{"emoji":"🧵","os":["darwin","linux"],"requires":{"bins":["tmux"]}}}
+metadata: { "zero": { "emoji": "🧵", "os": ["darwin", "linux"], "requires": { "bins": ["tmux"] } } }
 ---
 
 # tmux Skill (Zero)

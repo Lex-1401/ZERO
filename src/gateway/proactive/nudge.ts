@@ -9,7 +9,6 @@ export class ProactiveNudge {
 
   static start() {
     this.interval = setInterval(() => this.check(), 60000); // Check every minute
-
   }
 
   static stop() {

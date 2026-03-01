@@ -111,14 +111,14 @@ curl -s http://127.0.0.1:18791/tabs
 
 ### Referência de Configuração
 
-| Opção | Descrição | Padrão |
-|--------|-------------|---------|
-| `browser.enabled` | Habilita o controle do navegador | `true` |
+| Opção                    | Descrição                                                                             | Padrão                                                                            |
+| ------------------------ | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `browser.enabled`        | Habilita o controle do navegador                                                      | `true`                                                                            |
 | `browser.executablePath` | Caminho para um binário de navegador baseado em Chromium (Chrome/Brave/Edge/Chromium) | detectado automaticamente (prefere o navegador padrão quando baseado em Chromium) |
-| `browser.headless` | Executa sem GUI | `false` |
-| `browser.noSandbox` | Adiciona a flag `--no-sandbox` (necessária para algumas configurações Linux) | `false` |
-| `browser.attachOnly` | Não inicia o navegador, apenas anexa ao existente | `false` |
-| `browser.cdpPort` | Porta do Protocolo Chrome DevTools | `18800` |
+| `browser.headless`       | Executa sem GUI                                                                       | `false`                                                                           |
+| `browser.noSandbox`      | Adiciona a flag `--no-sandbox` (necessária para algumas configurações Linux)          | `false`                                                                           |
+| `browser.attachOnly`     | Não inicia o navegador, apenas anexa ao existente                                     | `false`                                                                           |
+| `browser.cdpPort`        | Porta do Protocolo Chrome DevTools                                                    | `18800`                                                                           |
 
 ### Problema: "Chrome extension relay is running, but no tab is connected"
 

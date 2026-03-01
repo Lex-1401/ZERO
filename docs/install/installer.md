@@ -42,7 +42,7 @@ O que ele faz (alto nível):
 - Para instalações git: executa `zero doctor --non-interactive` após instalação/atualização (melhor esforço).
 - Mitiga problemas de instalação nativa do `sharp` definindo `SHARP_IGNORE_GLOBAL_LIBVIPS=1` por padrão (evita compilar contra libvips do sistema).
 
-Se você *quer* que o `sharp` vincule a um libvips instalado globalmente (ou está depurando), defina:
+Se você _quer_ que o `sharp` vincule a um libvips instalado globalmente (ou está depurando), defina:
 
 ```bash
 SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/quickstart.sh | bash
@@ -61,7 +61,7 @@ Em contextos não interativos (sem TTY / `--no-prompt`), você deve passar `--in
 
 Git é necessário para o caminho `--install-method git` (clone / pull).
 
-Para instalações `npm`, o Git *geralmente* não é necessário, mas alguns ambientes ainda acabam precisando dele (por exemplo, quando um pacote ou dependência é buscado via URL git). O instalador atualmente garante que o Git esteja presente para evitar surpresas `spawn git ENOENT` em distros limpas.
+Para instalações `npm`, o Git _geralmente_ não é necessário, mas alguns ambientes ainda acabam precisando dele (por exemplo, quando um pacote ou dependência é buscado via URL git). O instalador atualmente garante que o Git esteja presente para evitar surpresas `spawn git ENOENT` em distros limpas.
 
 ### Por que o npm encontra `EACCES` em Linux limpo
 

@@ -1,8 +1,12 @@
 {
   "name": "@zero/tlon",
   "version": "2026.1.25",
-  "type": "module",
   "description": "Zero Tlon/Urbit channel plugin",
+  "type": "module",
+  "dependencies": {
+    "@urbit/aura": "^3.0.0",
+    "@urbit/http-api": "^3.0.0"
+  },
   "zero": {
     "extensions": [
       "./index.ts"
@@ -22,9 +26,5 @@
       "localPath": "extensions/tlon",
       "defaultChoice": "npm"
     }
-  },
-  "dependencies": {
-    "@urbit/aura": "^3.0.0",
-    "@urbit/http-api": "^3.0.0"
   }
 }

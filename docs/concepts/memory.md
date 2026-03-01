@@ -4,6 +4,7 @@ read_when:
   - Você deseja entender o layout dos arquivos de memória e o fluxo de trabalho
   - Você deseja ajustar a limpeza automática de memória pré-compactação
 ---
+
 # Memória
 
 A memória do ZERO é baseada em **Markdown simples no espaço de trabalho do agente**. Os arquivos são a fonte da verdade; o modelo apenas "lembra" o que é escrito no disco.
@@ -44,7 +45,7 @@ Este grafo complementa a memória Markdown não estruturada ao capturar conexõe
 
 ## Limpeza automática de memória (ping pré-compactação)
 
-Quando uma sessão está **perto da auto-compactação**, o ZERO dispara um **turno agêntico silencioso** que lembra o modelo de escrever memórias duradouras **antes** que o contexto seja compactado. Os prompts padrão dizem explicitamente que o modelo *pode responder*, mas geralmente `NO_REPLY` é a resposta correta para que o usuário nunca veja este turno.
+Quando uma sessão está **perto da auto-compactação**, o ZERO dispara um **turno agêntico silencioso** que lembra o modelo de escrever memórias duradouras **antes** que o contexto seja compactado. Os prompts padrão dizem explicitamente que o modelo _pode responder_, mas geralmente `NO_REPLY` é a resposta correta para que o usuário nunca veja este turno.
 
 Isso é controlado por `agents.defaults.compaction.memoryFlush`:
 
@@ -58,11 +59,11 @@ Isso é controlado por `agents.defaults.compaction.memoryFlush`:
           enabled: true,
           softThresholdTokens: 4000,
           systemPrompt: "Sessão próxima da compactação. Armazene memórias duradouras agora.",
-          prompt: "Escreva quaisquer notas duradouras em memory/AAAA-MM-DD.md; responda com NO_REPLY se não houver nada para armazenar."
-        }
-      }
-    }
-  }
+          prompt: "Escreva quaisquer notas duradouras em memory/AAAA-MM-DD.md; responda com NO_REPLY se não houver nada para armazenar.",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -230,16 +231,16 @@ A busca híbrida é o meio-termo pragmático: **usa ambos os sinais de recupera�
 
 Esboço da implementação:
 
-1) Recuperar um conjunto de candidatos de ambos os lados:
+1. Recuperar um conjunto de candidatos de ambos os lados:
 
 - **Vetor**: os top `maxResults * candidateMultiplier` por similaridade de cosseno.
 - **BM25**: os top `maxResults * candidateMultiplier` pela classificação BM25 do FTS5 (menor é melhor).
 
-1) Converter a classificação BM25 em uma pontuação de 0..1 aprox:
+1. Converter a classificação BM25 em uma pontuação de 0..1 aprox:
 
 - `textScore = 1 / (1 + max(0, bm25Rank))`
 
-1) Unir os candidatos pelo id do pedaço (chunk) e calcular uma pontuação ponderada:
+1. Unir os candidatos pelo id do pedaço (chunk) e calcular uma pontuação ponderada:
 
 - `finalScore = vectorWeight * vectorScore + textWeight * textScore`
 

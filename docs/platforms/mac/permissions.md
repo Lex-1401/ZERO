@@ -5,6 +5,7 @@ read_when:
   - Empacotando ou assinando o app macOS
   - Alterando IDs de pacote (bundle IDs) ou caminhos de instalação do app
 ---
+
 # Permissões do macOS (TCC)
 
 As concessões de permissão do macOS são frágeis. O TCC associa uma concessão de permissão à assinatura de código do app, ao identificador do pacote (bundle identifier) e ao caminho no disco. Se qualquer um desses mudar, o macOS trata o app como novo e pode descartar ou ocultar as solicitações.

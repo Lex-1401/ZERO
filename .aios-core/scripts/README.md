@@ -7,30 +7,30 @@
 
 Scripts are now organized by domain across three locations:
 
-| Location | Purpose |
-|----------|---------|
-| `.aios-core/core/` | Core framework modules (elicitation, session) |
-| `.aios-core/development/scripts/` | Development scripts (greeting, workflow, hooks) |
-| `.aios-core/infrastructure/scripts/` | Infrastructure scripts (git config, validators) |
-| `.aios-core/scripts/` (this directory) | Legacy utilities and migration scripts |
+| Location                               | Purpose                                         |
+| -------------------------------------- | ----------------------------------------------- |
+| `.aios-core/core/`                     | Core framework modules (elicitation, session)   |
+| `.aios-core/development/scripts/`      | Development scripts (greeting, workflow, hooks) |
+| `.aios-core/infrastructure/scripts/`   | Infrastructure scripts (git config, validators) |
+| `.aios-core/scripts/` (this directory) | Legacy utilities and migration scripts          |
 
 ## Scripts in This Directory
 
 ### Active Scripts
 
-| Script | Description |
-|--------|-------------|
-| `session-context-loader.js` | Loads session context for agents |
-| `command-execution-hook.js` | Hook for command execution |
-| `test-template-system.js` | Internal test utility for templates |
+| Script                      | Description                         |
+| --------------------------- | ----------------------------------- |
+| `session-context-loader.js` | Loads session context for agents    |
+| `command-execution-hook.js` | Hook for command execution          |
+| `test-template-system.js`   | Internal test utility for templates |
 
 ### Migration Scripts
 
-| Script | Description |
-|--------|-------------|
-| `batch-migrate-*.ps1` | Batch migration utilities |
+| Script                      | Description                    |
+| --------------------------- | ------------------------------ |
+| `batch-migrate-*.ps1`       | Batch migration utilities      |
 | `migrate-framework-docs.sh` | Documentation migration script |
-| `validate-phase1.ps1` | Phase 1 validation script |
+| `validate-phase1.ps1`       | Phase 1 validation script      |
 
 ## Script Path Mapping
 
@@ -61,7 +61,7 @@ scriptsLocation:
   core: .aios-core/core
   development: .aios-core/development/scripts
   infrastructure: .aios-core/infrastructure/scripts
-  legacy: .aios-core/scripts  # This directory
+  legacy: .aios-core/scripts # This directory
 ```
 
 ## Usage Examples
@@ -70,37 +70,37 @@ scriptsLocation:
 
 ```javascript
 // Elicitation Engine (from core)
-const ElicitationEngine = require('./.aios-core/core/elicitation/elicitation-engine');
+const ElicitationEngine = require("./.aios-core/core/elicitation/elicitation-engine");
 
 // Context Detector (from core)
-const ContextDetector = require('./.aios-core/core/session/context-detector');
+const ContextDetector = require("./.aios-core/core/session/context-detector");
 ```
 
 ### Loading Development Scripts
 
 ```javascript
 // Greeting Builder
-const GreetingBuilder = require('./.aios-core/development/scripts/greeting-builder');
+const GreetingBuilder = require("./.aios-core/development/scripts/greeting-builder");
 
 // Workflow Navigator
-const WorkflowNavigator = require('./.aios-core/development/scripts/workflow-navigator');
+const WorkflowNavigator = require("./.aios-core/development/scripts/workflow-navigator");
 ```
 
 ### Loading Infrastructure Scripts
 
 ```javascript
 // Project Status Loader
-const { loadProjectStatus } = require('./.aios-core/infrastructure/scripts/project-status-loader');
+const { loadProjectStatus } = require("./.aios-core/infrastructure/scripts/project-status-loader");
 
 // Git Config Detector
-const GitConfigDetector = require('./.aios-core/infrastructure/scripts/git-config-detector');
+const GitConfigDetector = require("./.aios-core/infrastructure/scripts/git-config-detector");
 ```
 
 ### Loading Legacy Scripts (this directory)
 
 ```javascript
 // Session Context Loader
-const sessionLoader = require('./.aios-core/scripts/session-context-loader');
+const sessionLoader = require("./.aios-core/scripts/session-context-loader");
 ```
 
 ## Related Documentation
@@ -112,10 +112,10 @@ const sessionLoader = require('./.aios-core/scripts/session-context-loader');
 
 ## Migration History
 
-| Date | Story | Change |
-|------|-------|--------|
-| 2025-12-18 | 6.16 | Deleted deprecated scripts, updated documentation |
-| 2025-01-15 | 2.2 | Initial script reorganization to modular structure |
+| Date       | Story | Change                                             |
+| ---------- | ----- | -------------------------------------------------- |
+| 2025-12-18 | 6.16  | Deleted deprecated scripts, updated documentation  |
+| 2025-01-15 | 2.2   | Initial script reorganization to modular structure |
 
 ---
 

@@ -5,6 +5,9 @@ import {
   loadWorkspaceBootstrapFiles,
   type WorkspaceBootstrapFile,
 } from "./workspace.js";
+import { resolveStateDir } from "../config/paths.js";
+import path from "node:path";
+import fs from "node:fs/promises";
 import { buildBootstrapContextFiles, resolveBootstrapMaxChars } from "./pi-embedded-helpers.js";
 import type { EmbeddedContextFile } from "./pi-embedded-helpers.js";
 
@@ -28,6 +31,23 @@ export async function resolveBootstrapFilesForRun(params: {
     await loadWorkspaceBootstrapFiles(params.workspaceDir),
     sessionKey,
   );
+
+  // Phase 5 Dual-Tier Human Memory: Always inject USER_FACTS.md if present
+  try {
+    const factsPath = path.join(resolveStateDir(process.env), "USER_FACTS.md");
+    const content = await fs.readFile(factsPath, "utf-8");
+    if (content.trim()) {
+      bootstrapFiles.push({
+        name: "USER_FACTS.md",
+        content,
+        match: () => true,
+        priority: 999
+      });
+    }
+  } catch (ignored) {
+    // Missing or unreadable USER_FACTS.md is ignored
+  }
+
   return applyBootstrapHookOverrides({
     files: bootstrapFiles,
     workspaceDir: params.workspaceDir,

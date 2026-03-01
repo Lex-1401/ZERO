@@ -8,17 +8,12 @@ import type {
   DiscordStatus,
   GoogleChatStatus,
   IMessageStatus,
-
   SignalStatus,
   SlackStatus,
   TelegramStatus,
   WhatsAppStatus,
 } from "../types";
-import type {
-  ChannelKey,
-  ChannelsChannelData,
-  ChannelsProps,
-} from "./channels.types";
+import type { ChannelKey, ChannelsChannelData, ChannelsProps } from "./channels.types";
 import { channelEnabled, renderChannelAccountCount } from "./channels.shared";
 import { renderChannelConfigSection } from "./channels.config";
 import { renderDiscordCard } from "./channels.discord";
@@ -34,12 +29,8 @@ import { t } from "../i18n";
 
 export function renderChannels(props: ChannelsProps) {
   const channels = props.snapshot?.channels as Record<string, unknown> | null;
-  const whatsapp = (channels?.whatsapp ?? undefined) as
-    | WhatsAppStatus
-    | undefined;
-  const telegram = (channels?.telegram ?? undefined) as
-    | TelegramStatus
-    | undefined;
+  const whatsapp = (channels?.whatsapp ?? undefined) as WhatsAppStatus | undefined;
+  const telegram = (channels?.telegram ?? undefined) as TelegramStatus | undefined;
   const discord = (channels?.discord ?? null) as DiscordStatus | null;
   const googlechat = (channels?.googlechat ?? null) as GoogleChatStatus | null;
   const slack = (channels?.slack ?? null) as SlackStatus | null;
@@ -61,22 +52,30 @@ export function renderChannels(props: ChannelsProps) {
   return html`
     <div class="animate-fade-in" style="display: flex; flex-direction: column; gap: 60px; padding-bottom: 60px;">
       
-      ${orderedChannels.map((channel, index) => html`
-        ${index > 0 ? html`<div style="height: 1px; background: var(--border-subtle); margin: 0 20px;"></div>` : nothing}
+      ${orderedChannels.map(
+        (channel, index) => html`
+        ${
+          index > 0
+            ? html`
+                <div style="height: 1px; background: var(--border-subtle); margin: 0 20px"></div>
+              `
+            : nothing
+        }
         <section class="channel-section" style="${!channel.enabled ? "opacity: 0.6; grayscale: 1;" : ""}">
             ${renderChannel(channel.key, props, {
-    whatsapp,
-    telegram,
-    discord,
-    googleChat: googlechat,
-    slack,
-    signal,
-    imessage,
+              whatsapp,
+              telegram,
+              discord,
+              googleChat: googlechat,
+              slack,
+              signal,
+              imessage,
 
-    channelAccounts: props.snapshot?.channelAccounts ?? null,
-  })}
+              channelAccounts: props.snapshot?.channelAccounts ?? null,
+            })}
         </section>
-      `)}
+      `,
+      )}
 
       <div style="height: 1px; background: var(--border-subtle); margin: 0 20px;"></div>
 
@@ -91,12 +90,16 @@ export function renderChannels(props: ChannelsProps) {
           </div>
         </div>
         
-        ${props.lastError ? html`
+        ${
+          props.lastError
+            ? html`
              <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
                 <div style="color: var(--danger); font-size: 12px; font-weight: 700;">${t("channels.health.error.title" as any)}</div>
                 <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${props.lastError}</div>
             </div>
-        ` : nothing}
+        `
+            : nothing
+        }
         
         <div class="group-list">
              <div class="group-item" style="padding: 0;">
@@ -115,27 +118,11 @@ function resolveChannelOrder(snapshot: ChannelsStatusSnapshot | null): ChannelKe
   if (snapshot?.channelOrder?.length) {
     return snapshot.channelOrder;
   }
-  return [
-    "whatsapp",
-    "discord",
-    "telegram",
-    "slack",
-    "googlechat",
-    "signal",
-    "imessage",
-
-  ];
+  return ["whatsapp", "discord", "telegram", "slack", "googlechat", "signal", "imessage"];
 }
 
-function renderChannel(
-  key: ChannelKey,
-  props: ChannelsProps,
-  data: ChannelsChannelData,
-) {
-  const accountCountLabel = renderChannelAccountCount(
-    key,
-    data.channelAccounts,
-  );
+function renderChannel(key: ChannelKey, props: ChannelsProps, data: ChannelsChannelData) {
+  const accountCountLabel = renderChannelAccountCount(key, data.channelAccounts);
   switch (key) {
     case "whatsapp":
       return renderWhatsAppCard({
@@ -214,11 +201,15 @@ function renderGenericChannelCard(
                 <span class="badge ${running ? "active" : ""}">${running ? t("channels.generic.running" as any) : t("channels.generic.stopped" as any)}</span>
              </div>
         </div>
-        ${lastError ? html`
+        ${
+          lastError
+            ? html`
             <div class="group-item" style="background: rgba(255,59,48,0.05);">
                 <div style="color: var(--danger); font-size: 11px;">${lastError}</div>
             </div>
-        ` : nothing}
+        `
+            : nothing
+        }
     </div>
     
     ${renderChannelConfigSection({ channelId: key, props })}
@@ -232,10 +223,7 @@ function resolveChannelMetaMap(
   return Object.fromEntries(snapshot.channelMeta.map((entry) => [entry.id, entry]));
 }
 
-function resolveChannelLabel(
-  snapshot: ChannelsStatusSnapshot | null,
-  key: string,
-): string {
+function resolveChannelLabel(snapshot: ChannelsStatusSnapshot | null, key: string): string {
   const meta = resolveChannelMetaMap(snapshot)[key];
   return meta?.label ?? snapshot?.channelLabels?.[key] ?? key;
 }

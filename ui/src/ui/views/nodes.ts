@@ -204,7 +204,9 @@ function normalizeAsk(value?: string): ExecAsk {
   return "on-miss";
 }
 
-function resolveExecApprovalsNodes(nodes: Array<Record<string, unknown>>): ExecApprovalsTargetNode[] {
+function resolveExecApprovalsNodes(
+  nodes: Array<Record<string, unknown>>,
+): ExecApprovalsTargetNode[] {
   return nodes
     .filter((n) => {
       const services = Array.isArray(n.services) ? n.services : [];
@@ -237,7 +239,7 @@ function resolveExecApprovalsAgents(
   const configAgents: ExecApprovalsAgentOption[] = list.map((record: Record<string, unknown>) => ({
     id: record.id as string,
     name: record.name as string,
-    isDefault: record.default === true
+    isDefault: record.default === true,
   }));
   const approvalsAgents = Object.keys(form?.agents ?? {});
   const merged = new Map<string, ExecApprovalsAgentOption>();
@@ -261,7 +263,10 @@ function resolveExecApprovalsState(props: NodesProps): ExecApprovalsState {
   const target = props.execApprovalsTarget;
   const targetNodeId = props.execApprovalsTargetNodeId;
   const selectedScope = props.execApprovalsSelectedAgent || EXEC_APPROVALS_DEFAULT_SCOPE;
-  const selectedAgent = selectedScope !== EXEC_APPROVALS_DEFAULT_SCOPE ? (form?.agents ?? {})[selectedScope] ?? null : null;
+  const selectedAgent =
+    selectedScope !== EXEC_APPROVALS_DEFAULT_SCOPE
+      ? ((form?.agents ?? {})[selectedScope] ?? null)
+      : null;
   const allowlist = Array.isArray(selectedAgent?.allowlist) ? selectedAgent.allowlist : [];
 
   return {
@@ -305,9 +310,13 @@ export function renderNodes(props: NodesProps) {
                     </button>
                 </div>
                 <div class="group-list">
-                    ${props.nodes.length === 0 ? html`
+                    ${
+                      props.nodes.length === 0
+                        ? html`
                         <div class="group-item" style="padding: 40px; justify-content: center; color: var(--text-dim);">${t("nodes.none" as any)}</div>
-                    ` : props.nodes.map(n => renderNode(n))}
+                    `
+                        : props.nodes.map((n) => renderNode(n))
+                    }
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; margin-top: 40px;">
@@ -325,11 +334,12 @@ export function renderNodes(props: NodesProps) {
                         <div class="group-content">
                             <select class="select-native" style="width: 240px;" @change=${(e: Event & { target: HTMLSelectElement }) => bindingState.onBindDefault(e.target.value || null)}>
                                 <option value="" .selected=${!bindingState.defaultBinding}>${t("nodes.binding.any" as any)}</option>
-                                ${bindingState.nodes.map(n => html`<option value=${n.id} .selected=${bindingState.defaultBinding === n.id}>${n.label}</option>`)}
+                                ${bindingState.nodes.map((n) => html`<option value=${n.id} .selected=${bindingState.defaultBinding === n.id}>${n.label}</option>`)}
                             </select>
                         </div>
                     </div>
-                    ${bindingState.agents.map(a => html`
+                    ${bindingState.agents.map(
+                      (a) => html`
                         <div class="group-item">
                             <div class="group-label">
                                 <div class="group-title">${a.name || a.id}</div>
@@ -338,11 +348,12 @@ export function renderNodes(props: NodesProps) {
                             <div class="group-content">
                                 <select class="select-native" style="width: 240px;" @change=${(e: Event & { target: HTMLSelectElement }) => bindingState.onBindAgent(a.index, e.target.value || null)}>
                                     <option value="" .selected=${!a.binding}>${t("nodes.binding.inherit" as any)}</option>
-                                    ${bindingState.nodes.map(n => html`<option value=${n.id} .selected=${a.binding === n.id}>${n.label}</option>`)}
+                                    ${bindingState.nodes.map((n) => html`<option value=${n.id} .selected=${a.binding === n.id}>${n.label}</option>`)}
                                 </select>
                             </div>
                         </div>
-                    `)}
+                    `,
+                    )}
                 </div>
             </div>
 
@@ -362,12 +373,16 @@ export function renderNodes(props: NodesProps) {
                                 <option value="gateway">${t("nodes.security.target.gateway" as any)}</option>
                                 <option value="node">${t("nodes.security.target.local" as any)}</option>
                             </select>
-                            ${approvalsState.target === "node" ? html`
+                            ${
+                              approvalsState.target === "node"
+                                ? html`
                                 <select class="select-native" style="width: 132px;" .value=${approvalsState.targetNodeId || ""} @change=${(e: Event & { target: HTMLSelectElement }) => approvalsState.onSelectTarget("node", e.target.value)}>
                                     <option value="">${t("nodes.security.target.select" as any)}</option>
-                                    ${approvalsState.targetNodes.map(n => html`<option value=${n.id}>${n.label}</option>`)}
+                                    ${approvalsState.targetNodes.map((n) => html`<option value=${n.id}>${n.label}</option>`)}
                                 </select>
-                            ` : nothing}
+                            `
+                                : nothing
+                            }
                         </div>
                     </div>
                 </div>
@@ -375,9 +390,11 @@ export function renderNodes(props: NodesProps) {
                 <div class="section-title">${t("nodes.security.scope" as any)}</div>
                 <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 16px;">
                     <button class="btn btn--sm ${approvalsState.selectedScope === EXEC_APPROVALS_DEFAULT_SCOPE ? "primary" : ""}" @click=${() => approvalsState.onSelectScope(EXEC_APPROVALS_DEFAULT_SCOPE)}>${t("nodes.security.global" as any)}</button>
-                    ${approvalsState.agents.map(a => html`
+                    ${approvalsState.agents.map(
+                      (a) => html`
                         <button class="btn btn--sm ${approvalsState.selectedScope === a.id ? "primary" : ""}" @click=${() => approvalsState.onSelectScope(a.id)}>${a.name || a.id}</button>
-                    `)}
+                    `,
+                    )}
                 </div>
 
                 <div class="group-list">
@@ -385,7 +402,7 @@ export function renderNodes(props: NodesProps) {
                         <div class="group-label"><div class="group-title">${t("nodes.security.level" as any)}</div></div>
                         <div class="group-content">
                             <select class="select-native" style="width: 240px;" .value=${approvalsState.defaults.security} @change=${(e: Event & { target: HTMLSelectElement }) => approvalsState.onPatch([approvalsState.selectedScope === EXEC_APPROVALS_DEFAULT_SCOPE ? "defaults" : "agents", approvalsState.selectedScope, "security"], e.target.value)}>
-                                ${SECURITY_OPTIONS.map(o => html`<option value=${o.value}>${o.label}</option>`)}
+                                ${SECURITY_OPTIONS.map((o) => html`<option value=${o.value}>${o.label}</option>`)}
                             </select>
                         </div>
                     </div>
@@ -393,10 +410,16 @@ export function renderNodes(props: NodesProps) {
 
                 <div class="section-title">${t("nodes.hardware.title" as any)}</div>
                 <div class="group-list">
-                    ${(props.devicesList?.pending || []).length === 0 && (props.devicesList?.paired || []).length === 0 ? html`
+                    ${
+                      (props.devicesList?.pending || []).length === 0 &&
+                      (props.devicesList?.paired || []).length === 0
+                        ? html`
                          <div class="group-item" style="padding: 40px; justify-content: center; color: var(--text-dim);">${t("nodes.hardware.none" as any)}</div>
-                    ` : nothing}
-                    ${(props.devicesList?.pending || []).map(req => html`
+                    `
+                        : nothing
+                    }
+                    ${(props.devicesList?.pending || []).map(
+                      (req) => html`
                         <div class="group-item">
                             <div class="group-label">
                                 <div class="group-title">${req.displayName || req.deviceId}</div>
@@ -407,8 +430,10 @@ export function renderNodes(props: NodesProps) {
                                 <button class="btn btn--sm danger" @click=${() => props.onDeviceReject(req.requestId)}>${t("nodes.hardware.reject" as any)}</button>
                             </div>
                         </div>
-                    `)}
-                    ${(props.devicesList?.paired || []).map(dev => html`
+                    `,
+                    )}
+                    ${(props.devicesList?.paired || []).map(
+                      (dev) => html`
                         <div class="group-item">
                             <div class="group-label">
                                 <div class="group-title">${dev.displayName || dev.deviceId}</div>
@@ -418,7 +443,8 @@ export function renderNodes(props: NodesProps) {
                                 <button class="btn btn--sm danger" @click=${() => props.onDeviceRevoke(dev.deviceId, (dev as any).roles?.[0] || "user")}>${t("nodes.hardware.revoke" as any)}</button>
                             </div>
                         </div>
-                    `)}
+                    `,
+                    )}
                 </div>
             </div>
 
@@ -441,7 +467,7 @@ function renderNode(node: Record<string, unknown>) {
         </div>
         <div class="group-desc">${t("common.id" as any)}: ${node.id}</div>
         <div style="display: flex; gap: 4px; margin-top: 6px;">
-            ${services.map(s => html`<span class="badge">${s}</span>`)}
+            ${services.map((s) => html`<span class="badge">${s}</span>`)}
         </div>
       </div>
       <div class="group-content" style="flex-direction: column; align-items: flex-end; gap: 4px;">

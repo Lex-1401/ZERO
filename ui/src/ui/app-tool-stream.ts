@@ -230,8 +230,7 @@ export function handleAgentEvent(host: ToolStreamHost, payload?: AgentEventPaylo
   }
 
   if (payload.stream !== "tool") return;
-  const sessionKey =
-    typeof payload.sessionKey === "string" ? payload.sessionKey : undefined;
+  const sessionKey = typeof payload.sessionKey === "string" ? payload.sessionKey : undefined;
   if (sessionKey && sessionKey !== host.sessionKey) return;
   // Fallback: only accept session-less events for the active run.
   if (!sessionKey && host.chatRunId && payload.runId !== host.chatRunId) return;
@@ -246,9 +245,9 @@ export function handleAgentEvent(host: ToolStreamHost, payload?: AgentEventPaylo
   const args = phase === "start" ? data.args : undefined;
   const output =
     phase === "update"
-      ? formatToolOutput(data.partialResult) ?? undefined
+      ? (formatToolOutput(data.partialResult) ?? undefined)
       : phase === "result"
-        ? formatToolOutput(data.result) ?? undefined
+        ? (formatToolOutput(data.result) ?? undefined)
         : undefined;
 
   const now = Date.now();
@@ -282,7 +281,7 @@ export function handleAgentEvent(host: ToolStreamHost, payload?: AgentEventPaylo
 
   // Logic adapted from Crabwalk: set thinking level or status based on stream
   if (isThinkingEvent(payload)) {
-    // We can use chatThinkingLevel or a new flag if we had one, 
+    // We can use chatThinkingLevel or a new flag if we had one,
     // for now we use chatStreamStartedAt as a proxy for 'busy' in some UI parts,
     // but let's assume the host (Lit component) will react to this.
   }

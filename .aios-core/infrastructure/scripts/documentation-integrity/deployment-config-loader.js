@@ -13,9 +13,9 @@
  * @story 6.9
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Default deployment configuration
@@ -24,30 +24,30 @@ const yaml = require('js-yaml');
  * @type {Object}
  */
 const DEFAULT_DEPLOYMENT_CONFIG = {
-  workflow: 'staging-first',
+  workflow: "staging-first",
 
   branches: {
-    staging_targets: ['feature/*', 'fix/*', 'docs/*', 'chore/*', 'refactor/*', 'test/*'],
-    production_targets: ['hotfix/*'],
-    staging_branch: 'staging',
-    production_branch: 'main',
-    default_target: 'staging',
+    staging_targets: ["feature/*", "fix/*", "docs/*", "chore/*", "refactor/*", "test/*"],
+    production_targets: ["hotfix/*"],
+    staging_branch: "staging",
+    production_branch: "main",
+    default_target: "staging",
   },
 
   environments: {
     staging: {
-      name: 'Staging',
+      name: "Staging",
       auto_deploy: true,
       platform: null,
       url: null,
-      promotion_message: 'After validation, create PR to main for production',
+      promotion_message: "After validation, create PR to main for production",
     },
     production: {
-      name: 'Production',
+      name: "Production",
       auto_deploy: true,
       platform: null,
       url: null,
-      promotion_message: 'This is the final production deployment',
+      promotion_message: "This is the final production deployment",
     },
   },
 
@@ -73,21 +73,21 @@ const DEFAULT_DEPLOYMENT_CONFIG = {
  * @returns {Object} Deployment configuration (merged with defaults)
  */
 function loadDeploymentConfig(projectRoot) {
-  const configPath = path.join(projectRoot, '.aios-core', 'core-config.yaml');
+  const configPath = path.join(projectRoot, ".aios-core", "core-config.yaml");
 
   if (!fs.existsSync(configPath)) {
     console.warn(`[deployment-config-loader] core-config.yaml not found at ${configPath}`);
-    console.warn('[deployment-config-loader] Using default deployment configuration');
+    console.warn("[deployment-config-loader] Using default deployment configuration");
     return { ...DEFAULT_DEPLOYMENT_CONFIG };
   }
 
   try {
-    const configContent = fs.readFileSync(configPath, 'utf8');
+    const configContent = fs.readFileSync(configPath, "utf8");
     const config = yaml.load(configContent);
 
     if (!config || !config.deployment) {
-      console.warn('[deployment-config-loader] No deployment section in core-config.yaml');
-      console.warn('[deployment-config-loader] Using default deployment configuration');
+      console.warn("[deployment-config-loader] No deployment section in core-config.yaml");
+      console.warn("[deployment-config-loader] Using default deployment configuration");
       return { ...DEFAULT_DEPLOYMENT_CONFIG };
     }
 
@@ -95,7 +95,7 @@ function loadDeploymentConfig(projectRoot) {
     return deepMerge(DEFAULT_DEPLOYMENT_CONFIG, config.deployment);
   } catch (error) {
     console.error(`[deployment-config-loader] Error loading config: ${error.message}`);
-    console.warn('[deployment-config-loader] Using default deployment configuration');
+    console.warn("[deployment-config-loader] Using default deployment configuration");
     return { ...DEFAULT_DEPLOYMENT_CONFIG };
   }
 }
@@ -107,14 +107,14 @@ function loadDeploymentConfig(projectRoot) {
  * @returns {Object|null} Project configuration or null if not found
  */
 function loadProjectConfig(projectRoot) {
-  const configPath = path.join(projectRoot, '.aios-core', 'core-config.yaml');
+  const configPath = path.join(projectRoot, ".aios-core", "core-config.yaml");
 
   if (!fs.existsSync(configPath)) {
     return null;
   }
 
   try {
-    const configContent = fs.readFileSync(configPath, 'utf8');
+    const configContent = fs.readFileSync(configPath, "utf8");
     const config = yaml.load(configContent);
     return config.project || null;
   } catch (error) {
@@ -149,7 +149,7 @@ function getTargetBranch(sourceBranch, deploymentConfig) {
   for (const pattern of branches.staging_targets || []) {
     if (matchesBranchPattern(sourceBranch, pattern)) {
       // If direct-to-main workflow, target production
-      if (workflow === 'direct-to-main') {
+      if (workflow === "direct-to-main") {
         return branches.production_branch;
       }
       return branches.staging_branch || branches.production_branch;
@@ -157,15 +157,15 @@ function getTargetBranch(sourceBranch, deploymentConfig) {
   }
 
   // Default target - resolve symbolic name to actual branch
-  const defaultTarget = (branches.default_target || 'production').toLowerCase();
+  const defaultTarget = (branches.default_target || "production").toLowerCase();
   const stagingBranch = branches.staging_branch;
   const productionBranch = branches.production_branch;
 
   // Handle symbolic names
-  if (defaultTarget === 'staging') {
+  if (defaultTarget === "staging") {
     return stagingBranch || productionBranch;
   }
-  if (defaultTarget === 'production') {
+  if (defaultTarget === "production") {
     return productionBranch;
   }
 
@@ -195,9 +195,9 @@ function matchesBranchPattern(branchName, pattern) {
   // Escape regex metacharacters first, then convert glob wildcards
   // Order matters: escape special chars, then convert * and ?
   const regexPattern = pattern
-    .replace(/[.+^${}()|[\]\\]/g, '\\$&') // Escape regex metacharacters (except * and ?)
-    .replace(/\*/g, '.*') // Convert glob * to regex .*
-    .replace(/\?/g, '.'); // Convert glob ? to regex .
+    .replace(/[.+^${}()|[\]\\]/g, "\\$&") // Escape regex metacharacters (except * and ?)
+    .replace(/\*/g, ".*") // Convert glob * to regex .*
+    .replace(/\?/g, "."); // Convert glob ? to regex .
 
   const regex = new RegExp(`^${regexPattern}$`);
   return regex.test(branchName);
@@ -235,7 +235,7 @@ function isQualityGateEnabled(gateName, deploymentConfig) {
 function getEnabledQualityGates(deploymentConfig) {
   const gates = deploymentConfig.quality_gates || {};
   return Object.entries(gates)
-    .filter(([key, value]) => value === true && key !== 'min_coverage')
+    .filter(([key, value]) => value === true && key !== "min_coverage")
     .map(([key]) => key);
 }
 
@@ -250,7 +250,7 @@ function deepMerge(target, source) {
   const result = { ...target };
 
   for (const key of Object.keys(source)) {
-    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+    if (source[key] && typeof source[key] === "object" && !Array.isArray(source[key])) {
       result[key] = deepMerge(target[key] || {}, source[key]);
     } else if (source[key] !== undefined) {
       result[key] = source[key];
@@ -270,22 +270,22 @@ function validateDeploymentConfig(config) {
   const errors = [];
 
   // Check workflow
-  if (!['staging-first', 'direct-to-main'].includes(config.workflow)) {
+  if (!["staging-first", "direct-to-main"].includes(config.workflow)) {
     errors.push(`Invalid workflow: ${config.workflow}`);
   }
 
   // Check branches
   if (!config.branches?.production_branch) {
-    errors.push('Missing production_branch');
+    errors.push("Missing production_branch");
   }
 
-  if (config.workflow === 'staging-first' && !config.branches?.staging_branch) {
-    errors.push('staging-first workflow requires staging_branch');
+  if (config.workflow === "staging-first" && !config.branches?.staging_branch) {
+    errors.push("staging-first workflow requires staging_branch");
   }
 
   // Check environments
   if (!config.environments?.production) {
-    errors.push('Missing production environment configuration');
+    errors.push("Missing production environment configuration");
   }
 
   return {

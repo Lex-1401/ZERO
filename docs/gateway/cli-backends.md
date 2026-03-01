@@ -5,6 +5,7 @@ read_when:
   - Você está executando a CLI do Claude Code ou outras CLIs de IA locais e deseja reutilizá-las
   - Você precisa de um caminho apenas de texto e sem ferramentas, mas que ainda suporte sessões e imagens
 ---
+
 # Backends de CLI (tempo de execução de fallback)
 
 O ZERO pode executar **CLIs de IA locais** como um **fallback apenas de texto** quando os provedores de API estão fora do ar, limitados por taxa ou apresentando instabilidade temporária. Isso é intencionalmente conservador:
@@ -38,11 +39,11 @@ Se o seu gateway rodar sob o launchd/systemd e o PATH for mínimo, adicione apen
     defaults: {
       cliBackends: {
         "claude-cli": {
-          command: "/opt/homebrew/bin/claude"
-        }
-      }
-    }
-  }
+          command: "/opt/homebrew/bin/claude",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -58,16 +59,14 @@ Adicione um backend de CLI à sua lista de fallbacks para que ele só rode quand
     defaults: {
       model: {
         primary: "anthropic/claude-opus-4-5",
-        fallbacks: [
-          "claude-cli/opus-4.5"
-        ]
+        fallbacks: ["claude-cli/opus-4.5"],
       },
       models: {
         "anthropic/claude-opus-4-5": { alias: "Opus" },
-        "claude-cli/opus-4.5": {}
-      }
-    }
-  }
+        "claude-cli/opus-4.5": {},
+      },
+    },
+  },
 }
 ```
 
@@ -98,7 +97,7 @@ Cada entrada é indexada por um **ID de provedor** (ex: `claude-cli`, `minha-cli
     defaults: {
       cliBackends: {
         "claude-cli": {
-          command: "/opt/homebrew/bin/claude"
+          command: "/opt/homebrew/bin/claude",
         },
         "minha-cli": {
           command: "minha-cli",
@@ -108,7 +107,7 @@ Cada entrada é indexada por um **ID de provedor** (ex: `claude-cli`, `minha-cli
           modelArg: "--model",
           modelAliases: {
             "claude-opus-4-5": "opus",
-            "claude-sonnet-4-5": "sonnet"
+            "claude-sonnet-4-5": "sonnet",
           },
           sessionArg: "--session",
           sessionMode: "existing",
@@ -117,21 +116,21 @@ Cada entrada é indexada por um **ID de provedor** (ex: `claude-cli`, `minha-cli
           systemPromptWhen: "first",
           imageArg: "--image",
           imageMode: "repeat",
-          serialize: true
-        }
-      }
-    }
-  }
+          serialize: true,
+        },
+      },
+    },
+  },
 }
 ```
 
 ## Como funciona
 
-1) **Seleciona um backend** com base no prefixo do provedor (`claude-cli/...`).
-2) **Constrói um prompt de sistema** usando o mesmo prompt do ZERO + contexto do espaço de trabalho.
-3) **Executa a CLI** com um ID de sessão (se suportado) para que o histórico permaneça consistente.
-4) **Analisa a saída** (JSON ou texto simples) e retorna o texto final.
-5) **Persiste os IDs de sessão** por backend, para que os acompanhamentos reutilizem a mesma sessão da CLI.
+1. **Seleciona um backend** com base no prefixo do provedor (`claude-cli/...`).
+2. **Constrói um prompt de sistema** usando o mesmo prompt do ZERO + contexto do espaço de trabalho.
+3. **Executa a CLI** com um ID de sessão (se suportado) para que o histórico permaneça consistente.
+4. **Analisa a saída** (JSON ou texto simples) e retorna o texto final.
+5. **Persiste os IDs de sessão** por backend, para que os acompanhamentos reutilizem a mesma sessão da CLI.
 
 ## Sessões
 

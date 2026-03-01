@@ -23,7 +23,7 @@ read_when:
 
 ## Estratégia de personalização (para que as atualizações não doam)
 
-Se você quer algo "100% personalizado para mim" *e* atualizações fáceis, mantenha suas customizações em:
+Se você quer algo "100% personalizado para mim" _e_ atualizações fáceis, mantenha suas customizações em:
 
 - **Configuração:** `~/.zero/zero.json` (formato JSON/JSON5)
 - **Espaço de Trabalho:** `~/zero` (habilidades, prompts, memórias; transforme em um repositório git privado)
@@ -44,16 +44,16 @@ Se você ainda não tem uma instalação global, execute via `pnpm zero setup`.
 
 ## Fluxo estável (app macOS primeiro)
 
-1) Instale e inicie o **ZERO.app** (barra de menu).
-2) Complete o checklist de integração/permissões (solicitações TCC).
-3) Certifique-se de que o Gateway está em modo **Local** e em execução (o app o gerencia).
-4) Vincule superfícies (exemplo: WhatsApp):
+1. Instale e inicie o **ZERO.app** (barra de menu).
+2. Complete o checklist de integração/permissões (solicitações TCC).
+3. Certifique-se de que o Gateway está em modo **Local** e em execução (o app o gerencia).
+4. Vincule superfícies (exemplo: WhatsApp):
 
 ```bash
 zero channels login
 ```
 
-1) Verificação de sanidade:
+1. Verificação de sanidade:
 
 ```bash
 zero health
@@ -89,7 +89,7 @@ pnpm gateway:watch
 No **ZERO.app**:
 
 - Modo de Conexão: **Local**
-O app se conectará ao gateway em execução na porta configurada.
+  O app se conectará ao gateway em execução na porta configurada.
 
 ### 3) Verifique
 

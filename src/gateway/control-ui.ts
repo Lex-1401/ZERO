@@ -19,6 +19,7 @@ export type ControlUiRequestOptions = {
   config?: ZEROConfig;
   agentId?: string;
   token?: string;
+  cspNonce?: string;
 };
 
 function resolveControlUiRoot(): string | null {
@@ -172,12 +173,16 @@ interface ControlUiInjectionOpts {
   assistantName?: string;
   assistantAvatar?: string;
   token?: string;
+  cspNonce?: string;
 }
 
 function injectControlUiConfig(html: string, opts: ControlUiInjectionOpts): string {
-  const { basePath, assistantName, assistantAvatar, token } = opts;
+  const { basePath, assistantName, assistantAvatar, token, cspNonce } = opts;
+  const nonceAttr = cspNonce ? ` nonce="${cspNonce}"` : "";
+  const baseHref = basePath ? (basePath.endsWith("/") ? basePath : `${basePath}/`) : "/";
+  const baseTag = `<base href="${baseHref}">`;
   const script =
-    `<script>` +
+    `<script${nonceAttr}>` +
     `window.__ZERO_CONTROL_UI_BASE_PATH__=${JSON.stringify(basePath)};` +
     `window.__ZERO_ASSISTANT_NAME__=${JSON.stringify(
       assistantName ?? DEFAULT_ASSISTANT_IDENTITY.name,
@@ -189,11 +194,24 @@ function injectControlUiConfig(html: string, opts: ControlUiInjectionOpts): stri
     `</script>`;
   // Check if already injected
   if (html.includes("__ZERO_ASSISTANT_NAME__")) return html;
-  const headClose = html.indexOf("</head>");
-  if (headClose !== -1) {
-    return `${html.slice(0, headClose)}${script}${html.slice(headClose)}`;
+
+  // Use regex for case-insensitive head tag matching
+  const headMatch = /<head[^>]*>/i.exec(html);
+  if (headMatch) {
+    const headTagEnd = headMatch.index + headMatch[0].length;
+    // Inject <base> at the top of <head>
+    const headCloseIndex = html.toLowerCase().indexOf("</head>");
+    if (headCloseIndex !== -1) {
+      return (
+        html.slice(0, headTagEnd) +
+        baseTag +
+        html.slice(headTagEnd, headCloseIndex) +
+        script +
+        html.slice(headCloseIndex)
+      );
+    }
   }
-  return `${script}${html}`;
+  return `${baseTag}${script}${html}`;
 }
 
 interface ServeIndexHtmlOpts {
@@ -201,10 +219,11 @@ interface ServeIndexHtmlOpts {
   config?: ZEROConfig;
   agentId?: string;
   token?: string;
+  cspNonce?: string;
 }
 
 function serveIndexHtml(res: ServerResponse, indexPath: string, opts: ServeIndexHtmlOpts) {
-  const { basePath, config, agentId, token } = opts;
+  const { basePath, config, agentId, token, cspNonce } = opts;
   const identity = config
     ? resolveAssistantIdentity({ cfg: config, agentId })
     : DEFAULT_ASSISTANT_IDENTITY;
@@ -227,6 +246,7 @@ function serveIndexHtml(res: ServerResponse, indexPath: string, opts: ServeIndex
       assistantName: identity.name,
       assistantAvatar: avatarValue,
       token,
+      cspNonce,
     }),
   );
 }
@@ -307,11 +327,14 @@ export function handleControlUiHttpRequest(
 
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     if (path.basename(filePath) === "index.html") {
+      const cspNonceRaw = opts?.cspNonce ?? res.getHeader("X-CSP-Nonce");
+      const cspNonce = typeof cspNonceRaw === "string" ? cspNonceRaw : undefined;
       serveIndexHtml(res, filePath, {
         basePath,
         config: opts?.config,
         agentId: opts?.agentId,
         token: opts?.token,
+        cspNonce,
       });
       return true;
     }
@@ -322,11 +345,14 @@ export function handleControlUiHttpRequest(
   // SPA fallback (client-side router): serve index.html for unknown paths.
   const indexPath = path.join(root, "index.html");
   if (fs.existsSync(indexPath)) {
+    const cspNonceRaw = opts?.cspNonce ?? res.getHeader("X-CSP-Nonce");
+    const cspNonce = typeof cspNonceRaw === "string" ? cspNonceRaw : undefined;
     serveIndexHtml(res, indexPath, {
       basePath,
       config: opts?.config,
       agentId: opts?.agentId,
       token: opts?.token,
+      cspNonce,
     });
     return true;
   }

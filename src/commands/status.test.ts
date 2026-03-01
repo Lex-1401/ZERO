@@ -93,7 +93,7 @@ vi.mock("../memory/manager.js", () => ({
       }),
       embedBatch: vi.fn(async (_texts: string[]) => [] as number[][]),
       embedQuery: vi.fn(async (_text: string) => [0.5, 0.5, 0.5]),
-      close: vi.fn(async () => {}),
+      close: vi.fn(async () => { }),
     })),
   },
 }));
@@ -302,6 +302,7 @@ describe("statusCommand", () => {
     expect(logs.some((l: any) => l.includes("Security audit"))).toBe(true);
     expect(logs.some((l: any) => l.includes("Summary:"))).toBe(true);
     expect(logs.some((l: any) => l.includes("CRITICAL"))).toBe(true);
+    console.log("LOGS DUMP:", logs.join("\\n"));
     expect(logs.some((l: any) => l.includes("Dashboard"))).toBe(true);
     expect(logs.some((l: any) => l.includes("macos 14.0 (arm64)"))).toBe(true);
     expect(logs.some((l: any) => l.includes("Memory"))).toBe(true);

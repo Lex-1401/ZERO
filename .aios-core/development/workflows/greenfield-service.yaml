@@ -93,7 +93,7 @@ workflow:
       action: shard_documents
       creates: sharded_docs
       duration_estimate: "15-30 min"
-      requires:  # all validated artifacts must be saved in project docs/ folder
+      requires: # all validated artifacts must be saved in project docs/ folder
         - prd.md
         - architecture.md
       notes: |

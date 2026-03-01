@@ -28,25 +28,25 @@ A máquina Gateway deve ter o binário `zca` disponível no `PATH`.
 
 ## Configuração rápida (iniciante)
 
-1) Instale o plugin (veja acima).
-2) Login (QR, na máquina Gateway):
+1. Instale o plugin (veja acima).
+2. Login (QR, na máquina Gateway):
    - `zero channels login --channel zalouser`
    - Escaneie o código QR no terminal com o app móvel Zalo.
-3) Ative o canal:
+3. Ative o canal:
 
 ```json5
 {
   channels: {
     zalouser: {
       enabled: true,
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
-1) Reinicie o Gateway (ou termine o onboarding).
-2) Acesso DM padroniza para pairing; aprove o código de emparelhamento no primeiro contato.
+1. Reinicie o Gateway (ou termine o onboarding).
+2. Acesso DM padroniza para pairing; aprove o código de emparelhamento no primeiro contato.
 
 ## O que é
 
@@ -102,10 +102,10 @@ Exemplo:
       groupPolicy: "allowlist",
       groups: {
         "123456789": { allow: true },
-        "Chat Trabalho": { allow: true }
-      }
-    }
-  }
+        "Chat Trabalho": { allow: true },
+      },
+    },
+  },
 }
 ```
 
@@ -120,10 +120,10 @@ Contas mapeiam para perfis zca. Exemplo:
       enabled: true,
       defaultAccount: "default",
       accounts: {
-        trabalho: { enabled: true, profile: "work" }
-      }
-    }
-  }
+        trabalho: { enabled: true, profile: "work" },
+      },
+    },
+  },
 }
 ```
 

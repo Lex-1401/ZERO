@@ -4,15 +4,16 @@ read_when:
   - Você deseja executar o ZERO com modelos locais via Ollama
   - Você precisa de orientação sobre configuração do Ollama
 ---
+
 # Ollama
 
 O Ollama é um tempo de execução de LLM local que facilita a execução de modelos de código aberto em sua máquina. O ZERO se integra à API compatível com OpenAI do Ollama e pode **descobrir automaticamente modelos capazes de usar ferramentas** quando você opta por usar `OLLAMA_API_KEY` (ou um perfil de autenticação) e não define uma entrada explícita em `models.providers.ollama`.
 
 ## Início rápido
 
-1) Instale o Ollama: <https://ollama.ai>
+1. Instale o Ollama: <https://ollama.ai>
 
-2) Baixe um modelo:
+2. Baixe um modelo:
 
 ```bash
 ollama pull llama3.3
@@ -22,7 +23,7 @@ ollama pull qwen2.5-coder:32b
 ollama pull deepseek-r1:32b
 ```
 
-1) Ative o Ollama para o ZERO (qualquer valor funciona; o Ollama não requer uma chave real):
+1. Ative o Ollama para o ZERO (qualquer valor funciona; o Ollama não requer uma chave real):
 
 ```bash
 # Definir variável de ambiente
@@ -32,15 +33,15 @@ export OLLAMA_API_KEY="ollama-local"
 zero config set models.providers.ollama.apiKey "ollama-local"
 ```
 
-1) Use modelos Ollama:
+1. Use modelos Ollama:
 
 ```json5
 {
   agents: {
     defaults: {
-      model: { primary: "ollama/llama3.3" }
-    }
-  }
+      model: { primary: "ollama/llama3.3" },
+    },
+  },
 }
 ```
 
@@ -130,10 +131,10 @@ Se o Ollama estiver rodando em um host ou porta diferente (a configuração expl
     providers: {
       ollama: {
         apiKey: "ollama-local",
-        baseUrl: "http://ollama-host:11434/v1"
-      }
-    }
-  }
+        baseUrl: "http://ollama-host:11434/v1",
+      },
+    },
+  },
 }
 ```
 
@@ -147,10 +148,10 @@ Uma vez configurado, todos os seus modelos Ollama estarão disponíveis:
     defaults: {
       model: {
         primary: "ollama/llama3.3",
-        fallback: ["ollama/qwen2.5-coder:32b"]
-      }
-    }
-  }
+        fallback: ["ollama/qwen2.5-coder:32b"],
+      },
+    },
+  },
 }
 ```
 
@@ -218,8 +219,8 @@ ollama serve
 
 Se você encontrar erros de "No API key found" ao usar o Ollama mesmo com a variável de ambiente definida (especialmente em ambientes de desenvolvimento ou gateways isolados), você pode criar um perfil de autenticação manual no arquivo `auth-profiles.json` do seu agente:
 
-1) Localize ou crie o arquivo em `~/.zero/agents/<agente>/agent/auth-profiles.json`.
-2) Adicione a seguinte entrada:
+1. Localize ou crie o arquivo em `~/.zero/agents/<agente>/agent/auth-profiles.json`.
+2. Adicione a seguinte entrada:
 
 ```json
 {

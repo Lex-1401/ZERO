@@ -118,11 +118,11 @@ URLs diretas são buscadas como estão. Isso utiliza a ferramenta `web_fetch` (o
 
 Os programas OpenProse mapeiam para primitivas do ZERO:
 
-| Conceito OpenProse | Ferramenta ZERO |
-| --- | --- |
-| Spawn session / Task tool | `sessions_spawn` |
+| Conceito OpenProse          | Ferramenta ZERO  |
+| --------------------------- | ---------------- |
+| Spawn session / Task tool   | `sessions_spawn` |
 | Leitura/Escrita de arquivos | `read` / `write` |
-| Busca web (Web fetch) | `web_fetch` |
+| Busca web (Web fetch)       | `web_fetch`      |
 
 Se a sua lista de permissão (allowlist) de ferramentas bloquear estas ferramentas, os programas OpenProse falharão. Consulte [Configuração de Habilidades](/tools/skills-config).
 

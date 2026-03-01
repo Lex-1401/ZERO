@@ -248,12 +248,12 @@ This task requires the following configuration keys from `core-config.yaml`:
 **Loading Config:**
 
 ```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
+const yaml = require("js-yaml");
+const fs = require("fs");
+const path = require("path");
 
-const configPath = path.join(__dirname, '../../.aios-core/core-config.yaml');
-const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+const configPath = path.join(__dirname, "../../.aios-core/core-config.yaml");
+const config = yaml.load(fs.readFileSync(configPath, "utf8"));
 
 const qa_location = config.qa.qaLocation;
 const dev_story_location = config.devStoryLocation;
@@ -511,8 +511,8 @@ function parseStoryId(input) {
 
 ```javascript
 function parseStoryId(input) {
-  if (!input || typeof input !== 'string') {
-    throw new Error('Story ID is required and must be a string');
+  if (!input || typeof input !== "string") {
+    throw new Error("Story ID is required and must be a string");
   }
   const match = input.match(/^(\d+)\.(\d+)$/);
   if (!match) {
@@ -621,3 +621,12 @@ This task is complete when:
 - Constraints section present
 - File follows template structure
 ```
+
+## Handoff
+
+next_agent: @dev
+next_command: \*fix-qa-issues
+condition: QA_FIX_REQUEST.md generated
+alternatives:
+
+- agent: @dev, command: \*apply-qa-fixes, condition: Simple fixes, no structured request needed

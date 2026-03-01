@@ -218,7 +218,7 @@ export async function createCanvasHostHandler(
       basePath,
       handleHttpRequest: async () => false,
       handleUpgrade: () => false,
-      close: async () => { },
+      close: async () => {},
     };
   }
 
@@ -258,14 +258,14 @@ export async function createCanvasHostHandler(
   let watcherClosed = false;
   const watcher = liveReload
     ? chokidar.watch(rootReal, {
-      ignoreInitial: true,
-      awaitWriteFinish: { stabilityThreshold: 75, pollInterval: 10 },
-      usePolling: opts.allowInTests === true,
-      ignored: [
-        /(^|[\\/])\../, // dotfiles
-        /(^|[\\/])node_modules([\\/]|$)/,
-      ],
-    })
+        ignoreInitial: true,
+        awaitWriteFinish: { stabilityThreshold: 75, pollInterval: 10 },
+        usePolling: opts.allowInTests === true,
+        ignored: [
+          /(^|[\\/])\../, // dotfiles
+          /(^|[\\/])node_modules([\\/]|$)/,
+        ],
+      })
     : null;
   watcher?.on("all", () => scheduleReload());
   watcher?.on("error", (err) => {
@@ -274,7 +274,7 @@ export async function createCanvasHostHandler(
     opts.runtime.error(
       `canvasHost watcher error: ${String(err)} (live reload disabled; consider canvasHost.liveReload=false or a smaller canvasHost.root)`,
     );
-    void watcher.close().catch(() => { });
+    void watcher.close().catch(() => {});
   });
 
   const handleUpgrade = (req: IncomingMessage, socket: Duplex, head: Buffer) => {
@@ -368,7 +368,7 @@ export async function createCanvasHostHandler(
     close: async () => {
       if (debounce) clearTimeout(debounce);
       watcherClosed = true;
-      await watcher?.close().catch(() => { });
+      await watcher?.close().catch(() => {});
       if (wss) {
         await new Promise<void>((resolve) => wss.close(() => resolve()));
       }
@@ -378,7 +378,7 @@ export async function createCanvasHostHandler(
 
 export async function startCanvasHost(opts: CanvasHostServerOpts): Promise<CanvasHostServer> {
   if (isDisabledByEnv() && opts.allowInTests !== true) {
-    return { port: 0, rootDir: "", close: async () => { } };
+    return { port: 0, rootDir: "", close: async () => {} };
   }
 
   const handler =

@@ -1,12 +1,11 @@
-
-import { useState, useEffect } from 'react';
-import { gatewayClient } from './lib/gateway';
+import { useState, useEffect } from "react";
+import { gatewayClient } from "./lib/gateway";
 
 interface Agent {
   id: string;
   name: string;
   role: string;
-  status: 'idle' | 'busy' | 'offline';
+  status: "idle" | "busy" | "offline";
   capabilities: string[];
 }
 
@@ -23,17 +22,17 @@ export default function AgentsView({ onDispatch }: AgentsViewProps) {
 
   const loadAgents = async () => {
     try {
-      const res: any = await gatewayClient.call('agents.list', {});
+      const res: any = await gatewayClient.call("agents.list", {});
       const mapped = (res.agents || []).map((a: any) => ({
         id: a.id,
         name: a.name || a.id,
-        role: a.role || 'Agente de Uso Geral',
-        status: 'idle', // Placeholder status for now
-        capabilities: a.capabilities || ['Raciocínio', 'Conversa'],
+        role: a.role || "Agente de Uso Geral",
+        status: "idle", // Placeholder status for now
+        capabilities: a.capabilities || ["Raciocínio", "Conversa"],
       }));
       setAgents(mapped);
     } catch (err) {
-      console.error('Falha ao carregar agentes', err);
+      console.error("Falha ao carregar agentes", err);
     }
   };
 
@@ -41,28 +40,39 @@ export default function AgentsView({ onDispatch }: AgentsViewProps) {
     <div className="agents-view">
       <div className="view-header">
         <h2 className="title-gradient">Enxame de Agentes</h2>
-        <button className="add-agent-btn" onClick={loadAgents}>Atualizar Enxame</button>
+        <button className="add-agent-btn" onClick={loadAgents}>
+          Atualizar Enxame
+        </button>
       </div>
 
       <div className="agents-grid">
-        {agents.length > 0 ? agents.map((agent) => (
-          <div key={agent.id} className="agent-card glass-morphism">
-            <div className={`status-indicator ${agent.status}`} />
-            <div className="agent-info">
-              <h3>{agent.name}</h3>
-              <p className="agent-role">{agent.role}</p>
-              <div className="capabilities-tags">
-                {agent.capabilities.map((cap) => (
-                  <span key={cap} className="cap-tag">{cap}</span>
-                ))}
+        {agents.length > 0 ? (
+          agents.map((agent) => (
+            <div key={agent.id} className="agent-card glass-morphism">
+              <div className={`status-indicator ${agent.status}`} />
+              <div className="agent-info">
+                <h3>{agent.name}</h3>
+                <p className="agent-role">{agent.role}</p>
+                <div className="capabilities-tags">
+                  {agent.capabilities.map((cap) => (
+                    <span key={cap} className="cap-tag">
+                      {cap}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="agent-actions">
+                <button className="control-btn">Configurar</button>
+                <button
+                  className="control-btn primary"
+                  onClick={() => onDispatch && onDispatch(agent.id)}
+                >
+                  Despachar
+                </button>
               </div>
             </div>
-            <div className="agent-actions">
-              <button className="control-btn">Configurar</button>
-              <button className="control-btn primary" onClick={() => onDispatch && onDispatch(agent.id)}>Despachar</button>
-            </div>
-          </div>
-        )) : (
+          ))
+        ) : (
           <div className="empty-state">
             <p>Nenhum agente configurado no seu enxame.</p>
           </div>

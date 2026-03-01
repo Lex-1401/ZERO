@@ -4,6 +4,7 @@ read_when:
   - Adicionando ou modificando o suporte a enquetes
   - Depurando envios de enquetes pela CLI ou gateway
 ---
+
 # Enquetes (Polls)
 
 ## Canais suportados

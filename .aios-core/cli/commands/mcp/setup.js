@@ -8,33 +8,36 @@
  * @story 2.11 - MCP System Global
  */
 
-const { Command } = require('commander');
+const { Command } = require("commander");
 const {
   createGlobalStructure,
   createGlobalConfig,
   globalConfigExists,
   getAvailableTemplates,
   getServerTemplate,
-} = require('../../../core/mcp/global-config-manager');
+} = require("../../../core/mcp/global-config-manager");
 const {
   getGlobalAiosDir,
   getGlobalMcpDir,
   getGlobalConfigPath,
-} = require('../../../core/mcp/os-detector');
+} = require("../../../core/mcp/os-detector");
 
 /**
  * Create the setup command
  * @returns {Command} Commander command instance
  */
 function createSetupCommand() {
-  const setup = new Command('setup');
+  const setup = new Command("setup");
 
   setup
-    .description('Create global MCP configuration structure at ~/.aios/')
-    .option('--with-defaults', 'Include default server templates (context7, exa, github)')
-    .option('--servers <servers>', 'Comma-separated list of servers to add (e.g., context7,exa,github)')
-    .option('-f, --force', 'Force recreation even if exists')
-    .option('-v, --verbose', 'Show detailed output')
+    .description("Create global MCP configuration structure at ~/.aios/")
+    .option("--with-defaults", "Include default server templates (context7, exa, github)")
+    .option(
+      "--servers <servers>",
+      "Comma-separated list of servers to add (e.g., context7,exa,github)",
+    )
+    .option("-f, --force", "Force recreation even if exists")
+    .option("-v, --verbose", "Show detailed output")
     .action(async (options) => {
       await executeSetup(options);
     });
@@ -47,17 +50,17 @@ function createSetupCommand() {
  * @param {Object} options - Command options
  */
 async function executeSetup(options) {
-  console.log('Creating global MCP configuration...\n');
+  console.log("Creating global MCP configuration...\n");
 
   // Check if already exists
   if (globalConfigExists() && !options.force) {
     console.log(`✓ Global config already exists at ${getGlobalConfigPath()}`);
-    console.log('  Use --force to recreate\n');
+    console.log("  Use --force to recreate\n");
     return;
   }
 
   // Step 1: Create directory structure
-  console.log('Step 1: Creating directory structure...');
+  console.log("Step 1: Creating directory structure...");
   const structureResult = createGlobalStructure();
 
   if (structureResult.created.length > 0) {
@@ -78,19 +81,19 @@ async function executeSetup(options) {
 
   if (options.withDefaults) {
     // Add default servers
-    const defaultServers = ['context7', 'exa', 'github'];
+    const defaultServers = ["context7", "exa", "github"];
     for (const server of defaultServers) {
       const template = getServerTemplate(server);
       if (template) {
         initialServers[server] = template;
       }
     }
-    console.log('\nStep 2: Adding default servers...');
+    console.log("\nStep 2: Adding default servers...");
     console.log(`  ✓ Added ${Object.keys(initialServers).length} default servers`);
   } else if (options.servers) {
     // Add specified servers
-    const serverNames = options.servers.split(',').map(s => s.trim());
-    console.log('\nStep 2: Adding specified servers...');
+    const serverNames = options.servers.split(",").map((s) => s.trim());
+    console.log("\nStep 2: Adding specified servers...");
 
     for (const server of serverNames) {
       const template = getServerTemplate(server);
@@ -102,28 +105,28 @@ async function executeSetup(options) {
       }
     }
   } else {
-    console.log('\nStep 2: Creating empty config (no servers)');
-    console.log('  Tip: Use --with-defaults or --servers to add servers');
+    console.log("\nStep 2: Creating empty config (no servers)");
+    console.log("  Tip: Use --with-defaults or --servers to add servers");
   }
 
   // Step 3: Create config file
-  console.log('\nStep 3: Creating global config file...');
+  console.log("\nStep 3: Creating global config file...");
   const configResult = createGlobalConfig(initialServers);
 
   if (configResult.success) {
     console.log(`  ✓ Created ${configResult.configPath}`);
-  } else if (configResult.error === 'Config already exists' && options.force) {
+  } else if (configResult.error === "Config already exists" && options.force) {
     // Overwrite for force mode
-    const fs = require('fs');
+    const fs = require("fs");
     const config = {
-      version: '1.0',
+      version: "1.0",
       servers: initialServers,
       defaults: {
         timeout: 30000,
         retries: 3,
       },
     };
-    fs.writeFileSync(configResult.configPath, JSON.stringify(config, null, 2), 'utf8');
+    fs.writeFileSync(configResult.configPath, JSON.stringify(config, null, 2), "utf8");
     console.log(`  ✓ Overwrote ${configResult.configPath}`);
   } else {
     console.error(`  ✗ ${configResult.error}`);
@@ -131,27 +134,27 @@ async function executeSetup(options) {
   }
 
   // Summary
-  console.log('\n✅ Global MCP setup complete!\n');
-  console.log('Structure created:');
+  console.log("\n✅ Global MCP setup complete!\n");
+  console.log("Structure created:");
   console.log(`  ${getGlobalAiosDir()}/`);
-  console.log('  ├── mcp/');
-  console.log('  │   ├── global-config.json');
-  console.log('  │   ├── servers/');
-  console.log('  │   └── cache/');
-  console.log('  ├── config.yaml');
-  console.log('  └── credentials/');
+  console.log("  ├── mcp/");
+  console.log("  │   ├── global-config.json");
+  console.log("  │   ├── servers/");
+  console.log("  │   └── cache/");
+  console.log("  ├── config.yaml");
+  console.log("  └── credentials/");
 
   if (Object.keys(initialServers).length > 0) {
-    console.log(`\nServers configured: ${Object.keys(initialServers).join(', ')}`);
+    console.log(`\nServers configured: ${Object.keys(initialServers).join(", ")}`);
   }
 
-  console.log('\nNext steps:');
+  console.log("\nNext steps:");
   console.log('  1. Run "aios mcp link" in your project to use global config');
   console.log('  2. Run "aios mcp add <server>" to add more servers');
   console.log('  3. Run "aios mcp status" to check configuration');
 
   if (options.verbose) {
-    console.log('\nAvailable server templates:');
+    console.log("\nAvailable server templates:");
     for (const name of getAvailableTemplates()) {
       console.log(`  - ${name}`);
     }

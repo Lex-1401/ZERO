@@ -15,7 +15,7 @@ Hooks são pequenos scripts que rodam quando algo acontece. Existem dois tipos:
 
 - **Hooks** (esta página): rodam dentro do Gateway quando eventos do agente são disparados, como `/new`, `/reset`, `/stop` ou eventos de ciclo de vida.
 - **Webhooks**: webhooks HTTP externos que permitem que outros sistemas disparem trabalhos no ZERO. Consulte [Ganchos de Webhook](/automation/webhook) ou use `zero webhooks` para comandos auxiliares do Gmail.
-  
+
 Os hooks também podem ser empacotados dentro de plugins; consulte [Plugins](/plugin#plugin-hooks).
 
 Usos comuns:
@@ -126,7 +126,7 @@ O arquivo `HOOK.md` contém metadados em frontmatter YAML, além de documentaç�
 name: meu-hook
 description: "Descrição curta do que este hook faz"
 homepage: https://github.com/Lex-1401/ZERO/tree/main/docs/hooks#meu-hook
-metadata: {"zero":{"emoji":"🔗","events":["command:new"],"requires":{"bins":["node"]}}}
+metadata: { "zero": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
 ---
 
 # Meu Hook
@@ -170,11 +170,11 @@ O objeto `metadata.zero` suporta:
 O arquivo `handler.ts` exporta uma função `HookHandler`:
 
 ```typescript
-import type { HookHandler } from '../../src/hooks/hooks.js';
+import type { HookHandler } from "../../src/hooks/hooks.js";
 
 const meuHandler: HookHandler = async (event) => {
   // Dispara apenas no comando 'new'
-  if (event.type !== 'command' || event.action !== 'new') {
+  if (event.type !== "command" || event.action !== "new") {
     return;
   }
 
@@ -185,7 +185,7 @@ const meuHandler: HookHandler = async (event) => {
   // Sua lógica personalizada aqui
 
   // Opcionalmente enviar uma mensagem ao usuário
-  event.messages.push('✨ Meu hook foi executado!');
+  event.messages.push("✨ Meu hook foi executado!");
 };
 
 export default meuHandler;
@@ -270,7 +270,7 @@ cd ~/.zero/hooks/meu-hook
 ---
 name: meu-hook
 description: "Faz algo útil"
-metadata: {"zero":{"emoji":"🎯","events":["command:new"]}}
+metadata: { "zero": { "emoji": "🎯", "events": ["command:new"] } }
 ---
 
 # Meu Hook Personalizado
@@ -281,14 +281,14 @@ Este hook faz algo útil quando você emite `/new`.
 ### 4. Crie o handler.ts
 
 ```typescript
-import type { HookHandler } from '../../src/hooks/hooks.js';
+import type { HookHandler } from "../../src/hooks/hooks.js";
 
 const handler: HookHandler = async (event) => {
-  if (event.type !== 'command' || event.action !== 'new') {
+  if (event.type !== "command" || event.action !== "new") {
     return;
   }
 
-  console.log('[meu-hook] Executando!');
+  console.log("[meu-hook] Executando!");
   // Sua lógica aqui
 };
 
@@ -586,7 +586,7 @@ const handler: HookHandler = async (event) => {
   try {
     await operacaoArriscada(event);
   } catch (err) {
-    console.error('[meu-handler] Falhou:', err instanceof Error ? err.message : String(err));
+    console.error("[meu-handler] Falhou:", err instanceof Error ? err.message : String(err));
     // Não lance erro - deixe outros manipuladores rodarem
   }
 };
@@ -599,7 +599,7 @@ Retorne imediatamente se o evento não for relevante:
 ```typescript
 const handler: HookHandler = async (event) => {
   // Apenas lida com comandos 'new'
-  if (event.type !== 'command' || event.action !== 'new') {
+  if (event.type !== "command" || event.action !== "new") {
     return;
   }
 
@@ -612,13 +612,13 @@ const handler: HookHandler = async (event) => {
 Especifique eventos exatos nos metadados quando possível:
 
 ```yaml
-metadata: {"zero":{"events":["command:new"]}}  # Específico
+metadata: { "zero": { "events": ["command:new"] } } # Específico
 ```
 
 Em vez de:
 
 ```yaml
-metadata: {"zero":{"events":["command"]}}      # Geral - gera mais overhead
+metadata: { "zero": { "events": ["command"] } } # Geral - gera mais overhead
 ```
 
 ## Depuração (Debugging)
@@ -647,7 +647,7 @@ No seu manipulador, registre quando ele for chamado:
 
 ```typescript
 const handler: HookHandler = async (event) => {
-  console.log('[meu-handler] Disparado:', event.type, event.action);
+  console.log("[meu-handler] Disparado:", event.type, event.action);
   // Sua lógica
 };
 ```
@@ -681,13 +681,13 @@ tail -f ~/.zero/gateway.log
 Teste seus manipuladores isoladamente:
 
 ```typescript
-import { test } from 'vitest';
-import { createHookEvent } from './src/hooks/hooks.js';
-import meuHandler from './hooks/meu-hook/handler.js';
+import { test } from "vitest";
+import { createHookEvent } from "./src/hooks/hooks.js";
+import meuHandler from "./hooks/meu-hook/handler.js";
 
-test('meu handler funciona', async () => {
-  const event = createHookEvent('command', 'new', 'test-session', {
-    foo: 'bar'
+test("meu handler funciona", async () => {
+  const event = createHookEvent("command", "new", "test-session", {
+    foo: "bar",
   });
 
   await meuHandler(event);
@@ -844,7 +844,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
    ---
    name: meu-hook
    description: "Meu hook personalizado"
-   metadata: {"zero":{"emoji":"🎯","events":["command:new"]}}
+   metadata: { "zero": { "emoji": "🎯", "events": ["command:new"] } }
    ---
 
    # Meu Hook

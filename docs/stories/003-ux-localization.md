@@ -24,4 +24,5 @@ A interface atual apresenta inconsistências estéticas e linguísticas. Há bot
 - [ ] **Task 3.4**: Gerar novo logo via AI Skill e aplicar em `ui/public`.
 
 ---
+
 — River, Scrum Master 🌊

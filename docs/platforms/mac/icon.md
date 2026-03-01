@@ -3,6 +3,7 @@ summary: "Estados e animações do ícone da barra de menus para o ZERO no macOS
 read_when:
   - Alterando o comportamento do ícone da barra de menus
 ---
+
 # Estados do Ícone da Barra de Menus
 
 Autor: steipete · Atualizado: 06-12-2025 · Escopo: app macOS (`apps/macos`)

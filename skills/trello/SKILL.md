@@ -2,7 +2,11 @@
 name: trello
 description: Gerencie quadros, listas e cartões do Trello via API REST do Trello.
 homepage: https://developer.atlassian.com/cloud/trello/rest/
-metadata: {"zero":{"emoji":"📋","requires":{"bins":["jq"],"env":["TRELLO_API_KEY","TRELLO_TOKEN"]}}}
+metadata:
+  {
+    "zero":
+      { "emoji": "📋", "requires": { "bins": ["jq"], "env": ["TRELLO_API_KEY", "TRELLO_TOKEN"] } },
+  }
 ---
 
 # Trello Skill

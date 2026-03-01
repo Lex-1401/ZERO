@@ -30,25 +30,25 @@ outputs:
 
 ```yaml
 common_false_positives:
-  - name: 'Placebo Fix'
+  - name: "Placebo Fix"
     description: "Change looks like it fixes the bug but doesn't actually address root cause"
-    example: 'Adding try-catch around code that errors, but error still occurs'
+    example: "Adding try-catch around code that errors, but error still occurs"
 
-  - name: 'Timing Coincidence'
-    description: 'Bug disappeared due to unrelated change or timing'
-    example: 'Race condition that stopped occurring due to added logging'
+  - name: "Timing Coincidence"
+    description: "Bug disappeared due to unrelated change or timing"
+    example: "Race condition that stopped occurring due to added logging"
 
-  - name: 'Environment Dependency'
-    description: 'Works in dev but fails in prod due to environment differences'
-    example: 'Hardcoded localhost URL that works locally'
+  - name: "Environment Dependency"
+    description: "Works in dev but fails in prod due to environment differences"
+    example: "Hardcoded localhost URL that works locally"
 
-  - name: 'Incomplete Fix'
-    description: 'Fix addresses one case but not all edge cases'
-    example: 'Null check added but undefined still causes crash'
+  - name: "Incomplete Fix"
+    description: "Fix addresses one case but not all edge cases"
+    example: "Null check added but undefined still causes crash"
 
-  - name: 'Self-Healing Bug'
-    description: 'Bug that intermittently resolves itself'
-    example: 'Cache-related bug that clears after restart'
+  - name: "Self-Healing Bug"
+    description: "Bug that intermittently resolves itself"
+    example: "Cache-related bug that clears after restart"
 ```
 
 ---
@@ -61,19 +61,19 @@ common_false_positives:
 assumptions_check:
   questions:
     - id: assumption-explicit
-      question: 'Are all assumptions explicitly stated?'
-      verify: 'List each assumption made about the fix'
-      red_flag: 'Implicit assumptions without evidence'
+      question: "Are all assumptions explicitly stated?"
+      verify: "List each assumption made about the fix"
+      red_flag: "Implicit assumptions without evidence"
 
     - id: assumption-verified
-      question: 'Is each assumption verified with evidence?'
-      verify: 'Link to test, log, or documentation for each'
-      red_flag: 'Assumptions taken for granted'
+      question: "Is each assumption verified with evidence?"
+      verify: "Link to test, log, or documentation for each"
+      red_flag: "Assumptions taken for granted"
 
     - id: alternatives-considered
-      question: 'Were alternative explanations considered?'
-      verify: 'List other possible causes that were ruled out'
-      red_flag: 'Only one explanation considered'
+      question: "Were alternative explanations considered?"
+      verify: "List other possible causes that were ruled out"
+      red_flag: "Only one explanation considered"
 ```
 
 ### 2. Causation Tests
@@ -82,36 +82,36 @@ assumptions_check:
 causation_tests:
   questions:
     - id: remove-test
-      question: 'Can we remove this change and see the problem return?'
+      question: "Can we remove this change and see the problem return?"
       verify: |
         1. Revert the fix (git stash or branch)
         2. Reproduce the original bug
         3. Re-apply the fix
         4. Confirm bug is gone
-      pass: 'Bug returns when fix removed, disappears when applied'
-      fail: 'Bug behavior unchanged by fix'
+      pass: "Bug returns when fix removed, disappears when applied"
+      fail: "Bug behavior unchanged by fix"
 
     - id: old-code-fails
-      question: 'Did we verify the OLD code actually fails?'
-      verify: 'Test case showing failure before fix'
-      pass: 'Have concrete evidence of failure'
-      fail: 'Assumed failure without verification'
+      question: "Did we verify the OLD code actually fails?"
+      verify: "Test case showing failure before fix"
+      pass: "Have concrete evidence of failure"
+      fail: "Assumed failure without verification"
 
     - id: new-code-succeeds
-      question: 'Did we verify the NEW code actually succeeds?'
-      verify: 'Test case showing success after fix'
-      pass: 'Have concrete evidence of success'
-      fail: 'Assumed success without verification'
+      question: "Did we verify the NEW code actually succeeds?"
+      verify: "Test case showing success after fix"
+      pass: "Have concrete evidence of success"
+      fail: "Assumed success without verification"
 
     - id: not-self-healing
-      question: 'Is this not a self-healing issue?'
+      question: "Is this not a self-healing issue?"
       verify: |
         1. Wait reasonable time
         2. Restart services
         3. Clear caches
         4. Confirm bug still fixed
-      pass: 'Bug stays fixed through various conditions'
-      fail: 'Bug fix is timing-dependent'
+      pass: "Bug stays fixed through various conditions"
+      fail: "Bug fix is timing-dependent"
 ```
 
 ### 3. Confirmation Bias Checks
@@ -120,26 +120,26 @@ causation_tests:
 bias_checks:
   questions:
     - id: negative-cases
-      question: 'Were negative cases tested?'
-      verify: 'List scenarios where the code SHOULD fail/reject'
-      pass: 'Negative cases defined and tested'
-      fail: 'Only happy path tested'
+      question: "Were negative cases tested?"
+      verify: "List scenarios where the code SHOULD fail/reject"
+      pass: "Negative cases defined and tested"
+      fail: "Only happy path tested"
 
     - id: independent-verification
-      question: 'Can someone else independently verify?'
-      verify: 'Reproduction steps clear enough for another person'
-      pass: 'Steps are complete and reproducible'
+      question: "Can someone else independently verify?"
+      verify: "Reproduction steps clear enough for another person"
+      pass: "Steps are complete and reproducible"
       fail: "Requires original developer's environment/knowledge"
 
     - id: mechanism-explained
-      question: 'Can we explain the mechanism, not just the result?'
+      question: "Can we explain the mechanism, not just the result?"
       verify: |
         Explain WHY the fix works:
         - What was the root cause?
         - How does the change address it?
         - Why won't it regress?
-      pass: 'Clear causal explanation'
-      fail: 'Only know THAT it works, not WHY'
+      pass: "Clear causal explanation"
+      fail: "Only know THAT it works, not WHY"
 ```
 
 ### 4. Edge Case Verification
@@ -147,20 +147,20 @@ bias_checks:
 ```yaml
 edge_cases:
   for_bug_fix:
-    - 'Null/undefined inputs'
-    - 'Empty strings/arrays'
-    - 'Maximum/minimum values'
-    - 'Concurrent access'
-    - 'Network failures'
-    - 'Timeout conditions'
+    - "Null/undefined inputs"
+    - "Empty strings/arrays"
+    - "Maximum/minimum values"
+    - "Concurrent access"
+    - "Network failures"
+    - "Timeout conditions"
 
   for_feature:
-    - 'First time use'
-    - 'Repeated use'
-    - 'Invalid input'
-    - 'Permission denied'
-    - 'Rate limiting'
-    - 'Offline mode'
+    - "First time use"
+    - "Repeated use"
+    - "Invalid input"
+    - "Permission denied"
+    - "Rate limiting"
+    - "Offline mode"
 ```
 
 ---
@@ -179,14 +179,14 @@ confidence_calculation:
     mechanism_explained: 0.05
 
   thresholds:
-    high_confidence: '>= 0.85'
-    medium_confidence: '>= 0.65'
-    low_confidence: '< 0.65'
+    high_confidence: ">= 0.85"
+    medium_confidence: ">= 0.65"
+    low_confidence: "< 0.65"
 
   actions:
-    high: 'Approve with confidence'
-    medium: 'Approve with notes'
-    low: 'Require additional verification or reject'
+    high: "Approve with confidence"
+    medium: "Approve with notes"
+    low: "Require additional verification or reject"
 ```
 
 ---
@@ -347,14 +347,14 @@ integration:
 
 ```yaml
 red_flags:
-  - 'Fix only tested on happy path'
-  - 'Cannot reproduce original bug'
-  - 'Fix works but mechanism unclear'
-  - 'Depends on specific timing/environment'
-  - 'No test added to prevent regression'
-  - 'Similar code elsewhere not checked'
-  - 'Assumptions not documented'
-  - 'Only one explanation considered'
+  - "Fix only tested on happy path"
+  - "Cannot reproduce original bug"
+  - "Fix works but mechanism unclear"
+  - "Depends on specific timing/environment"
+  - "No test added to prevent regression"
+  - "Similar code elsewhere not checked"
+  - "Assumptions not documented"
+  - "Only one explanation considered"
 ```
 
 ---

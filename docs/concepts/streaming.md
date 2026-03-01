@@ -5,6 +5,7 @@ read_when:
   - Alterando o streaming de blocos ou o comportamento de divisão do canal
   - Depurando respostas de blocos duplicadas/antecipadas ou streaming de rascunhos
 ---
+
 # Streaming + divisão (chunking)
 
 O ZERO possui duas camadas de “streaming” separadas:

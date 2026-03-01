@@ -16,7 +16,7 @@ Gerar planos de implementacao executaveis a partir de specs aprovados. Transform
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: execution-plan
 
   elicit: true # User approval for plan before execution
@@ -71,33 +71,33 @@ autoClaude:
 ```yaml
 rules:
   subtask_isolation:
-    description: 'Cada subtask deve ser atomica e verificavel'
+    description: "Cada subtask deve ser atomica e verificavel"
     constraints:
-      - '1 servico por subtask (frontend, backend, infra, database)'
-      - 'Maximo 3 arquivos por subtask'
-      - 'Cada subtask DEVE ter verificacao definida'
+      - "1 servico por subtask (frontend, backend, infra, database)"
+      - "Maximo 3 arquivos por subtask"
+      - "Cada subtask DEVE ter verificacao definida"
 
   service_types:
-    - frontend: 'UI components, stores, hooks, pages'
-    - backend: 'API routes, services, controllers'
-    - database: 'Migrations, seeds, schema changes'
-    - infra: 'Config files, CI/CD, environment'
+    - frontend: "UI components, stores, hooks, pages"
+    - backend: "API routes, services, controllers"
+    - database: "Migrations, seeds, schema changes"
+    - infra: "Config files, CI/CD, environment"
 
   verification_types:
-    - command: 'Shell command that returns exit code 0 on success'
-    - api: 'HTTP request with expected response'
-    - browser: 'Visual/interaction verification via Playwright'
-    - e2e: 'End-to-end test suite'
-    - manual: 'Human verification required'
+    - command: "Shell command that returns exit code 0 on success"
+    - api: "HTTP request with expected response"
+    - browser: "Visual/interaction verification via Playwright"
+    - e2e: "End-to-end test suite"
+    - manual: "Human verification required"
 
   phase_structure:
-    description: 'Fases agrupam subtasks logicamente'
+    description: "Fases agrupam subtasks logicamente"
     typical_phases:
-      - setup: 'Initial configuration, dependencies'
-      - implementation: 'Core feature code'
-      - testing: 'Unit and integration tests'
-      - integration: 'Connecting components'
-      - polish: 'Documentation, cleanup'
+      - setup: "Initial configuration, dependencies"
+      - implementation: "Core feature code"
+      - testing: "Unit and integration tests"
+      - integration: "Connecting components"
+      - polish: "Documentation, cleanup"
 ```
 
 ---
@@ -106,7 +106,7 @@ rules:
 
 ```yaml
 # implementation.yaml schema
-$schema: 'http://json-schema.org/draft-07/schema#'
+$schema: "http://json-schema.org/draft-07/schema#"
 type: object
 required:
   - storyId
@@ -120,32 +120,32 @@ properties:
   storyId:
     type: string
     pattern: "^[A-Z]+-\\d+$|^story-\\d+(\\.\\d+)?$"
-    description: 'Story identifier'
+    description: "Story identifier"
 
   createdAt:
     type: string
     format: date-time
-    description: 'Plan creation timestamp'
+    description: "Plan creation timestamp"
 
   createdBy:
     type: string
-    default: '@architect'
-    description: 'Agent that created the plan'
+    default: "@architect"
+    description: "Agent that created the plan"
 
   status:
     type: string
     enum: [pending, in_progress, completed, blocked]
     default: pending
-    description: 'Overall plan status'
+    description: "Overall plan status"
 
   complexity:
     type: string
     enum: [SIMPLE, STANDARD, COMPLEX]
-    description: 'From complexity assessment or inferred'
+    description: "From complexity assessment or inferred"
 
   estimatedEffort:
     type: string
-    description: 'Total estimated time'
+    description: "Total estimated time"
 
   dependencies:
     type: array
@@ -158,13 +158,13 @@ properties:
           type: string
         purpose:
           type: string
-    description: 'External dependencies to install'
+    description: "External dependencies to install"
 
   phases:
     type: array
     minItems: 1
     items:
-      $ref: '#/definitions/phase'
+      $ref: "#/definitions/phase"
 
 definitions:
   phase:
@@ -183,7 +183,7 @@ definitions:
         type: array
         minItems: 1
         items:
-          $ref: '#/definitions/subtask'
+          $ref: "#/definitions/subtask"
 
   subtask:
     type: object
@@ -192,11 +192,11 @@ definitions:
       id:
         type: string
         pattern: "^\\d+\\.\\d+$"
-        description: 'Phase.Subtask number (e.g., 1.1, 2.3)'
+        description: "Phase.Subtask number (e.g., 1.1, 2.3)"
       description:
         type: string
         minLength: 10
-        description: 'Clear description of what to implement'
+        description: "Clear description of what to implement"
       service:
         type: string
         enum: [frontend, backend, database, infra]
@@ -206,9 +206,9 @@ definitions:
         maxItems: 3
         items:
           type: string
-        description: 'Files to create or modify'
+        description: "Files to create or modify"
       verification:
-        $ref: '#/definitions/verification'
+        $ref: "#/definitions/verification"
       status:
         type: string
         enum: [pending, in_progress, completed, failed, blocked]
@@ -217,10 +217,10 @@ definitions:
         type: array
         items:
           type: string
-        description: 'Subtask IDs that must complete first'
+        description: "Subtask IDs that must complete first"
       notes:
         type: string
-        description: 'Additional context for the coder'
+        description: "Additional context for the coder"
 
   verification:
     type: object
@@ -231,19 +231,19 @@ definitions:
         enum: [command, api, browser, e2e, manual]
       command:
         type: string
-        description: 'Shell command for type=command'
+        description: "Shell command for type=command"
       url:
         type: string
-        description: 'URL for type=api'
+        description: "URL for type=api"
       expectedStatus:
         type: integer
-        description: 'HTTP status for type=api'
+        description: "HTTP status for type=api"
       testFile:
         type: string
-        description: 'Test file path for type=e2e'
+        description: "Test file path for type=e2e"
       instructions:
         type: string
-        description: 'Instructions for type=manual'
+        description: "Instructions for type=manual"
 ```
 
 ---
@@ -260,8 +260,8 @@ load_inputs:
     - spec.md: "Must exist and be approved (status not 'rejected')"
 
   optional:
-    - complexity.json: 'Use STANDARD if missing'
-    - research.json: 'Dependencies from research phase'
+    - complexity.json: "Use STANDARD if missing"
+    - research.json: "Dependencies from research phase"
 
   validation:
     - Spec must have Implementation Checklist section
@@ -276,16 +276,16 @@ extraction:
   action: analyze_spec
 
   from_spec:
-    - implementation_checklist: 'Section 9 of spec template'
-    - files_to_modify: 'Section 5 of spec template'
-    - files_to_create: 'Section 5 of spec template'
-    - dependencies: 'Section 4 of spec template'
-    - testing_strategy: 'Section 6 of spec template'
+    - implementation_checklist: "Section 9 of spec template"
+    - files_to_modify: "Section 5 of spec template"
+    - files_to_create: "Section 5 of spec template"
+    - dependencies: "Section 4 of spec template"
+    - testing_strategy: "Section 6 of spec template"
 
   from_complexity:
-    - estimated_effort: 'complexity.estimatedEffort'
-    - complexity_level: 'complexity.result'
-    - scope_score: 'complexity.dimensions.scope.score'
+    - estimated_effort: "complexity.estimatedEffort"
+    - complexity_level: "complexity.result"
+    - scope_score: "complexity.dimensions.scope.score"
 ```
 
 ### Step 3: Determine Phase Structure
@@ -363,42 +363,42 @@ verification_assignment:
 
   type_selection:
     command:
-      when: 'TypeScript/lint/build tasks'
+      when: "TypeScript/lint/build tasks"
       examples:
-        - 'npm run typecheck'
-        - 'npm run lint'
-        - 'npm run build'
+        - "npm run typecheck"
+        - "npm run lint"
+        - "npm run build"
         - "npm test -- --grep '{pattern}'"
 
     api:
-      when: 'Backend endpoint implementation'
+      when: "Backend endpoint implementation"
       template:
         type: api
-        url: 'http://localhost:3000/api/{endpoint}'
+        url: "http://localhost:3000/api/{endpoint}"
         method: POST|GET|PUT|DELETE
         expectedStatus: 200|201|204
 
     browser:
-      when: 'UI component with visual interaction'
+      when: "UI component with visual interaction"
       template:
         type: browser
-        url: 'http://localhost:3000/{page}'
+        url: "http://localhost:3000/{page}"
         actions:
-          - 'Click login button'
-          - 'Verify redirect'
+          - "Click login button"
+          - "Verify redirect"
 
     e2e:
-      when: 'Full flow verification'
+      when: "Full flow verification"
       template:
         type: e2e
-        testFile: 'tests/e2e/{feature}.spec.ts'
+        testFile: "tests/e2e/{feature}.spec.ts"
         command: "npm run test:e2e -- --grep '{pattern}'"
 
     manual:
-      when: 'Cannot be automated'
+      when: "Cannot be automated"
       template:
         type: manual
-        instructions: 'Verify {feature} works as expected'
+        instructions: "Verify {feature} works as expected"
 ```
 
 ### Step 6: Build Implementation Plan
@@ -437,6 +437,63 @@ build_plan:
             status: pending
             notes: "{optional context for coder}"
 ```
+
+### Step 6.5: Code Intelligence: Impact Analysis (Optional — Auto-skip if unavailable)
+
+> **Condition:** Only execute if `isCodeIntelAvailable()` returns true.
+> If no code intelligence provider is available, skip this step silently and proceed to Step 7.
+
+When code intelligence is available, enrich each subtask with blast radius and risk assessment:
+
+```javascript
+const { isCodeIntelAvailable } = require(".aios-core/core/code-intel");
+const { getImplementationImpact } = require(".aios-core/core/code-intel/helpers/planning-helper");
+
+if (isCodeIntelAvailable()) {
+  // For each subtask, analyze the files it modifies
+  for (const subtask of allSubtasks) {
+    const impact = await getImplementationImpact(subtask.files);
+    if (impact) {
+      subtask.codeIntelligence = {
+        blastRadius: impact.blastRadius,
+        riskLevel: impact.riskLevel, // 'LOW' | 'MEDIUM' | 'HIGH'
+        references: impact.references,
+      };
+
+      // If HIGH risk, add warning note to subtask
+      if (impact.riskLevel === "HIGH") {
+        subtask.notes =
+          (subtask.notes || "") +
+          ` ⚠️ HIGH blast radius (${impact.blastRadius} refs) — consider additional review.`;
+      }
+    }
+  }
+}
+```
+
+**If data is available, add to each subtask in implementation.yaml:**
+
+```yaml
+subtasks:
+  - id: "1.1"
+    description: "..."
+    codeIntelligence:
+      blastRadius: 12
+      riskLevel: "MEDIUM"
+      references:
+        - file: "src/module-a.js"
+        - file: "tests/module-a.test.js"
+```
+
+**Risk Level Thresholds:**
+
+- **LOW:** 0-4 references affected
+- **MEDIUM:** 5-15 references affected
+- **HIGH:** >15 references affected — add risk note to subtask
+
+> **Note:** Risk data is advisory. It enriches the plan but does not block execution.
+
+---
 
 ### Step 7: Validate Plan
 
@@ -507,14 +564,14 @@ save_output:
 
 ```yaml
 command:
-  name: '*create-plan'
-  syntax: '*create-plan {story-id} [--complexity=SIMPLE|STANDARD|COMPLEX]'
+  name: "*create-plan"
+  syntax: "*create-plan {story-id} [--complexity=SIMPLE|STANDARD|COMPLEX]"
   agent: architect
 
   examples:
-    - '*create-plan STORY-42'
-    - '*create-plan story-4.1'
-    - '*create-plan STORY-42 --complexity=COMPLEX'
+    - "*create-plan STORY-42"
+    - "*create-plan story-4.1"
+    - "*create-plan STORY-42 --complexity=COMPLEX"
 ```
 
 ### Pipeline Integration
@@ -545,28 +602,28 @@ pipeline:
 ```yaml
 errors:
   - id: missing-spec
-    condition: 'spec.md not found'
-    action: 'Halt - cannot create plan without spec'
+    condition: "spec.md not found"
+    action: "Halt - cannot create plan without spec"
     blocking: true
 
   - id: empty-implementation-checklist
-    condition: 'No implementation checklist in spec'
-    action: 'Warn and generate basic checklist from files section'
+    condition: "No implementation checklist in spec"
+    action: "Warn and generate basic checklist from files section"
     blocking: false
 
   - id: too-many-files
-    condition: 'Subtask would have > 3 files'
-    action: 'Split into multiple subtasks automatically'
+    condition: "Subtask would have > 3 files"
+    action: "Split into multiple subtasks automatically"
     blocking: false
 
   - id: missing-verification
-    condition: 'Cannot determine verification type'
-    action: 'Default to type=command with typecheck'
+    condition: "Cannot determine verification type"
+    action: "Default to type=command with typecheck"
     blocking: false
 
   - id: circular-dependency
-    condition: 'Subtask dependencies form a cycle'
-    action: 'Halt and report circular dependency'
+    condition: "Subtask dependencies form a cycle"
+    action: "Halt and report circular dependency"
     blocking: true
 ```
 
@@ -583,16 +640,16 @@ errors:
 ```yaml
 storyId: STORY-100
 createdAt: 2026-01-28T10:00:00Z
-createdBy: '@architect'
+createdBy: "@architect"
 status: pending
 complexity: SIMPLE
-estimatedEffort: '< 1 hour'
+estimatedEffort: "< 1 hour"
 
 phases:
   - id: phase-1
     name: Implementation
     subtasks:
-      - id: '1.1'
+      - id: "1.1"
         description: Add API_KEY to environment configuration
         service: infra
         files:
@@ -606,7 +663,7 @@ phases:
   - id: phase-2
     name: Testing
     subtasks:
-      - id: '2.1'
+      - id: "2.1"
         description: Add test for env variable validation
         service: backend
         files:
@@ -626,17 +683,17 @@ phases:
 ```yaml
 storyId: STORY-42
 createdAt: 2026-01-28T10:00:00Z
-createdBy: '@architect'
+createdBy: "@architect"
 status: pending
 complexity: STANDARD
-estimatedEffort: '1-2 days'
+estimatedEffort: "1-2 days"
 
 dependencies:
   - name: google-auth-library
-    version: '^9.0.0'
+    version: "^9.0.0"
     purpose: OAuth token handling
-  - name: '@auth/core'
-    version: '^0.18.0'
+  - name: "@auth/core"
+    version: "^0.18.0"
     purpose: Session management
 
 phases:
@@ -644,7 +701,7 @@ phases:
     name: Setup
     description: Install dependencies and configure OAuth
     subtasks:
-      - id: '1.1'
+      - id: "1.1"
         description: Install and configure Google OAuth dependencies
         service: infra
         files:
@@ -655,7 +712,7 @@ phases:
           command: npm install && npm run typecheck
         status: pending
 
-      - id: '1.2'
+      - id: "1.2"
         description: Create OAuth configuration module
         service: backend
         files:
@@ -669,7 +726,7 @@ phases:
     name: Backend Implementation
     description: Implement OAuth flow on server side
     subtasks:
-      - id: '2.1'
+      - id: "2.1"
         description: Implement OAuth callback handler
         service: backend
         files:
@@ -677,12 +734,12 @@ phases:
           - src/services/authService.ts
         verification:
           type: api
-          url: 'http://localhost:3000/api/auth/google/callback'
+          url: "http://localhost:3000/api/auth/google/callback"
           expectedStatus: 302
         status: pending
-        dependencies: ['1.2']
+        dependencies: ["1.2"]
 
-      - id: '2.2'
+      - id: "2.2"
         description: Implement user session management
         service: backend
         files:
@@ -692,13 +749,13 @@ phases:
           type: command
           command: npm test -- --grep "session"
         status: pending
-        dependencies: ['2.1']
+        dependencies: ["2.1"]
 
   - id: phase-3
     name: Frontend Implementation
     description: Implement OAuth UI components
     subtasks:
-      - id: '3.1'
+      - id: "3.1"
         description: Create auth store for session state
         service: frontend
         files:
@@ -708,7 +765,7 @@ phases:
           command: npm run typecheck
         status: pending
 
-      - id: '3.2'
+      - id: "3.2"
         description: Implement Google login button component
         service: frontend
         files:
@@ -716,17 +773,17 @@ phases:
           - src/components/GoogleLoginButton.module.css
         verification:
           type: browser
-          url: 'http://localhost:3000/login'
+          url: "http://localhost:3000/login"
           actions:
-            - 'Verify Google login button is visible'
+            - "Verify Google login button is visible"
         status: pending
-        dependencies: ['3.1']
+        dependencies: ["3.1"]
 
   - id: phase-4
     name: Testing
     description: Add comprehensive tests for OAuth flow
     subtasks:
-      - id: '4.1'
+      - id: "4.1"
         description: Write unit tests for auth services
         service: backend
         files:
@@ -736,9 +793,9 @@ phases:
           type: command
           command: npm test -- --grep "auth"
         status: pending
-        dependencies: ['2.2']
+        dependencies: ["2.2"]
 
-      - id: '4.2'
+      - id: "4.2"
         description: Write E2E test for complete login flow
         service: frontend
         files:
@@ -748,7 +805,7 @@ phases:
           testFile: tests/e2e/auth.spec.ts
           command: npm run test:e2e -- --grep "Google login"
         status: pending
-        dependencies: ['3.2', '4.1']
+        dependencies: ["3.2", "4.1"]
 ```
 
 ---
@@ -758,24 +815,24 @@ phases:
 ```yaml
 quality_gates:
   - id: file-coverage
-    description: 'All spec files are covered'
-    check: 'Every file in spec sections 5.1 and 5.2 appears in a subtask'
+    description: "All spec files are covered"
+    check: "Every file in spec sections 5.1 and 5.2 appears in a subtask"
 
   - id: verification-coverage
-    description: 'All subtasks have verification'
-    check: 'verification object exists for every subtask'
+    description: "All subtasks have verification"
+    check: "verification object exists for every subtask"
 
   - id: service-isolation
-    description: 'Single service per subtask'
-    check: 'service field is one of: frontend, backend, database, infra'
+    description: "Single service per subtask"
+    check: "service field is one of: frontend, backend, database, infra"
 
   - id: file-limit
-    description: 'File count within limits'
-    check: 'Each subtask has 1-3 files'
+    description: "File count within limits"
+    check: "Each subtask has 1-3 files"
 
   - id: dependency-validity
-    description: 'Dependencies reference existing subtasks'
-    check: 'All dependency IDs exist in the plan'
+    description: "Dependencies reference existing subtasks"
+    check: "All dependency IDs exist in the plan"
 ```
 
 ---
@@ -784,11 +841,11 @@ quality_gates:
 
 ```yaml
 metadata:
-  story: '4.1'
-  epic: 'Epic 4 - Execution Engine'
-  created: '2026-01-28'
-  author: '@architect (Aria)'
-  version: '1.0.0'
+  story: "4.1"
+  epic: "Epic 4 - Execution Engine"
+  created: "2026-01-28"
+  author: "@architect (Aria)"
+  version: "1.0.0"
   tags:
     - execution-pipeline
     - implementation-plan

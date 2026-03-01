@@ -6,6 +6,11 @@ const DEFAULT_MODEL = "models/gemini-2.0-flash-exp";
 const WS_URL_BASE =
   "wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent";
 
+/**
+ * Manages a realtime multimodal session with the model provider over WebSockets.
+ * Handles audio/video input and receives text, audio, and tool calls.
+ * Implements RealtimeSessionEvents.
+ */
 export class MultimodalSession extends EventEmitter implements RealtimeSessionEvents {
   private ws: WebSocket | null = null;
   private config: MultimodalConfig;
@@ -16,6 +21,9 @@ export class MultimodalSession extends EventEmitter implements RealtimeSessionEv
     this.config = config;
   }
 
+  /**
+   * Connects to the model provider's WebSocket endpoint.
+   */
   public async connect(): Promise<void> {
     if (this.ws) return;
 
@@ -43,6 +51,9 @@ export class MultimodalSession extends EventEmitter implements RealtimeSessionEv
     });
   }
 
+  /**
+   * Disconnects the current session.
+   */
   public disconnect() {
     if (this.ws) {
       this.ws.close();
@@ -50,6 +61,9 @@ export class MultimodalSession extends EventEmitter implements RealtimeSessionEv
     }
   }
 
+  /**
+   * Sends an audio chunk (PCM 16kHz) to the model.
+   */
   public sendAudio(chunk: Buffer) {
     if (!this.isConnected || !this.ws) return;
 
@@ -66,6 +80,9 @@ export class MultimodalSession extends EventEmitter implements RealtimeSessionEv
     this.ws.send(JSON.stringify(msg));
   }
 
+  /**
+   * Sends a video frame (JPEG) to the model.
+   */
   public sendVideo(frame: Buffer, mimeType: "image/jpeg" = "image/jpeg") {
     if (!this.isConnected || !this.ws) return;
 
@@ -82,6 +99,9 @@ export class MultimodalSession extends EventEmitter implements RealtimeSessionEv
     this.ws.send(JSON.stringify(msg));
   }
 
+  /**
+   * Sends a tool execution result back to the model.
+   */
   public sendToolResponse(result: ToolResult) {
     if (!this.isConnected || !this.ws) return;
 
@@ -126,52 +146,48 @@ export class MultimodalSession extends EventEmitter implements RealtimeSessionEv
   }
 
   private handleMessage(data: WebSocket.Data) {
-    if (data instanceof Buffer) {
-      // Unexpected raw binary, usually it's JSON text
-      data = data.toString();
-    }
+    let text = data instanceof Buffer ? data.toString() : (data as string);
 
     try {
-      const msg = JSON.parse(data as string);
-
-      if (msg.serverContent) {
-        if (msg.serverContent.modelTurn) {
-          const parts = msg.serverContent.modelTurn.parts;
-          for (const part of parts) {
-            if (part.text) {
-              this.emit("text", part.text);
-            }
-            if (part.inlineData) {
-              // Audio output
-              const buffer = Buffer.from(part.inlineData.data, "base64");
-              this.emit("audio", buffer);
-            }
-          }
-        }
-
-        if (msg.serverContent.turnComplete) {
-          // Turn finished
-        }
-
-        if (msg.serverContent.interrupted) {
-          this.emit("interrupted");
-        }
-      }
-
-      if (msg.toolCall) {
-        const calls = msg.toolCall.functionCalls;
-        if (calls) {
-          for (const call of calls) {
-            this.emit("toolCall", {
-              id: call.id,
-              name: call.name,
-              arguments: call.args,
-            });
-          }
-        }
-      }
+      const msg = JSON.parse(text);
+      if (msg.serverContent) this.handleServerContent(msg.serverContent);
+      if (msg.toolCall) this.handleToolCall(msg.toolCall);
     } catch (e) {
       console.error("Error parsing WS message", e);
+      this.emit("error", e instanceof Error ? e : new Error(String(e)));
+    }
+  }
+
+  /**
+   * Processes server content messages (text, audio, turn status).
+   */
+  private handleServerContent(content: any) {
+    if (content.modelTurn) {
+      const parts = content.modelTurn.parts;
+      for (const part of parts) {
+        if (part.text) this.emit("text", part.text);
+        if (part.inlineData) {
+          const buffer = Buffer.from(part.inlineData.data, "base64");
+          this.emit("audio", buffer);
+        }
+      }
+    }
+    if (content.interrupted) this.emit("interrupted");
+  }
+
+  /**
+   * Processes tool call requests from the model.
+   */
+  private handleToolCall(toolCall: any) {
+    const calls = toolCall.functionCalls;
+    if (calls) {
+      for (const call of calls) {
+        this.emit("toolCall", {
+          id: call.id,
+          name: call.name,
+          arguments: call.args,
+        });
+      }
     }
   }
 }

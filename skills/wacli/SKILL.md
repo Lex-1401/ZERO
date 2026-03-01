@@ -2,7 +2,31 @@
 name: wacli
 description: Envie mensagens de WhatsApp ou pesquise/sincronize o histórico via CLI wacli (uso técnico, não para chats comuns de usuário).
 homepage: https://wacli.sh
-metadata: {"zero":{"emoji":"📱","requires":{"bins":["wacli"]},"install":[{"id":"brew","kind":"brew","formula":"steipete/tap/wacli","bins":["wacli"],"label":"Install wacli (brew)"},{"id":"go","kind":"go","module":"github.com/steipete/wacli/cmd/wacli@latest","bins":["wacli"],"label":"Install wacli (go)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "📱",
+        "requires": { "bins": ["wacli"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "steipete/tap/wacli",
+              "bins": ["wacli"],
+              "label": "Install wacli (brew)",
+            },
+            {
+              "id": "go",
+              "kind": "go",
+              "module": "github.com/steipete/wacli/cmd/wacli@latest",
+              "bins": ["wacli"],
+              "label": "Install wacli (go)",
+            },
+          ],
+      },
+  }
 ---
 
 # wacli

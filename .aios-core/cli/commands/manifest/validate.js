@@ -8,22 +8,22 @@
  * @story 2.13 - Manifest System
  */
 
-const { Command } = require('commander');
-const path = require('path');
-const { createManifestValidator } = require('../../../core/manifest/manifest-validator');
+const { Command } = require("commander");
+const path = require("path");
+const { createManifestValidator } = require("../../../core/manifest/manifest-validator");
 
 /**
  * Create the validate subcommand
  * @returns {Command} Commander command instance
  */
 function createValidateCommand() {
-  const validate = new Command('validate');
+  const validate = new Command("validate");
 
   validate
-    .description('Validate all manifest files for integrity and file existence')
-    .option('-v, --verbose', 'Show detailed validation information')
-    .option('--json', 'Output results as JSON')
-    .option('--strict', 'Treat warnings as errors')
+    .description("Validate all manifest files for integrity and file existence")
+    .option("-v, --verbose", "Show detailed validation information")
+    .option("--json", "Output results as JSON")
+    .option("--strict", "Treat warnings as errors")
     .action(async (options) => {
       try {
         const validator = createManifestValidator({
@@ -31,7 +31,7 @@ function createValidateCommand() {
           verbose: options.verbose,
         });
 
-        console.log('Validating manifests...\n');
+        console.log("Validating manifests...\n");
 
         const results = await validator.validateAll();
 
@@ -43,15 +43,13 @@ function createValidateCommand() {
 
         // Exit with error code if validation failed
         const hasErrors = results.summary.invalid > 0;
-        const hasWarningsAsErrors = options.strict && (
-          results.summary.missing.length > 0 ||
-          results.summary.orphan.length > 0
-        );
+        const hasWarningsAsErrors =
+          options.strict &&
+          (results.summary.missing.length > 0 || results.summary.orphan.length > 0);
 
         if (hasErrors || hasWarningsAsErrors) {
           process.exit(1);
         }
-
       } catch (error) {
         console.error(`Error: ${error.message}`);
         process.exit(1);

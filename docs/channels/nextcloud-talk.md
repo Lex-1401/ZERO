@@ -30,18 +30,18 @@ Detalhes: [Plugins](/plugin)
 
 ## Configuração rápida (iniciante)
 
-1) Instale o plugin Nextcloud Talk.
-2) No seu servidor Nextcloud, crie um bot:
+1. Instale o plugin Nextcloud Talk.
+2. No seu servidor Nextcloud, crie um bot:
 
    ```bash
    ./occ talk:bot:install "ZERO" "<segredo-compartilhado>" "<url-webhook>" --feature reaction
    ```
 
-3) Ative o bot nas configurações da sala alvo.
-4) Configure ZERO:
+3. Ative o bot nas configurações da sala alvo.
+4. Configure ZERO:
    - Config: `channels.nextcloud-talk.baseUrl` + `channels.nextcloud-talk.botSecret`
    - Ou env: `NEXTCLOUD_TALK_BOT_SECRET` (apenas conta padrão)
-5) Reinicie o gateway (ou termine o onboarding).
+5. Reinicie o gateway (ou termine o onboarding).
 
 Configuração mínima:
 
@@ -52,9 +52,9 @@ Configuração mínima:
       enabled: true,
       baseUrl: "https://cloud.exemplo.com",
       botSecret: "segredo-compartilhado",
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
@@ -83,10 +83,10 @@ Configuração mínima:
   channels: {
     "nextcloud-talk": {
       rooms: {
-        "token-da-sala": { requireMention: true }
-      }
-    }
-  }
+        "token-da-sala": { requireMention: true },
+      },
+    },
+  },
 }
 ```
 
@@ -94,14 +94,14 @@ Configuração mínima:
 
 ## Capacidades
 
-| Recurso | Status |
-| :--- | :--- |
-| Mensagens diretas | Suportado |
-| Salas | Suportado |
-| Threads | Não suportado |
-| Mídia | Apenas URL |
-| Reações | Suportado |
-| Comandos nativos | Não suportado |
+| Recurso           | Status        |
+| :---------------- | :------------ |
+| Mensagens diretas | Suportado     |
+| Salas             | Suportado     |
+| Threads           | Não suportado |
+| Mídia             | Apenas URL    |
+| Reações           | Suportado     |
+| Comandos nativos  | Não suportado |
 
 ## Referência de configuração (Nextcloud Talk)
 

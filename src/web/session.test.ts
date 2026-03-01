@@ -108,7 +108,7 @@ describe("web session", () => {
   it("does not clobber creds backup when creds.json is corrupted", async () => {
     const credsSuffix = path.join(".zero", "credentials", "whatsapp", "default", "creds.json");
 
-    const copySpy = vi.spyOn(fsSync, "copyFileSync").mockImplementation(() => {});
+    const copySpy = vi.spyOn(fsSync, "copyFileSync").mockImplementation(() => { });
     const existsSpy = vi.spyOn(fsSync, "existsSync").mockImplementation((p) => {
       if (typeof p !== "string") return false;
       return p.endsWith(credsSuffix);
@@ -131,7 +131,7 @@ describe("web session", () => {
     const saveCreds = (await baileys.useMultiFileAuthState.mock.results[0].value).saveCreds;
 
     sock.ev.emit("creds.update", {});
-    await new Promise<void>((resolve) => setImmediate(resolve));
+    await new Promise<void>((resolve) => setTimeout(resolve, 10));
 
     expect(copySpy).not.toHaveBeenCalled();
     expect(saveCreds).toHaveBeenCalled();
@@ -167,14 +167,13 @@ describe("web session", () => {
     sock.ev.emit("creds.update", {});
     sock.ev.emit("creds.update", {});
 
-    await new Promise<void>((resolve) => setImmediate(resolve));
+    await new Promise<void>((resolve) => setTimeout(resolve, 10));
     expect(inFlight).toBe(1);
 
     release?.();
 
     // let both queued saves complete
-    await new Promise<void>((resolve) => setImmediate(resolve));
-    await new Promise<void>((resolve) => setImmediate(resolve));
+    await new Promise<void>((resolve) => setTimeout(resolve, 10));
 
     expect(saveCreds).toHaveBeenCalledTimes(2);
     expect(maxInFlight).toBe(1);
@@ -185,7 +184,7 @@ describe("web session", () => {
     const credsSuffix = path.join(".zero", "credentials", "whatsapp", "default", "creds.json");
     const backupSuffix = path.join(".zero", "credentials", "whatsapp", "default", "creds.json.bak");
 
-    const copySpy = vi.spyOn(fsSync, "copyFileSync").mockImplementation(() => {});
+    const copySpy = vi.spyOn(fsSync, "copyFileSync").mockImplementation(() => { });
     const existsSpy = vi.spyOn(fsSync, "existsSync").mockImplementation((p) => {
       if (typeof p !== "string") return false;
       return p.endsWith(credsSuffix);
@@ -208,7 +207,7 @@ describe("web session", () => {
     const saveCreds = (await baileys.useMultiFileAuthState.mock.results[0].value).saveCreds;
 
     sock.ev.emit("creds.update", {});
-    await new Promise<void>((resolve) => setImmediate(resolve));
+    await new Promise<void>((resolve) => setTimeout(resolve, 10));
 
     expect(copySpy).toHaveBeenCalledTimes(1);
     const args = copySpy.mock.calls[0] ?? [];

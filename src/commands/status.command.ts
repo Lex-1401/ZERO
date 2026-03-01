@@ -4,10 +4,7 @@ import { buildGatewayConnectionDetails, callGateway } from "../gateway/call.js";
 import { info } from "../globals.js";
 import { formatUsageReportLines, loadProviderUsageSummary } from "../infra/provider-usage.js";
 import type { RuntimeEnv } from "../runtime.js";
-const runSecurityAudit = async (_opts: unknown) => ({
-  summary: { critical: 0, warn: 0, info: 0 },
-  findings: [] as any[],
-});
+import { runSecurityAudit } from "../security/audit.js";
 import { renderTable } from "../terminal/table.js";
 import { theme } from "../terminal/theme.js";
 import { formatCliCommand } from "../cli/command-format.js";
@@ -100,28 +97,28 @@ export async function statusCommand(
 
   const usage = opts.usage
     ? await withProgress(
-        {
-          label: "Fetching usage snapshot…",
-          indeterminate: true,
-          enabled: opts.json !== true,
-        },
-        async () => await loadProviderUsageSummary({ timeoutMs: opts.timeoutMs }),
-      )
+      {
+        label: "Fetching usage snapshot…",
+        indeterminate: true,
+        enabled: opts.json !== true,
+      },
+      async () => await loadProviderUsageSummary({ timeoutMs: opts.timeoutMs }),
+    )
     : undefined;
   const health: HealthSummary | undefined = opts.deep
     ? await withProgress(
-        {
-          label: "Checking gateway health…",
-          indeterminate: true,
-          enabled: opts.json !== true,
-        },
-        async () =>
-          await callGateway<HealthSummary>({
-            method: "health",
-            params: { probe: true },
-            timeoutMs: opts.timeoutMs,
-          }),
-      )
+      {
+        label: "Checking gateway health…",
+        indeterminate: true,
+        enabled: opts.json !== true,
+      },
+      async () =>
+        await callGateway<HealthSummary>({
+          method: "health",
+          params: { probe: true },
+          timeoutMs: opts.timeoutMs,
+        }),
+    )
     : undefined;
 
   const configChannel = normalizeUpdateChannel(cfg.update?.channel);
@@ -211,13 +208,13 @@ export async function statusCommand(
     const self =
       gatewaySelf?.host || gatewaySelf?.version || gatewaySelf?.platform
         ? [
-            gatewaySelf?.host ? gatewaySelf.host : null,
-            gatewaySelf?.ip ? `(${gatewaySelf.ip})` : null,
-            gatewaySelf?.version ? `app ${gatewaySelf.version}` : null,
-            gatewaySelf?.platform ? gatewaySelf.platform : null,
-          ]
-            .filter(Boolean)
-            .join(" ")
+          gatewaySelf?.host ? gatewaySelf.host : null,
+          gatewaySelf?.ip ? `(${gatewaySelf.ip})` : null,
+          gatewaySelf?.version ? `app ${gatewaySelf.version}` : null,
+          gatewaySelf?.platform ? gatewaySelf.platform : null,
+        ]
+          .filter(Boolean)
+          .join(" ")
         : null;
     const suffix = self ? ` · ${self}` : "";
     return `${gatewayMode} · ${target} · ${reach}${auth}${suffix}`;
@@ -321,17 +318,17 @@ export async function statusCommand(
   const gitLabel =
     update.installKind === "git"
       ? (() => {
-          const shortSha = update.git?.sha ? update.git.sha.slice(0, 8) : null;
-          const branch =
-            update.git?.branch && update.git.branch !== "HEAD" ? update.git.branch : null;
-          const tag = update.git?.tag ?? null;
-          const parts = [
-            branch ?? (tag ? "detached" : "git"),
-            tag ? `tag ${tag}` : null,
-            shortSha ? `@ ${shortSha}` : null,
-          ].filter(Boolean);
-          return parts.join(" · ");
-        })()
+        const shortSha = update.git?.sha ? update.git.sha.slice(0, 8) : null;
+        const branch =
+          update.git?.branch && update.git.branch !== "HEAD" ? update.git.branch : null;
+        const tag = update.git?.tag ?? null;
+        const parts = [
+          branch ?? (tag ? "detached" : "git"),
+          tag ? `tag ${tag}` : null,
+          shortSha ? `@ ${shortSha}` : null,
+        ].filter(Boolean);
+        return parts.join(" · ");
+      })()
       : null;
 
   const overviewRows = [
@@ -478,21 +475,21 @@ export async function statusCommand(
       rows:
         summary.sessions.recent.length > 0
           ? summary.sessions.recent.map((sess) => ({
-              Key: shortenText(sess.key, 32),
-              Kind: sess.kind,
-              Age: sess.updatedAt ? formatAge(sess.age) : "no activity",
-              Model: sess.model ?? "unknown",
-              Tokens: formatTokensCompact(sess),
-            }))
+            Key: shortenText(sess.key, 32),
+            Kind: sess.kind,
+            Age: sess.updatedAt ? formatAge(sess.age) : "no activity",
+            Model: sess.model ?? "unknown",
+            Tokens: formatTokensCompact(sess),
+          }))
           : [
-              {
-                Key: muted("no sessions yet"),
-                Kind: "",
-                Age: "",
-                Model: "",
-                Tokens: "",
-              },
-            ],
+            {
+              Key: muted("no sessions yet"),
+              Kind: "",
+              Age: "",
+              Model: "",
+              Tokens: "",
+            },
+          ],
     }).trimEnd(),
   );
 

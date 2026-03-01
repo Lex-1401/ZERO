@@ -377,35 +377,19 @@ describe("exec approvals policy helpers", () => {
 
 describe("exec approvals wildcard agent", () => {
   it("merges wildcard allowlist entries with agent entries", () => {
-    const dir = makeTempDir();
-    const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(dir);
+    const file = {
+      version: 1 as const,
+      agents: {
+        "*": { allowlist: [{ pattern: "/bin/hostname" }] },
+        main: { allowlist: [{ pattern: "/usr/bin/uname" }] },
+      },
+    };
 
-    try {
-      const approvalsPath = path.join(dir, ".zero", "exec-approvals.json");
-      fs.mkdirSync(path.dirname(approvalsPath), { recursive: true });
-      fs.writeFileSync(
-        approvalsPath,
-        JSON.stringify(
-          {
-            version: 1,
-            agents: {
-              "*": { allowlist: [{ pattern: "/bin/hostname" }] },
-              main: { allowlist: [{ pattern: "/usr/bin/uname" }] },
-            },
-          },
-          null,
-          2,
-        ),
-      );
-
-      const resolved = resolveExecApprovals("main");
-      expect(resolved.allowlist.map((entry) => entry.pattern)).toEqual([
-        "/bin/hostname",
-        "/usr/bin/uname",
-      ]);
-    } finally {
-      homedirSpy.mockRestore();
-    }
+    const resolved = resolveExecApprovalsFromFile({ file, agentId: "main" });
+    expect(resolved.allowlist.map((entry) => entry.pattern)).toEqual([
+      "/bin/hostname",
+      "/usr/bin/uname",
+    ]);
   });
 });
 
@@ -488,7 +472,7 @@ describe("exec approvals node host allowlist check", () => {
 describe("exec approvals default agent migration", () => {
   it("migrates legacy default agent entries to main", () => {
     const file = {
-      version: 1,
+      version: 1 as const,
       agents: {
         default: { allowlist: [{ pattern: "/bin/legacy" }] },
       },
@@ -501,10 +485,10 @@ describe("exec approvals default agent migration", () => {
 
   it("prefers main agent settings when both main and default exist", () => {
     const file = {
-      version: 1,
+      version: 1 as const,
       agents: {
-        main: { ask: "always", allowlist: [{ pattern: "/bin/main" }] },
-        default: { ask: "off", allowlist: [{ pattern: "/bin/legacy" }] },
+        main: { ask: "always" as const, allowlist: [{ pattern: "/bin/main" }] },
+        default: { ask: "off" as const, allowlist: [{ pattern: "/bin/legacy" }] },
       },
     };
     const resolved = resolveExecApprovalsFromFile({ file });

@@ -14,11 +14,11 @@
  * - Enable workflow navigation on subsequent agent activation
  */
 
-const _fs = require('fs');
-const path = require('path');
-const ContextDetector = require('../../core/session/context-detector');
+const _fs = require("fs");
+const path = require("path");
+const ContextDetector = require("../../core/session/context-detector");
 
-const SESSION_STATE_PATH = path.join(process.cwd(), '.aios', 'session-state.json');
+const SESSION_STATE_PATH = path.join(process.cwd(), ".aios", "session-state.json");
 
 /**
  * Agent exit hook - called when command completes
@@ -38,21 +38,24 @@ function onCommandComplete(agent, command, result, context) {
     const detector = new ContextDetector();
     const workflowState = detectWorkflowState(command, result);
 
-    detector.updateSessionState({
-      workflowActive: workflowState?.workflow || null,
-      lastCommands: [command],
-      agentSequence: [agent],
-      context: {
-        story_path: context.story_path || '',
-        branch: context.branch || '',
-        epic: context.epic || '',
-        lastCommand: command,
-        lastAgent: agent,
+    detector.updateSessionState(
+      {
+        workflowActive: workflowState?.workflow || null,
+        lastCommands: [command],
+        agentSequence: [agent],
+        context: {
+          story_path: context.story_path || "",
+          branch: context.branch || "",
+          epic: context.epic || "",
+          lastCommand: command,
+          lastAgent: agent,
+        },
       },
-    }, SESSION_STATE_PATH);
+      SESSION_STATE_PATH,
+    );
   } catch (error) {
     // Graceful degradation - hook failures must not break command execution
-    console.warn('[AgentExitHooks] Hook failed:', error.message);
+    console.warn("[AgentExitHooks] Hook failed:", error.message);
   }
 }
 
@@ -65,10 +68,10 @@ function onCommandComplete(agent, command, result, context) {
 function detectWorkflowState(command, _result) {
   // Map commands to workflow states
   const stateMap = {
-    'validate-story-draft': { workflow: 'story_development', state: 'validated' },
-    'develop': { workflow: 'story_development', state: 'in_development' },
-    'review-qa': { workflow: 'story_development', state: 'qa_reviewed' },
-    'create-epic': { workflow: 'epic_creation', state: 'epic_created' },
+    "validate-story-draft": { workflow: "story_development", state: "validated" },
+    develop: { workflow: "story_development", state: "in_development" },
+    "review-qa": { workflow: "story_development", state: "qa_reviewed" },
+    "create-epic": { workflow: "epic_creation", state: "epic_created" },
   };
 
   return stateMap[command] || null;
@@ -81,11 +84,11 @@ function detectWorkflowState(command, _result) {
  */
 function registerHook(agentFramework) {
   if (!agentFramework || !agentFramework.registerCommandHook) {
-    console.warn('[AgentExitHooks] Framework does not support hooks');
+    console.warn("[AgentExitHooks] Framework does not support hooks");
     return false;
   }
 
-  agentFramework.registerCommandHook('onComplete', onCommandComplete);
+  agentFramework.registerCommandHook("onComplete", onCommandComplete);
   return true;
 }
 

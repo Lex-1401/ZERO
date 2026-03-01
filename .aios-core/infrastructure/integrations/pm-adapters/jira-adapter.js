@@ -12,10 +12,10 @@
  * @see Story 3.20 - PM Tool-Agnostic Integration (TR-3.20.4)
  */
 
-const https = require('https');
-const fs = require('fs');
-const yaml = require('js-yaml');
-const { PMAdapter } = require('../../scripts/pm-adapter');
+const https = require("https");
+const fs = require("fs");
+const yaml = require("js-yaml");
+const { PMAdapter } = require("../../scripts/pm-adapter");
 
 /**
  * Jira adapter - basic integration with Jira
@@ -36,20 +36,20 @@ class JiraAdapter extends PMAdapter {
     super(config);
 
     if (!config || !config.base_url || !config.project_key) {
-      throw new Error('Jira config requires: base_url, project_key');
+      throw new Error("Jira config requires: base_url, project_key");
     }
 
-    this.baseUrl = config.base_url.replace(/\/$/, '');  // Remove trailing slash
+    this.baseUrl = config.base_url.replace(/\/$/, ""); // Remove trailing slash
     this.projectKey = config.project_key;
     this.email = config.email || process.env.JIRA_EMAIL;
     this.apiToken = process.env.JIRA_API_TOKEN || config.api_token;
 
     if (!this.apiToken) {
-      console.warn('⚠️  JIRA_API_TOKEN not set - Jira operations will fail');
+      console.warn("⚠️  JIRA_API_TOKEN not set - Jira operations will fail");
     }
 
     if (!this.email) {
-      console.warn('⚠️  JIRA_EMAIL not set - authentication may fail');
+      console.warn("⚠️  JIRA_EMAIL not set - authentication may fail");
     }
   }
 
@@ -71,13 +71,13 @@ class JiraAdapter extends PMAdapter {
         };
       }
 
-      const storyContent = fs.readFileSync(storyPath, 'utf8');
+      const storyContent = fs.readFileSync(storyPath, "utf8");
       const story = yaml.load(storyContent);
 
       if (!story || !story.id) {
         return {
           success: false,
-          error: 'Invalid story file: missing id field',
+          error: "Invalid story file: missing id field",
         };
       }
 
@@ -109,9 +109,8 @@ class JiraAdapter extends PMAdapter {
           url: issueUrl,
         };
       }
-
     } catch (error) {
-      console.error('❌ Error syncing story to Jira:', error);
+      console.error("❌ Error syncing story to Jira:", error);
       return {
         success: false,
         error: error.message,
@@ -145,14 +144,14 @@ class JiraAdapter extends PMAdapter {
 
       // Map Jira status to AIOS status
       const statusMapping = {
-        'To Do': 'Draft',
-        'In Progress': 'InProgress',
-        'In Review': 'Review',
-        'Done': 'Done',
+        "To Do": "Draft",
+        "In Progress": "InProgress",
+        "In Review": "Review",
+        Done: "Done",
       };
 
       const jiraStatus = issue.fields.status.name;
-      const mappedStatus = statusMapping[jiraStatus] || 'Draft';
+      const mappedStatus = statusMapping[jiraStatus] || "Draft";
 
       console.log(`✅ Story ${storyId} status in Jira: ${mappedStatus}`);
 
@@ -162,9 +161,8 @@ class JiraAdapter extends PMAdapter {
           status: mappedStatus,
         },
       };
-
     } catch (error) {
-      console.error('❌ Error pulling story from Jira:', error);
+      console.error("❌ Error pulling story from Jira:", error);
       return {
         success: false,
         error: error.message,
@@ -191,9 +189,8 @@ class JiraAdapter extends PMAdapter {
         success: true,
         url: issueUrl,
       };
-
     } catch (error) {
-      console.error('❌ Error creating story in Jira:', error);
+      console.error("❌ Error creating story in Jira:", error);
       return {
         success: false,
         error: error.message,
@@ -223,13 +220,13 @@ class JiraAdapter extends PMAdapter {
 
       // Map AIOS status to Jira transition
       const transitionMapping = {
-        'Draft': 'To Do',
-        'InProgress': 'In Progress',
-        'Review': 'In Review',
-        'Done': 'Done',
+        Draft: "To Do",
+        InProgress: "In Progress",
+        Review: "In Review",
+        Done: "Done",
       };
 
-      const jiraStatus = transitionMapping[status] || 'To Do';
+      const jiraStatus = transitionMapping[status] || "To Do";
 
       // Execute transition (simplified - may need transition IDs in real implementation)
       await this._transitionIssue(issueKey, jiraStatus);
@@ -237,9 +234,8 @@ class JiraAdapter extends PMAdapter {
       console.log(`✅ Story ${storyId} status updated to ${status}`);
 
       return { success: true };
-
     } catch (error) {
-      console.error('❌ Error updating story status:', error);
+      console.error("❌ Error updating story status:", error);
       return {
         success: false,
         error: error.message,
@@ -259,28 +255,27 @@ class JiraAdapter extends PMAdapter {
       if (!this.apiToken) {
         return {
           success: false,
-          error: 'JIRA_API_TOKEN not configured',
+          error: "JIRA_API_TOKEN not configured",
         };
       }
 
       if (!this.email) {
         return {
           success: false,
-          error: 'JIRA_EMAIL not configured',
+          error: "JIRA_EMAIL not configured",
         };
       }
 
-      console.log('🔌 Testing Jira connection...');
+      console.log("🔌 Testing Jira connection...");
 
       // Try to fetch project info
-      await this._apiRequest('GET', `/rest/api/3/project/${this.projectKey}`);
+      await this._apiRequest("GET", `/rest/api/3/project/${this.projectKey}`);
 
-      console.log('✅ Jira connection successful');
+      console.log("✅ Jira connection successful");
 
       return { success: true };
-
     } catch (error) {
-      console.error('❌ Jira connection failed:', error);
+      console.error("❌ Jira connection failed:", error);
       return {
         success: false,
         error: error.message,
@@ -298,7 +293,7 @@ class JiraAdapter extends PMAdapter {
    */
   async _apiRequest(method, path, data = null) {
     return new Promise((resolve, reject) => {
-      const auth = Buffer.from(`${this.email}:${this.apiToken}`).toString('base64');
+      const auth = Buffer.from(`${this.email}:${this.apiToken}`).toString("base64");
       const url = new URL(`${this.baseUrl}${path}`);
 
       const options = {
@@ -307,20 +302,20 @@ class JiraAdapter extends PMAdapter {
         path: url.pathname + url.search,
         method: method,
         headers: {
-          'Authorization': `Basic ${auth}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       };
 
       const req = https.request(options, (res) => {
-        let body = '';
+        let body = "";
 
-        res.on('data', (chunk) => {
+        res.on("data", (chunk) => {
           body += chunk;
         });
 
-        res.on('end', () => {
+        res.on("end", () => {
           if (res.statusCode >= 200 && res.statusCode < 300) {
             try {
               resolve(body ? JSON.parse(body) : {});
@@ -333,7 +328,7 @@ class JiraAdapter extends PMAdapter {
         });
       });
 
-      req.on('error', reject);
+      req.on("error", reject);
 
       if (data) {
         req.write(JSON.stringify(data));
@@ -352,7 +347,10 @@ class JiraAdapter extends PMAdapter {
   async _findIssueByStoryId(storyId) {
     try {
       const jql = `project = ${this.projectKey} AND labels = story-${storyId}`;
-      const result = await this._apiRequest('GET', `/rest/api/3/search?jql=${encodeURIComponent(jql)}&maxResults=1`);
+      const result = await this._apiRequest(
+        "GET",
+        `/rest/api/3/search?jql=${encodeURIComponent(jql)}&maxResults=1`,
+      );
 
       if (result.issues && result.issues.length > 0) {
         return result.issues[0].key;
@@ -372,7 +370,7 @@ class JiraAdapter extends PMAdapter {
    * @returns {Promise<object>} Issue data
    */
   async _getIssue(issueKey) {
-    return await this._apiRequest('GET', `/rest/api/3/issue/${issueKey}`);
+    return await this._apiRequest("GET", `/rest/api/3/issue/${issueKey}`);
   }
 
   /**
@@ -388,19 +386,15 @@ class JiraAdapter extends PMAdapter {
           key: this.projectKey,
         },
         summary: `${story.id}: ${story.title}`,
-        description: story.description || story.context || '',
+        description: story.description || story.context || "",
         issuetype: {
-          name: 'Story',
+          name: "Story",
         },
-        labels: [
-          'story',
-          `story-${story.id}`,
-          ...(story.epic ? [`epic-${story.epic}`] : []),
-        ],
+        labels: ["story", `story-${story.id}`, ...(story.epic ? [`epic-${story.epic}`] : [])],
       },
     };
 
-    const result = await this._apiRequest('POST', '/rest/api/3/issue', issueData);
+    const result = await this._apiRequest("POST", "/rest/api/3/issue", issueData);
     return result.key;
   }
 
@@ -414,11 +408,11 @@ class JiraAdapter extends PMAdapter {
     const updateData = {
       fields: {
         summary: `${story.id}: ${story.title}`,
-        description: story.description || story.context || '',
+        description: story.description || story.context || "",
       },
     };
 
-    await this._apiRequest('PUT', `/rest/api/3/issue/${issueKey}`, updateData);
+    await this._apiRequest("PUT", `/rest/api/3/issue/${issueKey}`, updateData);
   }
 
   /**
@@ -429,17 +423,17 @@ class JiraAdapter extends PMAdapter {
    */
   async _transitionIssue(issueKey, statusName) {
     // Get available transitions
-    const transitions = await this._apiRequest('GET', `/rest/api/3/issue/${issueKey}/transitions`);
+    const transitions = await this._apiRequest("GET", `/rest/api/3/issue/${issueKey}/transitions`);
 
     // Find transition to target status
-    const transition = transitions.transitions.find(t => t.to.name === statusName);
+    const transition = transitions.transitions.find((t) => t.to.name === statusName);
 
     if (!transition) {
       throw new Error(`No transition available to status: ${statusName}`);
     }
 
     // Execute transition
-    await this._apiRequest('POST', `/rest/api/3/issue/${issueKey}/transitions`, {
+    await this._apiRequest("POST", `/rest/api/3/issue/${issueKey}/transitions`, {
       transition: { id: transition.id },
     });
   }

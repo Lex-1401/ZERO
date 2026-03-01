@@ -47,10 +47,7 @@ function resolveAccountConfig(
   return accounts[accountId] as GoogleChatAccountConfig | undefined;
 }
 
-function mergeGoogleChatAccountConfig(
-  cfg: ZeroConfig,
-  accountId: string,
-): GoogleChatAccountConfig {
+function mergeGoogleChatAccountConfig(cfg: ZeroConfig, accountId: string): GoogleChatAccountConfig {
   const raw = (cfg.channels?.["googlechat"] ?? {}) as GoogleChatConfig;
   const { accounts: _ignored, defaultAccount: _ignored2, ...base } = raw;
   const account = resolveAccountConfig(cfg, accountId) ?? {};

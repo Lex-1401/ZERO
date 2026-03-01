@@ -10,21 +10,21 @@ Status: pronto para DMs + spaces via webhooks da API do Google Chat (apenas HTTP
 
 ## Configuração rápida (iniciante)
 
-1) Crie um projeto Google Cloud e ative a **Google Chat API**.
+1. Crie um projeto Google Cloud e ative a **Google Chat API**.
    - Vá para: [Credenciais da API Google Chat](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
    - Ative a API se ela ainda não estiver ativada.
-2) Crie uma **Conta de Serviço** (Service Account):
+2. Crie uma **Conta de Serviço** (Service Account):
    - Pressione **Create Credentials** > **Service Account**.
    - Nomeie como quiser (ex., `zero-chat`).
    - Deixe as permissões em branco (pressione **Continue**).
    - Deixe os principais com acesso em branco (pressione **Done**).
-3) Crie e baixe a **Chave JSON**:
+3. Crie e baixe a **Chave JSON**:
    - Na lista de contas de serviço, clique na que você acabou de criar.
    - Vá para a aba **Keys**.
    - Clique em **Add Key** > **Create new key**.
    - Selecione **JSON** e pressione **Create**.
-4) Armazene o arquivo JSON baixado no host do seu gateway (ex., `~/.zero/googlechat-service-account.json`).
-5) Crie um app Google Chat na [Configuração de Chat do Console Google Cloud](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat):
+4. Armazene o arquivo JSON baixado no host do seu gateway (ex., `~/.zero/googlechat-service-account.json`).
+5. Crie um app Google Chat na [Configuração de Chat do Console Google Cloud](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat):
    - Preencha as **Informações do aplicativo** (Application info):
      - **Nome do app**: (ex. `ZERO`)
      - **URL do Avatar**: (ex. `https://raw.githubusercontent.com/Lex-1401/ZERO/main/logo.png`)
@@ -33,32 +33,32 @@ Status: pronto para DMs + spaces via webhooks da API do Google Chat (apenas HTTP
    - Em **Funcionalidade** (Functionality), marque **Participar de espaços e conversas em grupo** (Join spaces and group conversations).
    - Em **Configurações de conexão** (Connection settings), selecione **URL de endpoint HTTP**.
    - Em **Gatilhos** (Triggers), selecione **Usar uma URL de endpoint HTTP comum para todos os gatilhos** e defina-a para a URL pública do seu gateway seguida de `/googlechat`.
-     - *Dica: Execute `zero status` para encontrar a URL pública do seu gateway.*
+     - _Dica: Execute `zero status` para encontrar a URL pública do seu gateway._
    - Em **Visibilidade**, marque **Disponibilizar este app de Chat para pessoas e grupos específicos em &lt;Seu Domínio&gt;**.
    - Insira seu endereço de email (ex. `user@example.com`) na caixa de texto.
    - Clique em **Salvar** na parte inferior.
-6) **Ative o status do app**:
+6. **Ative o status do app**:
    - Após salvar, **atualize a página**.
    - Procure a seção **Status do app** (geralmente perto do topo ou fundo após salvar).
    - Altere o status para **Ao vivo - disponível para usuários** (Live - available to users).
    - Clique em **Salvar** novamente.
-7) Configure o ZERO com o caminho da conta de serviço + audiência do webhook:
+7. Configure o ZERO com o caminho da conta de serviço + audiência do webhook:
    - Env: `GOOGLE_CHAT_SERVICE_ACCOUNT_FILE=/caminho/para/service-account.json`
    - Ou config: `channels.googlechat.serviceAccountFile: "/caminho/para/service-account.json"`.
-8) Defina o tipo de audiência do webhook + valor (corresponde à configuração do seu app de Chat).
-9) Inicie o gateway. O Google Chat fará POST para o caminho do seu webhook.
+8. Defina o tipo de audiência do webhook + valor (corresponde à configuração do seu app de Chat).
+9. Inicie o gateway. O Google Chat fará POST para o caminho do seu webhook.
 
 ## Adicionar ao Google Chat
 
 Uma vez que o gateway esteja rodando e seu email adicionado à lista de visibilidade:
 
-1) Vá para o [Google Chat](https://chat.google.com/).
-2) Clique no ícone **+** (mais) ao lado de **Mensagens Diretas**.
-3) Na barra de pesquisa (onde você geralmente adiciona pessoas), digite o **Nome do app** que você configurou no Console Google Cloud.
-   - **Nota**: O bot *não* aparecerá na lista de navegação do "Marketplace" pois é um app privado. Você deve procurá-lo pelo nome.
-4) Selecione seu bot nos resultados.
-5) Clique em **Adicionar** ou **Chat** para iniciar uma conversa 1:1.
-6) Envie "Olá" para acionar o assistente!
+1. Vá para o [Google Chat](https://chat.google.com/).
+2. Clique no ícone **+** (mais) ao lado de **Mensagens Diretas**.
+3. Na barra de pesquisa (onde você geralmente adiciona pessoas), digite o **Nome do app** que você configurou no Console Google Cloud.
+   - **Nota**: O bot _não_ aparecerá na lista de navegação do "Marketplace" pois é um app privado. Você deve procurá-lo pelo nome.
+4. Selecione seu bot nos resultados.
+5. Clique em **Adicionar** ou **Chat** para iniciar uma conversa 1:1.
+6. Envie "Olá" para acionar o assistente!
 
 ## URL Pública (Apenas Webhook)
 
@@ -160,7 +160,7 @@ Use estes identificadores para entrega e allowlists:
 ```json5
 {
   channels: {
-    "googlechat": {
+    googlechat: {
       enabled: true,
       serviceAccountFile: "/caminho/para/service-account.json",
       audienceType: "app-url",
@@ -169,7 +169,7 @@ Use estes identificadores para entrega e allowlists:
       botUser: "users/1234567890", // opcional; ajuda na detecção de menção
       dm: {
         policy: "pairing",
-        allowFrom: ["users/1234567890", "nome@exemplo.com"]
+        allowFrom: ["users/1234567890", "nome@exemplo.com"],
       },
       groupPolicy: "allowlist",
       groups: {
@@ -177,14 +177,14 @@ Use estes identificadores para entrega e allowlists:
           allow: true,
           requireMention: true,
           users: ["users/1234567890"],
-          systemPrompt: "Apenas respostas curtas."
-        }
+          systemPrompt: "Apenas respostas curtas.",
+        },
       },
       actions: { reactions: true },
       typingIndicator: "message",
-      mediaMaxMb: 20
-    }
-  }
+      mediaMaxMb: 20,
+    },
+  },
 }
 ```
 

@@ -169,7 +169,7 @@ git rev-parse --is-inside-work-tree 2>/dev/null
 **Action:** Verify worktree exists
 
 ```javascript
-const WorktreeManager = require('./.aios-core/infrastructure/scripts/worktree-manager.js');
+const WorktreeManager = require("./.aios-core/infrastructure/scripts/worktree-manager.js");
 const manager = new WorktreeManager();
 const exists = await manager.exists(storyId);
 ```
@@ -422,8 +422,8 @@ This task is exposed as CLI command `*remove-worktree` in @devops agent:
 
 ```yaml
 commands:
-  - 'remove-worktree {storyId}': Remove worktree (confirms first)
-  - 'remove-worktree {storyId} --force': Force remove with uncommitted changes
+  - "remove-worktree {storyId}": Remove worktree (confirms first)
+  - "remove-worktree {storyId} --force": Force remove with uncommitted changes
 ```
 
 ---

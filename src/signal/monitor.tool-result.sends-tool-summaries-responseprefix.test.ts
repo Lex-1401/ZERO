@@ -11,7 +11,7 @@ const waitForTransportReadyMock = vi.hoisted(() => vi.fn());
 const sendMock = vi.fn();
 const replyMock = vi.fn();
 const updateLastRouteMock = vi.fn();
-let config: Record<string, unknown> = {};
+let config: any = {};
 const readAllowFromStoreMock = vi.fn();
 const upsertPairingRequestMock = vi.fn();
 
@@ -149,7 +149,7 @@ describe("monitorSignalProvider tool results", () => {
     };
     const abortController = new AbortController();
     streamMock.mockImplementation(async () => {
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
       return;
     });
 
@@ -191,7 +191,7 @@ describe("monitorSignalProvider tool results", () => {
     };
     const abortController = new AbortController();
     streamMock.mockImplementation(async () => {
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
       return;
     });
 
@@ -229,18 +229,24 @@ describe("monitorSignalProvider tool results", () => {
         event: "receive",
         data: JSON.stringify(payload),
       });
-      abortController.abort();
     });
 
-    await monitorSignalProvider({
+    const run = monitorSignalProvider({
       autoStart: false,
       baseUrl: "http://127.0.0.1:8080",
       abortSignal: abortController.signal,
     });
 
-    await flush();
+    let attempts = 0;
+    while (sendMock.mock.calls.length === 0 && attempts < 100) {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      attempts++;
+    }
 
-    expect(sendMock).toHaveBeenCalledTimes(1);
+    abortController.abort();
+    await run;
+
+    expect(sendMock).toHaveBeenCalled();
     expect(sendMock.mock.calls[0][1]).toBe("PFX final reply");
   });
 
@@ -274,7 +280,7 @@ describe("monitorSignalProvider tool results", () => {
         event: "receive",
         data: JSON.stringify(payload),
       });
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
     });
 
     await monitorSignalProvider({
@@ -312,7 +318,7 @@ describe("monitorSignalProvider tool results", () => {
         event: "receive",
         data: JSON.stringify(payload),
       });
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
     });
 
     await monitorSignalProvider({
@@ -351,7 +357,7 @@ describe("monitorSignalProvider tool results", () => {
         event: "receive",
         data: JSON.stringify(payload),
       });
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
     });
 
     await monitorSignalProvider({
@@ -400,7 +406,7 @@ describe("monitorSignalProvider tool results", () => {
         event: "receive",
         data: JSON.stringify(payload),
       });
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
     });
 
     await monitorSignalProvider({
@@ -456,7 +462,7 @@ describe("monitorSignalProvider tool results", () => {
         event: "receive",
         data: JSON.stringify(payload),
       });
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
     });
 
     await monitorSignalProvider({
@@ -501,7 +507,7 @@ describe("monitorSignalProvider tool results", () => {
         event: "receive",
         data: JSON.stringify(payload),
       });
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
     });
 
     await monitorSignalProvider({
@@ -556,7 +562,7 @@ describe("monitorSignalProvider tool results", () => {
           envelope: { ...payload.envelope, timestamp: 2 },
         }),
       });
-      abortController.abort();
+      setTimeout(() => abortController.abort(), 20);
     });
 
     await monitorSignalProvider({

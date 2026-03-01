@@ -3,14 +3,15 @@ summary: "Use high-performance models via Modal Labs in ZERO"
 read_when:
   - You want to use Modal Labs as a model provider for GLM-5 FP8
 ---
+
 # Modal Labs
 
 Modal Labs provides high-performance inference endpoints. ZERO supports Modal natively, specifically optimized for extreme-low-latency models like **GLM-5 FP8**.
 
 ## Quick setup
 
-1) Set your Modal API Key (optional if using public endpoints, but recommended).
-2) Run onboarding:
+1. Set your Modal API Key (optional if using public endpoints, but recommended).
+2. Run onboarding:
 
 ```bash
 zero onboard --auth-choice modal-api-key
@@ -40,20 +41,20 @@ modal/glm-5-fp8
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 128000,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
 ## Model catalog
 
-| Model ID | Context window | Max tokens | Reasoning | Input |
-| --- | --- | --- | --- | --- |
-| `glm-5-fp8` | 128000 | 8192 | true | text |
+| Model ID    | Context window | Max tokens | Reasoning | Input |
+| ----------- | -------------- | ---------- | --------- | ----- |
+| `glm-5-fp8` | 128000         | 8192       | true      | text  |
 
 ## Benefits
 

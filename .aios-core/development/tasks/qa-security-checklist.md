@@ -174,7 +174,7 @@ fix: Use textContent, createElement, or sanitization libraries
 
 ```yaml
 patterns:
-  - 'dangerouslySetInnerHTML'
+  - "dangerouslySetInnerHTML"
 
 risk: Cross-Site Scripting (XSS) in React
 fix: Use DOMPurify or avoid entirely
@@ -218,11 +218,11 @@ patterns:
   - "bearer\\s+[a-zA-Z0-9_-]{20,}"
 
   # AWS
-  - 'AKIA[0-9A-Z]{16}'
-  - 'aws[_-]?secret[_-]?access[_-]?key'
+  - "AKIA[0-9A-Z]{16}"
+  - "aws[_-]?secret[_-]?access[_-]?key"
 
   # Private Keys
-  - '-----BEGIN (RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----'
+  - "-----BEGIN (RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----"
 
 risk: Credential Exposure
 fix: Use environment variables, secrets manager, or .env files

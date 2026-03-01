@@ -16,7 +16,7 @@ Verify that a subtask has been completed successfully by running the configured 
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: execution-verify
 
   deterministic: true
@@ -32,7 +32,7 @@ autoClaude:
     - name: storyId
       type: string
       required: true
-      description: 'Story ID for locating implementation.yaml'
+      description: "Story ID for locating implementation.yaml"
 
     - name: implementationPath
       type: file
@@ -63,16 +63,16 @@ autoClaude:
 
 ```yaml
 command:
-  name: '*verify-subtask'
-  syntax: '*verify-subtask {subtask-id}'
+  name: "*verify-subtask"
+  syntax: "*verify-subtask {subtask-id}"
   agent: dev
 
   examples:
-    - '*verify-subtask 1.1'
-    - '*verify-subtask 2.3'
+    - "*verify-subtask 1.1"
+    - "*verify-subtask 2.3"
 
   aliases:
-    - '*verify'
+    - "*verify"
 ```
 
 ---
@@ -90,7 +90,7 @@ step_1:
         - .aios/plans/{storyId}/implementation.yaml
 
   validation:
-    check: 'implementation.yaml found'
+    check: "implementation.yaml found"
     onFailure: halt
 ```
 
@@ -152,11 +152,11 @@ step_3:
 ```yaml
 # In implementation.yaml
 subtasks:
-  - id: '1.1'
-    description: 'Create store module'
+  - id: "1.1"
+    description: "Create store module"
     verification:
       type: command
-      command: 'npm run typecheck'
+      command: "npm run typecheck"
       timeout: 60
 ```
 
@@ -164,15 +164,15 @@ subtasks:
 
 ```yaml
 subtasks:
-  - id: '2.1'
-    description: 'Implement login endpoint'
+  - id: "2.1"
+    description: "Implement login endpoint"
     verification:
       type: api
-      url: 'http://localhost:3000/api/auth/login'
+      url: "http://localhost:3000/api/auth/login"
       method: POST
       body:
-        email: 'test@example.com'
-        password: 'test123'
+        email: "test@example.com"
+        password: "test123"
       expectedStatus: 200
 ```
 
@@ -180,13 +180,13 @@ subtasks:
 
 ```yaml
 subtasks:
-  - id: '3.1'
-    description: 'Add login form'
+  - id: "3.1"
+    description: "Add login form"
     verification:
       type: browser
-      url: 'http://localhost:3000/login'
+      url: "http://localhost:3000/login"
       selector: "form[data-testid='login-form']"
-      expectedText: 'Sign In'
+      expectedText: "Sign In"
 ```
 
 ---
@@ -196,24 +196,24 @@ subtasks:
 ```yaml
 errors:
   - id: implementation-not-found
-    condition: 'implementation.yaml not found'
+    condition: "implementation.yaml not found"
     action: halt
-    message: 'Cannot verify - implementation.yaml not found for {storyId}'
+    message: "Cannot verify - implementation.yaml not found for {storyId}"
 
   - id: subtask-not-found
-    condition: 'Subtask ID not in plan'
+    condition: "Subtask ID not in plan"
     action: halt
-    message: 'Subtask {subtaskId} not found in implementation.yaml'
+    message: "Subtask {subtaskId} not found in implementation.yaml"
 
   - id: verification-failed
-    condition: 'Verification failed after retries'
+    condition: "Verification failed after retries"
     action: report
-    message: 'Verification failed for {subtaskId}: {error}'
+    message: "Verification failed for {subtaskId}: {error}"
 
   - id: timeout
-    condition: 'Verification timed out'
+    condition: "Verification timed out"
     action: report
-    message: 'Verification timed out after {timeout}ms'
+    message: "Verification timed out after {timeout}ms"
 ```
 
 ---
@@ -222,11 +222,11 @@ errors:
 
 ```yaml
 metadata:
-  story: '4.5'
-  epic: 'Epic 4 - Execution Pipeline'
-  created: '2026-01-28'
-  author: '@architect (Aria)'
-  version: '1.0.0'
+  story: "4.5"
+  epic: "Epic 4 - Execution Pipeline"
+  created: "2026-01-28"
+  author: "@architect (Aria)"
+  version: "1.0.0"
   tags:
     - execution-pipeline
     - verification

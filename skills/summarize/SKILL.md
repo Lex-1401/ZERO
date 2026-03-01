@@ -2,7 +2,24 @@
 name: summarize
 description: Resuma ou extraia textos/transcrições de URLs, podcasts e arquivos locais (ótima alternativa para "transcreva este YouTube/vídeo").
 homepage: https://summarize.sh
-metadata: {"zero":{"emoji":"🧾","requires":{"bins":["summarize"]},"install":[{"id":"brew","kind":"brew","formula":"steipete/tap/summarize","bins":["summarize"],"label":"Install summarize (brew)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "🧾",
+        "requires": { "bins": ["summarize"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "steipete/tap/summarize",
+              "bins": ["summarize"],
+              "label": "Install summarize (brew)",
+            },
+          ],
+      },
+  }
 ---
 
 # Summarize

@@ -45,7 +45,7 @@ gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
 
 ## JSON Output
 
-Most commands support `--json` for structured output.  You can use `--jq` to filter:
+Most commands support `--json` for structured output. You can use `--jq` to filter:
 
 ```bash
 gh issue list --repo owner/repo --json number,title --jq '.[] | "\(.number): \(.title)"'

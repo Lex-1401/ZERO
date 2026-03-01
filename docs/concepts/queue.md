@@ -3,6 +3,7 @@ summary: "Design da fila de comandos que serializa as execuções de resposta au
 read_when:
   - Alterando a execução de resposta automática ou a concorrência
 ---
+
 # Fila de Comandos (16-01-2026)
 
 Serializamos as execuções de resposta automática de entrada (em todos os canais) por meio de uma pequena fila em processo para evitar a colisão de múltiplas execuções de agentes, permitindo ao mesmo tempo um paralelismo seguro entre as sessões.
@@ -49,9 +50,9 @@ Configure globalmente ou por canal via `messages.queue`:
       debounceMs: 1000,
       cap: 20,
       drop: "summarize",
-      byChannel: { discord: "collect" }
-    }
-  }
+      byChannel: { discord: "collect" },
+    },
+  },
 }
 ```
 

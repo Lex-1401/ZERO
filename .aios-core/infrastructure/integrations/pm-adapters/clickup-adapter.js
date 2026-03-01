@@ -8,16 +8,16 @@
  * @see Story 3.20 - PM Tool-Agnostic Integration (TR-3.20.2)
  */
 
-const fs = require('fs');
-const _path = require('path');
-const yaml = require('js-yaml');
-const { PMAdapter } = require('../../scripts/pm-adapter');
+const fs = require("fs");
+const _path = require("path");
+const yaml = require("js-yaml");
+const { PMAdapter } = require("../../scripts/pm-adapter");
 const {
   updateStoryStatus,
   updateTaskDescription,
   addTaskComment,
   verifyEpicExists,
-} = require('../../scripts/clickup-helpers');
+} = require("../../scripts/clickup-helpers");
 
 /**
  * ClickUp adapter - integrates with ClickUp for story management
@@ -39,7 +39,7 @@ class ClickUpAdapter extends PMAdapter {
 
     // Validate required configuration
     if (!config) {
-      throw new Error('ClickUp config required');
+      throw new Error("ClickUp config required");
     }
 
     this.apiToken = process.env.CLICKUP_API_TOKEN || config.api_token;
@@ -48,7 +48,7 @@ class ClickUpAdapter extends PMAdapter {
     this.listId = config.list_id;
 
     if (!this.apiToken) {
-      console.warn('⚠️  CLICKUP_API_TOKEN not set - ClickUp operations will fail');
+      console.warn("⚠️  CLICKUP_API_TOKEN not set - ClickUp operations will fail");
     }
   }
 
@@ -71,13 +71,13 @@ class ClickUpAdapter extends PMAdapter {
         };
       }
 
-      const storyContent = fs.readFileSync(storyPath, 'utf8');
+      const storyContent = fs.readFileSync(storyPath, "utf8");
       const story = yaml.load(storyContent);
 
       if (!story || !story.id) {
         return {
           success: false,
-          error: 'Invalid story file: missing id field',
+          error: "Invalid story file: missing id field",
         };
       }
 
@@ -114,9 +114,8 @@ class ClickUpAdapter extends PMAdapter {
           error: `ClickUp task not found for story ${story.id}. Use createStory() to create it first.`,
         };
       }
-
     } catch (error) {
-      console.error('❌ Error syncing story to ClickUp:', error);
+      console.error("❌ Error syncing story to ClickUp:", error);
       return {
         success: false,
         error: error.message,
@@ -156,11 +155,10 @@ class ClickUpAdapter extends PMAdapter {
 
       return {
         success: true,
-        updates: null,  // No updates for now
+        updates: null, // No updates for now
       };
-
     } catch (error) {
-      console.error('❌ Error pulling story from ClickUp:', error);
+      console.error("❌ Error pulling story from ClickUp:", error);
       return {
         success: false,
         error: error.message,
@@ -182,7 +180,7 @@ class ClickUpAdapter extends PMAdapter {
 
       // Verify epic exists
       if (storyData.epic) {
-        const epicNum = parseInt(storyData.epic.split('-')[0]);
+        const epicNum = parseInt(storyData.epic.split("-")[0]);
         await verifyEpicExists(epicNum);
       }
 
@@ -192,16 +190,16 @@ class ClickUpAdapter extends PMAdapter {
       const result = await tool.createTask({
         listId: this.listId,
         name: `${storyData.id}: ${storyData.title}`,
-        description: storyData.description || '',
+        description: storyData.description || "",
         tags: [
-          'story',
+          "story",
           `story-${storyData.id}`,
           ...(storyData.epic ? [`epic-${storyData.epic}`] : []),
         ],
         custom_fields: [
           {
-            id: 'story-status',
-            value: storyData.status || 'Draft',
+            id: "story-status",
+            value: storyData.status || "Draft",
           },
         ],
       });
@@ -212,9 +210,8 @@ class ClickUpAdapter extends PMAdapter {
         success: true,
         url: `https://app.clickup.com/t/${result.id}`,
       };
-
     } catch (error) {
-      console.error('❌ Error creating story in ClickUp:', error);
+      console.error("❌ Error creating story in ClickUp:", error);
       return {
         success: false,
         error: error.message,
@@ -247,9 +244,8 @@ class ClickUpAdapter extends PMAdapter {
       console.log(`✅ Story ${storyId} status updated to ${status}`);
 
       return { success: true };
-
     } catch (error) {
-      console.error('❌ Error updating story status:', error);
+      console.error("❌ Error updating story status:", error);
       return {
         success: false,
         error: error.message,
@@ -269,23 +265,22 @@ class ClickUpAdapter extends PMAdapter {
       if (!this.apiToken) {
         return {
           success: false,
-          error: 'CLICKUP_API_TOKEN not configured',
+          error: "CLICKUP_API_TOKEN not configured",
         };
       }
 
-      console.log('🔌 Testing ClickUp connection...');
+      console.log("🔌 Testing ClickUp connection...");
 
       const tool = await this._getClickUpTool();
 
       // Try to fetch a single task to validate connection
       await tool.getWorkspaceTasks({ limit: 1 });
 
-      console.log('✅ ClickUp connection successful');
+      console.log("✅ ClickUp connection successful");
 
       return { success: true };
-
     } catch (error) {
-      console.error('❌ ClickUp connection failed:', error);
+      console.error("❌ ClickUp connection failed:", error);
       return {
         success: false,
         error: error.message,
@@ -300,8 +295,8 @@ class ClickUpAdapter extends PMAdapter {
    */
   async _getClickUpTool() {
     try {
-      const { resolveTool } = require('../../scripts/tool-resolver');
-      return await resolveTool('clickup');
+      const { resolveTool } = require("../../scripts/tool-resolver");
+      return await resolveTool("clickup");
     } catch (_error) {
       // Fall back to global references
       return {

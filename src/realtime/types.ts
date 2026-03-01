@@ -4,7 +4,7 @@ export interface MultimodalConfig {
   systemInstruction?: string;
   voiceName?: string;
   responseModalities?: ("AUDIO" | "TEXT")[];
-  tools?: any[]; // TODO: Define strict tool type from Gemini API schema
+  tools?: Record<string, unknown>[];
 }
 
 export interface RealtimeSessionEvents {

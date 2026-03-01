@@ -27,7 +27,7 @@ function extractCronChannels(schema: SchemaLike): string[] {
   return channels;
 }
 
-const UI_FILES = ["ui/src/ui/types.ts", "ui/src/ui/ui-types.ts", "ui/src/ui/views/cron.ts"];
+const UI_FILES = ["ui/src/ui/types/cron.ts", "ui/src/ui/ui-types.ts", "ui/src/ui/views/cron.ts"];
 
 const SWIFT_FILES = ["apps/macos/Sources/ZERO/GatewayConnection.swift"];
 
@@ -55,7 +55,7 @@ describe("cron protocol conformance", () => {
 
   it("cron status shape matches gateway fields in UI + Swift", async () => {
     const cwd = process.cwd();
-    const uiTypes = await fs.readFile(path.join(cwd, "ui/src/ui/types.ts"), "utf-8");
+    const uiTypes = await fs.readFile(path.join(cwd, "ui/src/ui/types/cron.ts"), "utf-8");
     expect(uiTypes.includes("export type CronStatus")).toBe(true);
     expect(uiTypes.includes("jobs:")).toBe(true);
     expect(uiTypes.includes("jobCount")).toBe(false);

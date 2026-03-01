@@ -128,17 +128,29 @@ export function renderSessions(props: SessionsProps) {
                 <div class="col-tokens">${t("sessions.list.header.tokens" as any)}</div>
                 <div class="col-actions">${t("sessions.list.header.actions" as any)}</div>
              </div>
-             ${rows.length === 0 ? html`
+             ${
+               rows.length === 0
+                 ? html`
                 <div class="group-item" style="padding: 60px; justify-content: center; color: var(--text-dim);">
                     ${t("sessions.list.none" as any)}
                 </div>
-             ` : rows.map(row => renderRow(row, props.basePath, props.onPatch, props.onDelete, props.loading))}
+             `
+                 : rows.map((row) =>
+                     renderRow(row, props.basePath, props.onPatch, props.onDelete, props.loading),
+                   )
+             }
         </div>
     </div>
   `;
 }
 
-function renderRow(row: GatewaySessionRow, basePath: string, onPatch: SessionsProps["onPatch"], onDelete: SessionsProps["onDelete"], disabled: boolean) {
+function renderRow(
+  row: GatewaySessionRow,
+  basePath: string,
+  onPatch: SessionsProps["onPatch"],
+  onDelete: SessionsProps["onDelete"],
+  disabled: boolean,
+) {
   const updated = row.updatedAt ? formatAgo(row.updatedAt) : "n/d";
   const rawThinking = row.thinkingLevel ?? "";
   const isBinaryThinking = isBinaryThinkingProvider(row.modelProvider);
@@ -148,7 +160,9 @@ function renderRow(row: GatewaySessionRow, basePath: string, onPatch: SessionsPr
   const reasoning = row.reasoningLevel ?? "";
   const displayName = row.displayName ?? row.key;
   const canLink = row.kind !== "global";
-  const chatUrl = canLink ? `${pathForTab("chat", basePath)}?session=${encodeURIComponent(row.key)}` : null;
+  const chatUrl = canLink
+    ? `${pathForTab("chat", basePath)}?session=${encodeURIComponent(row.key)}`
+    : null;
 
   return html`
     <div class="sessions-item">
@@ -166,10 +180,10 @@ function renderRow(row: GatewaySessionRow, basePath: string, onPatch: SessionsPr
 
       <div class="col-actions">
         <select class="select-native" style="width: 80px; height: 24px; font-size: 10px; min-width: 0;" .value=${thinking} @change=${(e: Event) => onPatch(row.key, { thinkingLevel: resolveThinkLevelPatchValue((e.target as HTMLSelectElement).value, isBinaryThinking) })}>
-            ${thinkLevels.map(l => html`<option value=${l}>${l || "---"}</option>`)}
+            ${thinkLevels.map((l) => html`<option value=${l}>${l || "---"}</option>`)}
         </select>
         <select class="select-native" style="width: 80px; height: 24px; font-size: 10px; min-width: 0;" .value=${verbose} @change=${(e: Event) => onPatch(row.key, { verboseLevel: (e.target as HTMLSelectElement).value || null })}>
-            ${VERBOSE_LEVELS.map(l => html`<option value=${l.value}>${l.label}</option>`)}
+            ${VERBOSE_LEVELS.map((l) => html`<option value=${l.value}>${l.label}</option>`)}
         </select>
         <button class="btn btn--icon btn--sm danger btn-delete-mobile" @click=${() => onDelete(row.key)}>${icons.trash}</button>
       </div>

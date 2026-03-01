@@ -4,6 +4,7 @@ read_when:
   - Você deseja usar modelos da OpenAI no ZERO
   - Você deseja autenticação por assinatura Codex em vez de chaves de API
 ---
+
 # OpenAI
 
 A OpenAI fornece APIs de desenvolvedor para modelos GPT. O Codex suporta o **login do ChatGPT** para acesso por assinatura ou **login por chave de API** para acesso baseado no uso. O Codex cloud requer login do ChatGPT, enquanto o Codex CLI suporta qualquer um dos métodos de login. O Codex CLI armazena detalhes de login em cache em `~/.codex/auth.json` (ou no armazenamento de credenciais do seu sistema operacional), que o ZERO pode reutilizar.
@@ -26,7 +27,7 @@ zero onboard --openai-api-key "$OPENAI_API_KEY"
 ```json5
 {
   env: { OPENAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } },
 }
 ```
 
@@ -51,7 +52,7 @@ zero onboard --auth-choice openai-codex
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } },
 }
 ```
 

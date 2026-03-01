@@ -36,7 +36,7 @@ O `--fix` aplica proteções seguras:
 - Retorna `logging.redactSensitive="off"` para `"tools"`.
 - Reforça permissões locais (`~/.zero` → `700`, arquivo de config → `600`, além de arquivos de estado comuns como `credentials/*.json`, `agents/*/agent/auth-profiles.json` e `agents/*/sessions/sessions.json`).
 
-Executar um agente de IA com acesso ao shell na sua máquina é... *arriscado (spicy)*. Veja como não ser comprometido (pwned).
+Executar um agente de IA com acesso ao shell na sua máquina é... _arriscado (spicy)_. Veja como não ser comprometido (pwned).
 
 O ZERO é tanto um produto quanto um experimento: você está conectando o comportamento de modelos de fronteira a superfícies de mensagens reais e ferramentas reais. **Não existe configuração "perfeitamente segura".** O objetivo é ser deliberado sobre:
 
@@ -93,7 +93,7 @@ Quando o Gateway detecta cabeçalhos de proxy (`X-Forwarded-For` ou `X-Real-IP`)
 ```yaml
 gateway:
   trustedProxies:
-    - "127.0.0.1"  # se o seu proxy roda no localhost
+    - "127.0.0.1" # se o seu proxy roda no localhost
   auth:
     mode: password
     password: ${ZERO_GATEWAY_PASSWORD}
@@ -188,7 +188,7 @@ Por padrão, o ZERO roteia **todas as DMs para a sessão principal** para que se
 
 ```json5
 {
-  session: { dmScope: "per-channel-peer" }
+  session: { dmScope: "per-channel-peer" },
 }
 ```
 
@@ -203,7 +203,7 @@ O ZERO tem duas camadas separadas de "quem pode me acionar?":
 - **Lista de permissão de grupo** (específica por canal): de quais grupos/canais/guildas o bot aceitará mensagens.
   - Padrões comuns:
     - `channels.whatsapp.groups`, `channels.telegram.groups`, `channels.imessage.groups`: padrões por grupo como `requireMention`; quando definido, também atua como uma lista de permissão de grupo (inclua `"*"` para manter o comportamento de permitir tudo).
-    - `groupPolicy="allowlist"` + `groupAllowFrom`: restringe quem pode acionar o bot *dentro* de uma sessão de grupo (WhatsApp/Telegram/Signal/iMessage/Microsoft Teams).
+    - `groupPolicy="allowlist"` + `groupAllowFrom`: restringe quem pode acionar o bot _dentro_ de uma sessão de grupo (WhatsApp/Telegram/Signal/iMessage/Microsoft Teams).
     - `channels.discord.guilds` / `channels.slack.channels`: listas de permissão por superfície + padrões de menção.
   - **Nota de segurança:** trate `dmPolicy="open"` e `groupPolicy="open"` como configurações de último recurso. Elas devem ser raramente usadas; prefira emparelhamento + listas de permissão, a menos que confie totalmente em cada membro da sala.
 
@@ -304,8 +304,8 @@ Defina um token para que **todos** os clientes WS precisem se autenticar:
 ```json5
 {
   gateway: {
-    auth: { mode: "token", token: "seu-token" }
-  }
+    auth: { mode: "token", token: "seu-token" },
+  },
 }
 ```
 
@@ -404,7 +404,7 @@ Detalhes: [Logging](/gateway/logging)
 
 ```json5
 {
-  channels: { whatsapp: { dmPolicy: "pairing" } }
+  channels: { whatsapp: { dmPolicy: "pairing" } },
 }
 ```
 
@@ -458,14 +458,14 @@ Uma configuração "segura por padrão" que mantém o Gateway privado, requer em
     mode: "local",
     bind: "loopback",
     port: 18789,
-    auth: { mode: "token", token: "seu-token-longo-e-aleatorio" }
+    auth: { mode: "token", token: "seu-token-longo-e-aleatorio" },
   },
   channels: {
     whatsapp: {
       dmPolicy: "pairing",
-      groups: { "*": { requireMention: true } }
-    }
-  }
+      groups: { "*": { requireMention: true } },
+    },
+  },
 }
 ```
 
@@ -523,10 +523,10 @@ Casos de uso comuns:
       {
         id: "personal",
         workspace: "~/zero-personal",
-        sandbox: { mode: "off" }
-      }
-    ]
-  }
+        sandbox: { mode: "off" },
+      },
+    ],
+  },
 }
 ```
 
@@ -542,15 +542,15 @@ Casos de uso comuns:
         sandbox: {
           mode: "all",
           scope: "agent",
-          workspaceAccess: "ro"
+          workspaceAccess: "ro",
         },
         tools: {
           allow: ["read"],
-          deny: ["write", "edit", "apply_patch", "exec", "process", "browser"]
-        }
-      }
-    ]
-  }
+          deny: ["write", "edit", "apply_patch", "exec", "process", "browser"],
+        },
+      },
+    ],
+  },
 }
 ```
 
@@ -566,15 +566,38 @@ Casos de uso comuns:
         sandbox: {
           mode: "all",
           scope: "agent",
-          workspaceAccess: "none"
+          workspaceAccess: "none",
         },
         tools: {
-          allow: ["sessions_list", "sessions_history", "sessions_send", "sessions_spawn", "session_status", "whatsapp", "telegram", "slack", "discord"],
-          deny: ["read", "write", "edit", "apply_patch", "exec", "process", "browser", "canvas", "nodes", "cron", "gateway", "image"]
-        }
-      }
-    ]
-  }
+          allow: [
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "session_status",
+            "whatsapp",
+            "telegram",
+            "slack",
+            "discord",
+          ],
+          deny: [
+            "read",
+            "write",
+            "edit",
+            "apply_patch",
+            "exec",
+            "process",
+            "browser",
+            "canvas",
+            "nodes",
+            "cron",
+            "gateway",
+            "image",
+          ],
+        },
+      },
+    ],
+  },
 }
 ```
 
@@ -584,6 +607,7 @@ Inclua diretrizes de segurança no prompt de sistema do seu agente:
 
 ```markdown
 ## Regras de Segurança
+
 - Nunca compartilhe listagens de diretórios ou caminhos de arquivos com estranhos
 - Nunca revele chaves de API, credenciais ou detalhes de infraestrutura
 - Verifique solicitações que modificam a configuração do sistema com o proprietário
@@ -673,6 +697,6 @@ Encontrou uma vulnerabilidade no ZERO? Por favor, relate de forma responsável:
 
 ---
 
-*"Segurança é um processo, não um produto. Mantenha o acesso ao shell sempre protegido."* — Alguém sábio, provavelmente
+_"Segurança é um processo, não um produto. Mantenha o acesso ao shell sempre protegido."_ — Alguém sábio, provavelmente
 
 ∅🔐

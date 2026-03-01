@@ -5,36 +5,37 @@ Utilities for the squad-creator agent to manage squads in AIOS projects.
 ## Overview
 
 This module provides utilities for:
+
 - **Loading** squad manifests from local directories
 - **Validating** squad structure and configuration (SQS-3)
 - **Generating** new squads from templates (SQS-4)
 
 ## Components
 
-| File | Story | Description |
-|------|-------|-------------|
-| `squad-loader.js` | SQS-2 | Load and resolve squad manifests |
-| `squad-validator.js` | SQS-3 | Validate squad structure |
-| `squad-generator.js` | SQS-4 | Generate new squads |
+| File                 | Story | Description                      |
+| -------------------- | ----- | -------------------------------- |
+| `squad-loader.js`    | SQS-2 | Load and resolve squad manifests |
+| `squad-validator.js` | SQS-3 | Validate squad structure         |
+| `squad-generator.js` | SQS-4 | Generate new squads              |
 
 ## Usage
 
 ### Squad Loader
 
 ```javascript
-const { SquadLoader } = require('./.aios-core/development/scripts/squad');
+const { SquadLoader } = require("./.aios-core/development/scripts/squad");
 
 // Create loader instance
 const loader = new SquadLoader({
-  squadsPath: './squads',  // Default: './squads'
-  verbose: false           // Enable debug logging
+  squadsPath: "./squads", // Default: './squads'
+  verbose: false, // Enable debug logging
 });
 
 // Resolve squad by name
-const { path, manifestPath } = await loader.resolve('my-squad');
+const { path, manifestPath } = await loader.resolve("my-squad");
 
 // Load and parse manifest
-const manifest = await loader.loadManifest('./squads/my-squad');
+const manifest = await loader.loadManifest("./squads/my-squad");
 
 // List all local squads
 const squads = await loader.listLocal();
@@ -44,11 +45,11 @@ const squads = await loader.listLocal();
 ### Error Handling
 
 ```javascript
-const { SquadLoader, SquadLoaderError } = require('./.aios-core/development/scripts/squad');
+const { SquadLoader, SquadLoaderError } = require("./.aios-core/development/scripts/squad");
 
 try {
   const loader = new SquadLoader();
-  await loader.resolve('non-existent-squad');
+  await loader.resolve("non-existent-squad");
 } catch (error) {
   if (error instanceof SquadLoaderError) {
     console.error(`Error [${error.code}]: ${error.message}`);
@@ -59,12 +60,12 @@ try {
 
 ### Error Codes
 
-| Code | Description | Suggestion |
-|------|-------------|------------|
-| `SQUAD_NOT_FOUND` | Squad directory not found | Create squad with: @squad-creator *create-squad {name} |
-| `MANIFEST_NOT_FOUND` | No manifest file in squad | Create squad.yaml in squad directory |
-| `YAML_PARSE_ERROR` | Invalid YAML syntax | Check YAML syntax - use a YAML linter |
-| `PERMISSION_DENIED` | File permission error | Check file permissions: chmod 644 {path} |
+| Code                 | Description               | Suggestion                                              |
+| -------------------- | ------------------------- | ------------------------------------------------------- |
+| `SQUAD_NOT_FOUND`    | Squad directory not found | Create squad with: @squad-creator \*create-squad {name} |
+| `MANIFEST_NOT_FOUND` | No manifest file in squad | Create squad.yaml in squad directory                    |
+| `YAML_PARSE_ERROR`   | Invalid YAML syntax       | Check YAML syntax - use a YAML linter                   |
+| `PERMISSION_DENIED`  | File permission error     | Check file permissions: chmod 644 {path}                |
 
 ## Manifest Files
 
@@ -107,6 +108,6 @@ npm test -- tests/unit/squad/squad-loader.test.js --coverage --collectCoverageFr
 
 ## Version History
 
-| Version | Date | Description |
-|---------|------|-------------|
-| 1.0.0 | 2025-12-18 | Initial implementation (Story SQS-2) |
+| Version | Date       | Description                          |
+| ------- | ---------- | ------------------------------------ |
+| 1.0.0   | 2025-12-18 | Initial implementation (Story SQS-2) |

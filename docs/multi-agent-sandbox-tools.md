@@ -148,7 +148,7 @@ Sobre o comportamento do sandboxing em tempo de execução, veja [Isolamento (Sa
   "agents": {
     "defaults": {
       "sandbox": {
-        "mode": "non-main",  // Padrão global
+        "mode": "non-main", // Padrão global
         "scope": "session"
       }
     },
@@ -157,14 +157,14 @@ Sobre o comportamento do sandboxing em tempo de execução, veja [Isolamento (Sa
         "id": "main",
         "workspace": "~/zero",
         "sandbox": {
-          "mode": "off"  // Sobrescrita: main nunca isolado
+          "mode": "off" // Sobrescrita: main nunca isolado
         }
       },
       {
         "id": "public",
         "workspace": "~/zero-public",
         "sandbox": {
-          "mode": "all",  // Sobrescrita: public sempre isolado
+          "mode": "all", // Sobrescrita: public sempre isolado
           "scope": "agent"
         },
         "tools": {

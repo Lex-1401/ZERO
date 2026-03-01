@@ -2,31 +2,19 @@ import crypto from "node:crypto";
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 
 import {
-  type ExecAsk,
   type ExecHost,
-  type ExecSecurity,
-  type ExecApprovalsFile,
-  addAllowlistEntry,
   evaluateShellAllowlist,
   maxAsk,
   minSecurity,
   requiresExecApproval,
   resolveSafeBins,
-  recordAllowlistUse,
-  resolveExecApprovals,
-  resolveExecApprovalsFromFile,
 } from "../infra/exec-approvals.js";
-import { requestHeartbeatNow } from "../infra/heartbeat-wake.js";
-import { buildNodeShellCommand } from "../infra/node-shell.js";
 import {
   getShellPathFromLoginShell,
   resolveShellEnvFallbackTimeoutMs,
 } from "../infra/shell-env.js";
 import { logInfo } from "../logger.js";
-import {
-  markBackgrounded,
-  tail,
-} from "./bash-process-registry.js";
+import { markBackgrounded } from "./bash-process-registry.js";
 import {
   buildSandboxEnv,
   clampNumber,
@@ -47,13 +35,13 @@ import {
   type ExecToolDefaults,
   type ExecToolDetails,
   type ExecProcessHandle,
-  type ExecElevatedDefaults
+  type ExecElevatedDefaults,
 } from "./bash-tools.exec.types.js";
 export {
   type ExecToolDefaults,
   type ExecToolDetails,
   type ExecProcessHandle,
-  type ExecElevatedDefaults
+  type ExecElevatedDefaults,
 };
 export { type BashSandboxConfig } from "./bash-tools.shared.js";
 import {
@@ -61,13 +49,11 @@ import {
   normalizeExecSecurity,
   normalizeExecAsk,
   renderExecHostLabel,
-  normalizeNotifyOutput,
   normalizePathPrepend,
   applyPathPrepend,
   applyShellPath,
   createApprovalSlug,
   resolveApprovalRunningNoticeMs,
-  emitExecSystemEvent
 } from "./bash-tools.exec.utils.js";
 import { runExecProcess } from "./bash-tools.exec.process.js";
 
@@ -85,16 +71,11 @@ const DEFAULT_PENDING_MAX_OUTPUT = clampNumber(
 );
 const DEFAULT_PATH =
   process.env.PATH ?? "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-const DEFAULT_NOTIFY_TAIL_CHARS = 400;
-const DEFAULT_APPROVAL_TIMEOUT_MS = 120_000;
-const DEFAULT_APPROVAL_REQUEST_TIMEOUT_MS = 130_000;
 
 /**
  * Cria a ferramenta 'exec' principal para execução de comandos shell.
  */
-export function createExecTool(
-  defaults?: ExecToolDefaults,
-): AgentTool<any, ExecToolDetails> {
+export function createExecTool(defaults?: ExecToolDefaults): AgentTool<any, ExecToolDetails> {
   const defaultBackgroundMs = clampNumber(
     defaults?.backgroundMs ?? readEnvInt("PI_BASH_YIELD_MS"),
     10_000,
@@ -137,7 +118,7 @@ export function createExecTool(
 
       if (commandRisk >= 3) {
         warnings.push(
-          `⚠️ ALERTA DE SEGURANÇA: Comando de alto risco detectado ("${params.command.split(" ")[0]}").`
+          `⚠️ ALERTA DE SEGURANÇA: Comando de alto risco detectado ("${params.command.split(" ")[0]}").`,
         );
       }
 
@@ -155,13 +136,22 @@ export function createExecTool(
       const elevatedDefaults = defaults?.elevated;
       const elevatedAllowed = Boolean(elevatedDefaults?.enabled && elevatedDefaults.allowed);
       const elevatedDefaultMode =
-        elevatedDefaults?.defaultLevel === "full" ? "full" :
-          elevatedDefaults?.defaultLevel === "ask" ? "ask" :
-            elevatedDefaults?.defaultLevel === "on" ? "ask" : "off";
+        elevatedDefaults?.defaultLevel === "full"
+          ? "full"
+          : elevatedDefaults?.defaultLevel === "ask"
+            ? "ask"
+            : elevatedDefaults?.defaultLevel === "on"
+              ? "ask"
+              : "off";
       const effectiveDefaultMode = elevatedAllowed ? elevatedDefaultMode : "off";
-      const elevatedMode = typeof params.elevated === "boolean"
-        ? params.elevated ? (elevatedDefaultMode === "full" ? "full" : "ask") : "off"
-        : effectiveDefaultMode;
+      const elevatedMode =
+        typeof params.elevated === "boolean"
+          ? params.elevated
+            ? elevatedDefaultMode === "full"
+              ? "full"
+              : "ask"
+            : "off"
+          : effectiveDefaultMode;
       const elevatedRequested = elevatedMode !== "off";
 
       if (elevatedRequested && (!elevatedDefaults?.enabled || !elevatedDefaults.allowed)) {
@@ -226,28 +216,55 @@ export function createExecTool(
       // Lógica específica para host=node
       if (host === "node") {
         return handleNodeHost({
-          params, defaults, agentId, nodeId: params.node,
-          security, ask, workdir, env, warnings, notifySessionKey
+          params,
+          defaults,
+          agentId,
+          nodeId: params.node,
+          security,
+          ask,
+          workdir,
+          env,
+          warnings,
+          notifySessionKey,
         });
       }
 
       // Lógica específica para host=gateway com aprovação
-      if (host === "gateway" && (elevatedMode !== "full")) {
+      if (host === "gateway" && elevatedMode !== "full") {
         const approvalResponse = await handleGatewayApproval({
-          params, defaults, agentId, security, ask, workdir, env,
-          warnings, maxOutput, pendingMaxOutput, notifySessionKey,
-          defaultTimeoutSec, approvalRunningNoticeMs, safeBins
+          params,
+          defaults,
+          agentId,
+          security,
+          ask,
+          workdir,
+          env,
+          warnings,
+          maxOutput,
+          pendingMaxOutput,
+          notifySessionKey,
+          defaultTimeoutSec,
+          approvalRunningNoticeMs,
+          safeBins,
         });
         if (approvalResponse) return approvalResponse;
       }
 
-      const effectiveTimeout = typeof params.timeout === "number" ? params.timeout : defaultTimeoutSec;
+      const effectiveTimeout =
+        typeof params.timeout === "number" ? params.timeout : defaultTimeoutSec;
       const usePty = params.pty === true && !sandbox;
 
       const run = await runExecProcess({
         command: params.command,
-        workdir, env, sandbox, containerWorkdir, usePty,
-        warnings, maxOutput, pendingMaxOutput, notifyOnExit,
+        workdir,
+        env,
+        sandbox,
+        containerWorkdir,
+        usePty,
+        warnings,
+        maxOutput,
+        pendingMaxOutput,
+        notifyOnExit,
         scopeKey: defaults?.scopeKey,
         sessionKey: notifySessionKey,
         timeoutSec: effectiveTimeout,
@@ -265,15 +282,17 @@ export function createExecTool(
 async function handleNodeHost(opts: any) {
   // Implementação simplificada para o entry point refatorado
   // (Lógica movida para auxiliar interno para manter o arquivo limpo)
-  const { params, nodeId: nodeQuery, security, ask, agentId, workdir, env } = opts;
+  const { params, nodeId: nodeQuery, security, ask, agentId: _agentId, workdir, env: _env } = opts;
   const nodes = await listNodes({});
   if (nodes.length === 0) throw new Error("no paired node available.");
 
   const nodeId = resolveNodeIdFromList(nodes, nodeQuery, !nodeQuery);
-  const nodeInfo = nodes.find((entry: any) => entry.nodeId === nodeId);
 
   const requiresAsk = requiresExecApproval({
-    ask, security, analysisOk: true, allowlistSatisfied: false
+    ask,
+    security,
+    analysisOk: true,
+    allowlistSatisfied: false,
   });
 
   if (requiresAsk) {
@@ -292,17 +311,23 @@ async function handleNodeHost(opts: any) {
     };
   }
 
-  const raw = await callGatewayTool("node.invoke", { timeoutMs: 30000 }, {
-    nodeId, command: "system.run", params: { command: [params.command], cwd: workdir }
-  }) as any;
+  const raw = (await callGatewayTool(
+    "node.invoke",
+    { timeoutMs: 30000 },
+    {
+      nodeId,
+      command: "system.run",
+      params: { command: [params.command], cwd: workdir },
+    },
+  )) as any;
 
   return {
     content: [{ type: "text" as const, text: raw?.payload?.stdout || "" }],
     details: {
-      status: raw?.payload?.success ? "completed" as const : "failed" as const,
+      status: raw?.payload?.success ? ("completed" as const) : ("failed" as const),
       exitCode: raw?.payload?.exitCode ?? null,
       aggregated: raw?.payload?.stdout || "",
-    }
+    },
   };
 }
 
@@ -312,17 +337,41 @@ async function handleNodeHost(opts: any) {
 async function handleGatewayApproval(opts: any) {
   const { ask, security, agentId, params, workdir, env, safeBins } = opts;
   const allowlistEval = evaluateShellAllowlist({
-    command: params.command, allowlist: [], safeBins, cwd: workdir, env
+    command: params.command,
+    allowlist: [],
+    safeBins,
+    cwd: workdir,
+    env,
   });
 
   const requiresAsk = requiresExecApproval({
-    ask, security, analysisOk: allowlistEval.analysisOk,
-    allowlistSatisfied: allowlistEval.allowlistSatisfied
+    ask,
+    security,
+    analysisOk: allowlistEval.analysisOk,
+    allowlistSatisfied: allowlistEval.allowlistSatisfied,
   });
 
   if (requiresAsk) {
     const approvalId = crypto.randomUUID();
-    // Lógica assíncrona de aprovação omitida para brevidade no entry point
+
+    void (async () => {
+      try {
+        await callGatewayTool(
+          "exec.approval.request",
+          { timeoutMs: 130000 },
+          {
+            approvalId,
+            agentId,
+            command: params.command,
+            cwd: workdir,
+            env,
+          },
+        );
+      } catch {
+        // Ignorar erros em background
+      }
+    })();
+
     return {
       content: [{ type: "text" as const, text: "Approval required" }],
       details: {
@@ -341,24 +390,35 @@ async function handleGatewayApproval(opts: any) {
 /**
  * Aguarda a finalização do processo ou faz yield para background.
  */
-function waitForProcess(run: ExecProcessHandle, allowBackground: boolean, yieldWindow: number | null, warnings: string[]) {
+function waitForProcess(
+  run: ExecProcessHandle,
+  allowBackground: boolean,
+  yieldWindow: number | null,
+  warnings: string[],
+) {
   const getWarningText = () => (warnings.length ? `${warnings.join("\n")}\n\n` : "");
 
   return new Promise<AgentToolResult<ExecToolDetails>>((resolve, reject) => {
     let yielded = false;
     let yieldTimer: NodeJS.Timeout | null = null;
 
-    const resolveRunning = () => resolve({
-      content: [{ type: "text", text: `${getWarningText()}Command still running (session ${run.session.id}).` }],
-      details: {
-        status: "running",
-        sessionId: run.session.id,
-        pid: run.session.pid,
-        startedAt: run.startedAt,
-        cwd: run.session.cwd,
-        tail: run.session.tail,
-      },
-    });
+    const resolveRunning = () =>
+      resolve({
+        content: [
+          {
+            type: "text",
+            text: `${getWarningText()}Command still running (session ${run.session.id}).`,
+          },
+        ],
+        details: {
+          status: "running",
+          sessionId: run.session.id,
+          pid: run.session.pid,
+          startedAt: run.startedAt,
+          cwd: run.session.cwd,
+          tail: run.session.tail,
+        },
+      });
 
     if (allowBackground && yieldWindow !== null) {
       if (yieldWindow === 0) {
@@ -373,21 +433,26 @@ function waitForProcess(run: ExecProcessHandle, allowBackground: boolean, yieldW
       }, yieldWindow);
     }
 
-    run.promise.then((outcome) => {
-      if (yieldTimer) clearTimeout(yieldTimer);
-      if (yielded) return;
-      if (outcome.status === "failed") return reject(new Error(outcome.reason ?? "Command failed."));
-      resolve({
-        content: [{ type: "text", text: `${getWarningText()}${outcome.aggregated || "(no output)"}` }],
-        details: {
-          status: "completed",
-          exitCode: outcome.exitCode ?? 0,
-          durationMs: outcome.durationMs,
-          aggregated: outcome.aggregated,
-          cwd: run.session.cwd,
-        },
-      });
-    }).catch(reject);
+    run.promise
+      .then((outcome) => {
+        if (yieldTimer) clearTimeout(yieldTimer);
+        if (yielded) return;
+        if (outcome.status === "failed")
+          return reject(new Error(outcome.reason ?? "Command failed."));
+        resolve({
+          content: [
+            { type: "text", text: `${getWarningText()}${outcome.aggregated || "(no output)"}` },
+          ],
+          details: {
+            status: "completed",
+            exitCode: outcome.exitCode ?? 0,
+            durationMs: outcome.durationMs,
+            aggregated: outcome.aggregated,
+            cwd: run.session.cwd,
+          },
+        });
+      })
+      .catch(reject);
   });
 }
 

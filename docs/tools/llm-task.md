@@ -15,7 +15,7 @@ sem escrever código ZERO personalizado para cada fluxo de trabalho.
 
 ## Habilitar o plugin
 
-1) Habilite o plugin:
+1. Habilite o plugin:
 
 ```json
 {
@@ -27,7 +27,7 @@ sem escrever código ZERO personalizado para cada fluxo de trabalho.
 }
 ```
 
-1) Adicione a ferramenta à lista de permissão (ela é registrada com `optional: true`):
+1. Adicione a ferramenta à lista de permissão (ela é registrada com `optional: true`):
 
 ```json
 {

@@ -127,8 +127,8 @@ public actor GatewayChannelActor {
     private var lastAuthSource: GatewayAuthSource = .none
     private let decoder = JSONDecoder()
     private let encoder = JSONEncoder()
-    private let connectTimeoutSeconds: Double = 6
-    private let connectChallengeTimeoutSeconds: Double = 0.75
+    private let connectTimeoutSeconds: Double = 30
+    private let connectChallengeTimeoutSeconds: Double = 10.0
     private var watchdogTask: Task<Void, Never>?
     private var tickTask: Task<Void, Never>?
     private let defaultRequestTimeoutMs: Double = 15000
@@ -224,16 +224,19 @@ public actor GatewayChannelActor {
         self.task?.cancel(with: .goingAway, reason: nil)
         self.task = self.session.makeWebSocketTask(url: self.url)
         self.task?.resume()
+        self.logger.info("gateway ws task resumed, sending connect frame")
         do {
             try await AsyncTimeout.withTimeout(
                 seconds: self.connectTimeoutSeconds,
                 onTimeout: {
-                    NSError(
+                    self.logger.error("gateway connect timed out")
+                    return NSError(
                         domain: "Gateway",
                         code: 1,
                         userInfo: [NSLocalizedDescriptionKey: "connect timed out"])
                 },
                 operation: { try await self.sendConnect() })
+            self.logger.info("gateway connect frame sent and acknowledged")
         } catch {
             let wrapped = self.wrap(error, context: "connect to gateway @ \(self.url.absoluteString)")
             self.connected = false
@@ -329,7 +332,9 @@ public actor GatewayChannelActor {
             params["auth"] = ProtoAnyCodable(["password": ProtoAnyCodable(password)])
         }
         let signedAtMs = Int(Date().timeIntervalSince1970 * 1000)
+        self.logger.info("waiting for connect.challenge (timeout \(self.connectChallengeTimeoutSeconds)s)")
         let connectNonce = try await self.waitForConnectChallenge()
+        self.logger.info("connect.challenge received: \(connectNonce ?? "nil")")
         let scopesValue = scopes.joined(separator: ",")
         var payloadParts = [
             connectNonce == nil ? "v1" : "v2",
@@ -485,13 +490,24 @@ public actor GatewayChannelActor {
                     guard let self else { return nil }
                     while true {
                         let msg = try await task.receive()
-                        guard let data = self.decodeMessageData(msg) else { continue }
-                        guard let frame = try? self.decoder.decode(GatewayFrame.self, from: data) else { continue }
-                        if case let .event(evt) = frame, evt.event == "connect.challenge" {
-                            if let payload = evt.payload?.value as? [String: ProtoAnyCodable],
-                               let nonce = payload["nonce"]?.value as? String {
-                                return nonce
+                        if let data = self.decodeMessageData(msg) {
+                            let raw = String(data: data, encoding: .utf8) ?? "binary"
+                            self.logger.info("handshake: received raw message (\(data.count) bytes): \(raw, privacy: .public)")
+                            do {
+                                let frame = try self.decoder.decode(GatewayFrame.self, from: data)
+                                self.logger.debug("handshake: decoded frame: \(String(describing: frame), privacy: .public)")
+                                if case let .event(evt) = frame, evt.event == "connect.challenge" {
+                                    if let payload = evt.payload?.value as? [String: ProtoAnyCodable],
+                                       let nonce = payload["nonce"]?.value as? String {
+                                        self.logger.info("handshake: found connect.challenge with nonce: \(nonce, privacy: .public)")
+                                        return nonce
+                                    }
+                                }
+                            } catch {
+                                self.logger.error("handshake: failed to decode GatewayFrame: \(error.localizedDescription, privacy: .public) from data: \(raw, privacy: .public)")
                             }
+                        } else {
+                            self.logger.warning("handshake: received empty or invalid message")
                         }
                     }
                 })
@@ -503,24 +519,34 @@ public actor GatewayChannelActor {
 
     private func waitForConnectResponse(reqId: String) async throws -> ResponseFrame {
         guard let task = self.task else {
-            throw NSError(
-                domain: "Gateway",
-                code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "connect failed (no response)"])
+            throw NSError(domain: "Gateway", code: 1, userInfo: [NSLocalizedDescriptionKey: "connect failed (no task)"])
         }
-        while true {
-            let msg = try await task.receive()
-            guard let data = self.decodeMessageData(msg) else { continue }
-            guard let frame = try? self.decoder.decode(GatewayFrame.self, from: data) else {
-                throw NSError(
-                    domain: "Gateway",
-                    code: 1,
-                    userInfo: [NSLocalizedDescriptionKey: "connect failed (invalid response)"])
-            }
-            if case let .res(res) = frame, res.id == reqId {
-                return res
-            }
-        }
+        
+        // Wait for responding frame with a hard timeout to prevent UI hang.
+        return try await AsyncTimeout.withTimeout(
+            seconds: 5.0,
+            onTimeout: {
+                NSError(domain: "Gateway", code: 1, userInfo: [NSLocalizedDescriptionKey: "connect response timeout"])
+            },
+            operation: {
+                while true {
+                    let msg = try await task.receive()
+                    guard let data = self.decodeMessageData(msg) else { continue }
+                    let raw = String(data: data, encoding: .utf8) ?? "binary"
+                    self.logger.info("handshake: waitForConnectResponse received msg: \(raw, privacy: .public)")
+                    do {
+                        let frame = try self.decoder.decode(GatewayFrame.self, from: data)
+                        self.logger.debug("handshake: decoded response frame: \(String(describing: frame), privacy: .public)")
+                        if case let .res(res) = frame, res.id == reqId {
+                            return res
+                        } else if case let .res(res) = frame {
+                            self.logger.warning("handshake: received response with different id: \(res.id, privacy: .public) (expected \(reqId, privacy: .public))")
+                        }
+                    } catch {
+                        self.logger.error("handshake: failed to decode response frame: \(error.localizedDescription, privacy: .public) from: \(raw, privacy: .public)")
+                    }
+                }
+            })
     }
 
     private nonisolated func decodeMessageData(_ msg: URLSessionWebSocketTask.Message) -> Data? {

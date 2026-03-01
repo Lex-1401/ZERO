@@ -29,9 +29,7 @@ export function renderNexus(props: NexusProps) {
     | { uptimeMs?: number; policy?: { tickIntervalMs?: number } }
     | undefined;
   const uptime = snapshot?.uptimeMs ? formatDurationMs(snapshot.uptimeMs) : "n/d";
-  const tick = snapshot?.policy?.tickIntervalMs
-    ? `${snapshot.policy.tickIntervalMs}ms`
-    : "n/d";
+  const tick = snapshot?.policy?.tickIntervalMs ? `${snapshot.policy.tickIntervalMs}ms` : "n/d";
 
   return html`
     <div class="nexus-view animate-fade-in" style="max-width: 1080px; margin: 0 auto; padding: 24px;">
@@ -54,9 +52,9 @@ export function renderNexus(props: NexusProps) {
                   type="text"
                   .value=${props.settings.gatewayUrl}
                   @input=${(e: Event) => {
-      const v = (e.target as HTMLInputElement).value;
-      props.onSettingsChange({ ...props.settings, gatewayUrl: v });
-    }}
+                    const v = (e.target as HTMLInputElement).value;
+                    props.onSettingsChange({ ...props.settings, gatewayUrl: v });
+                  }}
                   placeholder="ws://127.0.0.1:18789"
                 />
               </div>
@@ -74,9 +72,9 @@ export function renderNexus(props: NexusProps) {
                   style="width: 240px;"
                   .value=${props.settings.token}
                   @input=${(e: Event) => {
-      const v = (e.target as HTMLInputElement).value;
-      props.onSettingsChange({ ...props.settings, token: v });
-    }}
+                    const v = (e.target as HTMLInputElement).value;
+                    props.onSettingsChange({ ...props.settings, token: v });
+                  }}
                   placeholder="${t("nexus.token.placeholder" as any)}"
                 />
               </div>
@@ -94,9 +92,9 @@ export function renderNexus(props: NexusProps) {
                   style="width: 240px;"
                   .value=${props.password}
                   @input=${(e: Event) => {
-      const v = (e.target as HTMLInputElement).value;
-      props.onPasswordChange(v);
-    }}
+                    const v = (e.target as HTMLInputElement).value;
+                    props.onPasswordChange(v);
+                  }}
                   placeholder="••••••••"
                 />
               </div>
@@ -117,7 +115,9 @@ export function renderNexus(props: NexusProps) {
             </button>
           </div>
 
-          ${props.lastError ? html`
+          ${
+            props.lastError
+              ? html`
             <div class="group-list" style="margin-top: 32px; border-color: rgba(255, 59, 48, 0.3);">
               <div class="group-item" style="background: rgba(255, 59, 48, 0.05);">
                 <div class="group-label">
@@ -126,21 +126,23 @@ export function renderNexus(props: NexusProps) {
                 </div>
               </div>
             </div>
-          ` : nothing}
+          `
+              : nothing
+          }
 
           <div class="section-title" style="margin-top: 48px;">${t("nexus.metrics" as any)}</div>
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
-            <div class="group-list hover-lift ${!props.hello ? 'skeleton' : ''}" style="padding: 16px; min-height: 120px; transition: transform 0.2s ease;">
+            <div class="group-list hover-lift ${!props.hello ? "skeleton" : ""}" style="padding: 16px; min-height: 120px; transition: transform 0.2s ease;">
                 <div class="text-xs font-bold text-dim uppercase tracking-wider">${t("nexus.instances" as any)}</div>
                 <div style="font-size: 32px; font-weight: 800; margin-top: 8px;">${props.presenceCount}</div>
                 <div class="text-xs text-dim mt-2">${t("nexus.instances.desc" as any)}</div>
             </div>
-            <div class="group-list hover-lift ${!props.hello ? 'skeleton' : ''}" style="padding: 16px; min-height: 120px; transition: transform 0.2s ease;">
+            <div class="group-list hover-lift ${!props.hello ? "skeleton" : ""}" style="padding: 16px; min-height: 120px; transition: transform 0.2s ease;">
                 <div class="text-xs font-bold text-dim uppercase tracking-wider">${t("nexus.memory" as any)}</div>
                 <div style="font-size: 32px; font-weight: 800; margin-top: 8px;">${props.sessionsCount ?? "0"}</div>
                 <div class="text-xs text-dim mt-2">${t("nexus.memory.desc" as any)}</div>
             </div>
-            <div class="group-list hover-lift ${!props.hello ? 'skeleton' : ''}" style="padding: 16px; min-height: 120px; border-left: 3px solid var(--accent-blue); transition: transform 0.2s ease;">
+            <div class="group-list hover-lift ${!props.hello ? "skeleton" : ""}" style="padding: 16px; min-height: 120px; border-left: 3px solid var(--accent-blue); transition: transform 0.2s ease;">
                 <div class="text-xs font-bold text-dim uppercase tracking-wider">${t("nexus.status" as any)}</div>
                 <div style="font-size: 18px; font-weight: 800; margin-top: 14px; letter-spacing: -0.05em;">${t("nexus.status.sovereign" as any)}</div>
                 <div class="text-xs text-dim mt-2">${t("nexus.status.local" as any)}</div>
@@ -191,7 +193,9 @@ export function renderNexus(props: NexusProps) {
             <!-- Autopilot & Vision Module -->
             <div style="margin-top: 24px; display: flex; gap: 8px; width: 100%;">
                <button class="btn primary" style="flex: 1; background: var(--accent-red); border-color: rgba(0,0,0,0.1); justify-content: center; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);"
-                  @click=${() => { /* Vision module handled via state */ }}>
+                  @click=${() => {
+                    /* Vision module handled via state */
+                  }}>
                   <span style="margin-right: 6px; font-size: 10px; opacity: 0.8;">${t("nexus.radar" as any)}</span> ${t("nexus.autopilot" as any)}
                </button>
                <button class="btn" style="flex: 1; justify-content: center;"

@@ -3,19 +3,19 @@
  * @story WIS-3 - *next Task Implementation
  */
 
-'use strict';
+"use strict";
 
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
 // Mock dependencies before requiring SuggestionEngine
-jest.mock('../../core/session/context-loader', () => {
+jest.mock("../../core/session/context-loader", () => {
   return jest.fn().mockImplementation(() => ({
     loadContext: jest.fn().mockReturnValue({
-      sessionType: 'existing',
-      lastCommands: ['develop'],
-      currentStory: 'docs/stories/test-story.md',
-      workflowActive: 'story_development',
+      sessionType: "existing",
+      lastCommands: ["develop"],
+      currentStory: "docs/stories/test-story.md",
+      workflowActive: "story_development",
     }),
   }));
 });
@@ -25,9 +25,9 @@ const {
   createSuggestionEngine,
   SUGGESTION_CACHE_TTL,
   LOW_CONFIDENCE_THRESHOLD,
-} = require('../engine/suggestion-engine');
+} = require("../engine/suggestion-engine");
 
-describe('SuggestionEngine', () => {
+describe("SuggestionEngine", () => {
   let engine;
 
   beforeEach(() => {
@@ -39,40 +39,40 @@ describe('SuggestionEngine', () => {
     jest.clearAllMocks();
   });
 
-  describe('constructor', () => {
-    it('should create engine with default options', () => {
+  describe("constructor", () => {
+    it("should create engine with default options", () => {
       const defaultEngine = createSuggestionEngine();
       expect(defaultEngine).toBeInstanceOf(SuggestionEngine);
       expect(defaultEngine.cacheTTL).toBe(SUGGESTION_CACHE_TTL);
     });
 
-    it('should accept custom cache TTL', () => {
+    it("should accept custom cache TTL", () => {
       const customEngine = createSuggestionEngine({ cacheTTL: 60000 });
       expect(customEngine.cacheTTL).toBe(60000);
     });
 
-    it('should support lazy loading option', () => {
+    it("should support lazy loading option", () => {
       const lazyEngine = createSuggestionEngine({ lazyLoad: true });
       expect(lazyEngine.lazyLoad).toBe(true);
     });
   });
 
-  describe('buildContext()', () => {
-    it('should return context object with required properties', async () => {
+  describe("buildContext()", () => {
+    it("should return context object with required properties", async () => {
       const context = await engine.buildContext({});
 
-      expect(context).toHaveProperty('agentId');
-      expect(context).toHaveProperty('lastCommand');
-      expect(context).toHaveProperty('lastCommands');
-      expect(context).toHaveProperty('storyPath');
-      expect(context).toHaveProperty('branch');
-      expect(context).toHaveProperty('projectState');
+      expect(context).toHaveProperty("agentId");
+      expect(context).toHaveProperty("lastCommand");
+      expect(context).toHaveProperty("lastCommands");
+      expect(context).toHaveProperty("storyPath");
+      expect(context).toHaveProperty("branch");
+      expect(context).toHaveProperty("projectState");
     });
 
-    it('should use story override when provided', async () => {
+    it("should use story override when provided", async () => {
       // Create a temporary file for testing
-      const testStoryPath = path.join(process.cwd(), 'test-story-temp.md');
-      fs.writeFileSync(testStoryPath, '# Test Story');
+      const testStoryPath = path.join(process.cwd(), "test-story-temp.md");
+      fs.writeFileSync(testStoryPath, "# Test Story");
 
       try {
         const context = await engine.buildContext({
@@ -88,57 +88,57 @@ describe('SuggestionEngine', () => {
       }
     });
 
-    it('should use provided agent ID', async () => {
+    it("should use provided agent ID", async () => {
       const context = await engine.buildContext({
-        agentId: 'qa',
+        agentId: "qa",
       });
 
-      expect(context.agentId).toBe('qa');
+      expect(context.agentId).toBe("qa");
     });
 
-    it('should detect git branch when in git repo', async () => {
+    it("should detect git branch when in git repo", async () => {
       const context = await engine.buildContext({});
 
       // Branch should be detected or null (if not in git repo)
-      expect(context.branch === null || typeof context.branch === 'string').toBe(true);
+      expect(context.branch === null || typeof context.branch === "string").toBe(true);
     });
 
-    it('should build project state', async () => {
+    it("should build project state", async () => {
       const context = await engine.buildContext({});
 
       expect(context.projectState).toBeDefined();
-      expect(typeof context.projectState.activeStory).toBe('boolean');
+      expect(typeof context.projectState.activeStory).toBe("boolean");
     });
   });
 
-  describe('suggestNext()', () => {
-    it('should return result object with required properties', async () => {
+  describe("suggestNext()", () => {
+    it("should return result object with required properties", async () => {
       const context = {
-        agentId: 'dev',
-        lastCommand: 'develop',
-        lastCommands: ['develop'],
+        agentId: "dev",
+        lastCommand: "develop",
+        lastCommands: ["develop"],
         storyPath: null,
-        branch: 'main',
+        branch: "main",
         projectState: {},
       };
 
       const result = await engine.suggestNext(context);
 
-      expect(result).toHaveProperty('workflow');
-      expect(result).toHaveProperty('currentState');
-      expect(result).toHaveProperty('confidence');
-      expect(result).toHaveProperty('suggestions');
-      expect(result).toHaveProperty('isUncertain');
+      expect(result).toHaveProperty("workflow");
+      expect(result).toHaveProperty("currentState");
+      expect(result).toHaveProperty("confidence");
+      expect(result).toHaveProperty("suggestions");
+      expect(result).toHaveProperty("isUncertain");
       expect(Array.isArray(result.suggestions)).toBe(true);
     });
 
-    it('should return suggestions with proper structure', async () => {
+    it("should return suggestions with proper structure", async () => {
       const context = {
-        agentId: 'dev',
-        lastCommand: 'develop',
-        lastCommands: ['validate-story-draft', 'develop'],
-        storyPath: 'docs/stories/test.md',
-        branch: 'feature/test',
+        agentId: "dev",
+        lastCommand: "develop",
+        lastCommands: ["validate-story-draft", "develop"],
+        storyPath: "docs/stories/test.md",
+        branch: "feature/test",
         projectState: {},
       };
 
@@ -146,20 +146,20 @@ describe('SuggestionEngine', () => {
 
       if (result.suggestions.length > 0) {
         const suggestion = result.suggestions[0];
-        expect(suggestion).toHaveProperty('command');
-        expect(suggestion).toHaveProperty('args');
-        expect(suggestion).toHaveProperty('description');
-        expect(suggestion).toHaveProperty('confidence');
-        expect(suggestion).toHaveProperty('priority');
-        expect(suggestion.command.startsWith('*')).toBe(true);
+        expect(suggestion).toHaveProperty("command");
+        expect(suggestion).toHaveProperty("args");
+        expect(suggestion).toHaveProperty("description");
+        expect(suggestion).toHaveProperty("confidence");
+        expect(suggestion).toHaveProperty("priority");
+        expect(suggestion.command.startsWith("*")).toBe(true);
       }
     });
 
-    it('should mark low confidence results as uncertain', async () => {
+    it("should mark low confidence results as uncertain", async () => {
       const context = {
-        agentId: 'unknown',
-        lastCommand: 'random-command',
-        lastCommands: ['random-command'],
+        agentId: "unknown",
+        lastCommand: "random-command",
+        lastCommands: ["random-command"],
         storyPath: null,
         branch: null,
         projectState: {},
@@ -173,13 +173,13 @@ describe('SuggestionEngine', () => {
       }
     });
 
-    it('should use cache for repeated calls with same context', async () => {
+    it("should use cache for repeated calls with same context", async () => {
       const context = {
-        agentId: 'dev',
-        lastCommand: 'develop',
-        lastCommands: ['develop'],
+        agentId: "dev",
+        lastCommand: "develop",
+        lastCommands: ["develop"],
         storyPath: null,
-        branch: 'main',
+        branch: "main",
         projectState: {},
       };
 
@@ -192,22 +192,22 @@ describe('SuggestionEngine', () => {
       expect(result1).toEqual(result2);
     });
 
-    it('should invalidate cache on different context', async () => {
+    it("should invalidate cache on different context", async () => {
       const context1 = {
-        agentId: 'dev',
-        lastCommand: 'develop',
-        lastCommands: ['develop'],
+        agentId: "dev",
+        lastCommand: "develop",
+        lastCommands: ["develop"],
         storyPath: null,
-        branch: 'main',
+        branch: "main",
         projectState: {},
       };
 
       const context2 = {
-        agentId: 'qa',
-        lastCommand: 'review-qa',
-        lastCommands: ['review-qa'],
+        agentId: "qa",
+        lastCommand: "review-qa",
+        lastCommands: ["review-qa"],
         storyPath: null,
-        branch: 'main',
+        branch: "main",
         projectState: {},
       };
 
@@ -219,49 +219,51 @@ describe('SuggestionEngine', () => {
     });
   });
 
-  describe('getFallbackSuggestions()', () => {
-    it('should return fallback for dev agent', () => {
-      const result = engine.getFallbackSuggestions({ agentId: 'dev' });
+  describe("getFallbackSuggestions()", () => {
+    it("should return fallback for dev agent", () => {
+      const result = engine.getFallbackSuggestions({ agentId: "dev" });
 
       expect(result.suggestions.length).toBeGreaterThan(0);
       expect(result.isUncertain).toBe(true);
-      expect(result.suggestions.some((s) => s.command === '*help')).toBe(true);
+      expect(result.suggestions.some((s) => s.command === "*help")).toBe(true);
     });
 
-    it('should return fallback for po agent', () => {
-      const result = engine.getFallbackSuggestions({ agentId: 'po' });
+    it("should return fallback for po agent", () => {
+      const result = engine.getFallbackSuggestions({ agentId: "po" });
 
       expect(result.suggestions.length).toBeGreaterThan(0);
       expect(
-        result.suggestions.some((s) => s.command.includes('backlog') || s.command.includes('story')),
+        result.suggestions.some(
+          (s) => s.command.includes("backlog") || s.command.includes("story"),
+        ),
       ).toBe(true);
     });
 
-    it('should return fallback for qa agent', () => {
-      const result = engine.getFallbackSuggestions({ agentId: 'qa' });
+    it("should return fallback for qa agent", () => {
+      const result = engine.getFallbackSuggestions({ agentId: "qa" });
 
       expect(result.suggestions.length).toBeGreaterThan(0);
       expect(
-        result.suggestions.some((s) => s.command.includes('test') || s.command.includes('qa')),
+        result.suggestions.some((s) => s.command.includes("test") || s.command.includes("qa")),
       ).toBe(true);
     });
 
-    it('should return default fallback for unknown agent', () => {
-      const result = engine.getFallbackSuggestions({ agentId: 'unknown' });
+    it("should return default fallback for unknown agent", () => {
+      const result = engine.getFallbackSuggestions({ agentId: "unknown" });
 
       expect(result.suggestions.length).toBeGreaterThan(0);
-      expect(result.suggestions.some((s) => s.command === '*help')).toBe(true);
+      expect(result.suggestions.some((s) => s.command === "*help")).toBe(true);
     });
   });
 
-  describe('invalidateCache()', () => {
-    it('should clear cached suggestions', async () => {
+  describe("invalidateCache()", () => {
+    it("should clear cached suggestions", async () => {
       const context = {
-        agentId: 'dev',
-        lastCommand: 'develop',
-        lastCommands: ['develop'],
+        agentId: "dev",
+        lastCommand: "develop",
+        lastCommands: ["develop"],
         storyPath: null,
-        branch: 'main',
+        branch: "main",
         projectState: {},
       };
 
@@ -278,69 +280,69 @@ describe('SuggestionEngine', () => {
     });
   });
 
-  describe('_interpolateArgs()', () => {
-    it('should interpolate story_path variable', () => {
+  describe("_interpolateArgs()", () => {
+    it("should interpolate story_path variable", () => {
       const context = {
-        storyPath: 'docs/stories/test.md',
+        storyPath: "docs/stories/test.md",
       };
 
-      const result = engine._interpolateArgs('${story_path}', context);
-      expect(result).toBe('docs/stories/test.md');
+      const result = engine._interpolateArgs("${story_path}", context);
+      expect(result).toBe("docs/stories/test.md");
     });
 
-    it('should interpolate branch variable', () => {
+    it("should interpolate branch variable", () => {
       const context = {
-        branch: 'feature/test',
+        branch: "feature/test",
       };
 
-      const result = engine._interpolateArgs('${branch}', context);
-      expect(result).toBe('feature/test');
+      const result = engine._interpolateArgs("${branch}", context);
+      expect(result).toBe("feature/test");
     });
 
-    it('should handle missing variables', () => {
+    it("should handle missing variables", () => {
       const context = {};
 
-      const result = engine._interpolateArgs('${story_path}', context);
-      expect(result).toBe('');
+      const result = engine._interpolateArgs("${story_path}", context);
+      expect(result).toBe("");
     });
 
-    it('should handle null template', () => {
+    it("should handle null template", () => {
       const result = engine._interpolateArgs(null, {});
-      expect(result).toBe('');
+      expect(result).toBe("");
     });
   });
 
-  describe('_resolveStoryPath()', () => {
-    it('should return null for non-existent file', () => {
-      const result = engine._resolveStoryPath('/non/existent/file.md');
+  describe("_resolveStoryPath()", () => {
+    it("should return null for non-existent file", () => {
+      const result = engine._resolveStoryPath("/non/existent/file.md");
       expect(result).toBeNull();
     });
 
-    it('should return resolved path for existing file', () => {
-      const testPath = path.join(process.cwd(), 'package.json');
+    it("should return resolved path for existing file", () => {
+      const testPath = path.join(process.cwd(), "package.json");
       const result = engine._resolveStoryPath(testPath);
       expect(result).toBe(testPath);
     });
 
-    it('should handle relative paths', () => {
-      const result = engine._resolveStoryPath('package.json');
-      expect(result).toBe(path.resolve(process.cwd(), 'package.json'));
+    it("should handle relative paths", () => {
+      const result = engine._resolveStoryPath("package.json");
+      expect(result).toBe(path.resolve(process.cwd(), "package.json"));
     });
 
-    it('should return null for null input', () => {
+    it("should return null for null input", () => {
       const result = engine._resolveStoryPath(null);
       expect(result).toBeNull();
     });
   });
 
-  describe('_generateCacheKey()', () => {
-    it('should generate consistent key for same context', () => {
+  describe("_generateCacheKey()", () => {
+    it("should generate consistent key for same context", () => {
       const context = {
-        agentId: 'dev',
-        lastCommand: 'develop',
-        lastCommands: ['a', 'b', 'c'],
-        storyPath: 'test.md',
-        branch: 'main',
+        agentId: "dev",
+        lastCommand: "develop",
+        lastCommands: ["a", "b", "c"],
+        storyPath: "test.md",
+        branch: "main",
       };
 
       const key1 = engine._generateCacheKey(context);
@@ -349,14 +351,14 @@ describe('SuggestionEngine', () => {
       expect(key1).toBe(key2);
     });
 
-    it('should generate different key for different context', () => {
+    it("should generate different key for different context", () => {
       const context1 = {
-        agentId: 'dev',
-        lastCommand: 'develop',
+        agentId: "dev",
+        lastCommand: "develop",
       };
       const context2 = {
-        agentId: 'qa',
-        lastCommand: 'review',
+        agentId: "qa",
+        lastCommand: "review",
       };
 
       const key1 = engine._generateCacheKey(context1);
@@ -366,18 +368,18 @@ describe('SuggestionEngine', () => {
     });
   });
 
-  describe('constants', () => {
-    it('should export SUGGESTION_CACHE_TTL', () => {
+  describe("constants", () => {
+    it("should export SUGGESTION_CACHE_TTL", () => {
       expect(SUGGESTION_CACHE_TTL).toBe(5 * 60 * 1000); // 5 minutes
     });
 
-    it('should export LOW_CONFIDENCE_THRESHOLD', () => {
+    it("should export LOW_CONFIDENCE_THRESHOLD", () => {
       expect(LOW_CONFIDENCE_THRESHOLD).toBe(0.5);
     });
   });
 });
 
-describe('SuggestionEngine Performance', () => {
+describe("SuggestionEngine Performance", () => {
   let engine;
 
   beforeEach(() => {
@@ -385,13 +387,13 @@ describe('SuggestionEngine Performance', () => {
     engine.invalidateCache();
   });
 
-  it('should complete suggestNext within 100ms', async () => {
+  it("should complete suggestNext within 100ms", async () => {
     const context = {
-      agentId: 'dev',
-      lastCommand: 'develop',
-      lastCommands: ['develop'],
+      agentId: "dev",
+      lastCommand: "develop",
+      lastCommands: ["develop"],
       storyPath: null,
-      branch: 'main',
+      branch: "main",
       projectState: {},
     };
 
@@ -402,7 +404,7 @@ describe('SuggestionEngine Performance', () => {
     expect(duration).toBeLessThan(100);
   });
 
-  it('should complete buildContext within 50ms', async () => {
+  it("should complete buildContext within 50ms", async () => {
     const start = Date.now();
     await engine.buildContext({});
     const duration = Date.now() - start;
@@ -410,13 +412,13 @@ describe('SuggestionEngine Performance', () => {
     expect(duration).toBeLessThan(50);
   });
 
-  it('should be faster on cache hit', async () => {
+  it("should be faster on cache hit", async () => {
     const context = {
-      agentId: 'dev',
-      lastCommand: 'develop',
-      lastCommands: ['develop'],
+      agentId: "dev",
+      lastCommand: "develop",
+      lastCommands: ["develop"],
       storyPath: null,
-      branch: 'main',
+      branch: "main",
       projectState: {},
     };
 

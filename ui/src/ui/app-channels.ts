@@ -5,33 +5,32 @@ import {
   waitWhatsAppLogin,
 } from "./controllers/channels";
 import { loadConfig, saveConfig } from "./controllers/config";
-import type { ZEROApp } from "./app";
+import type { AppViewState } from "./app-view-state";
 
-
-export async function handleWhatsAppStart(host: ZEROApp, force: boolean) {
-  await startWhatsAppLogin(host, force);
-  await loadChannels(host, true);
+export async function handleWhatsAppStart(host: AppViewState, force: boolean) {
+  await startWhatsAppLogin(host as any, force);
+  await loadChannels(host as any, true);
 }
 
-export async function handleWhatsAppWait(host: ZEROApp) {
-  await waitWhatsAppLogin(host);
-  await loadChannels(host, true);
+export async function handleWhatsAppWait(host: AppViewState) {
+  await waitWhatsAppLogin(host as any);
+  await loadChannels(host as any, true);
 }
 
-export async function handleWhatsAppLogout(host: ZEROApp) {
-  await logoutWhatsApp(host);
-  await loadChannels(host, true);
+export async function handleWhatsAppLogout(host: AppViewState) {
+  await logoutWhatsApp(host as any);
+  await loadChannels(host as any, true);
 }
 
-export async function handleChannelConfigSave(host: ZEROApp) {
-  await saveConfig(host);
-  await loadConfig(host);
-  await loadChannels(host, true);
+export async function handleChannelConfigSave(host: AppViewState) {
+  await saveConfig(host as any);
+  await loadConfig(host as any);
+  await loadChannels(host as any, true);
 }
 
-export async function handleChannelConfigReload(host: ZEROApp) {
-  await loadConfig(host);
-  await loadChannels(host, true);
+export async function handleChannelConfigReload(host: AppViewState) {
+  await loadConfig(host as any);
+  await loadChannels(host as any, true);
 }
 
 function parseValidationErrors(details: unknown): Record<string, string> {
@@ -47,5 +46,3 @@ function parseValidationErrors(details: unknown): Record<string, string> {
   }
   return errors;
 }
-
-

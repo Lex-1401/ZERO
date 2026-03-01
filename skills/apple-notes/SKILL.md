@@ -2,7 +2,25 @@
 name: apple-notes
 description: Gerencie Notas da Apple via CLI `memo` no macOS (criar, visualizar, editar, excluir, pesquisar, mover e exportar notas). Use quando o usuário solicitar ao Zero para adicionar uma nota, listar notas, pesquisar notas ou gerenciar pastas de notas.
 homepage: https://github.com/antoniorodr/memo
-metadata: {"zero":{"emoji":"📝","os":["darwin"],"requires":{"bins":["memo"]},"install":[{"id":"brew","kind":"brew","formula":"antoniorodr/memo/memo","bins":["memo"],"label":"Instalar memo via Homebrew"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "📝",
+        "os": ["darwin"],
+        "requires": { "bins": ["memo"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "antoniorodr/memo/memo",
+              "bins": ["memo"],
+              "label": "Instalar memo via Homebrew",
+            },
+          ],
+      },
+  }
 ---
 
 # Apple Notes CLI

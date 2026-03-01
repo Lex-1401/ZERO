@@ -18,44 +18,44 @@ ai-providers/
 ### Basic Usage
 
 ```javascript
-const { getPrimaryProvider, executeWithFallback } = require('./ai-providers');
+const { getPrimaryProvider, executeWithFallback } = require("./ai-providers");
 
 // Get primary provider from config
 const provider = getPrimaryProvider();
-const response = await provider.execute('Write a hello world function');
+const response = await provider.execute("Write a hello world function");
 
 // Execute with automatic fallback
-const response = await executeWithFallback('Explain this code');
+const response = await executeWithFallback("Explain this code");
 ```
 
 ### Task-Based Routing
 
 ```javascript
-const { getProviderForTask } = require('./ai-providers');
+const { getProviderForTask } = require("./ai-providers");
 
 // Get optimal provider for task type
-const provider = getProviderForTask('code_generation'); // Returns Gemini (faster)
-const provider = getProviderForTask('security');        // Returns Claude (deeper reasoning)
+const provider = getProviderForTask("code_generation"); // Returns Gemini (faster)
+const provider = getProviderForTask("security"); // Returns Claude (deeper reasoning)
 ```
 
 ### Direct Provider Access
 
 ```javascript
-const { ClaudeProvider, GeminiProvider } = require('./ai-providers');
+const { ClaudeProvider, GeminiProvider } = require("./ai-providers");
 
 // Claude
-const claude = new ClaudeProvider({ model: 'claude-3-5-sonnet' });
-const response = await claude.execute('Explain this function');
+const claude = new ClaudeProvider({ model: "claude-3-5-sonnet" });
+const response = await claude.execute("Explain this function");
 
 // Gemini with JSON output
 const gemini = new GeminiProvider({ jsonOutput: true });
-const response = await gemini.executeJson('List 5 best practices');
+const response = await gemini.executeJson("List 5 best practices");
 ```
 
 ### Check Provider Status
 
 ```javascript
-const { getProvidersStatus } = require('./ai-providers');
+const { getProvidersStatus } = require("./ai-providers");
 
 const status = await getProvidersStatus();
 console.log(status);
@@ -88,12 +88,12 @@ gemini:
 
 ## Provider Comparison
 
-| Feature | Claude | Gemini |
-|---------|--------|--------|
-| Best for | Complex reasoning, security | Speed, cost efficiency |
-| JSON output | Manual parsing | Native `--output-format json` |
-| Cost | Higher | ~4x cheaper (Flash) |
-| SWE-bench | ~70% | 78% (Flash) |
+| Feature     | Claude                      | Gemini                        |
+| ----------- | --------------------------- | ----------------------------- |
+| Best for    | Complex reasoning, security | Speed, cost efficiency        |
+| JSON output | Manual parsing              | Native `--output-format json` |
+| Cost        | Higher                      | ~4x cheaper (Flash)           |
+| SWE-bench   | ~70%                        | 78% (Flash)                   |
 
 ## Epic Reference
 

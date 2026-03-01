@@ -4,6 +4,7 @@ read_when:
   - Instalando o ZERO no Windows
   - Procurando o status do aplicativo complementar para Windows
 ---
+
 # Windows (WSL2)
 
 O ZERO no Windows é recomendado **via WSL2** (Ubuntu recomendado). A CLI + Gateway rodam dentro do Linux, o que mantém o runtime consistente e torna o ferramental muito mais compatível (Node/Bun/pnpm, binários Linux, habilidades). Instalações nativas no Windows não foram testadas e são mais problemáticas.

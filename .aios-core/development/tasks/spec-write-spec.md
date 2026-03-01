@@ -16,7 +16,7 @@ Produzir especificação completa e executável a partir dos artefatos das fases
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: spec-write
 
   elicit: false
@@ -115,7 +115,7 @@ no_invention_rule:
     - Creating acceptance criteria not derived from requirements
 
   when_unclear:
-    action: 'Add to Open Questions section instead of assuming'
+    action: "Add to Open Questions section instead of assuming"
 ```
 
 ---
@@ -395,12 +395,12 @@ write_output:
 
 ```yaml
 command:
-  name: '*write-spec'
-  syntax: '*write-spec {story-id}'
+  name: "*write-spec"
+  syntax: "*write-spec {story-id}"
   agent: pm
 
   examples:
-    - '*write-spec STORY-42'
+    - "*write-spec STORY-42"
 ```
 
 ### Pipeline Integration
@@ -432,23 +432,23 @@ pipeline:
 ```yaml
 errors:
   - id: missing-requirements
-    condition: 'requirements.json not found'
-    action: 'Halt - cannot write spec without requirements'
+    condition: "requirements.json not found"
+    action: "Halt - cannot write spec without requirements"
     blocking: true
 
   - id: empty-functional
-    condition: 'No functional requirements'
-    action: 'Halt - spec needs at least one FR'
+    condition: "No functional requirements"
+    action: "Halt - spec needs at least one FR"
     blocking: true
 
   - id: unverified-dependency
-    condition: 'Dependency used but not in research.json'
-    action: 'Add warning, mark in spec with ⚠️'
+    condition: "Dependency used but not in research.json"
+    action: "Add warning, mark in spec with ⚠️"
     blocking: false
 
   - id: no-acceptance-criteria
-    condition: 'FR has no acceptance criteria'
-    action: 'Add to Open Questions, generate suggested criteria'
+    condition: "FR has no acceptance criteria"
+    action: "Add to Open Questions, generate suggested criteria"
     blocking: false
 ```
 
@@ -459,20 +459,20 @@ errors:
 ```yaml
 quality_gates:
   - id: traceability
-    description: 'Every spec statement traces to input'
-    check: 'No orphan statements'
+    description: "Every spec statement traces to input"
+    check: "No orphan statements"
 
   - id: completeness
-    description: 'All requirements addressed'
-    check: 'FR count in spec == FR count in requirements'
+    description: "All requirements addressed"
+    check: "FR count in spec == FR count in requirements"
 
   - id: testability
-    description: 'Every FR has test strategy'
-    check: 'Test section covers all FR-*'
+    description: "Every FR has test strategy"
+    check: "Test section covers all FR-*"
 
   - id: no_invention
-    description: 'No assumed content'
-    check: 'All technical choices from research.json'
+    description: "No assumed content"
+    check: "All technical choices from research.json"
 ```
 
 ---
@@ -518,14 +518,20 @@ _Derived from FR-1 and research.json google-auth-library patterns_
 
 ```yaml
 metadata:
-  story: '3.4'
-  epic: 'Epic 3 - Spec Pipeline'
-  created: '2026-01-28'
-  author: '@architect (Aria)'
-  version: '1.0.0'
+  story: "3.4"
+  epic: "Epic 3 - Spec Pipeline"
+  created: "2026-01-28"
+  author: "@architect (Aria)"
+  version: "1.0.0"
   tags:
     - spec-pipeline
     - specification
     - documentation
     - prompt-engineering
 ```
+
+## Handoff
+
+next_agent: @qa
+next_command: \*critique-spec {story-id}
+condition: Spec written (spec.md created)

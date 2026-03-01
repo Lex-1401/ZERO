@@ -4,6 +4,7 @@ read_when:
   - Você precisa de uma referência de configuração de modelos provedor por provedor
   - Você deseja exemplos de configurações ou comandos de CLI para integração de provedores de modelos
 ---
+
 # Provedores de modelos
 
 Esta página cobre os **provedores de modelos/LLM** (não canais de chat como WhatsApp/Telegram). Para as regras de seleção de modelos, veja [/concepts/models](/concepts/models).
@@ -27,7 +28,7 @@ O ZERO vem com o catálogo pi-ai. Esses provedores **não** exigem configuraçã
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } },
 }
 ```
 
@@ -40,7 +41,7 @@ O ZERO vem com o catálogo pi-ai. Esses provedores **não** exigem configuraçã
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } },
 }
 ```
 
@@ -53,7 +54,7 @@ O ZERO vem com o catálogo pi-ai. Esses provedores **não** exigem configuraçã
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } },
 }
 ```
 
@@ -66,7 +67,7 @@ O ZERO vem com o catálogo pi-ai. Esses provedores **não** exigem configuraçã
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "opencode/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "opencode/claude-opus-4-5" } } },
 }
 ```
 
@@ -136,7 +137,7 @@ A Moonshot usa endpoints compatíveis com a OpenAI, então configure-a como um p
 ```json5
 {
   agents: {
-    defaults: { model: { primary: "moonshot/kimi-k2-0905-preview" } }
+    defaults: { model: { primary: "moonshot/kimi-k2-0905-preview" } },
   },
   models: {
     mode: "merge",
@@ -145,10 +146,10 @@ A Moonshot usa endpoints compatíveis com a OpenAI, então configure-a como um p
         baseUrl: "https://api.moonshot.ai/v1",
         apiKey: "${MOONSHOT_API_KEY}",
         api: "openai-completions",
-        models: [{ id: "kimi-k2-0905-preview", name: "Kimi K2 0905 Preview" }]
-      }
-    }
-  }
+        models: [{ id: "kimi-k2-0905-preview", name: "Kimi K2 0905 Preview" }],
+      },
+    },
+  },
 }
 ```
 
@@ -164,7 +165,7 @@ O Kimi Code usa um endpoint e chave dedicados (separados da Moonshot):
 {
   env: { KIMICODE_API_KEY: "sk-..." },
   agents: {
-    defaults: { model: { primary: "kimi-code/kimi-for-coding" } }
+    defaults: { model: { primary: "kimi-code/kimi-for-coding" } },
   },
   models: {
     mode: "merge",
@@ -173,10 +174,10 @@ O Kimi Code usa um endpoint e chave dedicados (separados da Moonshot):
         baseUrl: "https://api.kimi.com/coding/v1",
         apiKey: "${KIMICODE_API_KEY}",
         api: "openai-completions",
-        models: [{ id: "kimi-for-coding", name: "Kimi For Coding" }]
-      }
-    }
-  }
+        models: [{ id: "kimi-for-coding", name: "Kimi For Coding" }],
+      },
+    },
+  },
 }
 ```
 
@@ -208,7 +209,7 @@ A Synthetic fornece modelos compatíveis com a Anthropic sob o provedor `synthet
 ```json5
 {
   agents: {
-    defaults: { model: { primary: "synthetic/hf:MiniMaxAI/MiniMax-M2.1" } }
+    defaults: { model: { primary: "synthetic/hf:MiniMaxAI/MiniMax-M2.1" } },
   },
   models: {
     mode: "merge",
@@ -217,10 +218,10 @@ A Synthetic fornece modelos compatíveis com a Anthropic sob o provedor `synthet
         baseUrl: "https://api.synthetic.new/anthropic",
         apiKey: "${SYNTHETIC_API_KEY}",
         api: "anthropic-messages",
-        models: [{ id: "hf:MiniMaxAI/MiniMax-M2.1", name: "MiniMax M2.1" }]
-      }
-    }
-  }
+        models: [{ id: "hf:MiniMaxAI/MiniMax-M2.1", name: "MiniMax M2.1" }],
+      },
+    },
+  },
 }
 ```
 
@@ -250,8 +251,8 @@ ollama pull llama3.3
 ```json5
 {
   agents: {
-    defaults: { model: { primary: "ollama/llama3.3" } }
-  }
+    defaults: { model: { primary: "ollama/llama3.3" } },
+  },
 }
 ```
 
@@ -266,8 +267,8 @@ Exemplo (compatível com OpenAI):
   agents: {
     defaults: {
       model: { primary: "lmstudio/minimax-m2.1-gs32" },
-      models: { "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" } }
-    }
+      models: { "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" } },
+    },
   },
   models: {
     providers: {
@@ -283,12 +284,12 @@ Exemplo (compatível com OpenAI):
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 200000,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 

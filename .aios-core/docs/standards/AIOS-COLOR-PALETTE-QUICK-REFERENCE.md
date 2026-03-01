@@ -38,12 +38,12 @@
 
 ```javascript
 // Import the AIOS color system
-const { colors, status, headings } = require('./src/utils/aios-colors');
+const { colors, status, headings } = require("./src/utils/aios-colors");
 
 // Use in your code
-console.log(headings.h1('Welcome to AIOS!'));
-console.log(status.success('Installation complete!'));
-console.log(status.tip('Press Enter to continue'));
+console.log(headings.h1("Welcome to AIOS!"));
+console.log(status.success("Installation complete!"));
+console.log(status.tip("Press Enter to continue"));
 ```
 
 ### CSS/Tailwind
@@ -51,9 +51,9 @@ console.log(status.tip('Press Enter to continue'));
 ```css
 /* Import CSS variables */
 :root {
-  --aios-primary: #8B5CF6;
-  --aios-success: #10B981;
-  --aios-error: #EF4444;
+  --aios-primary: #8b5cf6;
+  --aios-success: #10b981;
+  --aios-error: #ef4444;
 }
 
 /* Use in your styles */
@@ -67,12 +67,14 @@ console.log(status.tip('Press Enter to continue'));
 ## 📋 Common Patterns
 
 ### Welcome Screen
+
 ```javascript
-console.log(headings.h1('🎉 Welcome to AIOS v4.2 Installer!'));
-console.log(colors.info('Let\'s configure your project...\n'));
+console.log(headings.h1("🎉 Welcome to AIOS v4.2 Installer!"));
+console.log(colors.info("Let's configure your project...\n"));
 ```
 
 ### Interactive Question
+
 ```javascript
 {
   type: 'list',
@@ -86,20 +88,22 @@ console.log(colors.info('Let\'s configure your project...\n'));
 ```
 
 ### Status Feedback
+
 ```javascript
-console.log(status.loading('Installing dependencies...'));
+console.log(status.loading("Installing dependencies..."));
 // ... async operation ...
-console.log(status.success('Dependencies installed!'));
+console.log(status.success("Dependencies installed!"));
 ```
 
 ### Error Handling
+
 ```javascript
 try {
   // operation
 } catch (error) {
-  console.log(status.error('Operation failed'));
+  console.log(status.error("Operation failed"));
   console.log(colors.dim(`  Details: ${error.message}`));
-  console.log(status.tip('Try running with --verbose for more info'));
+  console.log(status.tip("Try running with --verbose for more info"));
 }
 ```
 
@@ -150,11 +154,13 @@ Level 4: Tertiary Content
 ## 🧪 Test Your Implementation
 
 Run the visual demo:
+
 ```bash
 node examples/color-palette-demo.js
 ```
 
 Expected output:
+
 - ✅ All brand colors display correctly
 - ✅ Status indicators show with icons
 - ✅ Gradients are smooth
@@ -182,4 +188,3 @@ Expected output:
 **Last Updated:** 2025-01-20
 
 — Uma, desenhando com empatia 💝
-

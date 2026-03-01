@@ -34,10 +34,10 @@ Detalhes: [Plugins](/plugin)
 
 ## Configuração rápida
 
-1) Instale o plugin Mattermost.
-2) Crie uma conta de bot Mattermost e copie o **bot token**.
-3) Copie a **URL base** do Mattermost (ex., `https://chat.exemplo.com`).
-4) Configure o ZERO e inicie o gateway.
+1. Instale o plugin Mattermost.
+2. Crie uma conta de bot Mattermost e copie o **bot token**.
+3. Copie a **URL base** do Mattermost (ex., `https://chat.exemplo.com`).
+4. Configure o ZERO e inicie o gateway.
 
 Configuração mínima:
 
@@ -48,9 +48,9 @@ Configuração mínima:
       enabled: true,
       botToken: "mm-token",
       baseUrl: "https://chat.exemplo.com",
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
@@ -78,9 +78,9 @@ Exemplo de configuração:
   channels: {
     mattermost: {
       chatmode: "onchar",
-      oncharPrefixes: [">", "!"]
-    }
-  }
+      oncharPrefixes: [">", "!"],
+    },
+  },
 }
 ```
 
@@ -123,10 +123,10 @@ O Mattermost suporta múltiplas contas sob `channels.mattermost.accounts`:
     mattermost: {
       accounts: {
         default: { name: "Primaria", botToken: "mm-token", baseUrl: "https://chat.exemplo.com" },
-        alerts: { name: "Alertas", botToken: "mm-token-2", baseUrl: "https://alerts.exemplo.com" }
-      }
-    }
-  }
+        alerts: { name: "Alertas", botToken: "mm-token-2", baseUrl: "https://alerts.exemplo.com" },
+      },
+    },
+  },
 }
 ```
 

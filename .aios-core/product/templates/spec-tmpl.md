@@ -217,7 +217,7 @@
 
 ```yaml
 spec:
-  version: '1.0'
+  version: "1.0"
   generatedBy: spec-pipeline
   generatedAt: { { timestamp } }
 

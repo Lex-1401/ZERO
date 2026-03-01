@@ -98,10 +98,7 @@ export function reconstructWebhookUrl(ctx: WebhookContext): string {
   return `${proto}://${host}${path}`;
 }
 
-function buildTwilioVerificationUrl(
-  ctx: WebhookContext,
-  publicUrl?: string,
-): string {
+function buildTwilioVerificationUrl(ctx: WebhookContext, publicUrl?: string): string {
   if (!publicUrl) {
     return reconstructWebhookUrl(ctx);
   }
@@ -179,12 +176,7 @@ export function verifyTwilioWebhook(
   const params = new URLSearchParams(ctx.rawBody);
 
   // Validate signature
-  const isValid = validateTwilioSignature(
-    authToken,
-    signature,
-    verificationUrl,
-    params,
-  );
+  const isValid = validateTwilioSignature(authToken, signature, verificationUrl, params);
 
   if (isValid) {
     return { ok: true, verificationUrl };
@@ -192,8 +184,7 @@ export function verifyTwilioWebhook(
 
   // Check if this is ngrok free tier - the URL might have different format
   const isNgrokFreeTier =
-    verificationUrl.includes(".ngrok-free.app") ||
-    verificationUrl.includes(".ngrok.io");
+    verificationUrl.includes(".ngrok-free.app") || verificationUrl.includes(".ngrok.io");
 
   if (isNgrokFreeTier && options?.allowNgrokFreeTier) {
     console.warn(
@@ -342,10 +333,7 @@ function validatePlivoV3Signature(params: {
   });
 
   const hmacBase = `${baseUrl}.${params.nonce}`;
-  const digest = crypto
-    .createHmac("sha256", params.authToken)
-    .update(hmacBase)
-    .digest("base64");
+  const digest = crypto.createHmac("sha256", params.authToken).update(hmacBase).digest("base64");
   const expected = normalizeSignatureBase64(digest);
 
   // Header can contain multiple signatures separated by commas.
@@ -402,8 +390,7 @@ export function verifyPlivoWebhook(
   }
 
   if (signatureV3 && nonceV3) {
-    const method =
-      ctx.method === "GET" || ctx.method === "POST" ? ctx.method : null;
+    const method = ctx.method === "GET" || ctx.method === "POST" ? ctx.method : null;
 
     if (!method) {
       return {

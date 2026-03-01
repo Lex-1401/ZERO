@@ -14,8 +14,8 @@ com sites pesados em JS ou páginas que bloqueiam buscas HTTP simples.
 
 ## Obtenha uma chave de API
 
-1) Crie uma conta no Firecrawl e gere uma chave de API.
-2) Armazene-a na configuração ou defina `FIRECRAWL_API_KEY` no ambiente do gateway.
+1. Crie uma conta no Firecrawl e gere uma chave de API.
+2. Armazene-a na configuração ou defina `FIRECRAWL_API_KEY` no ambiente do gateway.
 
 ## Configurar Firecrawl
 
@@ -29,15 +29,16 @@ com sites pesados em JS ou páginas que bloqueiam buscas HTTP simples.
           baseUrl: "https://api.firecrawl.dev",
           onlyMainContent: true,
           maxAgeMs: 172800000,
-          timeoutSeconds: 60
-        }
-      }
-    }
-  }
+          timeoutSeconds: 60,
+        },
+      },
+    },
+  },
 }
 ```
 
 Notas:
+
 - `firecrawl.enabled` padroniza para true quando uma chave de API está presente.
 - `maxAgeMs` controla o quão antigos os resultados armazenados em cache podem ser (ms). O padrão é 2 dias.
 
@@ -51,8 +52,9 @@ do que o scraping apenas básico.
 ## Como o `web_fetch` usa o Firecrawl
 
 Ordem de extração do `web_fetch`:
-1) Readability (local)
-2) Firecrawl (se configurado)
-3) Limpeza básica de HTML (último recurso)
+
+1. Readability (local)
+2. Firecrawl (se configurado)
+3. Limpeza básica de HTML (último recurso)
 
 Veja [Ferramentas Web](/tools/web) para a configuração completa das ferramentas web.

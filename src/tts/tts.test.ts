@@ -1,5 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
-import { completeSimple } from "@mariozechner/pi-ai";
+import { describe, expect, it, vi } from "vitest";
 import * as tts from "./tts.js";
 import { resolveTtsConfig } from "./tts.config.js";
 
@@ -15,7 +14,7 @@ vi.mock("../agents/pi-embedded-runner/model.js", () => ({
 }));
 
 const { maybeApplyTtsToPayload, getTtsProvider, _test } = tts;
-const { resolveOutputFormat, resolveEdgeOutputFormat } = _test;
+const { resolveOutputFormat } = _test;
 
 describe("tts integration", () => {
   describe("resolveOutputFormat", () => {

@@ -3,6 +3,7 @@ summary: "Quando o ZERO mostra indicadores de digitação e como ajustá-los"
 read_when:
   - Alterando o comportamento ou os padrões dos indicadores de digitação
 ---
+
 # Indicadores de digitação
 
 Indicadores de digitação são enviados ao canal de chat enquanto uma execução do agente está ativa. Use `agents.defaults.typingMode` para controlar **quando** a digitação começa e `typingIntervalSeconds` para controlar a **frequência** com que ela é atualizada.
@@ -34,8 +35,8 @@ Ordem de “quão cedo ele dispara”:
 {
   agent: {
     typingMode: "thinking",
-    typingIntervalSeconds: 6
-  }
+    typingIntervalSeconds: 6,
+  },
 }
 ```
 
@@ -45,8 +46,8 @@ Você pode sobrescrever o modo ou a cadência por sessão:
 {
   session: {
     typingMode: "message",
-    typingIntervalSeconds: 4
-  }
+    typingIntervalSeconds: 4,
+  },
 }
 ```
 

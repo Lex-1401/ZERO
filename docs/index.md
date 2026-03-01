@@ -3,9 +3,8 @@ summary: "Visão geral de alto nível do ZERO, recursos e propósito"
 read_when:
   - Apresentando o ZERO para novatos
 ---
-# ZERO ∅ (Distro Brasileira)
 
-![ZERO](whatsapp-zero.jpg)
+# ZERO ∅ (Distro Brasileira)
 
 O **ZERO** é o primeiro Sistema Operacional Pessoal Agêntico focado em soberania local e interatividade multicanal de alto desempenho. Imagine uma camada de inteligência transparente que reside em seu hardware local, orquestrando fluxos de trabalho entre dispositivos e plataformas de mensageria com latência ultra-baixa.
 
@@ -63,7 +62,7 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 - 👥 **Suporte a Chat de Grupo** — Baseado em menção por padrão; o dono pode alternar `/activation always|mention`
 - 📎 **Suporte a Mídia** — Envie e receba imagens, áudio, documentos
 - 🗣️ **Voice 2.0 (Zero Voice)** — Real-time Fast Path via **Edge-TTS** + VAD Nativo (Rust) para latência imperceptível.
-- 🎭 **Voice Cloning** — Clonagem de voz *zero-shot* (XTTS-v2) integrada para uma experiência agêntica ultra-personalizada.
+- 🎭 **Voice Cloning** — Clonagem de voz _zero-shot_ (XTTS-v2) integrada para uma experiência agêntica ultra-personalizada.
 - 🎨 **Interface Altair** — Nova UI Premium (estilo nativo) com Glassmorphism.
 - 🚀 **Mission Control** — Painel central de telemetria e Protocolo de Emergência.
 - 🌍 **Globalização & l10n** — Suporte poliglota (Português/Inglês) com **IA Skill Translator** automático.
@@ -75,28 +74,15 @@ A maioria das operações flui através do **Gateway** (`zero gateway`), um proc
 
 ### Galeria da Interface (Live UI) 📸
 
-| Chat & Assistente (Interface Altair) | Hub de Controle (Telemetria) |
-| :--- | :--- |
-| ![Chat UI](assets/screenshots/chat-ui-v4.png) | ![Hub UI](assets/screenshots/hub-ui-v4.png) |
-| *Modo Foco com comandos proativos e sugestões inteligentes.* | *Visão consolidada da saúde do sistema e conexões.* |
-
-| Núcleo (Aparência) | Atualização de Software (Updates) |
-| :--- | :--- |
-| ![Appearance Settings](assets/screenshots/settings-ui-v4.png) | ![Update UI](assets/screenshots/update-ui-v4.png) |
-| *Refinamento premium dos seletores de tema e idioma.* | *Gerenciador de integridade e versões do sistema.* |
-
-| Catálogo de Skills |
-| :--- |
-| ![Skills Catalog](assets/screenshots/skills-ui-v4.png) |
-| *Extensões para expandir os poderes da sua IA.* |
+_As capturas de tela da Interface Altair estão sendo renovadas para o padrão v0.4.0 (Lobo de Turing)._
 
 ---
 
-- 🏗️ **Zero Creator** — *Arquiteto Autônomo*. Cria projetos Full-Stack (Next.js, Supabase, Vercel).
-- 🏗️ **Zero Creator** — *Arquiteto Autônomo*. Cria projetos Full-Stack (Next.js, Supabase, Vercel).
-- 🛡️ **Zero Sentinel** — *Engine Nativa de Resiliência & Segurança*. Auto-correção de erros de terminal (**Self-Healing**), **Speculative Pre-warming** de arquivos e mitigação proativa de injeção de prompt. [Saiba mais](/concepts/sentinel)
+- 🏗️ **Zero Creator** — _Arquiteto Autônomo_. Cria projetos Full-Stack (Next.js, Supabase, Vercel).
+- 🏗️ **Zero Creator** — _Arquiteto Autônomo_. Cria projetos Full-Stack (Next.js, Supabase, Vercel).
+- 🛡️ **Zero Sentinel** — _Engine Nativa de Resiliência & Segurança_. Auto-correção de erros de terminal (**Self-Healing**), **Speculative Pre-warming** de arquivos e mitigação proativa de injeção de prompt. [Saiba mais](/concepts/sentinel)
 - 🚀 **DevOps Suite** — Integrações nativas com Vercel, Netlify, Supabase, Firebase, Railway.
-- 💡 **Nudge Engine** — *IA Proativa*. Sugere ações inteligentes baseadas no contexto (ex: "Sexta-feira à tarde?").
+- 💡 **Nudge Engine** — _IA Proativa_. Sugere ações inteligentes baseadas no contexto (ex: "Sexta-feira à tarde?").
 - 🧠 **Brain V3** — Plataforma com **Alta Estabilidade**. Memória persistente, **Arquitetura ClearCode** e orquestração proativa de contexto.
 - 🦞 **Mascote Zero** — A nova face da sua IA pessoal.
 - 🕸️ **Grafo de Conhecimento** — Malha vetorial persistente e navegável em SQLite.
@@ -171,10 +157,10 @@ Exemplo:
   channels: {
     whatsapp: {
       allowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } }
-    }
+      groups: { "*": { requireMention: true } },
+    },
   },
-  messages: { groupChat: { mentionPatterns: ["@zero"] } }
+  messages: { groupChat: { mentionPatterns: ["@zero"] } },
 }
 ```
 
@@ -182,7 +168,7 @@ Exemplo:
 
 - Comece aqui:
   - [Hubs de Documentação (todas as páginas)](/start/hubs)
-  - [Ajuda](/help) ← *correções comuns + solução de problemas*
+  - [Ajuda](/help) ← _correções comuns + solução de problemas_
   - [Configuração](/gateway/configuration)
   - [Exemplos de Configuração](/gateway/configuration-examples)
   - [Comandos Slash](/tools/slash-commands)
@@ -230,9 +216,17 @@ Exemplo:
 
 **ZERO = Arquitetura de Cripta + Pipeline de Alta Disponibilidade** — Porque a soberania de dados não é opcional, é o alicerce da mente digital.
 
+### 🦊 A Identidade Visual: O Lobo de Turing
+
+O logo do **ZERO** — a fusão da letra **"Z"** com um **Lobo/Raposa Cibernética** — representa a essência da inteligência agêntica:
+
+- **Instinto e Agilidade**: Como um lobo, o sistema possui instintos aguçados para navegar em seu sistema de arquivos e agir com precisão cirúrgica.
+- **Soberania Solitária**: O lobo é o símbolo da independência. O ZERO opera localmente, sem depender de "matilhas" de servidores de terceiros para processar sua mente.
+- **Fusão Homem-Máquina**: A estrutura metálica com circuitos cianos pulsantes simboliza a harmonia entre o design humano e o poder computacional bruto. É a tecnologia que serve à vida, não o contrário.
+
 ---
 
-*"Estamos todos apenas brincando com nossos próprios prompts."* — uma IA, provavelmente chapada de tokens
+_"Estamos todos apenas brincando com nossos próprios prompts."_ — uma IA, provavelmente chapada de tokens
 
 ## Créditos
 
@@ -244,4 +238,4 @@ MIT — Livre para expansão no vácuo digital ∅
 
 ---
 
-*"O vazio não é a ausência de algo, mas a presença de tudo o que ainda não foi manifestado."* ∅
+_"O vazio não é a ausência de algo, mas a presença de tudo o que ainda não foi manifestado."_ ∅

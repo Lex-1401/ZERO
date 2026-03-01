@@ -12,12 +12,12 @@
  * @location .aios-core/infrastructure/scripts/llm-routing/
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
 
-const isWindows = os.platform() === 'win32';
-const LLM_ROUTING_VERSION = '1.1.0'; // Added usage tracking support
+const isWindows = os.platform() === "win32";
+const LLM_ROUTING_VERSION = "1.1.0"; // Added usage tracking support
 
 /**
  * Get the installation directory for commands
@@ -28,7 +28,7 @@ function getInstallDir() {
     // Try npm global directory first (usually in PATH)
     const appData = process.env.APPDATA;
     if (appData) {
-      const npmGlobal = path.join(appData, 'npm');
+      const npmGlobal = path.join(appData, "npm");
       // Create npm directory if it doesn't exist
       if (!fs.existsSync(npmGlobal)) {
         fs.mkdirSync(npmGlobal, { recursive: true });
@@ -39,8 +39,8 @@ function getInstallDir() {
     return os.homedir();
   } else {
     // macOS/Linux: /usr/local/bin or ~/bin
-    const localBin = '/usr/local/bin';
-    const homeBin = path.join(os.homedir(), 'bin');
+    const localBin = "/usr/local/bin";
+    const homeBin = path.join(os.homedir(), "bin");
 
     // Check if /usr/local/bin is writable
     try {
@@ -69,10 +69,10 @@ function getInstallDir() {
 function installLLMRouting(options = {}) {
   const {
     projectRoot = process.cwd(),
-    templatesDir = path.join(__dirname, 'templates'),
+    templatesDir = path.join(__dirname, "templates"),
     enableTracking = true,
     onProgress = console.log,
-    onError = console.error
+    onError = console.error,
   } = options;
 
   const result = {
@@ -80,7 +80,7 @@ function installLLMRouting(options = {}) {
     installDir: null,
     filesInstalled: [],
     envCreated: false,
-    errors: []
+    errors: [],
   };
 
   // Check templates exist
@@ -97,15 +97,15 @@ function installLLMRouting(options = {}) {
 
   // Determine which scripts to install
   // Use tracked version of claude-free if tracking is enabled
-  const claudeFreeScript = enableTracking ? 'claude-free-tracked' : 'claude-free';
+  const claudeFreeScript = enableTracking ? "claude-free-tracked" : "claude-free";
 
   const scripts = isWindows
-    ? [`${claudeFreeScript}.cmd`, 'claude-max.cmd', 'deepseek-usage.cmd', 'deepseek-proxy.cmd']
-    : [`${claudeFreeScript}.sh`, 'claude-max.sh', 'deepseek-usage.sh', 'deepseek-proxy.sh'];
+    ? [`${claudeFreeScript}.cmd`, "claude-max.cmd", "deepseek-usage.cmd", "deepseek-proxy.cmd"]
+    : [`${claudeFreeScript}.sh`, "claude-max.sh", "deepseek-usage.sh", "deepseek-proxy.sh"];
 
   const targetNames = isWindows
-    ? ['claude-free.cmd', 'claude-max.cmd', 'deepseek-usage.cmd', 'deepseek-proxy.cmd']
-    : ['claude-free', 'claude-max', 'deepseek-usage', 'deepseek-proxy'];
+    ? ["claude-free.cmd", "claude-max.cmd", "deepseek-usage.cmd", "deepseek-proxy.cmd"]
+    : ["claude-free", "claude-max", "deepseek-usage", "deepseek-proxy"];
 
   // Install each script
   scripts.forEach((script, index) => {
@@ -134,15 +134,15 @@ function installLLMRouting(options = {}) {
       result.errors.push(`Failed to install ${targetNames[index]}: ${error.message}`);
       onError(`❌ Failed to install ${targetNames[index]}: ${error.message}`);
 
-      if (!isWindows && error.code === 'EACCES') {
+      if (!isWindows && error.code === "EACCES") {
         onProgress(`   Try: sudo node ${process.argv[1]}`);
       }
     }
   });
 
   // Handle .env file
-  const envExample = path.join(projectRoot, '.env.example');
-  const envFile = path.join(projectRoot, '.env');
+  const envExample = path.join(projectRoot, ".env.example");
+  const envFile = path.join(projectRoot, ".env");
 
   if (fs.existsSync(envExample) && !fs.existsSync(envFile)) {
     try {
@@ -174,20 +174,20 @@ function installLLMRouting(options = {}) {
  * @param {boolean} trackingEnabled - Whether tracking is enabled
  */
 function updateClaudeConfig(trackingEnabled = true) {
-  const claudeConfigPath = path.join(os.homedir(), '.claude.json');
+  const claudeConfigPath = path.join(os.homedir(), ".claude.json");
 
   try {
     let config = {};
 
     if (fs.existsSync(claudeConfigPath)) {
-      config = JSON.parse(fs.readFileSync(claudeConfigPath, 'utf8'));
+      config = JSON.parse(fs.readFileSync(claudeConfigPath, "utf8"));
     }
 
     config.aiosLLMRouting = {
       version: LLM_ROUTING_VERSION,
       installedAt: new Date().toISOString(),
-      commands: ['claude-max', 'claude-free', 'deepseek-usage', 'deepseek-proxy'],
-      trackingEnabled
+      commands: ["claude-max", "claude-free", "deepseek-usage", "deepseek-proxy"],
+      trackingEnabled,
     };
 
     fs.writeFileSync(claudeConfigPath, JSON.stringify(config, null, 2));
@@ -204,11 +204,15 @@ function isLLMRoutingInstalled() {
   const installDir = getInstallDir();
 
   if (isWindows) {
-    return fs.existsSync(path.join(installDir, 'claude-max.cmd')) &&
-           fs.existsSync(path.join(installDir, 'claude-free.cmd'));
+    return (
+      fs.existsSync(path.join(installDir, "claude-max.cmd")) &&
+      fs.existsSync(path.join(installDir, "claude-free.cmd"))
+    );
   } else {
-    return fs.existsSync(path.join(installDir, 'claude-max')) &&
-           fs.existsSync(path.join(installDir, 'claude-free'));
+    return (
+      fs.existsSync(path.join(installDir, "claude-max")) &&
+      fs.existsSync(path.join(installDir, "claude-free"))
+    );
   }
 }
 
@@ -221,37 +225,37 @@ function getInstallationSummary(result) {
   const summary = [];
 
   if (result.success) {
-    summary.push('');
-    summary.push('📋 LLM Routing Installation Complete!');
-    summary.push('═'.repeat(60));
-    summary.push('');
-    summary.push('Commands installed:');
-    summary.push('  • claude-max      → Uses your Claude Max subscription');
-    summary.push('  • claude-free     → Uses DeepSeek (~$0.14/M tokens) with tracking');
-    summary.push('  • deepseek-usage  → View usage statistics by alias');
-    summary.push('  • deepseek-proxy  → Manage the usage tracking proxy');
-    summary.push('');
+    summary.push("");
+    summary.push("📋 LLM Routing Installation Complete!");
+    summary.push("═".repeat(60));
+    summary.push("");
+    summary.push("Commands installed:");
+    summary.push("  • claude-max      → Uses your Claude Max subscription");
+    summary.push("  • claude-free     → Uses DeepSeek (~$0.14/M tokens) with tracking");
+    summary.push("  • deepseek-usage  → View usage statistics by alias");
+    summary.push("  • deepseek-proxy  → Manage the usage tracking proxy");
+    summary.push("");
 
     if (result.envCreated) {
-      summary.push('Next steps:');
-      summary.push('  1. Edit .env and add your DEEPSEEK_API_KEY');
-      summary.push('     Get key at: https://platform.deepseek.com/api_keys');
-      summary.push('');
+      summary.push("Next steps:");
+      summary.push("  1. Edit .env and add your DEEPSEEK_API_KEY");
+      summary.push("     Get key at: https://platform.deepseek.com/api_keys");
+      summary.push("");
     }
 
-    summary.push('Usage:');
-    summary.push('  claude-max          # Premium Claude experience');
-    summary.push('  claude-free         # Cost-effective development (tracked)');
-    summary.push('  deepseek-usage      # View all usage stats');
-    summary.push('  deepseek-usage <alias>  # Stats for specific alias');
-    summary.push('');
-    summary.push('Usage data saved to: ~/.aios/usage-tracking/deepseek-usage.json');
-    summary.push('');
+    summary.push("Usage:");
+    summary.push("  claude-max          # Premium Claude experience");
+    summary.push("  claude-free         # Cost-effective development (tracked)");
+    summary.push("  deepseek-usage      # View all usage stats");
+    summary.push("  deepseek-usage <alias>  # Stats for specific alias");
+    summary.push("");
+    summary.push("Usage data saved to: ~/.aios/usage-tracking/deepseek-usage.json");
+    summary.push("");
   } else {
-    summary.push('');
-    summary.push('❌ LLM Routing installation failed:');
-    result.errors.forEach(err => summary.push(`   • ${err}`));
-    summary.push('');
+    summary.push("");
+    summary.push("❌ LLM Routing installation failed:");
+    result.errors.forEach((err) => summary.push(`   • ${err}`));
+    summary.push("");
   }
 
   return summary;
@@ -263,18 +267,18 @@ module.exports = {
   isLLMRoutingInstalled,
   getInstallDir,
   getInstallationSummary,
-  LLM_ROUTING_VERSION
+  LLM_ROUTING_VERSION,
 };
 
 // Run if executed directly
 if (require.main === module) {
-  console.log('\n🚀 AIOS LLM Routing Installer\n');
+  console.log("\n🚀 AIOS LLM Routing Installer\n");
 
   const result = installLLMRouting({
     projectRoot: process.cwd(),
-    templatesDir: path.join(__dirname, 'templates')
+    templatesDir: path.join(__dirname, "templates"),
   });
 
   const summary = getInstallationSummary(result);
-  summary.forEach(line => console.log(line));
+  summary.forEach((line) => console.log(line));
 }

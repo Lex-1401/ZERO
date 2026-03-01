@@ -28,8 +28,7 @@ export async function loadRoleDefinition(
       // If we want YAML support we need a yaml parser dependency or stick to JSON.
       // Given the project uses JSON5 elsewhere, let's stick to JSON5 for now.
       if (ext.includes("yaml") || ext.includes("yml")) {
-        // TODO: Add YAML parser if needed. For now warn or skip.
-        log.warn(`YAML role parsing not yet implemented for ${filePath}`);
+        log.warn(`O parse de roles em formato YAML não é suportado nativamente. Ignorando ${filePath}`);
         continue;
       }
 
@@ -94,13 +93,13 @@ export async function syncRoleCronJobs(
     const payload: CronPayload =
       roleJob.action === "message"
         ? {
-            kind: "agentTurn",
-            message: roleJob.message || "Execute scheduled task",
-          }
+          kind: "agentTurn",
+          message: roleJob.message || "Execute scheduled task",
+        }
         : {
-            kind: "agentTurn",
-            message: `Execute tool ${roleJob.tool} with params: ${JSON.stringify(roleJob.params ?? {})}`,
-          };
+          kind: "agentTurn",
+          message: `Execute tool ${roleJob.tool} with params: ${JSON.stringify(roleJob.params ?? {})}`,
+        };
 
     const newJob: CronJob = {
       id: crypto.randomUUID(),

@@ -40,12 +40,12 @@ Diferente de sistemas que esquecem após a sessão fechar, o ZERO utiliza um ín
 
 ## 🆚 ZERO vs. OpenClaw
 
-| Capacidade | OpenClaw | ∅ ZERO |
-| :--- | :--- | :--- |
-| **Aprendizado** | Baseado apenas em histórico de chat. | Contextual, Proativo e Sistêmico. |
-| **Correção de Erros** | Requer intervenção manual do dev. | **Self-Healing** automático via Sentinel. |
-| **Evolução de Código** | Estático entre versões. | **Dinâmico**: O sistema se reescreve localmente. |
-| **Segurança** | Auditada por terceiros (Man in the middle). | **Soberana**: Sentinel audita segredos em Rust. |
+| Capacidade             | OpenClaw                                    | ∅ ZERO                                           |
+| :--------------------- | :------------------------------------------ | :----------------------------------------------- |
+| **Aprendizado**        | Baseado apenas em histórico de chat.        | Contextual, Proativo e Sistêmico.                |
+| **Correção de Erros**  | Requer intervenção manual do dev.           | **Self-Healing** automático via Sentinel.        |
+| **Evolução de Código** | Estático entre versões.                     | **Dinâmico**: O sistema se reescreve localmente. |
+| **Segurança**          | Auditada por terceiros (Man in the middle). | **Soberana**: Sentinel audita segredos em Rust.  |
 
 ---
 
@@ -56,4 +56,5 @@ Diferente de sistemas que esquecem após a sessão fechar, o ZERO utiliza um ín
 A auto-evolução do ZERO é governada por **Protocolos de Segurança Multinível (Levels 1-5)**. O sistema nunca expande suas capacidades além do que foi autorizado pelo usuário, garantindo que a autonomia nunca comprometa a soberania humana.
 
 ---
-*ZERO: Evoluindo silenciosamente para que você não precise se preocupar com a infraestrutura.*
+
+_ZERO: Evoluindo silenciosamente para que você não precise se preocupar com a infraestrutura._

@@ -21,13 +21,13 @@ Message context lines include `slack message id` and `channel` fields you can re
 
 ### Action groups
 
-| Action group | Default | Notes |
-| --- | --- | --- |
-| reactions | enabled | React + list reactions |
-| messages | enabled | Read/send/edit/delete |
-| pins | enabled | Pin/unpin/list |
-| memberInfo | enabled | Member info |
-| emojiList | enabled | Custom emoji list |
+| Action group | Default | Notes                  |
+| ------------ | ------- | ---------------------- |
+| reactions    | enabled | React + list reactions |
+| messages     | enabled | Read/send/edit/delete  |
+| pins         | enabled | Pin/unpin/list         |
+| memberInfo   | enabled | Member info            |
+| emojiList    | enabled | Custom emoji list      |
 
 ### React to a message
 

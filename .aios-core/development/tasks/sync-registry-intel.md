@@ -1,6 +1,7 @@
 # Task: Sync Registry Intel
 
 ## Metadata
+
 - **Task ID:** sync-registry-intel
 - **Agent:** @aios-master
 - **Story:** NOG-2
@@ -36,7 +37,7 @@ Default: Incremental sync (only entities whose source file mtime > lastSynced)
 ### Step 2: Execute Sync
 
 ```javascript
-const { RegistrySyncer } = require('.aios-core/core/code-intel/registry-syncer');
+const { RegistrySyncer } = require(".aios-core/core/code-intel/registry-syncer");
 
 const syncer = new RegistrySyncer();
 const stats = await syncer.sync({ full: hasFullFlag });
@@ -45,6 +46,7 @@ const stats = await syncer.sync({ full: hasFullFlag });
 ### Step 3: Report Results
 
 Display sync statistics:
+
 - Total entities in registry
 - Entities processed (enriched)
 - Entities skipped (unchanged)
@@ -53,6 +55,7 @@ Display sync statistics:
 ### Step 4: Handle Fallback
 
 If no code intelligence provider is available:
+
 - Display: "No code intelligence provider available, skipping enrichment"
 - Exit gracefully with zero modifications
 

@@ -118,13 +118,13 @@ Catch syntax errors, formatting issues, and simple bugs immediately during devel
 
 ### Checks
 
-| Check | Tool | Config File | Blocking |
-|-------|------|-------------|----------|
-| Linting | ESLint | `.eslintrc.json` | Yes |
-| Formatting | Prettier | `.prettierrc` | Yes |
-| Type Checking | TypeScript | `tsconfig.json` | Yes |
-| Unit Tests | Jest | `jest.config.js` | Yes |
-| Commit Message | commitlint | `commitlint.config.js` | Yes |
+| Check          | Tool       | Config File            | Blocking |
+| -------------- | ---------- | ---------------------- | -------- |
+| Linting        | ESLint     | `.eslintrc.json`       | Yes      |
+| Formatting     | Prettier   | `.prettierrc`          | Yes      |
+| Type Checking  | TypeScript | `tsconfig.json`        | Yes      |
+| Unit Tests     | Jest       | `jest.config.js`       | Yes      |
+| Commit Message | commitlint | `commitlint.config.js` | Yes      |
 
 ### Configuration
 
@@ -148,16 +148,9 @@ npm test -- --onlyChanged --passWithNoTests
 
 ```json
 {
-  "*.{js,jsx,ts,tsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ],
-  "*.{json,md,yaml,yml}": [
-    "prettier --write"
-  ],
-  "*.md": [
-    "markdownlint --fix"
-  ]
+  "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,md,yaml,yml}": ["prettier --write"],
+  "*.md": ["markdownlint --fix"]
 }
 ```
 
@@ -193,17 +186,17 @@ Run comprehensive automated checks on every PR, including AI-powered code review
 
 ### Checks
 
-| Check | Tool | Threshold | Blocking |
-|-------|------|-----------|----------|
-| AI Code Review | CodeRabbit | N/A (suggestions) | No* |
-| Integration Tests | Jest | 100% pass | Yes |
-| Coverage | Jest | 80% minimum | Yes |
-| Security Audit | npm audit | No high/critical | Yes |
-| Lint | ESLint | 0 errors | Yes |
-| Type Check | TypeScript | 0 errors | Yes |
-| Build | npm/webpack | Success | Yes |
+| Check             | Tool        | Threshold         | Blocking |
+| ----------------- | ----------- | ----------------- | -------- |
+| AI Code Review    | CodeRabbit  | N/A (suggestions) | No\*     |
+| Integration Tests | Jest        | 100% pass         | Yes      |
+| Coverage          | Jest        | 80% minimum       | Yes      |
+| Security Audit    | npm audit   | No high/critical  | Yes      |
+| Lint              | ESLint      | 0 errors          | Yes      |
+| Type Check        | TypeScript  | 0 errors          | Yes      |
+| Build             | npm/webpack | Success           | Yes      |
 
-*CodeRabbit suggestions are non-blocking but tracked.
+\*CodeRabbit suggestions are non-blocking but tracked.
 
 ### Configuration
 
@@ -236,8 +229,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -313,13 +306,13 @@ Strategic review by humans focusing on architecture, business logic, and edge ca
 
 ### Review Focus
 
-| Area | Reviewer | What to Check |
-|------|----------|---------------|
-| Architecture | @architect, Tech Lead | Alignment with patterns, scalability |
-| Business Logic | PO, Domain Expert | Correctness, edge cases |
-| Security | Security Champion | Best practices, vulnerabilities |
-| Documentation | Tech Writer | Clarity, completeness |
-| UX Impact | UX Expert | User-facing changes |
+| Area           | Reviewer              | What to Check                        |
+| -------------- | --------------------- | ------------------------------------ |
+| Architecture   | @architect, Tech Lead | Alignment with patterns, scalability |
+| Business Logic | PO, Domain Expert     | Correctness, edge cases              |
+| Security       | Security Champion     | Best practices, vulnerabilities      |
+| Documentation  | Tech Writer           | Clarity, completeness                |
+| UX Impact      | UX Expert             | User-facing changes                  |
 
 ### CODEOWNERS Configuration
 
@@ -359,31 +352,37 @@ tsconfig.json @senior-devs
 ## Human Review Checklist
 
 ### Architecture
+
 - [ ] Changes align with module boundaries
 - [ ] Dependencies flow correctly (no circular)
 - [ ] No breaking changes without migration path
 
 ### Business Logic
+
 - [ ] Requirements correctly implemented
 - [ ] Edge cases handled
 - [ ] Error scenarios covered
 
 ### Security
+
 - [ ] No hardcoded secrets
 - [ ] Input validation present
 - [ ] Authentication/authorization correct
 
 ### Performance
+
 - [ ] No N+1 queries
 - [ ] Caching considered
 - [ ] Large operations async
 
 ### Documentation
+
 - [ ] README updated if needed
 - [ ] API documentation current
 - [ ] Breaking changes documented
 
 ### Tests
+
 - [ ] Critical paths covered
 - [ ] Edge cases tested
 - [ ] Mocks appropriate
@@ -454,13 +453,13 @@ git commit -m "docs: update readme [skip ci]"
 
 CodeRabbit automatically adjusts review focus based on story type:
 
-| Story Type | Review Focus | Priority Checks |
-|------------|--------------|-----------------|
-| 🔧 Infrastructure | Configuration, CI/CD | Security, backwards compatibility |
-| 💻 Feature | Business logic, UX | Tests, documentation |
-| 📖 Documentation | Clarity, accuracy | Links, terminology |
-| ✅ Validation | Test coverage | Edge cases |
-| 🐛 Bug Fix | Root cause, regression | Tests, side effects |
+| Story Type        | Review Focus           | Priority Checks                   |
+| ----------------- | ---------------------- | --------------------------------- |
+| 🔧 Infrastructure | Configuration, CI/CD   | Security, backwards compatibility |
+| 💻 Feature        | Business logic, UX     | Tests, documentation              |
+| 📖 Documentation  | Clarity, accuracy      | Links, terminology                |
+| ✅ Validation     | Test coverage          | Edge cases                        |
+| 🐛 Bug Fix        | Root cause, regression | Tests, side effects               |
 
 ### Path-Based Instructions
 
@@ -505,21 +504,21 @@ reviews:
 
 ### Before Quality Gates (v2.0)
 
-| Metric | Value |
-|--------|-------|
-| Issues caught automatically | 0% |
-| Average review time | 2-4 hours per PR |
-| Issues escaping to production | ~15% |
-| Developer context switches | High |
+| Metric                        | Value            |
+| ----------------------------- | ---------------- |
+| Issues caught automatically   | 0%               |
+| Average review time           | 2-4 hours per PR |
+| Issues escaping to production | ~15%             |
+| Developer context switches    | High             |
 
 ### After Quality Gates (v4.2)
 
-| Metric | Value | Improvement |
-|--------|-------|-------------|
-| Issues caught automatically | 80% | **∞** |
-| Average review time | 30 min per PR | **75% reduction** |
-| Issues escaping to production | <5% | **67% reduction** |
-| Developer context switches | Low | **Significant** |
+| Metric                        | Value         | Improvement       |
+| ----------------------------- | ------------- | ----------------- |
+| Issues caught automatically   | 80%           | **∞**             |
+| Average review time           | 30 min per PR | **75% reduction** |
+| Issues escaping to production | <5%           | **67% reduction** |
+| Developer context switches    | Low           | **Significant**   |
 
 ### Layer Breakdown
 

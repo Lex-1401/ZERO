@@ -55,12 +55,16 @@ export function renderDiscordCard(params: {
                     </div>
                 </div>
 
-                ${discord?.lastError ? html`
+                ${
+                  discord?.lastError
+                    ? html`
                     <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
                         <div style="color: var(--danger); font-size: 12px; font-weight: 700;">Erro de Protocolo</div>
                         <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${discord.lastError}</div>
                     </div>
-                ` : nothing}
+                `
+                    : nothing
+                }
 
                 ${renderChannelConfigSection({ channelId: "discord", props })}
             </div>
@@ -79,7 +83,9 @@ export function renderDiscordCard(params: {
                             </div>
                         </div>
                         
-                        ${discord?.probe ? html`
+                        ${
+                          discord?.probe
+                            ? html`
                             <div style="width: 100%; height: 1px; background: var(--border-subtle);"></div>
                             <div style="width: 100%;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
@@ -91,9 +97,13 @@ export function renderDiscordCard(params: {
                                     ${discord.probe.error ? html`<br/><span style="color: var(--danger);">${discord.probe.error}</span>` : ""}
                                 </div>
                             </div>
-                        ` : html`
-                            <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%;">Nenhum diagnóstico recente.</div>
-                        `}
+                        `
+                            : html`
+                                <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%">
+                                  Nenhum diagnóstico recente.
+                                </div>
+                              `
+                        }
                     </div>
                 </div>
             </div>

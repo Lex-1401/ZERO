@@ -32,6 +32,13 @@ export interface ACITaskResult {
 export interface ACIStep {
   action: string; // e.g., "click", "type", "scroll"
   targetElementId?: number;
+  targetDescriptor?: {
+    role?: string | null;
+    name?: string | null;
+    text?: string | null;
+    tagName?: string;
+    cssSelector?: string; // If the agent figured it out
+  };
   parameters?: any;
   contextSnapshot?: string; // Summary of what was seen before action
   resultSnapshot?: string; // Summary of what changed after action

@@ -28,12 +28,12 @@ sections:
   - id: introduction
     instruction: |
       This template guides creation of a comprehensive Project Brief that serves as the foundational input for product development.
-      
+
       Start by asking the user which mode they prefer:
-      
+
       1. **Interactive Mode** - Work through each section collaboratively
       2. **YOLO Mode** - Generate complete draft for review and refinement
-      
+
       Before beginning, understand what inputs are available (brainstorming results, market research, competitive analysis, initial ideas) and gather project context.
 
   - id: executive-summary
@@ -218,4 +218,4 @@ sections:
       - id: pm-handoff
         title: PM Handoff
         content: |
-          This Project Brief provides the full context for {{project_name}}. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section as the template indicates, asking for any necessary clarification or suggesting improvements. 
+          This Project Brief provides the full context for {{project_name}}. Please start in 'PRD Generation Mode', review the brief thoroughly to work with the user to create the PRD section by section as the template indicates, asking for any necessary clarification or suggesting improvements.

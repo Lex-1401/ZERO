@@ -13,7 +13,7 @@ Requer decisão humana para continuar, pausar, revisar ou abortar.
 task_id: story-checkpoint
 version: "1.0.0"
 agent: "@po"
-elicit: true  # REQUIRES human interaction
+elicit: true # REQUIRES human interaction
 epic: "11 - Projeto Bob"
 story: "11.3"
 ```
@@ -28,12 +28,12 @@ Pausar o workflow de desenvolvimento entre stories para perguntar ao usuário qu
 
 ## Inputs
 
-| Input | Type | Required | Description |
-|-------|------|----------|-------------|
-| `story_file` | path | Yes | Path to completed story file |
-| `pr_url` | string | No | URL of created PR (if push succeeded) |
-| `implementation` | object | No | Implementation details from development phase |
-| `review_result` | object | No | Quality gate review result |
+| Input            | Type   | Required | Description                                   |
+| ---------------- | ------ | -------- | --------------------------------------------- |
+| `story_file`     | path   | Yes      | Path to completed story file                  |
+| `pr_url`         | string | No       | URL of created PR (if push succeeded)         |
+| `implementation` | object | No       | Implementation details from development phase |
+| `review_result`  | object | No       | Quality gate review result                    |
 
 ---
 
@@ -339,12 +339,12 @@ output:
 
 ## Error Handling
 
-| Error | Handling |
-|-------|----------|
-| No next story found | Display "Epic complete" message |
+| Error                | Handling                                |
+| -------------------- | --------------------------------------- |
+| No next story found  | Display "Epic complete" message         |
 | Next story not ready | Display warning, allow manual selection |
-| State save failed | Retry 3x, then warn user |
-| User timeout | Default to PAUSE after 30 minutes |
+| State save failed    | Retry 3x, then warn user                |
+| User timeout         | Default to PAUSE after 30 minutes       |
 
 ---
 
@@ -357,4 +357,4 @@ output:
 
 ---
 
-*Task created by @dev (Dex) for Story 11.3*
+_Task created by @dev (Dex) for Story 11.3_

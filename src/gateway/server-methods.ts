@@ -27,6 +27,7 @@ import { wizardHandlers } from "./server-methods/wizard.js";
 import { memoryHandlers } from "./server-methods/memory-search.js";
 import { telemetryHandlers } from "./server-methods/telemetry.js";
 import { docsHandlers } from "./server-methods/docs.js";
+import { tasksHandlers } from "./server-methods/tasks.js";
 
 const ADMIN_SCOPE = "operator.admin";
 const READ_SCOPE = "operator.read";
@@ -79,6 +80,7 @@ const READ_METHODS = new Set([
   "system.smartScan",
   "docs.list",
   "docs.get",
+  "tasks.list",
 ]);
 const WRITE_METHODS = new Set([
   "send",
@@ -202,6 +204,7 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
   ...memoryHandlers,
   ...telemetryHandlers,
   ...docsHandlers,
+  ...tasksHandlers,
 };
 
 /**
@@ -223,7 +226,7 @@ export async function handleGatewayRequest(
   opts: GatewayRequestOptions & { extraHandlers?: GatewayRequestHandlers },
 ): Promise<void> {
   const { req, respond, client, isWebchatConnect, context } = opts;
-  // console.log("[debug-ws] handling req", req.id, req.method);
+  //
   const authError = authorizeGatewayMethod(req.method, client);
   if (authError) {
     respond(false, undefined, authError);

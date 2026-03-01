@@ -3,6 +3,7 @@
 Este arquivo define as instrucoes do projeto para o Codex CLI.
 
 <!-- AIOS-MANAGED-START: core -->
+
 ## Core Rules
 
 1. Siga a Constitution em `.aios-core/constitution.md`
@@ -12,6 +13,7 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 <!-- AIOS-MANAGED-END: core -->
 
 <!-- AIOS-MANAGED-START: quality -->
+
 ## Quality Gates
 
 - Rode `npm run lint`
@@ -21,6 +23,7 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 <!-- AIOS-MANAGED-END: quality -->
 
 <!-- AIOS-MANAGED-START: codebase -->
+
 ## Project Map
 
 - Core framework: `.aios-core/`
@@ -31,6 +34,7 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 <!-- AIOS-MANAGED-END: codebase -->
 
 <!-- AIOS-MANAGED-START: commands -->
+
 ## Common Commands
 
 - `npm run sync:ide`
@@ -42,9 +46,11 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 <!-- AIOS-MANAGED-END: commands -->
 
 <!-- AIOS-MANAGED-START: shortcuts -->
+
 ## Agent Shortcuts
 
 Preferencia de ativacao no Codex CLI:
+
 1. Use `/skills` e selecione `aios-<agent-id>` vindo de `.codex/skills` (ex.: `aios-architect`)
 2. Se preferir, use os atalhos abaixo (`@architect`, `/architect`, etc.)
 

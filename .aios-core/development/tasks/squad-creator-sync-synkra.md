@@ -25,7 +25,7 @@ Checklist:
   - "[x] Exibir URL do marketplace"
 ---
 
-# *sync-squad-synkra
+# \*sync-squad-synkra
 
 Sincroniza um squad local para o Synkra API marketplace.
 
@@ -63,6 +63,7 @@ SYNKRA_API_TOKEN=seu-token
 ```
 
 Para obter um token:
+
 1. Acesse https://synkra.dev/settings/api-keys
 2. Crie uma nova API key com permissões de sync
 3. Configure a variável de ambiente
@@ -104,14 +105,14 @@ Next steps:
 
 ## Flags
 
-| Flag | Descrição | Default |
-|------|-----------|---------|
-| `--public` | Torna o squad visível no marketplace público | false |
-| `--private` | Mantém squad privado (apenas workspace) | true |
-| `--dry-run` | Preview sem enviar para API | false |
-| `--verbose` | Output detalhado | false |
-| `--official` | Marca como squad oficial (apenas SynkraAI team) | false |
-| `--force` | Ignora warnings e força sync | false |
+| Flag         | Descrição                                       | Default |
+| ------------ | ----------------------------------------------- | ------- |
+| `--public`   | Torna o squad visível no marketplace público    | false   |
+| `--private`  | Mantém squad privado (apenas workspace)         | true    |
+| `--dry-run`  | Preview sem enviar para API                     | false   |
+| `--verbose`  | Output detalhado                                | false   |
+| `--official` | Marca como squad oficial (apenas SynkraAI team) | false   |
+| `--force`    | Ignora warnings e força sync                    | false   |
 
 ## Workflow
 
@@ -193,45 +194,43 @@ Content-Type: application/json
 
 ```javascript
 // 1. Parse squad path from arguments
-const squadPath = args[0] || '.';
+const squadPath = args[0] || ".";
 const flags = parseFlags(args);
 
 // 2. Find and read squad.yaml
-const squadYamlPath = path.join(squadPath, 'squad.yaml');
+const squadYamlPath = path.join(squadPath, "squad.yaml");
 if (!fs.existsSync(squadYamlPath)) {
   error(`squad.yaml not found in ${squadPath}`);
   return;
 }
 
 // 3. Validate with squad-validator.js
-const { validateSquad } = await import('.aios-core/development/scripts/squad/squad-validator.js');
+const { validateSquad } = await import(".aios-core/development/scripts/squad/squad-validator.js");
 const validation = await validateSquad(squadYamlPath);
 
 if (!validation.valid) {
-  error(`Validation failed: ${validation.errors.join(', ')}`);
+  error(`Validation failed: ${validation.errors.join(", ")}`);
   return;
 }
 
 if (validation.warnings.length > 0 && !flags.force) {
-  warn(`Warnings: ${validation.warnings.join(', ')}`);
+  warn(`Warnings: ${validation.warnings.join(", ")}`);
   // Consider prompting user to continue
 }
 
 // 4. Read and parse squad data
-const squadContent = fs.readFileSync(squadYamlPath, 'utf8');
+const squadContent = fs.readFileSync(squadYamlPath, "utf8");
 const squadData = parseYaml(squadContent);
 
 // 5. Calculate checksum
-const checksum = crypto.createHash('sha256')
-  .update(squadContent)
-  .digest('hex');
+const checksum = crypto.createHash("sha256").update(squadContent).digest("hex");
 
 // 6. Check authentication
 const apiToken = process.env.SYNKRA_API_TOKEN;
-const apiUrl = process.env.SYNKRA_API_URL || 'https://api.synkra.dev/api';
+const apiUrl = process.env.SYNKRA_API_URL || "https://api.synkra.dev/api";
 
 if (!apiToken) {
-  error('SYNKRA_API_TOKEN not set. See task docs for authentication.');
+  error("SYNKRA_API_TOKEN not set. See task docs for authentication.");
   return;
 }
 
@@ -242,27 +241,27 @@ DRY RUN - Would sync:
   Squad: ${squadData.name}
   Version: ${squadData.version}
   Checksum: ${checksum}
-  Visibility: ${flags.public ? 'public' : 'private'}
+  Visibility: ${flags.public ? "public" : "private"}
   `);
   return;
 }
 
 // 8. Call Synkra API
 const response = await fetch(`${apiUrl}/squads/sync`, {
-  method: 'POST',
+  method: "POST",
   headers: {
-    'Authorization': `Bearer ${apiToken}`,
-    'Content-Type': 'application/json'
+    Authorization: `Bearer ${apiToken}`,
+    "Content-Type": "application/json",
   },
   body: JSON.stringify({
     squadData: {
       ...squadData,
       checksum,
-      raw_content: squadContent
+      raw_content: squadContent,
     },
     isPublic: flags.public,
-    isOfficial: flags.official
-  })
+    isOfficial: flags.official,
+  }),
 });
 
 const result = await response.json();
@@ -287,14 +286,14 @@ if (result.success) {
 
 ## Error Handling
 
-| Error | Causa | Solução |
-|-------|-------|---------|
-| `squad.yaml not found` | Caminho inválido | Verifique o path do squad |
-| `Validation failed` | Squad não passa na validação | Execute `*validate-squad` primeiro |
-| `SYNKRA_API_TOKEN not set` | Token não configurado | Configure a variável de ambiente |
-| `401 Unauthorized` | Token inválido ou expirado | Gere novo token em synkra.dev |
-| `403 Forbidden` | Sem permissão para operação | Verifique permissões da API key |
-| `Squad not found or not owned` | Tentando atualizar squad de outro workspace | Verifique ownership |
+| Error                          | Causa                                       | Solução                            |
+| ------------------------------ | ------------------------------------------- | ---------------------------------- |
+| `squad.yaml not found`         | Caminho inválido                            | Verifique o path do squad          |
+| `Validation failed`            | Squad não passa na validação                | Execute `*validate-squad` primeiro |
+| `SYNKRA_API_TOKEN not set`     | Token não configurado                       | Configure a variável de ambiente   |
+| `401 Unauthorized`             | Token inválido ou expirado                  | Gere novo token em synkra.dev      |
+| `403 Forbidden`                | Sem permissão para operação                 | Verifique permissões da API key    |
+| `Squad not found or not owned` | Tentando atualizar squad de outro workspace | Verifique ownership                |
 
 ## Related Tasks
 
@@ -309,7 +308,7 @@ if (result.success) {
 
 ## Changelog
 
-| Version | Date | Description |
-|---------|------|-------------|
-| 1.0.0 | 2025-12-23 | Full implementation (Story SQS-5) |
-| 0.1.0 | 2025-12-18 | Initial placeholder |
+| Version | Date       | Description                       |
+| ------- | ---------- | --------------------------------- |
+| 1.0.0   | 2025-12-23 | Full implementation (Story SQS-5) |
+| 0.1.0   | 2025-12-18 | Initial placeholder               |

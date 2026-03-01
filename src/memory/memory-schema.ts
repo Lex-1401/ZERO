@@ -58,7 +58,9 @@ export function ensureMemoryIndexSchema(params: {
       name TEXT NOT NULL,
       type TEXT NOT NULL,
       description TEXT,
-      updated_at INTEGER NOT NULL
+      updated_at INTEGER NOT NULL,
+      x REAL,
+      y REAL
     );
   `);
   params.db.exec(`
@@ -102,18 +104,15 @@ export function ensureMemoryIndexSchema(params: {
 
   ensureColumn(params.db, "files", "source", "TEXT NOT NULL DEFAULT 'memory'");
   ensureColumn(params.db, "chunks", "source", "TEXT NOT NULL DEFAULT 'memory'");
+  ensureColumn(params.db, "entities", "x", "REAL");
+  ensureColumn(params.db, "entities", "y", "REAL");
   params.db.exec(`CREATE INDEX IF NOT EXISTS idx_chunks_path ON chunks(path);`);
   params.db.exec(`CREATE INDEX IF NOT EXISTS idx_chunks_source ON chunks(source);`);
 
   return { ftsAvailable, ...(ftsError ? { ftsError } : {}) };
 }
 
-function ensureColumn(
-  db: DatabaseSync,
-  table: "files" | "chunks",
-  column: string,
-  definition: string,
-): void {
+function ensureColumn(db: DatabaseSync, table: string, column: string, definition: string): void {
   const rows = db.prepare(`PRAGMA table_info(${table})`).all() as Array<{ name: string }>;
   if (rows.some((row) => row.name === column)) return;
   db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);

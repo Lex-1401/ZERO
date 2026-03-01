@@ -30,12 +30,14 @@
 
 ```css
 /* ✅ CORRECT */
-.content-area { }
+.content-area {
+}
 --content-padding-top: 50px;
 --spacing-md: 200px;
 
 /* ❌ WRONG */
-.contentArea { }
+.contentArea {
+}
 --content_padding_top: 50px;
 ```
 
@@ -104,23 +106,23 @@ FASE 5: Template & Page (Rendering)
 
 ### v2.0 → v3.0 Mapping
 
-| v2.0 | v3.0 | Name | Breaking? |
-|------|------|------|-----------|
-| 0 | 0 | Initialize Orchestrator | ❌ No |
-| 1 | 1 | Load Format Configuration | ❌ No |
-| 2 | 2 | Load Brand Configuration | ❌ No |
-| 3 | 3 | Analyze Brief | ❌ No |
-| 4 | 4 | Select Ad Template | ❌ No |
-| 5 | 5 | Craft Ad Copy | ❌ No |
-| 6 | 6 | Apply Typography | ❌ No |
-| **7** | **7a, 7b, 7c** | **Design CTA, Badge, Validate** | ✅ **YES** |
-| **8** | **8a, 8b, 8c** | **Text Group, Action Group, Content Area** | ✅ **YES** |
-| 9 | 9 | Select Image | ❌ No |
-| 10 | 10 | Detect Faces | ❌ No |
-| 11 | 11 | Determine Optimal Positioning | ❌ No |
-| **12** | **12** | **Load Design Tokens (moved to FASE 0)** | ⚠️ **Phase change** |
-| **13** | **13a, 13b** | **Inject CSS, Render HTML** | ✅ **YES** |
-| 14 | 14 | Export to PNG | ❌ No |
+| v2.0   | v3.0           | Name                                       | Breaking?           |
+| ------ | -------------- | ------------------------------------------ | ------------------- |
+| 0      | 0              | Initialize Orchestrator                    | ❌ No               |
+| 1      | 1              | Load Format Configuration                  | ❌ No               |
+| 2      | 2              | Load Brand Configuration                   | ❌ No               |
+| 3      | 3              | Analyze Brief                              | ❌ No               |
+| 4      | 4              | Select Ad Template                         | ❌ No               |
+| 5      | 5              | Craft Ad Copy                              | ❌ No               |
+| 6      | 6              | Apply Typography                           | ❌ No               |
+| **7**  | **7a, 7b, 7c** | **Design CTA, Badge, Validate**            | ✅ **YES**          |
+| **8**  | **8a, 8b, 8c** | **Text Group, Action Group, Content Area** | ✅ **YES**          |
+| 9      | 9              | Select Image                               | ❌ No               |
+| 10     | 10             | Detect Faces                               | ❌ No               |
+| 11     | 11             | Determine Optimal Positioning              | ❌ No               |
+| **12** | **12**         | **Load Design Tokens (moved to FASE 0)**   | ⚠️ **Phase change** |
+| **13** | **13a, 13b**   | **Inject CSS, Render HTML**                | ✅ **YES**          |
+| 14     | 14             | Export to PNG                              | ❌ No               |
 
 **Total: 14 steps → 19 steps** (more granular, more testable)
 
@@ -128,28 +130,28 @@ FASE 5: Template & Page (Rendering)
 
 ## DECISION D: Executor Mapping per Step
 
-| Step | Task | Executor | Conditional? | Rationale |
-|------|------|----------|--------------|-----------|
-| 0 | Initialize | **Worker** | ❌ No | Deterministic validation |
-| 1 | Load Format | **Worker** | ❌ No | File read + calculation |
-| 2 | Load Brand | **Worker** | ❌ No | File read + validation |
-| 3 | Analyze Brief | **Agente** / **Worker** | ✅ Yes (ready_copy) | AI if full gen, skip if ready_copy |
-| 4 | Select Template | **Agente** / **Worker** | ✅ Yes (template_id) | AI if not specified, skip if provided |
-| 5 | Craft Copy | **Agente** / **Worker** | ✅ Yes (ready_copy) | AI if full gen, passthrough if ready_copy |
-| 6 | Apply Typography | **Agente** | ❌ No | AI decides transformations |
-| 7a | Design CTA | **Agente** / **Worker** | ✅ Yes (ready_copy) | AI if full gen, defaults if ready_copy |
-| 7b | Design Badge | **Agente** / **Worker** | ✅ Yes (urgency) | AI if high urgency, skip if low |
-| 7c | Validate Components | **Clone** | ❌ No | Brad Frost validates Atomic Design |
-| 8a | Compose Text Group | **Agente** | ❌ No | AI groups atoms into molecule |
-| 8b | Compose Action Group | **Agente** | ⚠️ Optional | Only if badge exists |
-| 8c | Compose Content Area | **Agente** | ❌ No | AI composes organism |
-| 9 | Select Image | **Agente** | ❌ No | AI semantic search |
-| 10 | Detect Faces | **Agente** | ❌ No | External AI API (Gemini Vision) |
-| 11 | Determine Positioning | **Agente** / **Worker** | ✅ Yes (faces?) | AI if complex, heuristics if simple |
-| 12 | Load Design Tokens | **Worker** | ❌ No | Parse CSS file |
-| 13a | Inject CSS Variables | **Worker** | ❌ No | Template injection |
-| 13b | Render HTML | **Worker** | ❌ No | Handlebars compilation |
-| 14 | Export PNG | **Worker** | ❌ No | Puppeteer screenshot |
+| Step | Task                  | Executor                | Conditional?         | Rationale                                 |
+| ---- | --------------------- | ----------------------- | -------------------- | ----------------------------------------- |
+| 0    | Initialize            | **Worker**              | ❌ No                | Deterministic validation                  |
+| 1    | Load Format           | **Worker**              | ❌ No                | File read + calculation                   |
+| 2    | Load Brand            | **Worker**              | ❌ No                | File read + validation                    |
+| 3    | Analyze Brief         | **Agente** / **Worker** | ✅ Yes (ready_copy)  | AI if full gen, skip if ready_copy        |
+| 4    | Select Template       | **Agente** / **Worker** | ✅ Yes (template_id) | AI if not specified, skip if provided     |
+| 5    | Craft Copy            | **Agente** / **Worker** | ✅ Yes (ready_copy)  | AI if full gen, passthrough if ready_copy |
+| 6    | Apply Typography      | **Agente**              | ❌ No                | AI decides transformations                |
+| 7a   | Design CTA            | **Agente** / **Worker** | ✅ Yes (ready_copy)  | AI if full gen, defaults if ready_copy    |
+| 7b   | Design Badge          | **Agente** / **Worker** | ✅ Yes (urgency)     | AI if high urgency, skip if low           |
+| 7c   | Validate Components   | **Clone**               | ❌ No                | Brad Frost validates Atomic Design        |
+| 8a   | Compose Text Group    | **Agente**              | ❌ No                | AI groups atoms into molecule             |
+| 8b   | Compose Action Group  | **Agente**              | ⚠️ Optional          | Only if badge exists                      |
+| 8c   | Compose Content Area  | **Agente**              | ❌ No                | AI composes organism                      |
+| 9    | Select Image          | **Agente**              | ❌ No                | AI semantic search                        |
+| 10   | Detect Faces          | **Agente**              | ❌ No                | External AI API (Gemini Vision)           |
+| 11   | Determine Positioning | **Agente** / **Worker** | ✅ Yes (faces?)      | AI if complex, heuristics if simple       |
+| 12   | Load Design Tokens    | **Worker**              | ❌ No                | Parse CSS file                            |
+| 13a  | Inject CSS Variables  | **Worker**              | ❌ No                | Template injection                        |
+| 13b  | Render HTML           | **Worker**              | ❌ No                | Handlebars compilation                    |
+| 14   | Export PNG            | **Worker**              | ❌ No                | Puppeteer screenshot                      |
 
 **Conditional Logic Summary:**
 
@@ -268,8 +270,8 @@ Step 13b: Render HTML Template
 
 ```javascript
 const [formatConfig, brand] = await Promise.all([
-  loadFormatConfig(format_id),  // Step 1
-  loadBrand(brand_id)            // Step 2
+  loadFormatConfig(format_id), // Step 1
+  loadBrand(brand_id), // Step 2
 ]);
 ```
 
@@ -282,8 +284,8 @@ const [formatConfig, brand] = await Promise.all([
 ```javascript
 // After Step 5 (Craft Copy)
 const [selectedTemplate, visualPlan] = await Promise.all([
-  selectTemplate(adAnalysis, brand),  // Step 4
-  selectImage(adAnalysis, adCopy)     // Step 9
+  selectTemplate(adAnalysis, brand), // Step 4
+  selectImage(adAnalysis, adCopy), // Step 9
 ]);
 ```
 
@@ -295,10 +297,10 @@ const [selectedTemplate, visualPlan] = await Promise.all([
 
 ```javascript
 const [ctaComponent, badgeComponent] = await Promise.all([
-  designCTAComponent(typography.cta, brand),    // Step 7a
-  urgencyLevel === 'high' 
-    ? designBadgeComponent(adAnalysis, brand)   // Step 7b
-    : Promise.resolve(null)
+  designCTAComponent(typography.cta, brand), // Step 7a
+  urgencyLevel === "high"
+    ? designBadgeComponent(adAnalysis, brand) // Step 7b
+    : Promise.resolve(null),
 ]);
 ```
 
@@ -313,7 +315,7 @@ const [ctaComponent, badgeComponent] = await Promise.all([
 ```javascript
 // Step 1 completion → immediately load tokens
 const formatConfig = await loadFormatConfig(format_id);
-const designTokens = await loadDesignTokens(formatConfig);  // Cache!
+const designTokens = await loadDesignTokens(formatConfig); // Cache!
 
 // Later, Step 11 runs alone (no parallelization needed)
 ```
@@ -389,25 +391,25 @@ const designTokens = await loadDesignTokens(formatConfig);  // Cache!
 
 ### Error Strategy per Step
 
-| Step | Strategy | Fallback/Retry | Abort Workflow? |
-|------|----------|----------------|-----------------|
-| 0 | abort | Retry 2x | ✅ Yes |
-| 1 | abort | Retry 2x | ✅ Yes |
-| 2 | abort | Retry 2x | ✅ Yes |
-| 3 | fallback | Use ready_copy or defaults | ❌ No |
-| 4 | fallback | Use default template | ❌ No |
-| 5 | fallback | Use ready_copy | ❌ No |
-| 6 | retry | Retry 3x | ❌ No |
-| 7a | fallback | Use brand colors | ❌ No |
-| 7b | skip | N/A (optional) | ❌ No |
-| 7c | abort | Retry 1x | ✅ Yes (validation critical) |
-| 8a-8c | retry | Retry 3x | ❌ No |
-| 9 | fallback | Use placeholder image | ❌ No |
-| 10 | retry | Retry 3x | ❌ No |
-| 11 | fallback | Use default spacing | ❌ No |
-| 12 | abort | Retry 2x | ✅ Yes |
-| 13a-13b | abort | Retry 2x | ✅ Yes |
-| 14 | abort | Retry 2x | ✅ Yes |
+| Step    | Strategy | Fallback/Retry             | Abort Workflow?              |
+| ------- | -------- | -------------------------- | ---------------------------- |
+| 0       | abort    | Retry 2x                   | ✅ Yes                       |
+| 1       | abort    | Retry 2x                   | ✅ Yes                       |
+| 2       | abort    | Retry 2x                   | ✅ Yes                       |
+| 3       | fallback | Use ready_copy or defaults | ❌ No                        |
+| 4       | fallback | Use default template       | ❌ No                        |
+| 5       | fallback | Use ready_copy             | ❌ No                        |
+| 6       | retry    | Retry 3x                   | ❌ No                        |
+| 7a      | fallback | Use brand colors           | ❌ No                        |
+| 7b      | skip     | N/A (optional)             | ❌ No                        |
+| 7c      | abort    | Retry 1x                   | ✅ Yes (validation critical) |
+| 8a-8c   | retry    | Retry 3x                   | ❌ No                        |
+| 9       | fallback | Use placeholder image      | ❌ No                        |
+| 10      | retry    | Retry 3x                   | ❌ No                        |
+| 11      | fallback | Use default spacing        | ❌ No                        |
+| 12      | abort    | Retry 2x                   | ✅ Yes                       |
+| 13a-13b | abort    | Retry 2x                   | ✅ Yes                       |
+| 14      | abort    | Retry 2x                   | ✅ Yes                       |
 
 ---
 
@@ -415,23 +417,23 @@ const designTokens = await loadDesignTokens(formatConfig);  // Cache!
 
 ### Cache Strategy
 
-| Item | Cache Key | TTL | Rationale |
-|------|-----------|-----|-----------|
-| Format Config | `format_${format_id}_${orientation}` | Infinite | Never changes |
-| Brand Config | `brand_${brand_id}` | 1 hour | Might update |
-| Design Tokens | `tokens_${format_id}` | Infinite | Per format, static |
-| Templates | `template_${template_id}_v${version}` | Infinite | Versioned |
+| Item          | Cache Key                             | TTL      | Rationale          |
+| ------------- | ------------------------------------- | -------- | ------------------ |
+| Format Config | `format_${format_id}_${orientation}`  | Infinite | Never changes      |
+| Brand Config  | `brand_${brand_id}`                   | 1 hour   | Might update       |
+| Design Tokens | `tokens_${format_id}`                 | Infinite | Per format, static |
+| Templates     | `template_${template_id}_v${version}` | Infinite | Versioned          |
 
 ### Early Exit Strategy
 
-| Step | Skippable When | Savings |
-|------|----------------|---------|
-| 3 | `ready_copy=true` | ~4s, $0.0025 |
-| 4 | `template_id` provided | ~3s, $0.0003 |
-| 5 | `ready_copy=true` | ~5s, $0.005 |
-| 7a | `ready_copy=true` | ~2s, $0.003 |
-| 7b | `urgencyLevel!='high'` | ~2s, $0.003 |
-| 11 | `faces.length=0` (potential) | ~1s, $0.001 |
+| Step | Skippable When               | Savings      |
+| ---- | ---------------------------- | ------------ |
+| 3    | `ready_copy=true`            | ~4s, $0.0025 |
+| 4    | `template_id` provided       | ~3s, $0.0003 |
+| 5    | `ready_copy=true`            | ~5s, $0.005  |
+| 7a   | `ready_copy=true`            | ~2s, $0.003  |
+| 7b   | `urgencyLevel!='high'`       | ~2s, $0.003  |
+| 11   | `faces.length=0` (potential) | ~1s, $0.001  |
 
 **Ready Copy Mode Total Savings:** ~16s, $0.0145 per ad
 
@@ -502,22 +504,21 @@ atomic_layer: Molecule
 
 ## Summary: v3.0 vs v2.0
 
-| Aspect | v2.0 | v3.0 | Improvement |
-|--------|------|------|-------------|
-| **Steps** | 14 | 19 | +35% granularity |
-| **Atomic Design Layers** | Implicit | Explicit | +100% clarity |
-| **Executor Types Defined** | 0% | 100% | All steps typed |
-| **Checklists Structured** | 0% | 100% | Pre/post/acceptance |
-| **Molecule Layer** | Missing | Added | +Reusability |
-| **Parallelization** | 0 groups | 4 groups | ~4.6s savings |
-| **Error Handling** | Implicit | Explicit | +Robustness |
-| **Performance Tracking** | Missing | Complete | +Observability |
-| **Naming Consistency** | 5/10 | 10/10 | +Clarity |
-| **Testability** | 4/10 | 9/10 | +Isolation |
+| Aspect                     | v2.0     | v3.0     | Improvement         |
+| -------------------------- | -------- | -------- | ------------------- |
+| **Steps**                  | 14       | 19       | +35% granularity    |
+| **Atomic Design Layers**   | Implicit | Explicit | +100% clarity       |
+| **Executor Types Defined** | 0%       | 100%     | All steps typed     |
+| **Checklists Structured**  | 0%       | 100%     | Pre/post/acceptance |
+| **Molecule Layer**         | Missing  | Added    | +Reusability        |
+| **Parallelization**        | 0 groups | 4 groups | ~4.6s savings       |
+| **Error Handling**         | Implicit | Explicit | +Robustness         |
+| **Performance Tracking**   | Missing  | Complete | +Observability      |
+| **Naming Consistency**     | 5/10     | 10/10    | +Clarity            |
+| **Testability**            | 4/10     | 9/10     | +Isolation          |
 
 ---
 
 **END OF V3 ARCHITECTURAL DECISIONS**
 
 **Next:** Generate WORKFLOW-COMPLETE-CONSOLIDATED-V3.md
-

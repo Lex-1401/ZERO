@@ -25,11 +25,12 @@ This template defines the fixed structure for task execution reports. The struct
 **Task:** {task.name}
 **Started:** {timestamp.start}
 **Completed:** {timestamp.end}
-**Duration:** {duration}                    ← LINE 7 (FIXED POSITION)
-**Tokens Used:** {tokens.total} total       ← LINE 8 (FIXED POSITION)
+**Duration:** {duration} ← LINE 7 (FIXED POSITION)
+**Tokens Used:** {tokens.total} total ← LINE 8 (FIXED POSITION)
 ```
 
 **Fixed Elements:**
+
 - Header title: `## 📊 Task Execution Report` (must be exact)
 - Duration must appear on **line 7** (relative to header start)
 - Tokens Used must appear on **line 8** (relative to header start)
@@ -50,10 +51,12 @@ This template defines the fixed structure for task execution reports. The struct
 
 ```markdown
 ### Status
-{status_icon} {PERSONALIZED_MESSAGE}        ← PERSONALITY SLOT
+
+{status_icon} {PERSONALIZED_MESSAGE} ← PERSONALITY SLOT
 ```
 
 **Flexible Elements:**
+
 - Status icon: `✅` (success) or `❌` (failure)
 - Personalized message: Uses agent vocabulary and tone
 - Tone-specific patterns:
@@ -66,10 +69,12 @@ This template defines the fixed structure for task execution reports. The struct
 
 ```markdown
 ### Output
-{task_specific_content}                     ← TASK-SPECIFIC CONTENT
+
+{task_specific_content} ← TASK-SPECIFIC CONTENT
 ```
 
 **Flexible Elements:**
+
 - Content is task-specific
 - Format can vary based on task type
 - No personality injection here (pure task output)
@@ -77,13 +82,15 @@ This template defines the fixed structure for task execution reports. The struct
 ### Metrics Section
 
 ```markdown
-### Metrics                                  ← ALWAYS LAST (FIXED)
+### Metrics ← ALWAYS LAST (FIXED)
+
 - Tests: {tests.passed}/{tests.total}
 - Coverage: {coverage}%
 - Linting: {lint.status}
 ```
 
 **Fixed Elements:**
+
 - Section title: `### Metrics` (must be exact)
 - Must be the last section before signature
 - Format is standardized
@@ -92,10 +99,12 @@ This template defines the fixed structure for task execution reports. The struct
 
 ```markdown
 ---
-{signature_closing}                         ← PERSONALITY SLOT
+
+{signature_closing} ← PERSONALITY SLOT
 ```
 
 **Flexible Elements:**
+
 - Uses `persona_profile.communication.signature_closing`
 - Examples:
   - Builder: "— Dex, sempre construindo 🔨"
@@ -121,10 +130,13 @@ This template defines the fixed structure for task execution reports. The struct
 ---
 
 ### Status
+
 ✅ Tá pronto! Implementado com sucesso.
 
 ### Output
+
 Created components:
+
 - UserProfile.tsx
 - UserAvatar.tsx
 - UserSettings.tsx
@@ -132,11 +144,13 @@ Created components:
 All tests passing, coverage 87%.
 
 ### Metrics
+
 - Tests: 12/12
 - Coverage: 87%
 - Linting: ✅ Clean
 
 ---
+
 — Dex, sempre construindo 🔨
 ```
 
@@ -155,21 +169,26 @@ All tests passing, coverage 87%.
 ---
 
 ### Status
+
 ✅ Validado rigorosamente. Todos os critérios validados.
 
 ### Output
+
 Validation complete:
+
 - Unit tests: 47/47 ✅
 - Integration tests: 12/12 ✅
 - Edge cases: 15/15 ✅
 - Security: No vulnerabilities
 
 ### Metrics
+
 - Tests: 74/74
 - Coverage: 94%
 - Linting: ✅ Clean
 
 ---
+
 — Quinn, guardião da qualidade 🛡️
 ```
 
@@ -188,20 +207,25 @@ Validation complete:
 ---
 
 ### Status
+
 ✅ Validado e harmonizado. Todos os aspectos alinhados.
 
 ### Output
+
 Validation complete:
+
 - Template compliance: ✅ All sections present
 - Acceptance criteria: ✅ 7/7 covered
 - File structure: ✅ All paths verified
 
 ### Metrics
+
 - Tests: 0/0 (validation only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — Pax, equilibrando prioridades 🎯
 ```
 
@@ -220,21 +244,26 @@ Validation complete:
 ---
 
 ### Status
+
 ✅ Criado com cuidado e atenção aos detalhes.
 
 ### Output
+
 Story created:
+
 - Story ID: STORY-6.1.8
 - Epic: Epic-6.1
 - Status: Ready to Start
 - Acceptance criteria: 5 defined
 
 ### Metrics
+
 - Tests: 0/0 (creation only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — River, facilitando o fluxo 🌊
 ```
 
@@ -253,20 +282,25 @@ Story created:
 ---
 
 ### Status
+
 ✅ Projetado rigorosamente. Todos os critérios validados.
 
 ### Output
+
 Architecture design complete:
+
 - 3-layer system designed
 - Pattern validation: ✅ All patterns documented
 - Scalability analysis: ✅ Horizontal scaling supported
 
 ### Metrics
+
 - Tests: 0/0 (design only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — Aria, arquitetando o futuro 🏛️
 ```
 
@@ -285,21 +319,26 @@ Architecture design complete:
 ---
 
 ### Status
+
 ✅ Tá pronto! Planejado com sucesso.
 
 ### Output
+
 PRD created:
+
 - Product: AIOS Framework
 - Version: 2.0
 - Epics: 5 defined
 - Stories: 23 planned
 
 ### Metrics
+
 - Tests: 0/0 (documentation only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — Morgan, planejando o futuro 📋
 ```
 
@@ -318,21 +357,26 @@ PRD created:
 ---
 
 ### Status
+
 ✅ Analisado rigorosamente. Todos os padrões identificados.
 
 ### Output
+
 Analysis complete:
+
 - Files analyzed: 1,247
 - Patterns identified: 15
 - Dependencies mapped: 89
 - Recommendations: 12
 
 ### Metrics
+
 - Tests: 0/0 (analysis only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — Atlas, explorando o código 🔍
 ```
 
@@ -351,21 +395,26 @@ Analysis complete:
 ---
 
 ### Status
+
 ✅ Projetado com cuidado e atenção aos detalhes.
 
 ### Output
+
 User flow designed:
+
 - User journeys: 3 mapped
 - Pain points: 5 identified
 - Solutions: 8 proposed
 - Prototypes: 2 created
 
 ### Metrics
+
 - Tests: 0/0 (design only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — Uma, cuidando da experiência 🎨
 ```
 
@@ -384,20 +433,25 @@ User flow designed:
 ---
 
 ### Status
+
 ✅ Tá pronto! Otimizado com sucesso.
 
 ### Output
+
 Query optimized:
+
 - Execution time: 2.3s → 0.15s (93% improvement)
 - Indexes added: 2
 - Query plan: Optimized
 
 ### Metrics
+
 - Tests: 5/5
 - Coverage: 100%
 - Linting: ✅ Clean
 
 ---
+
 — Dara, otimizando dados 📊
 ```
 
@@ -416,21 +470,26 @@ Query optimized:
 ---
 
 ### Status
+
 ✅ Tá pronto! Implantado com sucesso.
 
 ### Output
+
 Deployment complete:
+
 - Environment: staging
 - Version: 1.2.3
 - Health check: ✅ Passing
 - Rollback ready: ✅ Yes
 
 ### Metrics
+
 - Tests: 0/0 (deployment only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — Gage, automatizando tudo ⚙️
 ```
 
@@ -449,21 +508,26 @@ Deployment complete:
 ---
 
 ### Status
+
 ✅ Coordenado e harmonizado. Todos os aspectos alinhados.
 
 ### Output
+
 Sprint coordinated:
+
 - Stories assigned: 8
 - Dependencies resolved: 3
 - Team alignment: ✅ Complete
 - Blockers cleared: 2
 
 ### Metrics
+
 - Tests: 0/0 (coordination only)
 - Coverage: N/A
 - Linting: ✅ Clean
 
 ---
+
 — Orion, orquestrando o sistema 🌟
 ```
 
@@ -492,4 +556,3 @@ The validator (`validate-output-pattern.js`) enforces:
 
 **Last Updated:** 2025-01-15  
 **Story:** 6.1.6 - Output Formatter Implementation
-

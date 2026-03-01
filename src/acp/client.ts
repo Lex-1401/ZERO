@@ -51,19 +51,16 @@ function printSessionUpdate(notification: SessionNotification): void {
       return;
     }
     case "tool_call": {
-      console.log(`\n[tool] ${update.title} (${update.status})`);
       return;
     }
     case "tool_call_update": {
       if (update.status) {
-        console.log(`[tool update] ${update.toolCallId}: ${update.status}`);
       }
       return;
     }
     case "available_commands_update": {
       const names = update.availableCommands?.map((cmd) => `/${cmd.name}`).join(" ");
-      if (names) console.log(`\n[commands] ${names}`);
-      return;
+      if (names) return;
     }
     default:
       return;
@@ -73,7 +70,7 @@ function printSessionUpdate(notification: SessionNotification): void {
 export async function createAcpClient(opts: AcpClientOptions = {}): Promise<AcpClientHandle> {
   const cwd = opts.cwd ?? process.cwd();
   const verbose = Boolean(opts.verbose);
-  const log = verbose ? (msg: string) => console.error(`[acp-client] ${msg}`) : () => {};
+  const log = verbose ? (msg: string) => console.error(`[acp-client] ${msg}`) : () => { };
 
   ensureZEROCliOnPath({ cwd });
   const serverCommand = opts.serverCommand ?? "zero";
@@ -100,7 +97,6 @@ export async function createAcpClient(opts: AcpClientOptions = {}): Promise<AcpC
         printSessionUpdate(params);
       },
       requestPermission: async (params: RequestPermissionRequest) => {
-        console.log("\n[permission requested]", params.toolCall?.title ?? "tool");
         const options = params.options ?? [];
         const allowOnce = options.find((option) => option.kind === "allow_once");
         const fallback = options[0];
@@ -146,10 +142,6 @@ export async function runAcpClientInteractive(opts: AcpClientOptions = {}): Prom
     output: process.stdout,
   });
 
-  console.log("ZERO ACP client");
-  console.log(`Session: ${sessionId}`);
-  console.log('Type a prompt, or "exit" to quit.\n');
-
   const prompt = () => {
     rl.question("> ", async (input) => {
       const text = input.trim();
@@ -164,11 +156,10 @@ export async function runAcpClientInteractive(opts: AcpClientOptions = {}): Prom
       }
 
       try {
-        const response = await client.prompt({
+        await client.prompt({
           sessionId,
           prompt: [{ type: "text", text }],
         });
-        console.log(`\n[${response.stopReason}]\n`);
       } catch (err) {
         console.error(`\n[error] ${String(err)}\n`);
       }
@@ -180,7 +171,6 @@ export async function runAcpClientInteractive(opts: AcpClientOptions = {}): Prom
   prompt();
 
   agent.on("exit", (code) => {
-    console.log(`\nAgent exited with code ${code ?? 0}`);
     rl.close();
     process.exit(code ?? 0);
   });

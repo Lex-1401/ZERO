@@ -54,7 +54,7 @@ export function loadSettings(): UiSettings {
 
     const parsed = JSON.parse(raw) as Partial<UiSettings>;
 
-    // Ensure we don't carry over the bad port if it managed to get into v2 somehow, 
+    // Ensure we don't carry over the bad port if it managed to get into v2 somehow,
     // or if the user manually set it to 18789.
     const cleanGatewayUrl = (url: string | undefined): string => {
       if (!url || typeof url !== "string") return defaultUrl;
@@ -69,52 +69,35 @@ export function loadSettings(): UiSettings {
           ? parsed.sessionKey.trim()
           : defaults.sessionKey,
       lastActiveSessionKey:
-        typeof parsed.lastActiveSessionKey === "string" &&
-          parsed.lastActiveSessionKey.trim()
+        typeof parsed.lastActiveSessionKey === "string" && parsed.lastActiveSessionKey.trim()
           ? parsed.lastActiveSessionKey.trim()
           : (typeof parsed.sessionKey === "string" && parsed.sessionKey.trim()) ||
-          defaults.lastActiveSessionKey,
+            defaults.lastActiveSessionKey,
       theme:
-        parsed.theme === "light" ||
-          parsed.theme === "dark" ||
-          parsed.theme === "system"
+        parsed.theme === "light" || parsed.theme === "dark" || parsed.theme === "system"
           ? parsed.theme
           : defaults.theme,
       chatFocusMode:
-        typeof parsed.chatFocusMode === "boolean"
-          ? parsed.chatFocusMode
-          : defaults.chatFocusMode,
+        typeof parsed.chatFocusMode === "boolean" ? parsed.chatFocusMode : defaults.chatFocusMode,
       chatShowThinking:
         typeof parsed.chatShowThinking === "boolean"
           ? parsed.chatShowThinking
           : defaults.chatShowThinking,
       splitRatio:
         typeof parsed.splitRatio === "number" &&
-          parsed.splitRatio >= 0.4 &&
-          parsed.splitRatio <= 0.7
+        parsed.splitRatio >= 0.4 &&
+        parsed.splitRatio <= 0.7
           ? parsed.splitRatio
           : defaults.splitRatio,
       navCollapsed:
-        typeof parsed.navCollapsed === "boolean"
-          ? parsed.navCollapsed
-          : defaults.navCollapsed,
+        typeof parsed.navCollapsed === "boolean" ? parsed.navCollapsed : defaults.navCollapsed,
       navGroupsCollapsed:
-        typeof parsed.navGroupsCollapsed === "object" &&
-          parsed.navGroupsCollapsed !== null
+        typeof parsed.navGroupsCollapsed === "object" && parsed.navGroupsCollapsed !== null
           ? parsed.navGroupsCollapsed
           : defaults.navGroupsCollapsed,
-      autopilot:
-        typeof parsed.autopilot === "boolean"
-          ? parsed.autopilot
-          : defaults.autopilot,
-      zenMode:
-        typeof parsed.zenMode === "boolean"
-          ? parsed.zenMode
-          : defaults.zenMode,
-      onboarded:
-        typeof parsed.onboarded === "boolean"
-          ? parsed.onboarded
-          : defaults.onboarded,
+      autopilot: typeof parsed.autopilot === "boolean" ? parsed.autopilot : defaults.autopilot,
+      zenMode: typeof parsed.zenMode === "boolean" ? parsed.zenMode : defaults.zenMode,
+      onboarded: typeof parsed.onboarded === "boolean" ? parsed.onboarded : defaults.onboarded,
     };
   } catch {
     return defaults;

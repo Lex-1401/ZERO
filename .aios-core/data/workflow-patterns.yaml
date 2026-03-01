@@ -17,10 +17,10 @@ workflows:
   story_development:
     description: "Complete story lifecycle from validation to deployment"
     agent_sequence:
-      - po         # Story validation
-      - dev        # Implementation
-      - qa         # Quality assurance
-      - devops     # Deployment
+      - po # Story validation
+      - dev # Implementation
+      - qa # Quality assurance
+      - devops # Deployment
     key_commands:
       - validate-story-draft
       - validate-next-story
@@ -88,9 +88,9 @@ workflows:
   epic_creation:
     description: "Create and organize epics with initial stories"
     agent_sequence:
-      - po         # Epic planning
-      - sm         # Story creation
-      - architect  # Technical review
+      - po # Epic planning
+      - sm # Story creation
+      - architect # Technical review
     key_commands:
       - create-epic
       - brownfield-create-epic
@@ -147,9 +147,9 @@ workflows:
   backlog_management:
     description: "Review, prioritize, and schedule backlog items"
     agent_sequence:
-      - qa         # Backlog review
-      - po         # Prioritization
-      - pm         # Scheduling
+      - qa # Backlog review
+      - po # Prioritization
+      - pm # Scheduling
     key_commands:
       - backlog-add
       - backlog-update
@@ -205,9 +205,9 @@ workflows:
   architecture_review:
     description: "Design review and documentation of architectural decisions"
     agent_sequence:
-      - architect  # Design and review
-      - qa         # Review validation
-      - dev        # Implementation planning
+      - architect # Design and review
+      - qa # Review validation
+      - dev # Implementation planning
     key_commands:
       - analyze-impact
       - analyze-framework
@@ -264,8 +264,8 @@ workflows:
   git_workflow:
     description: "Version control and deployment workflow"
     agent_sequence:
-      - dev        # Code changes
-      - devops     # Git operations
+      - dev # Code changes
+      - devops # Git operations
     key_commands:
       - pre-push-quality-gate
       - github-pr-automation
@@ -319,9 +319,9 @@ workflows:
   database_workflow:
     description: "Database schema design and migration workflow"
     agent_sequence:
-      - data-engineer  # Schema design
-      - dev            # Migration implementation
-      - qa             # Testing
+      - data-engineer # Schema design
+      - dev # Migration implementation
+      - qa # Testing
     key_commands:
       - db-domain-modeling
       - db-schema-audit
@@ -379,8 +379,8 @@ workflows:
   code_quality_workflow:
     description: "Refactoring and code quality improvements"
     agent_sequence:
-      - qa         # Quality assessment
-      - dev        # Refactoring
+      - qa # Quality assessment
+      - dev # Refactoring
     key_commands:
       - improve-code-quality
       - suggest-refactoring
@@ -436,9 +436,9 @@ workflows:
   documentation_workflow:
     description: "Create and synchronize project documentation"
     agent_sequence:
-      - analyst    # Research and analysis
-      - architect  # Documentation creation
-      - po         # Review
+      - analyst # Research and analysis
+      - architect # Documentation creation
+      - po # Review
     key_commands:
       - document-project
       - sync-documentation
@@ -494,9 +494,9 @@ workflows:
   ux_workflow:
     description: "User experience design and validation"
     agent_sequence:
-      - ux-design-expert  # Design
-      - dev               # Implementation
-      - qa                # Validation
+      - ux-design-expert # Design
+      - dev # Implementation
+      - qa # Validation
     key_commands:
       - ux-create-wireframe
       - ux-user-research
@@ -551,9 +551,9 @@ workflows:
   research_workflow:
     description: "Facilitated brainstorming and research sessions"
     agent_sequence:
-      - analyst    # Research
-      - architect  # Analysis
-      - po         # Documentation
+      - analyst # Research
+      - architect # Analysis
+      - po # Documentation
     key_commands:
       - analyst-facilitate-brainstorming
       - advanced-elicitation
@@ -607,11 +607,11 @@ workflows:
   bob_orchestration:
     description: "Bob (PM) orchestrates multi-agent workflows via executor assignment"
     agent_sequence:
-      - pm         # Bob orchestrates
-      - po         # Story validation
-      - dev        # Implementation
-      - qa         # Quality assurance
-      - devops     # Deployment
+      - pm # Bob orchestrates
+      - po # Story validation
+      - dev # Implementation
+      - qa # Quality assurance
+      - devops # Deployment
     key_commands:
       - execute-epic
       - assign-executor
@@ -685,10 +685,10 @@ workflows:
   agent_handoff:
     description: "Handoff between agents during multi-agent story execution"
     agent_sequence:
-      - dev        # Development
-      - qa         # Review
-      - dev        # Fix issues
-      - devops     # Push
+      - dev # Development
+      - qa # Review
+      - dev # Fix issues
+      - devops # Push
     key_commands:
       - develop
       - develop-yolo
@@ -760,8 +760,8 @@ state_integration:
 
   behavior:
     detection_priority:
-      - state_file    # If active state file exists, use it
-      - command_history  # Fall back to pattern-based detection
+      - state_file # If active state file exists, use it
+      - command_history # Fall back to pattern-based detection
     sync:
       - "State files are created by *run-workflow {name} start"
       - "State files are updated by *run-workflow {name} continue/skip/abort"

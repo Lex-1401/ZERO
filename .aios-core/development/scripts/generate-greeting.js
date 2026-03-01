@@ -29,9 +29,9 @@
  * Part of Story ACT-6: Unified Activation Pipeline
  */
 
-'use strict';
+"use strict";
 
-const { ActivationRuntime } = require('./activation-runtime');
+const { ActivationRuntime } = require("./activation-runtime");
 
 /**
  * Generate unified greeting for agent activation.
@@ -58,9 +58,8 @@ async function generateGreeting(agentId) {
     }
 
     return result.greeting;
-
   } catch (error) {
-    console.error('[generate-greeting] Error:', {
+    console.error("[generate-greeting] Error:", {
       agentId,
       error: error.message,
       stack: error.stack,
@@ -87,20 +86,20 @@ if (require.main === module) {
   const agentId = process.argv[2];
 
   if (!agentId) {
-    console.error('Usage: node generate-greeting.js <agent-id>');
-    console.error('\nExamples:');
-    console.error('  node generate-greeting.js qa');
-    console.error('  node generate-greeting.js dev');
+    console.error("Usage: node generate-greeting.js <agent-id>");
+    console.error("\nExamples:");
+    console.error("  node generate-greeting.js qa");
+    console.error("  node generate-greeting.js dev");
     process.exit(1);
   }
 
   generateGreeting(agentId)
-    .then(greeting => {
+    .then((greeting) => {
       console.log(greeting);
       process.exit(0);
     })
-    .catch(error => {
-      console.error('Fatal error:', error.message);
+    .catch((error) => {
+      console.error("Fatal error:", error.message);
       console.log(generateFallbackGreeting(agentId));
       process.exit(1);
     });

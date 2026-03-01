@@ -1,6 +1,7 @@
 ---
 summary: "Perguntas frequentes sobre a instalação, configuração e uso do ZERO"
 ---
+
 # FAQ
 
 Respostas rápidas e solução de problemas aprofundada para configurações do mundo real (desenvolvimento local, VPS, multi-agente, chaves OAuth/API, failover de modelo). Para diagnósticos de tempo de execução, consulte [Solução de Problemas](/gateway/troubleshooting). Para a referência completa de configuração, consulte [Configuração](/gateway/configuration).
@@ -195,7 +196,7 @@ Respostas rápidas e solução de problemas aprofundada para configurações do 
 
 ## Primeiros 60 segundos se algo estiver quebrado
 
-1) **Status rápido (primeira verificação)**
+1. **Status rápido (primeira verificação)**
 
    ```bash
    zero status
@@ -203,7 +204,7 @@ Respostas rápidas e solução de problemas aprofundada para configurações do 
 
    Resumo local rápido: SO + atualização, acessibilidade do gateway/serviço, agentes/sessões, configuração do provedor + problemas de tempo de execução (quando o gateway está acessível).
 
-2) **Relatório colável (seguro para compartilhar)**
+2. **Relatório colável (seguro para compartilhar)**
 
    ```bash
    zero status --all
@@ -211,7 +212,7 @@ Respostas rápidas e solução de problemas aprofundada para configurações do 
 
    Diagnóstico de apenas leitura com tail de log (tokens redigidos).
 
-3) **Estado do daemon + porta**
+3. **Estado do daemon + porta**
 
    ```bash
    zero gateway status
@@ -219,7 +220,7 @@ Respostas rápidas e solução de problemas aprofundada para configurações do 
 
    Mostra o tempo de execução do supervisor vs acessibilidade RPC, a URL de destino da sonda e qual configuração o serviço provavelmente usou.
 
-4) **Sondas profundas (Deep probes)**
+4. **Sondas profundas (Deep probes)**
 
    ```bash
    zero status --deep
@@ -227,7 +228,7 @@ Respostas rápidas e solução de problemas aprofundada para configurações do 
 
    Executa verificações de saúde do gateway + sondas de provedor (requer um gateway acessível). Veja [Saúde](/gateway/health).
 
-5) **Acompanhar o log mais recente**
+5. **Acompanhar o log mais recente**
 
    ```bash
    zero logs --follow
@@ -241,7 +242,7 @@ Respostas rápidas e solução de problemas aprofundada para configurações do 
 
    Logs de arquivo são separados de logs de serviço; veja [Registro (Logging)](/logging) e [Solução de Problemas](/gateway/troubleshooting).
 
-6) **Executar o doctor (reparos)**
+6. **Executar o doctor (reparos)**
 
    ```bash
    zero doctor
@@ -249,7 +250,7 @@ Respostas rápidas e solução de problemas aprofundada para configurações do 
 
    Repara/migra configuração/estado + executa verificações de saúde. Veja [Doctor](/gateway/doctor).
 
-7) **Instantâneo (Snapshot) do Gateway**
+7. **Instantâneo (Snapshot) do Gateway**
 
    ```bash
    zero health --json
@@ -376,13 +377,13 @@ That screen depends on the Gateway being reachable and authenticated. The TUI al
 "Wake up, my friend!" automatically on first hatch. If you see that line with **no reply**
 and tokens stay at 0, the agent never ran.
 
-1) Restart the Gateway:
+1. Restart the Gateway:
 
 ```bash
 zero gateway restart
 ```
 
-1) Check status + auth:
+1. Check status + auth:
 
 ```bash
 zero status
@@ -390,7 +391,7 @@ zero models status
 zero logs --follow
 ```
 
-1) If it still hangs, run:
+1. If it still hangs, run:
 
 ```bash
 zero doctor
@@ -405,10 +406,10 @@ Yes. Copy the **state directory** and **workspace**, then run Doctor once. This
 keeps your bot “exactly the same” (memory, session history, auth, and channel
 state) as long as you copy **both** locations:
 
-1) Install ZERO on the new machine.
-2) Copy `$ZERO_STATE_DIR` (default: `~/.zero`) from the old machine.
-3) Copy your workspace (default: `~/zero`).
-4) Run `zero doctor` and restart the Gateway service.
+1. Install ZERO on the new machine.
+2. Copy `$ZERO_STATE_DIR` (default: `~/.zero`) from the old machine.
+3. Copy your workspace (default: `~/zero`).
+4. Run `zero doctor` and restart the Gateway service.
 
 That preserves config, auth profiles, WhatsApp creds, sessions, and memory. If you’re in
 remote mode, remember the gateway host owns the session store and workspace.
@@ -488,7 +489,7 @@ and the fast debug loop in [Im stuck](/help/faq#im-stuck--whats-the-fastest-way-
 
 Two options:
 
-1) **Dev channel (git checkout):**
+1. **Dev channel (git checkout):**
 
 ```bash
 zero update --channel dev
@@ -496,7 +497,7 @@ zero update --channel dev
 
 This switches to the `main` branch and updates from source.
 
-1) **Hackable install (from the installer site):**
+1. **Hackable install (from the installer site):**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Lex-1401/ZERO/main/install.sh | bash -s -- --install-method git
@@ -709,7 +710,7 @@ Confira a seção [VPS e Nuvem](/install/vps) em nossa documentação.
 
 Sim! Se o Zero tiver permissões de escrita na pasta de instalação, você pode enviar o comando `/update` no chat (se a habilidade de atualização estiver habilitada) ou rodar na CLI:
 
-```bash
+````bash
 zero update
 can import the CLI login or run the OAuth flow for you.
 
@@ -817,7 +818,7 @@ Yes. Homebrew supports Linux (Linuxbrew). Quick setup:
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.profile
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 brew install <formula>
-```
+````
 
 If you run ZERO via systemd, ensure the service PATH includes `/home/linuxbrew/.linuxbrew/bin` (or your brew prefix) so `brew`-installed tools resolve in non‑login shells.
 Recent builds also prepend common user bin dirs on Linux systemd services (for example `~/.local/bin`, `~/.npm-global/bin`, `~/.local/share/pnpm`, `~/.bun/bin`) and honor `PNPM_HOME`, `NPM_CONFIG_PREFIX`, `BUN_INSTALL`, `VOLTA_HOME`, `ASDF_DATA_DIR`, `NVM_DIR`, and `FNM_DIR` when set.
@@ -976,7 +977,7 @@ Run the Gateway on Linux, pair a macOS node (menubar app), and set **Node Run Co
 **Option C - proxy macOS binaries over SSH (advanced).**  
 Keep the Gateway on Linux, but make the required CLI binaries resolve to SSH wrappers that run on a Mac. Then override the skill to allow Linux so it stays eligible.
 
-1) Create an SSH wrapper for the binary (example: `imsg`):
+1. Create an SSH wrapper for the binary (example: `imsg`):
 
    ```bash
    #!/usr/bin/env bash
@@ -984,18 +985,18 @@ Keep the Gateway on Linux, but make the required CLI binaries resolve to SSH wra
    exec ssh -T user@mac-host /opt/homebrew/bin/imsg "$@"
    ```
 
-2) Put the wrapper on `PATH` on the Linux host (for example `~/bin/imsg`).
-3) Override the skill metadata (workspace or `~/.zero/skills`) to allow Linux:
+2. Put the wrapper on `PATH` on the Linux host (for example `~/bin/imsg`).
+3. Override the skill metadata (workspace or `~/.zero/skills`) to allow Linux:
 
    ```markdown
    ---
    name: imsg
    description: iMessage/SMS CLI for listing chats, history, watch, and sending.
-   metadata: {"zero":{"os":["darwin","linux"],"requires":{"bins":["imsg"]}}}
+   metadata: { "zero": { "os": ["darwin", "linux"], "requires": { "bins": ["imsg"] } } }
    ---
    ```
 
-4) Start a new session so the skills snapshot refreshes.
+4. Start a new session so the skills snapshot refreshes.
 
 For iMessage specifically, you can also point `channels.imessage.cliPath` at an SSH wrapper (ZERO only needs stdio). See [iMessage](/channels/imessage).
 
@@ -1132,16 +1133,16 @@ Related: [Agent workspace](/concepts/agent-workspace), [Memory](/concepts/memory
 
 Everything lives under `$ZERO_STATE_DIR` (default: `~/.zero`):
 
-| Path | Purpose |
-|------|---------|
-| `$ZERO_STATE_DIR/zero.json` | Main config (JSON5) |
-| `$ZERO_STATE_DIR/credentials/oauth.json` | Legacy OAuth import (copied into auth profiles on first use) |
-| `$ZERO_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth + API keys) |
-| `$ZERO_STATE_DIR/agents/<agentId>/agent/auth.json` | Runtime auth cache (managed automatically) |
-| `$ZERO_STATE_DIR/credentials/` | Provider state (e.g. `whatsapp/<accountId>/creds.json`) |
-| `$ZERO_STATE_DIR/agents/` | Per‑agent state (agentDir + sessions) |
-| `$ZERO_STATE_DIR/agents/<agentId>/sessions/` | Conversation history & state (per agent) |
-| `$ZERO_STATE_DIR/agents/<agentId>/sessions/sessions.json` | Session metadata (per agent) |
+| Path                                                        | Purpose                                                      |
+| ----------------------------------------------------------- | ------------------------------------------------------------ |
+| `$ZERO_STATE_DIR/zero.json`                                 | Main config (JSON5)                                          |
+| `$ZERO_STATE_DIR/credentials/oauth.json`                    | Legacy OAuth import (copied into auth profiles on first use) |
+| `$ZERO_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth + API keys)                             |
+| `$ZERO_STATE_DIR/agents/<agentId>/agent/auth.json`          | Runtime auth cache (managed automatically)                   |
+| `$ZERO_STATE_DIR/credentials/`                              | Provider state (e.g. `whatsapp/<accountId>/creds.json`)      |
+| `$ZERO_STATE_DIR/agents/`                                   | Per‑agent state (agentDir + sessions)                        |
+| `$ZERO_STATE_DIR/agents/<agentId>/sessions/`                | Conversation history & state (per agent)                     |
+| `$ZERO_STATE_DIR/agents/<agentId>/sessions/sessions.json`   | Session metadata (per agent)                                 |
 
 Legacy single‑agent path: `~/.zero/agent/*` (migrated by `zero doctor`).
 
@@ -1160,7 +1161,7 @@ Default workspace is `~/zero`, configurable via:
 
 ```json5
 {
-  agents: { defaults: { workspace: "~/zero" } }
+  agents: { defaults: { workspace: "~/zero" } },
 }
 ```
 
@@ -1205,9 +1206,9 @@ Example (repo as default cwd):
 {
   agents: {
     defaults: {
-      workspace: "~/Projects/my-repo"
-    }
-  }
+      workspace: "~/Projects/my-repo",
+    },
+  },
 }
 ```
 
@@ -1237,9 +1238,9 @@ Non-loopback binds **require auth**. Configure `gateway.auth.mode` + `gateway.au
     bind: "lan",
     auth: {
       mode: "token",
-      token: "replace-me"
-    }
-  }
+      token: "replace-me",
+    },
+  },
 }
 ```
 
@@ -1275,13 +1276,13 @@ Gateway process.
       search: {
         enabled: true,
         apiKey: "BRAVE_API_KEY_HERE",
-        maxResults: 5
+        maxResults: 5,
       },
       fetch: {
-        enabled: true
-      }
-    }
-  }
+        enabled: true,
+      },
+    },
+  },
 }
 ```
 
@@ -1314,9 +1315,9 @@ Yes. It’s a config option:
   browser: { headless: true },
   agents: {
     defaults: {
-      sandbox: { browser: { headless: true } }
-    }
-  }
+      sandbox: { browser: { headless: true } },
+    },
+  },
 }
 ```
 
@@ -1519,7 +1520,7 @@ Docs: [Config](/cli/config), [Configure](/cli/configure), [Doctor](/gateway/doct
 ```json5
 {
   agents: { defaults: { workspace: "~/zero" } },
-  channels: { whatsapp: { allowFrom: ["+15555550123"] } }
+  channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
@@ -1529,18 +1530,18 @@ This sets your workspace and restricts who can trigger the bot.
 
 Minimal steps:
 
-1) **Install + login on the VPS**
+1. **Install + login on the VPS**
 
    ```bash
    curl -fsSL https://tailscale.com/install.sh | sh
    sudo tailscale up
    ```
 
-2) **Install + login on your Mac**
+2. **Install + login on your Mac**
    - Use the Tailscale app and sign in to the same tailnet.
-3) **Enable MagicDNS (recommended)**
+3. **Enable MagicDNS (recommended)**
    - In the Tailscale admin console, enable MagicDNS so the VPS has a stable name.
-4) **Use the tailnet hostname**
+4. **Use the tailnet hostname**
    - SSH: `ssh user@your-vps.tailnet-xxxx.ts.net`
    - Gateway WS: `ws://your-vps.tailnet-xxxx.ts.net:18789`
 
@@ -1558,10 +1559,10 @@ Serve exposes the **Gateway Control UI + WS**. Nodes connect over the same Gatew
 
 Recommended setup:
 
-1) **Make sure the VPS + Mac are on the same tailnet**.
-2) **Use the macOS app in Remote mode** (SSH target can be the tailnet hostname).
+1. **Make sure the VPS + Mac are on the same tailnet**.
+2. **Use the macOS app in Remote mode** (SSH target can be the tailnet hostname).
    The app will tunnel the Gateway port and connect as a node.
-3) **Approve the node** on the gateway:
+3. **Approve the node** on the gateway:
 
    ```bash
    zero nodes pending
@@ -1587,8 +1588,8 @@ You can also define inline env vars in config (applied only if missing from the 
 {
   env: {
     OPENROUTER_API_KEY: "sk-or-...",
-    vars: { GROQ_API_KEY: "gsk-..." }
-  }
+    vars: { GROQ_API_KEY: "gsk-..." },
+  },
 }
 ```
 
@@ -1598,8 +1599,8 @@ See [/environment](/environment) for full precedence and sources.
 
 Two common fixes:
 
-1) Put the missing keys in `~/.zero/.env` so they’re picked up even when the service doesn’t inherit your shell env.
-2) Enable shell import (opt‑in convenience):
+1. Put the missing keys in `~/.zero/.env` so they’re picked up even when the service doesn’t inherit your shell env.
+2. Enable shell import (opt‑in convenience):
 
 ```json5
 {
@@ -1611,22 +1612,22 @@ Use one of these:
 
 - **Compact** (keeps the conversation but summarizes older turns):
 
-  ```
+```
 
-  /compact
+/compact
 
-  ```
+```
 
-  or `/compact <instructions>` to guide the summary.
+or `/compact <instructions>` to guide the summary.
 
 - **Reset** (fresh session ID for the same chat key):
 
-  ```
+```
 
-  /new
-  /reset
+/new
+/reset
 
-  ```
+````
 
 If it keeps happening:
 
@@ -1649,15 +1650,15 @@ Heartbeats run every **30m** by default. Tune or disable them:
 
 ```json5
 {
-  agents: {
-    defaults: {
-      heartbeat: {
-        every: "2h"   // or "0m" to disable
-      }
+agents: {
+  defaults: {
+    heartbeat: {
+      every: "2h"   // or "0m" to disable
     }
   }
 }
-```
+}
+````
 
 If `HEARTBEAT.md` exists but is effectively empty (only blank lines and markdown
 headers like `# Heading`), ZERO skips the heartbeat run to save API calls.
@@ -1677,9 +1678,9 @@ If you want only **you** to be able to trigger group replies:
   channels: {
     whatsapp: {
       groupPolicy: "allowlist",
-      groupAllowFrom: ["+15551234567"]
-    }
-  }
+      groupAllowFrom: ["+15551234567"],
+    },
+  },
 }
 ```
 
@@ -1887,12 +1888,12 @@ in **2026.1.12** (unreleased at the time of writing).
 
 Fix checklist:
 
-1) Upgrade to **2026.1.12** (or run from source `main`), then restart the gateway.
-2) Make sure MiniMax is configured (wizard or JSON), or that a MiniMax API key
+1. Upgrade to **2026.1.12** (or run from source `main`), then restart the gateway.
+2. Make sure MiniMax is configured (wizard or JSON), or that a MiniMax API key
    exists in env/auth profiles so the provider can be injected.
-3) Use the exact model id (case‑sensitive): `minimax/MiniMax-M2.1` or
+3. Use the exact model id (case‑sensitive): `minimax/MiniMax-M2.1` or
    `minimax/MiniMax-M2.1-lightning`.
-4) Run:
+4. Run:
 
    ```bash
    zero models list
@@ -1917,10 +1918,10 @@ Fallbacks are for **errors**, not “hard tasks,” so use `/model` or a separat
       model: { primary: "minimax/MiniMax-M2.1" },
       models: {
         "minimax/MiniMax-M2.1": { alias: "minimax" },
-        "openai/gpt-5.2": { alias: "gpt" }
-      }
-    }
-  }
+        "openai/gpt-5.2": { alias: "gpt" },
+      },
+    },
+  },
 }
 ```
 
@@ -1963,10 +1964,10 @@ Aliases come from `agents.defaults.models.<modelId>.alias`. Example:
       models: {
         "anthropic/claude-opus-4-5": { alias: "opus" },
         "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
-        "anthropic/claude-haiku-4-5": { alias: "haiku" }
-      }
-    }
-  }
+        "anthropic/claude-haiku-4-5": { alias: "haiku" },
+      },
+    },
+  },
 }
 ```
 
@@ -1981,10 +1982,10 @@ OpenRouter (pay‑per‑token; many models):
   agents: {
     defaults: {
       model: { primary: "openrouter/anthropic/claude-sonnet-4-5" },
-      models: { "openrouter/anthropic/claude-sonnet-4-5": {} }
-    }
+      models: { "openrouter/anthropic/claude-sonnet-4-5": {} },
+    },
   },
-  env: { OPENROUTER_API_KEY: "sk-or-..." }
+  env: { OPENROUTER_API_KEY: "sk-or-..." },
 }
 ```
 
@@ -1995,10 +1996,10 @@ Z.AI (GLM models):
   agents: {
     defaults: {
       model: { primary: "zai/glm-4.7" },
-      models: { "zai/glm-4.7": {} }
-    }
+      models: { "zai/glm-4.7": {} },
+    },
   },
-  env: { ZAI_API_KEY: "..." }
+  env: { ZAI_API_KEY: "..." },
 }
 ```
 
@@ -2225,9 +2226,9 @@ Set `gateway.mode: "remote"` and point to a remote WebSocket URL, optionally wit
     remote: {
       url: "ws://gateway.tailnet:18789",
       token: "your-token",
-      password: "your-password"
-    }
-  }
+      password: "your-password",
+    },
+  },
 }
 ```
 
@@ -2262,7 +2263,7 @@ Fix:
 
 - Start Tailscale on that host (so it has a 100.x address), or
 - Switch to `gateway.bind: "loopback"` / `"lan"`.
-  
+
 Note: `tailnet` is explicit. `auto` prefers loopback; use `gateway.bind: "tailnet"` when you want a tailnet-only bind.
 
 ### Can I run multiple Gateways on the same host
@@ -2299,9 +2300,9 @@ Common causes:
 
 Quick fixes:
 
-1) Use the WS URL: `ws://<host>:18789` (or `wss://...` if HTTPS).
-2) Don’t open the WS port in a normal browser tab.
-3) If auth is on, include the token/password in the `connect` frame.
+1. Use the WS URL: `ws://<host>:18789` (or `wss://...` if HTTPS).
+2. Don’t open the WS port in a normal browser tab.
+3. If auth is on, include the token/password in the `connect` frame.
 
 If you’re using the CLI or TUI, the URL should look like:
 
@@ -2411,10 +2412,10 @@ Docs: [Channels](/channels), [Troubleshooting](/gateway/troubleshooting), [Remot
 
 This usually means the UI lost the WebSocket connection. Check:
 
-1) Is the Gateway running? `zero gateway status`
-2) Is the Gateway healthy? `zero status`
-3) Does the UI have the right token? `zero dashboard`
-4) If remote, is the tunnel/Tailscale link up?
+1. Is the Gateway running? `zero gateway status`
+2. Is the Gateway healthy? `zero status`
+3. Does the UI have the right token? `zero dashboard`
+4. If remote, is the tunnel/Tailscale link up?
 
 Then tail logs:
 
@@ -2630,7 +2631,7 @@ Sim! Se você criou uma integração para um novo provedor ou serviço de chat, 
 
 ---
 
-*Esta FAQ é atualizada regularmente. Se você não encontrou a resposta para sua pergunta, sinta-se à vontade para perguntar em nossa comunidade.*
+_Esta FAQ é atualizada regularmente. Se você não encontrou a resposta para sua pergunta, sinta-se à vontade para perguntar em nossa comunidade._
 
 Check pending requests:
 
@@ -2719,12 +2720,12 @@ Enable cross‑provider messaging for the agent:
         message: {
           crossContext: {
             allowAcrossProviders: true,
-            marker: { enabled: true, prefix: "[from {channel}] " }
-          }
-        }
-      }
-    }
-  }
+            marker: { enabled: true, prefix: "[from {channel}] " },
+          },
+        },
+      },
+    },
+  },
 }
 ```
 

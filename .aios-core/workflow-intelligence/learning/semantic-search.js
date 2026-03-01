@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              CONFIGURATION
@@ -32,21 +32,21 @@ const DEFAULT_CONFIG = {
 
   // Synonym groups for semantic matching
   synonymGroups: [
-    ['create', 'make', 'generate', 'add', 'new'],
-    ['delete', 'remove', 'destroy', 'drop'],
-    ['update', 'modify', 'change', 'edit', 'alter'],
-    ['get', 'fetch', 'retrieve', 'load', 'read'],
-    ['list', 'show', 'display', 'view'],
-    ['test', 'verify', 'check', 'validate'],
-    ['build', 'compile', 'bundle', 'package'],
-    ['deploy', 'publish', 'release', 'ship'],
-    ['fix', 'repair', 'resolve', 'patch'],
-    ['review', 'inspect', 'audit', 'examine'],
-    ['story', 'task', 'ticket', 'issue'],
-    ['dev', 'develop', 'development', 'implement'],
-    ['qa', 'quality', 'testing'],
-    ['start', 'begin', 'init', 'initialize'],
-    ['end', 'finish', 'complete', 'done'],
+    ["create", "make", "generate", "add", "new"],
+    ["delete", "remove", "destroy", "drop"],
+    ["update", "modify", "change", "edit", "alter"],
+    ["get", "fetch", "retrieve", "load", "read"],
+    ["list", "show", "display", "view"],
+    ["test", "verify", "check", "validate"],
+    ["build", "compile", "bundle", "package"],
+    ["deploy", "publish", "release", "ship"],
+    ["fix", "repair", "resolve", "patch"],
+    ["review", "inspect", "audit", "examine"],
+    ["story", "task", "ticket", "issue"],
+    ["dev", "develop", "development", "implement"],
+    ["qa", "quality", "testing"],
+    ["start", "begin", "init", "initialize"],
+    ["end", "finish", "complete", "done"],
   ],
 };
 
@@ -154,7 +154,7 @@ class SemanticSearch {
     if (pattern.sequence) queryParts.push(...pattern.sequence);
     if (pattern.commands) queryParts.push(...pattern.commands);
 
-    const query = queryParts.join(' ');
+    const query = queryParts.join(" ");
 
     // Exclude the reference pattern
     const candidatePatterns = patterns.filter((p) => p.id !== pattern.id);
@@ -343,12 +343,12 @@ class SemanticSearch {
    * @private
    */
   _normalize(text) {
-    if (!text) return '';
+    if (!text) return "";
 
     return text
       .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, ' ')
-      .replace(/\s+/g, ' ')
+      .replace(/[^a-z0-9\s]/g, " ")
+      .replace(/\s+/g, " ")
       .trim()
       .slice(0, this.config.maxQueryLength);
   }
@@ -364,12 +364,12 @@ class SemanticSearch {
     if (pattern.id) parts.push(pattern.id);
     if (pattern.workflow) parts.push(pattern.workflow);
     if (pattern.description) parts.push(pattern.description);
-    if (pattern.sequence) parts.push(pattern.sequence.join(' '));
-    if (pattern.commands) parts.push(pattern.commands.join(' '));
-    if (pattern.agents) parts.push(pattern.agents.join(' '));
-    if (pattern.keywords) parts.push(pattern.keywords.join(' '));
+    if (pattern.sequence) parts.push(pattern.sequence.join(" "));
+    if (pattern.commands) parts.push(pattern.commands.join(" "));
+    if (pattern.agents) parts.push(pattern.agents.join(" "));
+    if (pattern.keywords) parts.push(pattern.keywords.join(" "));
 
-    return parts.join(' ');
+    return parts.join(" ");
   }
 
   /**
@@ -402,10 +402,10 @@ class SemanticSearch {
    * @private
    */
   _determineMatchMethod(score) {
-    if (score >= 0.9) return 'exact';
-    if (score >= 0.6) return 'semantic';
-    if (score >= 0.4) return 'subsequence';
-    return 'fuzzy';
+    if (score >= 0.9) return "exact";
+    if (score >= 0.6) return "semantic";
+    if (score >= 0.4) return "subsequence";
+    return "fuzzy";
   }
 
   // ─────────────────────────────────────────────────────────────────────────────────

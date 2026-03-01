@@ -3,6 +3,7 @@ summary: "Como o app mac incorpora o WebChat do gateway e como depurá-lo"
 read_when:
   - Depurando a view do WebChat no mac ou porta loopback
 ---
+
 # WebChat (app macOS)
 
 O app da barra de menus do macOS incorpora a UI do WebChat como uma view nativa em SwiftUI. Ele se conecta ao Gateway e usa como padrão a **sessão principal** (main session) para o agente selecionado (com um alternador de sessões para outras sessões).

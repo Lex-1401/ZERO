@@ -44,10 +44,7 @@ export function createTelephonyTtsProvider(params: {
   };
 }
 
-function applyTtsOverride(
-  coreConfig: CoreConfig,
-  override?: VoiceCallTtsConfig,
-): CoreConfig {
+function applyTtsOverride(coreConfig: CoreConfig, override?: VoiceCallTtsConfig): CoreConfig {
   if (!override) return coreConfig;
 
   const base = coreConfig.messages?.tts;
@@ -57,7 +54,7 @@ function applyTtsOverride(
   return {
     ...coreConfig,
     messages: {
-      ...(coreConfig.messages ?? {}),
+      ...coreConfig.messages,
       tts: merged,
     },
   };

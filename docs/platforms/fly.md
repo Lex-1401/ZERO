@@ -76,13 +76,13 @@ primary_region = "iad"
 
 **Configurações principais:**
 
-| Configuração | Por quê |
-|---------|-----|
-| `--bind lan` | Vincula ao `0.0.0.0` para que o proxy do Fly possa alcançar o gateway |
-| `--allow-unconfigured` | Inicia sem um arquivo de configuração (você criará um depois) |
-| `internal_port = 3000` | Deve corresponder à porta `--port 3000` (ou `ZERO_GATEWAY_PORT`) para as verificações de saúde do Fly |
-| `memory = "2048mb"` | 512MB é muito pouco; 2GB recomendado |
-| `ZERO_STATE_DIR = "/data"` | Persiste o estado no volume |
+| Configuração               | Por quê                                                                                               |
+| -------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `--bind lan`               | Vincula ao `0.0.0.0` para que o proxy do Fly possa alcançar o gateway                                 |
+| `--allow-unconfigured`     | Inicia sem um arquivo de configuração (você criará um depois)                                         |
+| `internal_port = 3000`     | Deve corresponder à porta `--port 3000` (ou `ZERO_GATEWAY_PORT`) para as verificações de saúde do Fly |
+| `memory = "2048mb"`        | 512MB é muito pouco; 2GB recomendado                                                                  |
+| `ZERO_STATE_DIR = "/data"` | Persiste o estado no volume                                                                           |
 
 ## 3) Configurar segredos (secrets)
 

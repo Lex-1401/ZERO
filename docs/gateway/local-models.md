@@ -21,9 +21,9 @@ Melhor stack local atual. Carregue o MiniMax M2.1 no LM Studio, habilite o servi
       model: { primary: "lmstudio/minimax-m2.1-gs32" },
       models: {
         "anthropic/claude-opus-4-5": { alias: "Opus" },
-        "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" }
-      }
-    }
+        "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" },
+      },
+    },
   },
   models: {
     mode: "merge",
@@ -40,12 +40,12 @@ Melhor stack local atual. Carregue o MiniMax M2.1 no LM Studio, habilite o servi
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -67,14 +67,14 @@ Mantenha modelos hospedados configurados mesmo ao rodar localmente; use `models.
     defaults: {
       model: {
         primary: "anthropic/claude-sonnet-4-5",
-        fallbacks: ["lmstudio/minimax-m2.1-gs32", "anthropic/claude-opus-4-5"]
+        fallbacks: ["lmstudio/minimax-m2.1-gs32", "anthropic/claude-opus-4-5"],
       },
       models: {
         "anthropic/claude-sonnet-4-5": { alias: "Sonnet" },
         "lmstudio/minimax-m2.1-gs32": { alias: "MiniMax Local" },
-        "anthropic/claude-opus-4-5": { alias: "Opus" }
-      }
-    }
+        "anthropic/claude-opus-4-5": { alias: "Opus" },
+      },
+    },
   },
   models: {
     mode: "merge",
@@ -91,12 +91,12 @@ Mantenha modelos hospedados configurados mesmo ao rodar localmente; use `models.
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -130,12 +130,12 @@ vLLM, LiteLLM, OAI-proxy ou gateways personalizados funcionam se expuserem um en
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 120000,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 

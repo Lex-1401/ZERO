@@ -161,7 +161,7 @@ describe("exec tool backgrounding", () => {
         command: "echo hi",
         elevated: true,
       }),
-    ).rejects.toThrow("Context: provider=telegram session=agent:main:main");
+    ).rejects.toThrow("elevated is not available right now.");
   });
 
   it("does not default to elevated when not allowed", async () => {

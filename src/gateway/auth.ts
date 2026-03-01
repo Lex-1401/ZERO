@@ -73,11 +73,13 @@ function resolveRequestClientIp(
 
 function isLocalDirectRequest(req?: IncomingMessage, trustedProxies?: string[]): boolean {
   if (!req) return false;
+
+  // O clientIp real após resolver os proxies
   const clientIp = resolveRequestClientIp(req, trustedProxies) ?? "";
   if (!isLoopbackAddress(clientIp)) return false;
 
   const host = getHostName(req.headers?.host);
-  const hostIsLocal = host === "localhost" || host === "127.0.0.1" || host === "::1";
+  const hostIsLocal = host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "0.0.0.0";
   const hostIsTailscaleServe = host.endsWith(".ts.net");
 
   const hasForwarded = Boolean(
@@ -86,8 +88,18 @@ function isLocalDirectRequest(req?: IncomingMessage, trustedProxies?: string[]):
     req.headers?.["x-forwarded-host"],
   );
 
+  // SECURITY: A requisição só é local direto se não foi repassada (hasForwarded falso)
+  // OU se ela foi repassada por um proxy explicitamente confiável e configurado.
+  // Sem `trustedProxies` configurado explícitamente, NENHUM cabeçalho X-Forwarded é confiável.
   const remoteIsTrustedProxy = isTrustedProxyAddress(req.socket?.remoteAddress, trustedProxies);
-  return (hostIsLocal || hostIsTailscaleServe) && (!hasForwarded || remoteIsTrustedProxy);
+
+  // Se tem cabeçalhos de proxy mas a conexão TCP real NÃO vem de um proxy confiável, 
+  // é uma tentativa de spoofing. Bloqueia.
+  if (hasForwarded && !remoteIsTrustedProxy) {
+    return false;
+  }
+
+  return hostIsLocal || hostIsTailscaleServe;
 }
 
 function getTailscaleUser(req?: IncomingMessage): TailscaleUser | null {
@@ -113,9 +125,22 @@ function hasTailscaleProxyHeaders(req?: IncomingMessage): boolean {
   );
 }
 
-function isTailscaleProxyRequest(req?: IncomingMessage): boolean {
+function isTailscaleProxyRequest(req?: IncomingMessage, trustedProxies?: string[]): boolean {
   if (!req) return false;
-  return isLoopbackAddress(req.socket?.remoteAddress) && hasTailscaleProxyHeaders(req);
+
+  // Se tem cabeçalhos de proxy do Tailscale, mas não vem de um proxy confiável configurado
+  // OU não vem de fato do localhost na camada TCP, é spoofing.
+  // IMPORTANTE: Se o próprio localhost estiver enviando os cabeçalhos de proxy, mas ele NÃO
+  // estiver na lista de trustedProxies, a requisição deve ser rejeitada, pois qualquer script
+  // local poderia falsificar esses cabeçalhos (que é o que está acontecendo no ataque).
+  const hasHeaders = hasTailscaleProxyHeaders(req);
+  const isTCPLocal = isLoopbackAddress(req.socket?.remoteAddress);
+  const isTrustedLocal = isTrustedProxyAddress(req.socket?.remoteAddress, trustedProxies);
+
+  // Para aceitar cabeçalhos de proxy do Tailscale de origem local, 
+  // o localhost (IP do socket) DEVE estar em trustedProxies. 
+  // Se não estiver (padrão seguro), não podemos confiar nos cabeçalhos.
+  return isTCPLocal && hasHeaders && isTrustedLocal;
 }
 
 export function resolveGatewayAuth(params: {
@@ -197,7 +222,7 @@ async function authorizeGatewayConnectInternal(params: {
 
   if (auth.allowTailscale && !localDirect) {
     const tailscaleUser = getTailscaleUser(req);
-    const tailscaleProxy = isTailscaleProxyRequest(req);
+    const tailscaleProxy = isTailscaleProxyRequest(req, trustedProxies);
 
     if (tailscaleUser && tailscaleProxy) {
       return {

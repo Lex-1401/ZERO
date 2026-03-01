@@ -19,7 +19,7 @@ Checklist:
   - "[ ] Generate migration report"
 ---
 
-# *migrate-squad
+# \*migrate-squad
 
 Migrates legacy squad formats to AIOS 2.1 standard.
 
@@ -43,24 +43,24 @@ Migrates legacy squad formats to AIOS 2.1 standard.
 
 ## Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `squad_path` | string | - | Full path to squad directory (required) |
-| `--dry-run` | flag | false | Preview changes without modifying files |
-| `--verbose` | flag | false | Show detailed migration output |
+| Parameter    | Type   | Default | Description                             |
+| ------------ | ------ | ------- | --------------------------------------- |
+| `squad_path` | string | -       | Full path to squad directory (required) |
+| `--dry-run`  | flag   | false   | Preview changes without modifying files |
+| `--verbose`  | flag   | false   | Show detailed migration output          |
 
 ## Migration Detection
 
 The migrator detects the following legacy patterns:
 
-| Pattern | Detection | Migration Action |
-|---------|-----------|------------------|
-| `config.yaml` | Legacy manifest name | Rename to `squad.yaml` |
-| Flat structure | No `tasks/`, `agents/` dirs | Create directory structure |
-| Missing `aios.type` | Field not present | Add `aios.type: squad` |
-| Missing `aios.minVersion` | Field not present | Add `aios.minVersion: 2.1.0` |
-| Missing `name` | Field not present | Infer from directory name |
-| Missing `version` | Field not present | Add `version: 1.0.0` |
+| Pattern                   | Detection                   | Migration Action             |
+| ------------------------- | --------------------------- | ---------------------------- |
+| `config.yaml`             | Legacy manifest name        | Rename to `squad.yaml`       |
+| Flat structure            | No `tasks/`, `agents/` dirs | Create directory structure   |
+| Missing `aios.type`       | Field not present           | Add `aios.type: squad`       |
+| Missing `aios.minVersion` | Field not present           | Add `aios.minVersion: 2.1.0` |
+| Missing `name`            | Field not present           | Infer from directory name    |
+| Missing `version`         | Field not present           | Add `version: 1.0.0`         |
 
 ## Flow
 
@@ -187,20 +187,20 @@ ls ./squads/my-squad/
 
 ## Error Codes
 
-| Code | Severity | Description |
-|------|----------|-------------|
-| `SQUAD_NOT_FOUND` | Error | Squad directory doesn't exist |
-| `NO_MANIFEST` | Error | No config.yaml or squad.yaml found |
-| `BACKUP_FAILED` | Error | Failed to create backup |
-| `MIGRATION_FAILED` | Error | Action execution failed |
-| `VALIDATION_FAILED` | Warning | Post-migration validation found issues |
-| `INVALID_PATH` | Error | Invalid squad path provided |
+| Code                | Severity | Description                            |
+| ------------------- | -------- | -------------------------------------- |
+| `SQUAD_NOT_FOUND`   | Error    | Squad directory doesn't exist          |
+| `NO_MANIFEST`       | Error    | No config.yaml or squad.yaml found     |
+| `BACKUP_FAILED`     | Error    | Failed to create backup                |
+| `MIGRATION_FAILED`  | Error    | Action execution failed                |
+| `VALIDATION_FAILED` | Warning  | Post-migration validation found issues |
+| `INVALID_PATH`      | Error    | Invalid squad path provided            |
 
 ## Implementation
 
 ```javascript
-const { SquadMigrator } = require('./.aios-core/development/scripts/squad');
-const { SquadValidator } = require('./.aios-core/development/scripts/squad');
+const { SquadMigrator } = require("./.aios-core/development/scripts/squad");
+const { SquadValidator } = require("./.aios-core/development/scripts/squad");
 
 async function migrateSquad(options) {
   const { squadPath, dryRun, verbose } = options;
@@ -210,7 +210,7 @@ async function migrateSquad(options) {
   const migrator = new SquadMigrator({
     dryRun,
     verbose,
-    validator
+    validator,
   });
 
   // Analyze first
@@ -220,7 +220,7 @@ async function migrateSquad(options) {
   console.log(migrator.generateReport(analysis));
 
   if (!analysis.needsMigration) {
-    console.log('Squad is already up to date. No migration needed.');
+    console.log("Squad is already up to date. No migration needed.");
     return 0;
   }
 

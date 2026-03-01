@@ -53,10 +53,10 @@ As configurações do navegador ficam em `~/.zero/zero.json`.
 ```json5
 {
   browser: {
-    enabled: true,                    // padrão: true
+    enabled: true, // padrão: true
     controlUrl: "http://127.0.0.1:18791",
     cdpUrl: "http://127.0.0.1:18792", // padroniza para controlUrl + 1
-    remoteCdpTimeoutMs: 1500,         // timeout HTTP CDP remoto (ms)
+    remoteCdpTimeoutMs: 1500, // timeout HTTP CDP remoto (ms)
     remoteCdpHandshakeTimeoutMs: 3000, // timeout de handshake WebSocket CDP remoto (ms)
     defaultProfile: "chrome",
     color: "#FF4500",
@@ -67,9 +67,9 @@ As configurações do navegador ficam em `~/.zero/zero.json`.
     profiles: {
       zero: { cdpPort: 18800, color: "#FF4500" },
       work: { cdpPort: 18801, color: "#0066CC" },
-      remote: { cdpUrl: "http://10.0.0.42:9222", color: "#00AA00" }
-    }
-  }
+      remote: { cdpUrl: "http://10.0.0.42:9222", color: "#00AA00" },
+    },
+  },
 }
 ```
 
@@ -149,8 +149,8 @@ Exemplo:
   browser: {
     enabled: true,
     controlUrl: "http://10.0.0.42:18791",
-    defaultProfile: "work"
-  }
+    defaultProfile: "work",
+  },
 }
 ```
 
@@ -198,10 +198,10 @@ Exemplo:
     profiles: {
       browserless: {
         cdpUrl: "https://production-sfo.browserless.io?token=<BROWSERLESS_API_KEY>",
-        color: "#00AA00"
-      }
-    }
-  }
+        color: "#00AA00",
+      },
+    },
+  },
 }
 ```
 
@@ -230,7 +230,7 @@ Então aponte seu Gateway para ele:
     // Opção A (recomendado): mantenha o token no env no Gateway
     // (evite escrever segredos em arquivos de configuração)
     // controlToken: "<token>"
-  }
+  },
 }
 ```
 
@@ -247,8 +247,8 @@ Opção B: armazene o token na configuração do Gateway (mesmo token compartilh
   browser: {
     enabled: true,
     controlUrl: "http://<browser-host>:18791",
-    controlToken: "<token>"
-  }
+    controlToken: "<token>",
+  },
 }
 ```
 
@@ -266,7 +266,7 @@ Ideias chave:
 
 - `browser.controlToken` / `ZERO_BROWSER_CONTROL_TOKEN` é **apenas** para autenticar requisições HTTP de controle do navegador para `browser.controlUrl`.
 - **Não** é o token do Gateway (`gateway.auth.token`) e **não** é um token de pareamento de nó.
-- Você *pode* reutilizar o mesmo valor de string, mas é melhor mantê-los separados para reduzir o raio de explosão.
+- Você _pode_ reutilizar o mesmo valor de string, mas é melhor mantê-los separados para reduzir o raio de explosão.
 
 ### Binding (não exponha à sua LAN por acidente)
 
@@ -285,11 +285,11 @@ Melhor prática aqui: mantenha `zero browser serve` em HTTP e termine o TLS na f
 
 Se você já estiver usando Tailscale, tem duas boas opções:
 
-1) **Apenas Tailnet, ainda HTTP** (o transporte é criptografado pelo Tailscale):
+1. **Apenas Tailnet, ainda HTTP** (o transporte é criptografado pelo Tailscale):
 
 - Mantenha `controlUrl` como `http://…` mas garanta que seja acessível apenas pela sua tailnet.
 
-1) **Sirva HTTPS via Tailscale** (boa UX: URL `https://…`):
+1. **Sirva HTTPS via Tailscale** (boa UX: URL `https://…`):
 
 ```bash
 # na máquina do navegador
@@ -347,7 +347,7 @@ A tomada de controle do relay de extensão do Chrome requer controle de navegado
 
 ### Configuração
 
-1) Carregue a extensão (dev/unpacked):
+1. Carregue a extensão (dev/unpacked):
 
 ```bash
 zero browser extension install
@@ -357,7 +357,7 @@ zero browser extension install
 - “Carregar sem compactação” → selecione o diretório impresso por `zero browser extension path`
 - Fixe a extensão e clique nela na aba que deseja controlar (o emblema mostra `ON`).
 
-1) Use-a:
+1. Use-a:
 
 - CLI: `zero browser --browser-profile chrome tabs`
 - Ferramenta de agente: `browser` com `profile="chrome"`

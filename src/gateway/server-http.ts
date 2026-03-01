@@ -38,6 +38,7 @@ import { handleMemoryGraphHttpRequest } from "./memory-graph-http.js";
 import { handleAudioTranscribeHttpRequest } from "./audio-transcribe-http.js";
 import { loadCombinedSessionStoreForGateway, listSessionsFromStore } from "./session-utils.js";
 import { listDevicePairing } from "../infra/device-pairing.js";
+import { taskManager } from "./task-manager.js";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 
@@ -250,7 +251,6 @@ export function createGatewayHttpServer(opts: {
   });
 
   router.all("/api/sessions/list", async (ctx) => {
-    console.log("[debug-api] sessions.list hit");
     const config = loadConfig();
     const token = getBearerToken(ctx.req);
     const authResult = await authorizeGatewayConnect({
@@ -269,7 +269,6 @@ export function createGatewayHttpServer(opts: {
   });
 
   router.all("/api/nodes", async (ctx) => {
-
     const token = getBearerToken(ctx.req);
     const authResult = await authorizeGatewayConnect({
       auth: resolvedAuth,
@@ -282,6 +281,24 @@ export function createGatewayHttpServer(opts: {
     }
     const list = await listDevicePairing();
     sendJson(ctx.res, 200, list.paired);
+    return true;
+  });
+
+  router.all("/api/tasks", async (ctx) => {
+    const token = getBearerToken(ctx.req);
+    const authResult = await authorizeGatewayConnect({
+      auth: resolvedAuth,
+      connectAuth: token ? { token, password: token } : null,
+      req: ctx.req,
+    });
+    if (!authResult.ok) {
+      sendUnauthorized(ctx.res);
+      return true;
+    }
+    const url = new URL(ctx.req.url ?? "/", "http://localhost");
+    const sessionKey = url.searchParams.get("sessionKey") ?? undefined;
+    const tasks = taskManager.listTasks(sessionKey);
+    sendJson(ctx.res, 200, tasks);
     return true;
   });
 
@@ -355,7 +372,6 @@ export function createGatewayHttpServer(opts: {
   router.all("*", async (ctx) => {
     if (!controlUiEnabled) return false;
 
-
     const config = loadConfig();
 
     // Blindagem Control UI: Autenticação Obrigatória
@@ -398,17 +414,16 @@ export function createGatewayHttpServer(opts: {
       trustedProxies,
     });
 
-    if (!authResult.ok) {
-      console.log(
-        `[debug-auth] auth failed: ok=${authResult.ok} reason=${authResult.reason} token_len=${token?.length ?? 0} expected_len=${resolvedAuth.token?.length ?? 0}`,
-      );
-      sendUnauthorized(ctx.res);
-      return true;
-    }
-
-    // SECURITY: Session Fixation prevention — generate opaque session token
-    // O cookie NUNCA contém o gateway token real. Um UUID de sessão é usado.
     if (fromQuery && token) {
+      if (!authResult.ok) {
+        console.log(
+          `[debug-auth] auth failed: ok=${authResult.ok} reason=${authResult.reason} token_len=${token?.length ?? 0} expected_len=${resolvedAuth.token?.length ?? 0}`,
+        );
+        sendUnauthorized(ctx.res);
+        return true;
+      }
+      // SECURITY: Session Fixation prevention — generate opaque session token
+      // O cookie NUNCA contém o gateway token real. Um UUID de sessão é usado.
       const sessionToken = randomUUID();
       const securePart = opts.isTls ? "; Secure" : "";
       ctx.res.setHeader("Set-Cookie", [
@@ -425,6 +440,8 @@ export function createGatewayHttpServer(opts: {
       return true;
     }
 
+    const validToken = authResult.ok ? token : undefined;
+
     if (
       handleControlUiAvatarRequest(ctx.req, ctx.res, {
         basePath: controlUiBasePath,
@@ -437,7 +454,7 @@ export function createGatewayHttpServer(opts: {
       handleControlUiHttpRequest(ctx.req, ctx.res, {
         basePath: controlUiBasePath,
         config: config,
-        token: token,
+        token: validToken,
       })
     )
       return true;
@@ -464,6 +481,28 @@ export function createGatewayHttpServer(opts: {
 
   async function handleRequest(req: IncomingMessage, res: ServerResponse) {
     if (String(req.headers.upgrade ?? "").toLowerCase() === "websocket") return;
+
+    // SECURITY: Content Security Policy (CSP) implementation with nonces
+    // Protects against XSS, clickjacking, MIME sniffing, and other attacks
+    const cspNonce = randomBytes(16).toString("base64");
+    const cspValue = [
+      "default-src 'self'",
+      `script-src 'self' 'unsafe-inline' 'nonce-${cspNonce}'`,
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: https:",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "connect-src 'self' ws: wss:",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+    ].join("; ");
+    res.setHeader("Content-Security-Policy", cspValue);
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-XSS-Protection", "0"); // Desabilitado — CSP nonce é proteção superior
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+    res.setHeader("X-CSP-Nonce", cspNonce); // Disponibilizar nonce para UI dinâmica
 
     // Rate Limiting — primeira verificação antes de qualquer processamento
     const config = loadConfig();
@@ -500,27 +539,7 @@ export function createGatewayHttpServer(opts: {
       return;
     }
 
-    // SECURITY: Content Security Policy (CSP) implementation with nonces
-    // Protects against XSS, clickjacking, MIME sniffing, and other attacks
-    const cspNonce = randomBytes(16).toString("base64");
-    res.setHeader(
-      "Content-Security-Policy",
-      "default-src 'self'; " +
-      `script-src 'self' 'unsafe-inline' 'nonce-${cspNonce}'; ` +
-      "style-src 'self' 'unsafe-inline'; " + // inline styles necessários para UI dinâmica
-      "img-src 'self' data: https:; " +
-      "font-src 'self' data:; " +
-      "connect-src 'self' ws: wss:; " +
-      "frame-ancestors 'none'; " +
-      "base-uri 'self'; " +
-      "form-action 'self'",
-    );
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("X-Frame-Options", "DENY");
-    res.setHeader("X-XSS-Protection", "0"); // Desabilitado — CSP nonce é proteção superior
-    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-    res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
-    res.setHeader("X-CSP-Nonce", cspNonce); // Disponibilizar nonce para UI dinâmica
+    // (CSP headers were moved to the top for better reliability with UI injection)
 
     // SECURITY: CORS Headers (configurable via zero.json)
     const corsConfig = config.gateway?.cors;

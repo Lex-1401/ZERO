@@ -288,10 +288,10 @@ changelog:
 ```yaml
 elicit: true
 interaction_points:
-  - project_name: 'What is the project name?'
-  - github_org: 'GitHub organization or username for repository?'
-  - optional_tools: 'Which optional tools do you want to install?'
-  - git_provider: 'Git provider preference (GitHub/GitLab/Bitbucket)?'
+  - project_name: "What is the project name?"
+  - github_org: "GitHub organization or username for repository?"
+  - optional_tools: "Which optional tools do you want to install?"
+  - git_provider: "Git provider preference (GitHub/GitLab/Bitbucket)?"
 ```
 
 ---
@@ -404,27 +404,27 @@ Would you like to update outdated tools? (Y/n): _
 ```yaml
 update_checks:
   supabase:
-    check_latest: 'npm view supabase version'
+    check_latest: "npm view supabase version"
     update:
-      npm: 'npm update -g supabase'
-      scoop: 'scoop update supabase'
-      brew: 'brew upgrade supabase'
+      npm: "npm update -g supabase"
+      scoop: "scoop update supabase"
+      brew: "brew upgrade supabase"
 
   gh:
-    check_latest: 'gh api repos/cli/cli/releases/latest --jq .tag_name'
+    check_latest: "gh api repos/cli/cli/releases/latest --jq .tag_name"
     update:
-      windows: 'winget upgrade GitHub.cli'
-      macos: 'brew upgrade gh'
-      linux: 'gh upgrade'
+      windows: "winget upgrade GitHub.cli"
+      macos: "brew upgrade gh"
+      linux: "gh upgrade"
 
   node:
-    note: 'Consider using nvm/fnm for Node.js version management'
-    check_latest: 'npm view node version'
+    note: "Consider using nvm/fnm for Node.js version management"
+    check_latest: "npm view node version"
 
   railway:
-    check_latest: 'npm view @railway/cli version'
+    check_latest: "npm view @railway/cli version"
     update:
-      npm: 'npm update -g @railway/cli'
+      npm: "npm update -g @railway/cli"
 ```
 
 **CLI Check Commands:**
@@ -433,61 +433,61 @@ update_checks:
 cli_checks:
   essential:
     git:
-      check: 'git --version'
-      expected: 'git version 2.x'
+      check: "git --version"
+      expected: "git version 2.x"
       install:
-        windows: 'winget install --id Git.Git'
-        macos: 'xcode-select --install'
-        linux: 'sudo apt install git'
+        windows: "winget install --id Git.Git"
+        macos: "xcode-select --install"
+        linux: "sudo apt install git"
 
     gh:
-      check: 'gh --version'
-      expected: 'gh version 2.x'
+      check: "gh --version"
+      expected: "gh version 2.x"
       install:
-        windows: 'winget install --id GitHub.cli'
-        macos: 'brew install gh'
-        linux: 'sudo apt install gh'
-      post_install: 'gh auth login'
+        windows: "winget install --id GitHub.cli"
+        macos: "brew install gh"
+        linux: "sudo apt install gh"
+      post_install: "gh auth login"
 
     node:
-      check: 'node --version'
-      expected: 'v18.x or v20.x'
+      check: "node --version"
+      expected: "v18.x or v20.x"
       install:
-        windows: 'winget install --id OpenJS.NodeJS.LTS'
-        macos: 'brew install node@20'
-        linux: 'curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt install nodejs'
+        windows: "winget install --id OpenJS.NodeJS.LTS"
+        macos: "brew install node@20"
+        linux: "curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt install nodejs"
 
     npm:
-      check: 'npm --version'
-      expected: '10.x'
-      note: 'Installed with Node.js'
+      check: "npm --version"
+      expected: "10.x"
+      note: "Installed with Node.js"
 
   infrastructure:
     supabase:
-      check: 'supabase --version'
-      expected: '1.x'
+      check: "supabase --version"
+      expected: "1.x"
       install:
-        npm: 'npm install -g supabase'
-        scoop: 'scoop bucket add supabase https://github.com/supabase/scoop-bucket.git && scoop install supabase'
-        brew: 'brew install supabase/tap/supabase'
-      post_install: 'supabase login'
+        npm: "npm install -g supabase"
+        scoop: "scoop bucket add supabase https://github.com/supabase/scoop-bucket.git && scoop install supabase"
+        brew: "brew install supabase/tap/supabase"
+      post_install: "supabase login"
 
     railway:
-      check: 'railway --version'
-      expected: '3.x'
+      check: "railway --version"
+      expected: "3.x"
       install:
-        npm: 'npm install -g @railway/cli'
-        brew: 'brew install railway'
-      post_install: 'railway login'
+        npm: "npm install -g @railway/cli"
+        brew: "brew install railway"
+      post_install: "railway login"
 
     docker:
-      check: 'docker --version'
-      expected: '24.x or 25.x'
+      check: "docker --version"
+      expected: "24.x or 25.x"
       install:
-        windows: 'winget install --id Docker.DockerDesktop'
-        macos: 'brew install --cask docker'
-        linux: 'See https://docs.docker.com/engine/install/'
-      note: 'Required for local Supabase development'
+        windows: "winget install --id Docker.DockerDesktop"
+        macos: "brew install --cask docker"
+        linux: "See https://docs.docker.com/engine/install/"
+      note: "Required for local Supabase development"
 
   quality:
     coderabbit:
@@ -510,7 +510,7 @@ cli_checks:
         else
           echo "NOT_INSTALLED"
         fi
-      expected: '0.8.x or higher'
+      expected: "0.8.x or higher"
       install:
         windows_wsl: |
           # 1. Ensure WSL is installed: wsl --install
@@ -518,8 +518,8 @@ cli_checks:
           curl -fsSL https://coderabbit.ai/install.sh | bash
           # 3. Authenticate:
           ~/.local/bin/coderabbit auth login
-        macos: 'curl -fsSL https://coderabbit.ai/install.sh | bash'
-        linux: 'curl -fsSL https://coderabbit.ai/install.sh | bash'
+        macos: "curl -fsSL https://coderabbit.ai/install.sh | bash"
+        linux: "curl -fsSL https://coderabbit.ai/install.sh | bash"
       note: |
         WINDOWS USERS: CodeRabbit CLI runs in WSL, not native Windows.
         - Requires WSL with Ubuntu/Debian distribution
@@ -528,23 +528,23 @@ cli_checks:
         - See: docs/guides/coderabbit/README.md for full setup guide
       verification:
         windows: "wsl bash -c '~/.local/bin/coderabbit --version'"
-        unix: 'coderabbit --version'
+        unix: "coderabbit --version"
 
   optional:
     pnpm:
-      check: 'pnpm --version'
-      expected: '8.x'
+      check: "pnpm --version"
+      expected: "8.x"
       install:
-        npm: 'npm install -g pnpm'
-      note: 'Faster alternative to npm'
+        npm: "npm install -g pnpm"
+      note: "Faster alternative to npm"
 
     bun:
-      check: 'bun --version'
-      expected: '1.x'
+      check: "bun --version"
+      expected: "1.x"
       install:
         windows: 'powershell -c "irm bun.sh/install.ps1 | iex"'
-        unix: 'curl -fsSL https://bun.sh/install | bash'
-      note: 'Ultra-fast JavaScript runtime'
+        unix: "curl -fsSL https://bun.sh/install | bash"
+      note: "Ultra-fast JavaScript runtime"
 ```
 
 ---
@@ -952,6 +952,7 @@ Escolha [1/2]:
 **YOLO Mode Behavior:** Auto-select `advanced` (developer running in autonomous mode is advanced by definition)
 
 **Profile Mapping:**
+
 - Option 1 (Modo Assistido) → `user_profile: "bob"`
 - Option 2 (Modo Avançado) → `user_profile: "advanced"`
 
@@ -975,17 +976,21 @@ EOF
 **Programmatic (Node.js):**
 
 ```javascript
-const { setUserConfigValue, ensureUserConfigDir } = require('.aios-core/core/config/config-resolver');
+const {
+  setUserConfigValue,
+  ensureUserConfigDir,
+} = require(".aios-core/core/config/config-resolver");
 
 // Ensure directory exists with permissions 700
 ensureUserConfigDir();
 
 // Write user profile
-setUserConfigValue('user_profile', selectedProfile); // 'bob' or 'advanced'
-setUserConfigValue('default_language', 'pt-BR');
+setUserConfigValue("user_profile", selectedProfile); // 'bob' or 'advanced'
+setUserConfigValue("default_language", "pt-BR");
 ```
 
 **Validation:**
+
 - Profile must be either `bob` or `advanced`
 - `~/.aios/` directory must have permissions 700
 - `~/.aios/user-config.yaml` must be valid YAML after write

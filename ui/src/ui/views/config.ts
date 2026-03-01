@@ -1,12 +1,7 @@
 import { html, nothing } from "lit";
 import type { ConfigUiHints } from "../types";
 import { analyzeConfigSchema, renderConfigForm, SECTION_META } from "./config-form";
-import {
-  hintForPath,
-  humanize,
-  schemaType,
-  type JsonSchema,
-} from "./config-form.shared";
+import { hintForPath, humanize, schemaType, type JsonSchema } from "./config-form.shared";
 import { icons } from "../icons";
 import { t } from "../i18n";
 
@@ -54,37 +49,244 @@ export type ConfigProps = {
 
 // SVG Icons for sidebar (Lucide-style)
 const sidebarIcons = {
-  all: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>`,
-  env: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
-  update: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
-  agents: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"></path><circle cx="8" cy="14" r="1"></circle><circle cx="16" cy="14" r="1"></circle></svg>`,
-  auth: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`,
-  channels: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
-  messages: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
-  commands: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`,
-  hooks: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`,
-  skills: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
-  tools: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
-  gateway: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
-  wizard: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4V2"></path><path d="M15 16v-2"></path><path d="M8 9h2"></path><path d="M20 9h2"></path><path d="M17.8 11.8 19 13"></path><path d="M15 9h0"></path><path d="M17.8 6.2 19 5"></path><path d="m3 21 9-9"></path><path d="M12.2 6.2 11 5"></path></svg>`,
+  all: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="14" y="14" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+    </svg>
+  `,
+  env: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path
+        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+      ></path>
+    </svg>
+  `,
+  update: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+  `,
+  agents: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path
+        d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"
+      ></path>
+      <circle cx="8" cy="14" r="1"></circle>
+      <circle cx="16" cy="14" r="1"></circle>
+    </svg>
+  `,
+  auth: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+  `,
+  channels: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  `,
+  messages: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+      <polyline points="22,6 12,13 2,6"></polyline>
+    </svg>
+  `,
+  commands: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <polyline points="4 17 10 11 4 5"></polyline>
+      <line x1="12" y1="19" x2="20" y2="19"></line>
+    </svg>
+  `,
+  hooks: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+    </svg>
+  `,
+  skills: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <polygon
+        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+      ></polygon>
+    </svg>
+  `,
+  tools: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path
+        d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+      ></path>
+    </svg>
+  `,
+  gateway: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="2" y1="12" x2="22" y2="12"></line>
+      <path
+        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+      ></path>
+    </svg>
+  `,
+  wizard: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M15 4V2"></path>
+      <path d="M15 16v-2"></path>
+      <path d="M8 9h2"></path>
+      <path d="M20 9h2"></path>
+      <path d="M17.8 11.8 19 13"></path>
+      <path d="M15 9h0"></path>
+      <path d="M17.8 6.2 19 5"></path>
+      <path d="m3 21 9-9"></path>
+      <path d="M12.2 6.2 11 5"></path>
+    </svg>
+  `,
   // Additional sections
-  meta: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`,
-  logging: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
-  browser: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="21.17" y1="8" x2="12" y2="8"></line><line x1="3.95" y1="6.06" x2="8.54" y2="14"></line><line x1="10.88" y1="21.94" x2="15.46" y2="14"></line></svg>`,
-  ui: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>`,
-  models: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
-  bindings: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`,
-  gitMerge: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/></svg>`,
-  broadcast: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"></path><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"></path><circle cx="12" cy="12" r="2"></circle><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"></path><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"></path></svg>`,
-  audio: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`,
-  session: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`,
-  cron: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
-  web: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
-  discovery: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
-  canvasHost: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`,
-  talk: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>`,
-  plugins: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6"></path><path d="m4.93 10.93 4.24 4.24"></path><path d="M2 12h6"></path><path d="m4.93 13.07 4.24-4.24"></path><path d="M12 22v-6"></path><path d="m19.07 13.07-4.24-4.24"></path><path d="M22 12h-6"></path><path d="m19.07 10.93-4.24 4.24"></path></svg>`,
-  default: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`,
+  meta: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 20h9"></path>
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+    </svg>
+  `,
+  logging: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+    </svg>
+  `,
+  browser: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"></circle>
+      <circle cx="12" cy="12" r="4"></circle>
+      <line x1="21.17" y1="8" x2="12" y2="8"></line>
+      <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+      <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+    </svg>
+  `,
+  ui: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="3" y1="9" x2="21" y2="9"></line>
+      <line x1="9" y1="21" x2="9" y2="9"></line>
+    </svg>
+  `,
+  models: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path
+        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+      ></path>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+      <line x1="12" y1="22.08" x2="12" y2="12"></line>
+    </svg>
+  `,
+  bindings: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+      <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+      <line x1="6" y1="6" x2="6.01" y2="6"></line>
+      <line x1="6" y1="18" x2="6.01" y2="18"></line>
+    </svg>
+  `,
+  gitMerge: html`
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="18" cy="18" r="3" />
+      <circle cx="6" cy="6" r="3" />
+      <path d="M6 21V9a9 9 0 0 0 9 9" />
+    </svg>
+  `,
+  broadcast: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"></path>
+      <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"></path>
+      <circle cx="12" cy="12" r="2"></circle>
+      <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"></path>
+      <path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"></path>
+    </svg>
+  `,
+  audio: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M9 18V5l12-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+  `,
+  session: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+  `,
+  cron: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+  `,
+  web: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="2" y1="12" x2="22" y2="12"></line>
+      <path
+        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+      ></path>
+    </svg>
+  `,
+  discovery: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  `,
+  canvasHost: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+      <polyline points="21 15 16 10 5 21"></polyline>
+    </svg>
+  `,
+  talk: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+      <line x1="12" y1="19" x2="12" y2="23"></line>
+      <line x1="8" y1="23" x2="16" y2="23"></line>
+    </svg>
+  `,
+  plugins: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 2v6"></path>
+      <path d="m4.93 10.93 4.24 4.24"></path>
+      <path d="M2 12h6"></path>
+      <path d="m4.93 13.07 4.24-4.24"></path>
+      <path d="M12 22v-6"></path>
+      <path d="m19.07 13.07-4.24-4.24"></path>
+      <path d="M22 12h-6"></path>
+      <path d="m19.07 10.93-4.24 4.24"></path>
+    </svg>
+  `,
+  default: html`
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+    </svg>
+  `,
 };
 
 // Section definitions
@@ -119,7 +321,6 @@ const getSections = () => [
   { key: "plugins", label: t("config.section.plugins.label" as any) },
 ];
 
-
 type SubsectionEntry = {
   key: string;
   label: string;
@@ -134,7 +335,10 @@ function getSectionIcon(key: string) {
   return sidebarIcons[key as keyof typeof sidebarIcons] ?? sidebarIcons.default;
 }
 
-function resolveSectionMeta(key: string, schema?: JsonSchema): {
+function resolveSectionMeta(
+  key: string,
+  schema?: JsonSchema,
+): {
   label: string;
   description?: string;
 } {
@@ -166,7 +370,7 @@ function resolveSubsections(params: {
 
 function computeDiff(
   original: Record<string, unknown> | null,
-  current: Record<string, unknown> | null
+  current: Record<string, unknown> | null,
 ): Array<{ path: string; from: unknown; to: unknown }> {
   if (!original || !current) return [];
   const changes: Array<{ path: string; from: unknown; to: unknown }> = [];
@@ -215,24 +419,22 @@ function truncateValue(value: unknown, maxLen = 40): string {
 
 export function renderConfig(props: ConfigProps) {
   const analysis = analyzeConfigSchema(props.schema);
-  const formUnsafe = analysis.schema
-    ? analysis.unsupportedPaths.length > 0
-    : false;
+  const formUnsafe = analysis.schema ? analysis.unsupportedPaths.length > 0 : false;
 
   const schemaProps = analysis.schema?.properties ?? {};
   const sections = getSections();
-  const availableSections = sections.filter(s => s.key in schemaProps);
+  const availableSections = sections.filter((s) => s.key in schemaProps);
 
-  const knownKeys = new Set(sections.map(s => s.key));
+  const knownKeys = new Set(sections.map((s) => s.key));
   const extraSections = Object.keys(schemaProps)
-    .filter(k => !knownKeys.has(k))
-    .map(k => ({ key: k, label: k.charAt(0).toUpperCase() + k.slice(1) }));
+    .filter((k) => !knownKeys.has(k))
+    .map((k) => ({ key: k, label: k.charAt(0).toUpperCase() + k.slice(1) }));
 
   const allSections = [
     { key: "appearance", label: t("settings.appearance") },
     { key: "update", label: t("settings.update") },
-    ...availableSections.filter(s => s.key !== "update"),
-    ...extraSections
+    ...availableSections.filter((s) => s.key !== "update"),
+    ...extraSections,
   ];
 
   const activeSectionSchema =
@@ -244,30 +446,27 @@ export function renderConfig(props: ConfigProps) {
     : null;
   const subsections = props.activeSection
     ? resolveSubsections({
-      key: props.activeSection,
-      schema: activeSectionSchema,
-      uiHints: props.uiHints,
-    })
+        key: props.activeSection,
+        schema: activeSectionSchema,
+        uiHints: props.uiHints,
+      })
     : [];
   const allowSubnav =
-    props.formMode === "form" &&
-    Boolean(props.activeSection) &&
-    subsections.length > 0;
+    props.formMode === "form" && Boolean(props.activeSection) && subsections.length > 0;
   const isAllSubsection = props.activeSubsection === ALL_SUBSECTION;
   const effectiveSubsection = props.searchQuery
     ? null
     : isAllSubsection
       ? null
-      : props.activeSubsection ?? (subsections[0]?.key ?? (props.activeSection === "appearance" ? "visual" : null));
+      : (props.activeSubsection ??
+        subsections[0]?.key ??
+        (props.activeSection === "appearance" ? "visual" : null));
 
-  const diff = props.formMode === "form"
-    ? computeDiff(props.originalValue, props.formValue)
-    : [];
+  const diff = props.formMode === "form" ? computeDiff(props.originalValue, props.formValue) : [];
   const hasRawChanges = props.formMode === "raw" && props.raw !== props.originalRaw;
   const hasChanges = props.formMode === "form" ? diff.length > 0 : hasRawChanges;
 
-  const canSaveForm =
-    Boolean(props.formValue) && !props.loading && Boolean(analysis.schema);
+  const canSaveForm = Boolean(props.formValue) && !props.loading && Boolean(analysis.schema);
   const canSave =
     props.connected &&
     !props.saving &&
@@ -294,7 +493,8 @@ export function renderConfig(props: ConfigProps) {
     const registryVer = normalizeVer(registry?.latestVersion);
     const currentVer = normalizeVer(git?.tag);
 
-    const hasUpdate = (git?.behind ?? 0) > 0 || (registryVer !== "0.0.0" && registryVer !== currentVer);
+    const hasUpdate =
+      (git?.behind ?? 0) > 0 || (registryVer !== "0.0.0" && registryVer !== currentVer);
 
     return html`
       <div class="animate-fade-in" style="display: flex; flex-direction: column; gap: 24px;">
@@ -312,18 +512,28 @@ export function renderConfig(props: ConfigProps) {
             </div>
           </div>
           <div style="padding: 24px 24px 40px 24px;">
-            ${loading && !status ? html`
+            ${
+              loading && !status
+                ? html`
                 <div style="text-align: center; padding: 40px;">
                     <div class="animate-spin" style="display: inline-block; margin-bottom: 12px; opacity: 0.5;">${icons.loader}</div>
                     <div style="font-size: 12px; color: var(--text-muted);">${t("common.loading" as any)}...</div>
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${error ? html`
+            ${
+              error
+                ? html`
                 <div class="badge danger" style="width: 100%; margin-bottom: 16px;">${error}</div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${status ? html`
+            ${
+              status
+                ? html`
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
                     <!-- Version Info -->
                     <div class="info-group">
@@ -354,26 +564,36 @@ export function renderConfig(props: ConfigProps) {
 
                 <div style="margin-top: 32px; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);">
                     <div>
-                        ${hasUpdate ? html`
+                        ${
+                          hasUpdate
+                            ? html`
                             <div style="color: var(--accent-blue); font-weight: 700; font-size: 15px; letter-spacing: -0.01em;">${t("config.update.ready" as any)}</div>
                             <div style="font-size: 12px; color: var(--text-muted); opacity: 0.8;">${t("config.update.ready.desc" as any)}</div>
-                        ` : html`
+                        `
+                            : html`
                             <div style="color: var(--success); font-weight: 700; font-size: 15px; letter-spacing: -0.01em;">${t("config.update.uptodate" as any)}</div>
                             <div style="font-size: 12px; color: var(--text-muted); opacity: 0.8;">${t("config.update.uptodate.desc" as any)}</div>
-                        `}
+                        `
+                        }
                     </div>
-                    <button class="btn primary" ?disabled=${props.updateRunning || !hasUpdate} @click=${() => props.onRunSoftwareUpdate()} style="min-width: 140px; height: 38px; box-shadow: ${hasUpdate ? '0 4px 15px rgba(59, 130, 246, 0.3)' : 'none'};">
+                    <button class="btn primary" ?disabled=${props.updateRunning || !hasUpdate} @click=${() => props.onRunSoftwareUpdate()} style="min-width: 140px; height: 38px; box-shadow: ${hasUpdate ? "0 4px 15px rgba(59, 130, 246, 0.3)" : "none"};">
                         ${props.updateRunning ? html`<div class="animate-spin" style="margin-right: 8px;">${icons.loader}</div>` : nothing}
                         ${props.updateRunning ? t("config.update.running" as any) : t("config.update.button" as any)}
                     </button>
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${!status && !loading && !error ? html`
+            ${
+              !status && !loading && !error
+                ? html`
                 <div style="text-align: center; padding: 40px;">
                     <button class="btn" @click=${() => props.onRefreshUpdateStatus()}>${t("config.update.check" as any)}</button>
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
           </div>
         </div>
       </div>
@@ -474,18 +694,20 @@ export function renderConfig(props: ConfigProps) {
           
           <div class="section-title" style="margin-top: 16px; margin-bottom: 8px;">${t("config.nav.settings" as any)}</div>
           
-          ${allSections.map(section => html`
+          ${allSections.map(
+            (section) => html`
             <button
               class="config-nav__item ${props.activeSection === section.key ? "active" : ""}"
               @click=${() => {
-      props.onSectionChange(section.key);
-      if (section.key === "update") props.onRefreshUpdateStatus();
-    }}
+                props.onSectionChange(section.key);
+                if (section.key === "update") props.onRefreshUpdateStatus();
+              }}
             >
               <span class="config-nav__icon">${getSectionIcon(section.key)}</span>
               <span>${section.label}</span>
             </button>
-          `)}
+          `,
+          )}
         </nav>
 
         <div class="config-sidebar__footer">
@@ -502,19 +724,51 @@ export function renderConfig(props: ConfigProps) {
         <!-- Action Bar -->
         <div class="config-actions">
              <div class="config-actions__left">
-                ${hasChanges ? html`
+                ${
+                  hasChanges
+                    ? html`
                     <div class="config-changes-badge animate-fade-in">
-                        ${props.formMode === "raw" ? t("config.status.manual" as any) : t("config.status.changes" as any).replace("{count}", String(diff.length)).replace("{suffix}", diff.length !== 1 ? (props.language === "en-US" ? "s" : "ões") : (props.language === "en-US" ? "" : "ão"))}
+                        ${
+                          props.formMode === "raw"
+                            ? t("config.status.manual" as any)
+                            : t("config.status.changes" as any)
+                                .replace("{count}", String(diff.length))
+                                .replace(
+                                  "{suffix}",
+                                  diff.length !== 1
+                                    ? props.language === "en-US"
+                                      ? "s"
+                                      : "ões"
+                                    : props.language === "en-US"
+                                      ? ""
+                                      : "ão",
+                                )
+                        }
                     </div>
-                ` : html`
+                `
+                    : html`
                     <div class="badge muted">${t("config.status.synced" as any)}</div>
-                `}
+                `
+                }
                 
-                ${props.issues.length > 0 ? html`
+                ${
+                  props.issues.length > 0
+                    ? html`
                     <div class="badge danger animate-fade-in">
-                        ${t("config.status.errors" as any).replace("{count}", String(props.issues.length)).replace("{suffix}", props.issues.length !== 1 ? (props.language === "en-US" ? "s" : "s") : "")}
+                        ${t("config.status.errors" as any)
+                          .replace("{count}", String(props.issues.length))
+                          .replace(
+                            "{suffix}",
+                            props.issues.length !== 1
+                              ? props.language === "en-US"
+                                ? "s"
+                                : "s"
+                              : "",
+                          )}
                     </div>
-                ` : nothing}
+                `
+                    : nothing
+                }
              </div>
 
              <div class="config-actions__right">
@@ -528,22 +782,29 @@ export function renderConfig(props: ConfigProps) {
         <!-- Scrollable Content -->
         <div class="config-content">
             
-            ${props.error ? html`
+            ${
+              props.error
+                ? html`
                 <div class="config-error-banner animate-slide-down" style="margin: 0 0 24px 0; padding: 12px 16px; background: rgba(255, 68, 68, 0.1); border-left: 4px solid var(--danger); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                     <div style="color: var(--danger); font-size: 12px; font-weight: 500;">
                         ${props.error}
                     </div>
                     <button class="btn btn--icon btn--xs" @click=${props.onReload}>${icons.loader}</button>
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${hasChanges && props.formMode === "form" ? html`
+            ${
+              hasChanges && props.formMode === "form"
+                ? html`
                 <div class="config-diff animate-fade-in" style="margin: 0 0 24px 0;">
                     <div class="config-diff__summary" style="padding: 10px 16px; background: rgba(255, 68, 68, 0.1);">
                         ${t("config.diff.title" as any)}
                     </div>
                     <div style="padding: 8px;">
-                        ${diff.map(change => html`
+                        ${diff.map(
+                          (change) => html`
                             <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; font-size: 11px; border-bottom: 1px solid rgba(255,255,255,0.05);">
                                 <div style="font-family: var(--font-mono); color: var(--text-dim);">${change.path}</div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -552,12 +813,17 @@ export function renderConfig(props: ConfigProps) {
                                     <span style="color: var(--accent-blue); font-weight: 600;">${truncateValue(change.to)}</span>
                                 </div>
                             </div>
-                        `)}
+                        `,
+                        )}
                     </div>
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${activeSectionMeta && props.formMode === "form" && props.activeSection !== "appearance" ? html`
+            ${
+              activeSectionMeta && props.formMode === "form" && props.activeSection !== "appearance"
+                ? html`
                 <div class="config-section-hero" style="margin: -24px -24px 24px -24px;">
                     <div class="config-section-hero__icon">
                         ${getSectionIcon(props.activeSection ?? "")}
@@ -567,32 +833,48 @@ export function renderConfig(props: ConfigProps) {
                         ${activeSectionMeta.description ? html`<p class="config-section-hero__desc" style="font-size: 11px; color: var(--text-muted); opacity: 0.8;">${activeSectionMeta.description}</p>` : nothing}
                     </div>
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
-            ${props.formMode === "form" ? html`
-                ${props.schemaLoading ? html`
+            ${
+              props.formMode === "form"
+                ? html`
+                ${
+                  props.schemaLoading
+                    ? html`
                     <div style="padding: 80px; text-align: center; color: var(--text-dim);">
                         <div class="animate-spin" style="display: inline-block; margin-bottom: 12px; opacity: 0.5;">${icons.loader}</div>
                         <div style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;">${t("config.loading.defs" as any)}</div>
                     </div>
-                ` : props.activeSection === "appearance" ? renderAppearance() : props.activeSection === "update" ? renderUpdate() : renderConfigForm({
-      schema: analysis.schema,
-      uiHints: props.uiHints,
-      value: props.formValue,
-      disabled: props.loading || !props.formValue,
-      unsupportedPaths: analysis.unsupportedPaths,
-      onPatch: props.onFormPatch,
-      searchQuery: props.searchQuery,
-      activeSection: props.activeSection,
-      activeSubsection: effectiveSubsection,
-    })}
-            ` : html`
+                `
+                    : props.activeSection === "appearance"
+                      ? renderAppearance()
+                      : props.activeSection === "update"
+                        ? renderUpdate()
+                        : renderConfigForm({
+                            schema: analysis.schema,
+                            uiHints: props.uiHints,
+                            value: props.formValue,
+                            disabled: props.loading || !props.formValue,
+                            unsupportedPaths: analysis.unsupportedPaths,
+                            onPatch: props.onFormPatch,
+                            searchQuery: props.searchQuery,
+                            activeSection: props.activeSection,
+                            activeSubsection: effectiveSubsection,
+                          })
+                }
+            `
+                : html`
                 <div class="config-section-card" style="height: calc(100% - 4px); margin: 0;">
                     <textarea class="code-block" style="width: 100%; height: 100%; border: none; resize: none; background: transparent; padding: 24px; font-size: 12px; line-height: 1.6;" .value=${props.raw} @input=${(e: Event) => props.onRawChange((e.target as HTMLTextAreaElement).value)}></textarea>
                 </div>
-            `}
+            `
+            }
 
-            ${props.issues.length > 0 ? html`
+            ${
+              props.issues.length > 0
+                ? html`
                 <div class="group-list" style="margin-top: 32px; border-color: var(--danger); background: rgba(255, 59, 48, 0.03);">
                     <div class="group-item" style="border-bottom: 1px solid rgba(255, 59, 48, 0.1);">
                         <div class="group-title" style="color: var(--danger); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;">${t("config.diag.critical" as any)}</div>
@@ -601,7 +883,9 @@ export function renderConfig(props: ConfigProps) {
                         <pre class="code-block" style="background: transparent; border: none; padding: 0; color: var(--danger); font-size: 11px; opacity: 0.8;">${JSON.stringify(props.issues, null, 2)}</pre>
                     </div>
                 </div>
-            ` : nothing}
+            `
+                : nothing
+            }
 
         </div>
 

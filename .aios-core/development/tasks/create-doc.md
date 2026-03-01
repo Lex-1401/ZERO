@@ -2,7 +2,7 @@
 # Template selection determined dynamically during task execution
 # User selects from available templates in .aios-core/product/templates/
 tools:
-  - github-cli        # For file operations
+  - github-cli # For file operations
 utils:
   - template-engine
   - template-validator
@@ -15,16 +15,19 @@ utils:
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -192,6 +195,7 @@ token_usage: ~1,500-5,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Cache template compilation; minimize data transformations; lazy load resources
 
 ---
@@ -211,8 +215,8 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Execution Dependencies
+
 **Utils:** template-engine, template-validator
 
 ## ⚠️ CRITICAL EXECUTION NOTICE ⚠️
@@ -249,6 +253,56 @@ If a YAML Template has not been provided, list all templates from .aios-core/pro
 **WORKFLOW VIOLATION:** Creating content for elicit=true sections without user interaction violates this task.
 
 **NEVER ask yes/no questions or use any other format.**
+
+## Code Intelligence: Codebase Intelligence Section (Optional — Auto-skip if unavailable)
+
+> **Condition:** Only execute if `isCodeIntelAvailable()` returns true AND the document being created is a PRD or architecture document.
+> If no code intelligence provider is available, skip this enhancement silently.
+
+When creating PRDs or architecture documents with code intelligence available, add a "Codebase Intelligence" section:
+
+```javascript
+const { isCodeIntelAvailable } = require(".aios-core/core/code-intel");
+const {
+  getCodebaseOverview,
+  getDependencyGraph,
+} = require(".aios-core/core/code-intel/helpers/planning-helper");
+
+if (isCodeIntelAvailable()) {
+  const overview = await getCodebaseOverview(".");
+  const depGraph = await getDependencyGraph(".");
+
+  // Add optional section to generated document:
+  // - overview.codebase: project patterns, file groups, architecture
+  // - overview.stats: file counts, language distribution, LOC
+  // - depGraph.summary: { totalDeps, depth }
+}
+```
+
+**If data is available, append this section to the generated document:**
+
+```markdown
+## Codebase Intelligence
+
+> Auto-generated from code intelligence provider. Real codebase data, not estimates.
+
+### Project Overview
+
+{{overview.codebase summary — patterns, file groups, architecture}}
+
+### Statistics
+
+{{overview.stats — file counts, language distribution}}
+
+### Dependency Summary
+
+- **Total Dependencies:** {{depGraph.summary.totalDeps}}
+- **Dependency Depth:** {{depGraph.summary.depth}}
+```
+
+> **Note:** This section is optional and only appears when a code intelligence provider is available. The document is fully functional without it.
+
+---
 
 ## Processing Flow
 

@@ -13,8 +13,8 @@
  *     node .aios-core/infrastructure/scripts/git-hooks/post-commit.js
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 /**
  * Find the project root by walking up from the current directory
@@ -27,7 +27,7 @@ function findProjectRoot() {
 
   // Walk up looking for .aios-core
   for (let i = 0; i < 10; i++) {
-    if (fs.existsSync(path.join(dir, '.aios-core'))) {
+    if (fs.existsSync(path.join(dir, ".aios-core"))) {
       return dir;
     }
     const parent = path.dirname(dir);
@@ -44,7 +44,7 @@ function findProjectRoot() {
  */
 function clearProjectStatusCache() {
   const projectRoot = findProjectRoot();
-  const aiosDir = path.join(projectRoot, '.aios');
+  const aiosDir = path.join(projectRoot, ".aios");
 
   if (!fs.existsSync(aiosDir)) {
     return; // No .aios directory - nothing to clear
@@ -55,7 +55,7 @@ function clearProjectStatusCache() {
 
     for (const file of files) {
       // Match project-status.yaml and project-status-{hash}.yaml
-      if (file.startsWith('project-status') && file.endsWith('.yaml')) {
+      if (file.startsWith("project-status") && file.endsWith(".yaml")) {
         const filePath = path.join(aiosDir, file);
         try {
           fs.unlinkSync(filePath);

@@ -60,7 +60,7 @@ function formatPaginationInfo(pagination) {
   const { startIndex, endIndex, totalItems, page, totalPages } = pagination;
 
   if (totalItems === 0) {
-    return 'No items found.';
+    return "No items found.";
   }
 
   if (totalPages === 1) {
@@ -87,10 +87,10 @@ function formatPaginationHint(pagination) {
   }
 
   if (hints.length === 0) {
-    return '';
+    return "";
   }
 
-  return `Use ${hints.join(', ')}.`;
+  return `Use ${hints.join(", ")}.`;
 }
 
 module.exports = {

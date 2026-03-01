@@ -3,6 +3,7 @@ summary: "Lógica de status da barra de menus e o que é exibido aos usuários"
 read_when:
   - Ajustando a interface do menu do mac ou a lógica de status
 ---
+
 # Lógica de Status da Barra de Menus
 
 ## O que é exibido

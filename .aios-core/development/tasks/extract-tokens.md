@@ -9,16 +9,19 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -186,6 +189,7 @@ token_usage: ~1,000-3,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Parallelize independent operations; reuse atom results; implement early exits
 
 ---
@@ -205,14 +209,13 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Description
 
 Generate design token system from consolidated patterns. Produce 3-layer token architecture (core → semantic → component) with OKLCH values, W3C DTCG-compliant JSON, and companion exports (YAML, JSON, CSS custom properties, Tailwind config, SCSS).
 
 ## Prerequisites
 
-- Consolidation completed (*consolidate command run successfully)
+- Consolidation completed (\*consolidate command run successfully)
 - .state.yaml contains consolidation data
 - Consolidated pattern files exist (color-clusters.txt, spacing-consolidation.txt, etc)
 
@@ -389,7 +392,7 @@ layers:
 
 ## Error Handling
 
-- **No consolidation data**: Exit with message to run *consolidate first
+- **No consolidation data**: Exit with message to run \*consolidate first
 - **Invalid consolidated patterns**: Log which patterns failed, continue with valid ones
 - **Export format error**: Validate syntax, report errors, fix or skip format
 - **Low coverage (<95%)**: Warn user, suggest additional consolidation
@@ -412,6 +415,7 @@ layers:
 ```
 
 Output:
+
 ```
 🔍 Brad: Extracting tokens from consolidated patterns...
 
@@ -440,9 +444,9 @@ Ready for Atlas to build components or generate migration strategy.
 /* tokens.css */
 :root {
   /* Colors */
-  --color-primary: #0066CC;
-  --color-primary-dark: #0052A3;
-  --color-error: #DC2626;
+  --color-primary: #0066cc;
+  --color-primary-dark: #0052a3;
+  --color-error: #dc2626;
 
   /* Spacing */
   --space-xs: 4px;
@@ -463,5 +467,5 @@ Ready for Atlas to build components or generate migration strategy.
 - Hover states auto-detected by "-dark" suffix
 - Coverage <95% means some patterns weren't consolidated
 - Export formats stay in sync - update tokens.yaml and regenerate all
-- Brad recommends: Run *migrate next to create migration strategy
-- For component generation, hand off to Atlas: *agent atlas
+- Brad recommends: Run \*migrate next to create migration strategy
+- For component generation, hand off to Atlas: \*agent atlas

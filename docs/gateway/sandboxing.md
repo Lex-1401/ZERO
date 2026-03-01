@@ -35,7 +35,7 @@ Não entra em sandbox:
 - `"off"`: sem sandboxing.
 - `"non-main"`: sandbox apenas para sessões que **não sejam a principal (non-main)** (padrão se você deseja chats normais no host).
 - `"all"`: cada sessão roda em uma sandbox.
-Nota: `"non-main"` baseia-se na chave `session.mainKey` (padrão `"main"`), não no ID do agente. Sessões de grupos/canais usam suas próprias chaves, portanto contam como non-main e entrarão em sandbox.
+  Nota: `"non-main"` baseia-se na chave `session.mainKey` (padrão `"main"`), não no ID do agente. Sessões de grupos/canais usam suas próprias chaves, portanto contam como non-main e entrarão em sandbox.
 
 ## Escopo
 
@@ -71,24 +71,21 @@ Exemplo (código-fonte somente leitura + socket do docker):
     defaults: {
       sandbox: {
         docker: {
-          binds: [
-            "/home/user/source:/source:ro",
-            "/var/run/docker.sock:/var/run/docker.sock"
-          ]
-        }
-      }
+          binds: ["/home/user/source:/source:ro", "/var/run/docker.sock:/var/run/docker.sock"],
+        },
+      },
     },
     list: [
       {
         id: "build",
         sandbox: {
           docker: {
-            binds: ["/mnt/cache:/cache:rw"]
-          }
-        }
-      }
-    ]
-  }
+            binds: ["/mnt/cache:/cache:rw"],
+          },
+        },
+      },
+    ],
+  },
 }
 ```
 
@@ -168,10 +165,10 @@ Veja [Sandbox & Ferramentas Multi-Agente](/multi-agent-sandbox-tools) para prece
       sandbox: {
         mode: "non-main",
         scope: "session",
-        workspaceAccess: "none"
-      }
-    }
-  }
+        workspaceAccess: "none",
+      },
+    },
+  },
 }
 ```
 

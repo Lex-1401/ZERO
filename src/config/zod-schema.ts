@@ -530,6 +530,26 @@ export const ZEROSchema = z
       })
       .strict()
       .optional(),
+    environments: z
+      .object({
+        templates: z
+          .record(
+            z.string(),
+            z
+              .object({
+                name: z.string(),
+                description: z.string().optional(),
+                image: z.string().optional(),
+                tools: z.array(z.string()).optional(),
+                env: z.record(z.string(), z.string()).optional(),
+                mounts: z.array(z.string()).optional(),
+              })
+              .strict(),
+          )
+          .optional(),
+      })
+      .strict()
+      .optional(),
   })
   .strict()
   .superRefine((cfg, ctx) => {

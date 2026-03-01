@@ -258,29 +258,18 @@ export class SecurityGuard {
     const baseCommand = commandParts[0];
 
     const highRisk = [
-      "curl",
-      "wget",
-      "ssh",
-      "scp",
-      "ftp",
-      "base64",
-      "nc",
-      "ncat",
-      "netcat",
-      "socat",
-      "sudo",
-      "eval",
-      "exec",
-      "kubectl",
-      "docker",
-      "ansible",
-      "terraform",
-      "aws",
-      "gcloud",
-      "az",
+      "curl", "wget", "ssh", "scp", "ftp", "rsync",
+      "base64", "nc", "ncat", "netcat", "socat", "ngrok",
+      "sudo", "eval", "exec", "su",
+      "kubectl", "docker", "ansible", "terraform",
+      "aws", "gcloud", "az", "heroku",
+      "python", "python3", "perl", "ruby", "php", "node", "ts-node",
+      "nmap", "tcpdump", "tshark", "ping", "dig", "ifconfig", "ip",
+      "chmod", "chown", "dd", "rm", "mv", "kill", "killall",
+      "systemctl", "service", "journalctl",
     ];
 
-    const dangerousArgs = ["rm", "chmod", "chown", "mv", "dd"];
+    const dangerousArgs = ["rm", "chmod", "chown", "mv", "dd", ">", ">>"];
 
     if (highRisk.includes(baseCommand)) return 3;
 
@@ -296,7 +285,11 @@ export class SecurityGuard {
       return 3;
     }
 
-    const medRisk = ["git", "npm", "pip", "pnpm", "yarn", "apt", "brew", "yum", "dnf"];
+    const medRisk = [
+      "git", "npm", "pip", "pnpm", "yarn", "bun",
+      "apt", "apt-get", "brew", "yum", "dnf", "apk", "pacman", "zypper",
+      "ps", "top", "htop", "uname", "df", "du", "free"
+    ];
 
     if (medRisk.includes(baseCommand)) return 2;
 
@@ -388,17 +381,22 @@ export class SecurityGuard {
       }
     }
 
-    // High entropy check for hex strings (likely keys)
-    const hexKeys = text.match(/\b[a-fA-F0-9]{32,}\b/g);
-    if (hexKeys) {
-      for (const key of hexKeys) {
+    // High entropy check for hex/base64 strings (likely keys/tokens)
+    const secretCandidates = text.match(/\b(?:[a-fA-F0-9]{32,}|[A-Za-z0-9+/]{40,}=*)\b/g);
+    if (secretCandidates) {
+      for (const key of secretCandidates) {
         const entropy = nativeSecurity
           ? nativeSecurity.calculateEntropy(key)
           : this.calculateEntropy(key);
-        if (entropy > 4.0) {
+
+        // Thresholds: Hex (3.0-4.0), Base64 (4.0-5.0)
+        const isHex = /^[a-fA-F0-9]+$/.test(key);
+        const threshold = isHex ? 3.8 : 4.5;
+
+        if (entropy > threshold) {
           return {
             type: "pii",
-            details: "Cadeia de alta entropia (possível segredo) detectada na saída.",
+            details: `Cadeia de alta entropia (${isHex ? 'hex' : 'base64'}) detectada na saída (Entropia: ${entropy.toFixed(2)}).`,
           };
         }
       }

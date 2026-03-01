@@ -11,9 +11,9 @@ O ZERO usa o Brave Search como o provedor padrão para a habilidade `web_search`
 
 ## Obter uma chave de API
 
-1) Crie uma conta na API do Brave Search em <https://brave.com/search/api/>
-2) No painel, escolha o plano **Data for Search** e gere uma chave de API.
-3) Armazene a chave na configuração (recomendado) ou defina `BRAVE_API_KEY` no ambiente do Gateway.
+1. Crie uma conta na API do Brave Search em <https://brave.com/search/api/>
+2. No painel, escolha o plano **Data for Search** e gere uma chave de API.
+3. Armazene a chave na configuração (recomendado) ou defina `BRAVE_API_KEY` no ambiente do Gateway.
 
 ## Exemplo de configuração
 
@@ -25,10 +25,10 @@ O ZERO usa o Brave Search como o provedor padrão para a habilidade `web_search`
         provider: "brave",
         apiKey: "SUA_BRAVE_API_KEY_AQUI",
         maxResults: 5,
-        timeoutSeconds: 30
-      }
-    }
-  }
+        timeoutSeconds: 30,
+      },
+    },
+  },
 }
 ```
 

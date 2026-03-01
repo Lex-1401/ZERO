@@ -36,9 +36,9 @@ Desative no nó se necessário:
 {
   nodeHost: {
     browserProxy: {
-      enabled: false
-    }
-  }
+      enabled: false,
+    },
+  },
 }
 ```
 

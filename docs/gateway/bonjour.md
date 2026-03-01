@@ -4,6 +4,7 @@ read_when:
   - Depurando problemas de descoberta Bonjour no macOS/iOS
   - Alterando tipos de serviço mDNS, registros TXT ou UX de descoberta
 ---
+
 # Bonjour / Descoberta mDNS
 
 O ZERO usa o Bonjour (mDNS / DNS-SD) apenas como uma **conveniência de rede local (LAN)** para descobrir um Gateway ativo (ponto de extremidade WebSocket). É feito por melhor esforço e **não** substitui a conectividade baseada em SSH ou Tailscale (Tailnet).
@@ -14,9 +15,9 @@ Se o nó e o gateway estiverem em redes diferentes, o mDNS multicast não cruzar
 
 Passos de alto nível:
 
-1) Execute um servidor DNS no host do gateway (acessível via Tailnet).
-2) Publique registros DNS-SD para `_zero-gw._tcp` sob uma zona dedicada (exemplo: `zero.internal.`).
-3) Configure o **DNS dividido (split DNS)** da Tailscale para que `zero.internal` seja resolvido através desse servidor DNS para os clientes (incluindo iOS).
+1. Execute um servidor DNS no host do gateway (acessível via Tailnet).
+2. Publique registros DNS-SD para `_zero-gw._tcp` sob uma zona dedicada (exemplo: `zero.internal.`).
+3. Configure o **DNS dividido (split DNS)** da Tailscale para que `zero.internal` seja resolvido através desse servidor DNS para os clientes (incluindo iOS).
 
 O ZERO padroniza o domínio `zero.internal.` para este modo. Os nós iOS/Android procuram automaticamente tanto em `local.` quanto em `zero.internal.`.
 
@@ -25,7 +26,7 @@ O ZERO padroniza o domínio `zero.internal.` para este modo. Os nós iOS/Android
 ```json5
 {
   gateway: { bind: "tailnet" }, // apenas Tailnet (recomendado)
-  discovery: { wideArea: { enabled: true } } // habilita a publicação DNS-SD em zero.internal
+  discovery: { wideArea: { enabled: true } }, // habilita a publicação DNS-SD em zero.internal
 }
 ```
 

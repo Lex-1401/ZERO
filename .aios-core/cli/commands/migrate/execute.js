@@ -8,10 +8,10 @@
  * @story 2.14 - Migration Script v2.0 → v4.0.4
  */
 
-const fs = require('fs');
-const path = require('path');
-const { copyFileWithMetadata } = require('./backup');
-const { MODULE_MAPPING } = require('./analyze');
+const fs = require("fs");
+const path = require("path");
+const { copyFileWithMetadata } = require("./backup");
+const { MODULE_MAPPING } = require("./analyze");
 
 /**
  * Create module directories for v4.0.4 structure
@@ -24,7 +24,7 @@ async function createModuleDirectories(aiosCoreDir, options = {}) {
   const modules = Object.keys(MODULE_MAPPING);
   const created = [];
 
-  onProgress({ phase: 'directories', message: 'Creating module directories...' });
+  onProgress({ phase: "directories", message: "Creating module directories..." });
 
   for (const moduleName of modules) {
     const moduleDir = path.join(aiosCoreDir, moduleName);
@@ -32,7 +32,7 @@ async function createModuleDirectories(aiosCoreDir, options = {}) {
     if (!fs.existsSync(moduleDir)) {
       await fs.promises.mkdir(moduleDir, { recursive: true });
       created.push(moduleDir);
-      onProgress({ phase: 'directory', message: `  ✓ Created ${moduleName}/` });
+      onProgress({ phase: "directory", message: `  ✓ Created ${moduleName}/` });
     }
   }
 
@@ -86,7 +86,7 @@ async function migrateModule(moduleData, moduleName, aiosCoreDir, options = {}) 
 
       if (verbose) {
         onProgress({
-          phase: 'file',
+          phase: "file",
           message: `    → ${file.relativePath}`,
         });
       }
@@ -138,7 +138,7 @@ async function executeMigration(plan, options = {}) {
   }
 
   // Phase 2: Migrate each module
-  const moduleNames = ['core', 'development', 'product', 'infrastructure'];
+  const moduleNames = ["core", "development", "product", "infrastructure"];
 
   for (const moduleName of moduleNames) {
     const moduleData = plan.modules[moduleName];
@@ -153,16 +153,15 @@ async function executeMigration(plan, options = {}) {
     }
 
     onProgress({
-      phase: 'module',
+      phase: "module",
       message: `✓ Migrating ${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)} module (${moduleData.files.length} files)`,
     });
 
-    const moduleResult = await migrateModule(
-      moduleData,
-      moduleName,
-      plan.aiosCoreDir,
-      { verbose, onProgress, dryRun },
-    );
+    const moduleResult = await migrateModule(moduleData, moduleName, plan.aiosCoreDir, {
+      verbose,
+      onProgress,
+      dryRun,
+    });
 
     result.modules[moduleName] = {
       files: moduleResult.migratedFiles.length,
@@ -181,13 +180,13 @@ async function executeMigration(plan, options = {}) {
   // Handle uncategorized files (move to core/)
   if (plan.uncategorized.length > 0 && !dryRun) {
     onProgress({
-      phase: 'uncategorized',
+      phase: "uncategorized",
       message: `Handling ${plan.uncategorized.length} uncategorized files...`,
     });
 
     for (const file of plan.uncategorized) {
       try {
-        const targetPath = path.join(plan.aiosCoreDir, 'core', file.relativePath);
+        const targetPath = path.join(plan.aiosCoreDir, "core", file.relativePath);
         await copyFileWithMetadata(file.sourcePath, targetPath);
         result.totalFiles++;
         result.totalSize += file.size;
@@ -202,7 +201,7 @@ async function executeMigration(plan, options = {}) {
 
   // Phase 3: Cleanup original files (if not dry run and enabled)
   if (!dryRun && cleanupOriginals) {
-    onProgress({ phase: 'cleanup', message: 'Cleaning up original locations...' });
+    onProgress({ phase: "cleanup", message: "Cleaning up original locations..." });
 
     // Get directories that should be removed (now nested in modules)
     const dirsToCleanup = new Set();
@@ -220,14 +219,14 @@ async function executeMigration(plan, options = {}) {
       try {
         // Check this is not a module directory itself
         const dirName = path.basename(dir);
-        if (!['core', 'development', 'product', 'infrastructure'].includes(dirName)) {
+        if (!["core", "development", "product", "infrastructure"].includes(dirName)) {
           await fs.promises.rm(dir, { recursive: true });
           result.cleanedUp.push(dir);
         }
       } catch (error) {
         // Non-fatal: cleanup errors are logged but don't fail migration
         result.errors.push({
-          type: 'cleanup',
+          type: "cleanup",
           path: dir,
           error: error.message,
         });
@@ -236,7 +235,7 @@ async function executeMigration(plan, options = {}) {
   }
 
   // Final status
-  result.success = result.errors.filter(e => e.type !== 'cleanup').length === 0;
+  result.success = result.errors.filter((e) => e.type !== "cleanup").length === 0;
 
   return result;
 }
@@ -247,11 +246,18 @@ async function executeMigration(plan, options = {}) {
  * @param {Object} state - Migration state
  */
 async function saveMigrationState(projectRoot, state) {
-  const statePath = path.join(projectRoot, '.aios-migration-state.json');
-  await fs.promises.writeFile(statePath, JSON.stringify({
-    ...state,
-    timestamp: new Date().toISOString(),
-  }, null, 2));
+  const statePath = path.join(projectRoot, ".aios-migration-state.json");
+  await fs.promises.writeFile(
+    statePath,
+    JSON.stringify(
+      {
+        ...state,
+        timestamp: new Date().toISOString(),
+      },
+      null,
+      2,
+    ),
+  );
 }
 
 /**
@@ -260,10 +266,10 @@ async function saveMigrationState(projectRoot, state) {
  * @returns {Object|null} Migration state or null
  */
 async function loadMigrationState(projectRoot) {
-  const statePath = path.join(projectRoot, '.aios-migration-state.json');
+  const statePath = path.join(projectRoot, ".aios-migration-state.json");
 
   if (fs.existsSync(statePath)) {
-    const content = await fs.promises.readFile(statePath, 'utf8');
+    const content = await fs.promises.readFile(statePath, "utf8");
     return JSON.parse(content);
   }
 
@@ -275,7 +281,7 @@ async function loadMigrationState(projectRoot) {
  * @param {string} projectRoot - Project root
  */
 async function clearMigrationState(projectRoot) {
-  const statePath = path.join(projectRoot, '.aios-migration-state.json');
+  const statePath = path.join(projectRoot, ".aios-migration-state.json");
 
   if (fs.existsSync(statePath)) {
     await fs.promises.unlink(statePath);

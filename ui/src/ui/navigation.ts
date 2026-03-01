@@ -5,7 +5,7 @@ export const TAB_GROUPS = [
   { label: t("group.Conversa" as any), tabs: ["chat"] },
   {
     label: t("group.Controle" as any),
-    tabs: ["mission-control", "overview", "channels", "instances", "sessions", "cron"],
+    tabs: ["mission-control", "tasks", "overview", "channels", "instances", "sessions", "cron"],
   },
   { label: t("group.Agente" as any), tabs: ["skills", "nodes", "graph", "playground", "docs"] },
   { label: t("group.Ajustes" as any), tabs: ["config", "debug", "logs"] },
@@ -13,6 +13,7 @@ export const TAB_GROUPS = [
 
 export type Tab =
   | "mission-control"
+  | "tasks"
   | "overview"
   | "channels"
   | "instances"
@@ -31,6 +32,7 @@ export type Tab =
 
 const TAB_PATHS: Record<Tab, string> = {
   "mission-control": "/mission-control",
+  tasks: "/tasks",
   overview: "/overview",
   channels: "/channels",
   instances: "/instances",
@@ -110,6 +112,8 @@ export function iconForTab(tab: Tab): IconName {
       return "bug";
     case "mission-control":
       return "activity";
+    case "tasks":
+      return "layout";
     case "logs":
       return "scrollText";
     case "docs":
@@ -125,4 +129,12 @@ export function titleForTab(tab: Tab) {
 
 export function subtitleForTab(tab: Tab) {
   return t(`subtitle.${tab}` as any);
+}
+export function resolveOnboardingMode(): boolean {
+  if (!window.location.search) return false;
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get("onboarding");
+  if (!raw) return false;
+  const normalized = raw.trim().toLowerCase();
+  return normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "on";
 }

@@ -1,6 +1,4 @@
-
 ---
-
 description: Create and run a realtime multimodal agent session
 ---
 
@@ -9,11 +7,11 @@ description: Create and run a realtime multimodal agent session
 
    ```typescript
    import { MultimodalSession, SemanticRouter } from "../../src/realtime";
-   
+
    const config = {
-       apiKey: process.env.GEMINI_API_KEY,
-       model: "gemini-2.0-flash-exp",
-       tools: [new SemanticRouter([]).getRouterToolDefinition()]
+     apiKey: process.env.GEMINI_API_KEY,
+     model: "gemini-2.0-flash-exp",
+     tools: [new SemanticRouter([]).getRouterToolDefinition()],
    };
    ```
 
@@ -21,15 +19,15 @@ description: Create and run a realtime multimodal agent session
 
    ```typescript
    const session = new MultimodalSession(config);
-   
+
    // Handle audio output from the model (e.g., play to speakers)
    session.on("audio", (chunk) => {
-       // audioSystem.play(chunk);
+     // audioSystem.play(chunk);
    });
-   
+
    // Handle text output for UI/Logs
    session.on("text", (text) => {
-       console.log("Agent:", text);
+     console.log("Agent:", text);
    });
    ```
 
@@ -37,15 +35,15 @@ description: Create and run a realtime multimodal agent session
 
    ```typescript
    session.on("toolCall", async (call) => {
-       if (call.name === "execute") {
-           // Use the router to identify the actual tool
-           const realTool = await router.route(call.arguments.task);
-           // Execute the real tool...
-           const output = "Result of: " + realTool.toolName;
-           
-           // Send response back to the model
-           session.sendToolResponse({ id: call.id, result: output });
-       }
+     if (call.name === "execute") {
+       // Use the router to identify the actual tool
+       const realTool = await router.route(call.arguments.task);
+       // Execute the real tool...
+       const output = "Result of: " + realTool.toolName;
+
+       // Send response back to the model
+       session.sendToolResponse({ id: call.id, result: output });
+     }
    });
    ```
 
@@ -53,7 +51,7 @@ description: Create and run a realtime multimodal agent session
 
    ```typescript
    await session.connect();
-   
+
    // In a loop or event handler:
    // session.sendAudio(micBuffer);
    // session.sendVideo(cameraFrame);

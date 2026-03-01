@@ -16,7 +16,7 @@ Avaliar a complexidade de uma story/requisito para determinar quais fases do pip
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: spec-assess
 
   elicit: false
@@ -63,14 +63,14 @@ autoClaude:
 
 ```yaml
 scope:
-  description: 'Quantos arquivos/componentes serão afetados?'
+  description: "Quantos arquivos/componentes serão afetados?"
 
   scoring:
-    1: '1-2 arquivos, mudança localizada'
-    2: '3-5 arquivos, um módulo'
-    3: '6-10 arquivos, múltiplos módulos'
-    4: '11-20 arquivos, cross-cutting'
-    5: '20+ arquivos, arquitetura inteira'
+    1: "1-2 arquivos, mudança localizada"
+    2: "3-5 arquivos, um módulo"
+    3: "6-10 arquivos, múltiplos módulos"
+    4: "11-20 arquivos, cross-cutting"
+    5: "20+ arquivos, arquitetura inteira"
 
   analysis:
     - Count files mentioned in requirements
@@ -82,14 +82,14 @@ scope:
 
 ```yaml
 integration:
-  description: 'Quantas integrações externas são necessárias?'
+  description: "Quantas integrações externas são necessárias?"
 
   scoring:
-    1: 'Nenhuma integração externa'
-    2: '1 API interna existente'
-    3: '1-2 APIs externas ou nova API interna'
-    4: '3+ APIs ou integração complexa (webhooks, eventos)'
-    5: 'Orquestração de múltiplos sistemas'
+    1: "Nenhuma integração externa"
+    2: "1 API interna existente"
+    3: "1-2 APIs externas ou nova API interna"
+    4: "3+ APIs ou integração complexa (webhooks, eventos)"
+    5: "Orquestração de múltiplos sistemas"
 
   analysis:
     - Identify external services mentioned
@@ -101,14 +101,14 @@ integration:
 
 ```yaml
 infrastructure:
-  description: 'Mudanças de infraestrutura necessárias?'
+  description: "Mudanças de infraestrutura necessárias?"
 
   scoring:
-    1: 'Nenhuma mudança de infra'
-    2: 'Configuração simples (env vars)'
-    3: 'Nova dependência ou serviço'
-    4: 'Mudança de banco de dados / schema'
-    5: 'Nova infraestrutura (servidor, container, etc)'
+    1: "Nenhuma mudança de infra"
+    2: "Configuração simples (env vars)"
+    3: "Nova dependência ou serviço"
+    4: "Mudança de banco de dados / schema"
+    5: "Nova infraestrutura (servidor, container, etc)"
 
   analysis:
     - Check for database changes
@@ -120,14 +120,14 @@ infrastructure:
 
 ```yaml
 knowledge:
-  description: 'Conhecimento necessário para implementar'
+  description: "Conhecimento necessário para implementar"
 
   scoring:
-    1: 'Padrões existentes no codebase'
-    2: 'Tecnologia conhecida, novo padrão'
-    3: 'Nova biblioteca, documentação clara'
-    4: 'Tecnologia nova para o time'
-    5: 'Área de domínio desconhecida, pesquisa necessária'
+    1: "Padrões existentes no codebase"
+    2: "Tecnologia conhecida, novo padrão"
+    3: "Nova biblioteca, documentação clara"
+    4: "Tecnologia nova para o time"
+    5: "Área de domínio desconhecida, pesquisa necessária"
 
   analysis:
     - Check existing patterns in codebase
@@ -139,14 +139,14 @@ knowledge:
 
 ```yaml
 risk:
-  description: 'Risco de impacto negativo'
+  description: "Risco de impacto negativo"
 
   scoring:
-    1: 'Baixo risco, feature isolada'
-    2: 'Risco moderado, afeta poucos usuários'
-    3: 'Risco médio, feature importante'
-    4: 'Risco alto, afeta muitos usuários'
-    5: 'Risco crítico, core do sistema'
+    1: "Baixo risco, feature isolada"
+    2: "Risco moderado, afeta poucos usuários"
+    3: "Risco médio, feature importante"
+    4: "Risco alto, afeta muitos usuários"
+    5: "Risco crítico, core do sistema"
 
   analysis:
     - Assess user impact
@@ -162,22 +162,22 @@ risk:
 thresholds:
   SIMPLE:
     max_total: 8
-    description: 'Tarefa direta, padrões existentes'
+    description: "Tarefa direta, padrões existentes"
     pipeline_phases: [gather, spec, critique]
-    typical_time: '< 1 dia'
+    typical_time: "< 1 dia"
 
   STANDARD:
     min_total: 9
     max_total: 15
-    description: 'Complexidade moderada, alguma pesquisa'
+    description: "Complexidade moderada, alguma pesquisa"
     pipeline_phases: [gather, assess, research, spec, critique, plan]
-    typical_time: '1-3 dias'
+    typical_time: "1-3 dias"
 
   COMPLEX:
     min_total: 16
-    description: 'Alta complexidade, múltiplas iterações'
+    description: "Alta complexidade, múltiplas iterações"
     pipeline_phases: [gather, assess, research, spec, critique_1, revise, critique_2, plan]
-    typical_time: '3+ dias'
+    typical_time: "3+ dias"
 
     flags:
       - Requires architectural review
@@ -206,7 +206,7 @@ codebase_analysis:
 
   actions:
     - id: count_affected_files
-      description: 'Estimate files that will be modified'
+      description: "Estimate files that will be modified"
       method: |
         1. Parse functional requirements
         2. Identify components/modules mentioned
@@ -214,14 +214,14 @@ codebase_analysis:
         4. Count unique files
 
     - id: check_patterns
-      description: 'Check if similar patterns exist'
+      description: "Check if similar patterns exist"
       method: |
         1. Extract key concepts from requirements
         2. Search for similar implementations
         3. Assess reusability
 
     - id: identify_integrations
-      description: 'Find external integrations needed'
+      description: "Find external integrations needed"
       method: |
         1. Parse requirements for external services
         2. Check existing integrations
@@ -360,13 +360,13 @@ output:
 
 ```yaml
 command:
-  name: '*assess-complexity'
-  syntax: '*assess-complexity {story-id} [--complexity=SIMPLE|STANDARD|COMPLEX]'
+  name: "*assess-complexity"
+  syntax: "*assess-complexity {story-id} [--complexity=SIMPLE|STANDARD|COMPLEX]"
   agent: architect
 
   examples:
-    - '*assess-complexity STORY-42'
-    - '*assess-complexity STORY-42 --complexity=COMPLEX'
+    - "*assess-complexity STORY-42"
+    - "*assess-complexity STORY-42 --complexity=COMPLEX"
 ```
 
 ### Pipeline Integration
@@ -385,7 +385,7 @@ pipeline:
     - requirements.json
 
   skip_conditions:
-    - 'overrideComplexity is provided' # Still runs but uses override
+    - "overrideComplexity is provided" # Still runs but uses override
 ```
 
 ---
@@ -395,18 +395,18 @@ pipeline:
 ```yaml
 errors:
   - id: missing-requirements
-    condition: 'requirements.json not found'
-    action: 'Halt and instruct to run gather phase first'
+    condition: "requirements.json not found"
+    action: "Halt and instruct to run gather phase first"
     blocking: true
 
   - id: empty-requirements
-    condition: 'functional requirements array is empty'
-    action: 'Cannot assess - no requirements to analyze'
+    condition: "functional requirements array is empty"
+    action: "Cannot assess - no requirements to analyze"
     blocking: true
 
   - id: override-mismatch
-    condition: 'override significantly differs from calculated'
-    action: 'Log warning but proceed with override'
+    condition: "override significantly differs from calculated"
+    action: "Log warning but proceed with override"
     blocking: false
 ```
 
@@ -448,11 +448,11 @@ Total:       13 → STANDARD
 
 ```yaml
 metadata:
-  story: '3.2'
-  epic: 'Epic 3 - Spec Pipeline'
-  created: '2026-01-28'
-  author: '@architect (Aria)'
-  version: '1.0.0'
+  story: "3.2"
+  epic: "Epic 3 - Spec Pipeline"
+  created: "2026-01-28"
+  author: "@architect (Aria)"
+  version: "1.0.0"
   tags:
     - spec-pipeline
     - complexity

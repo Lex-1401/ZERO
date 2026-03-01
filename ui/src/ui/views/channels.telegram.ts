@@ -30,13 +30,17 @@ export function renderTelegramCard(params: {
             <div>
                 <div class="section-title">Status da Conexão</div>
                 
-                ${hasMultipleAccounts ? html`
+                ${
+                  hasMultipleAccounts
+                    ? html`
                     <div class="group-list">
-                        ${telegramAccounts.map(account => {
-    const probe = account.probe as { bot?: { username?: string } } | undefined;
-    const botUsername = probe?.bot?.username;
-    const label = account.name || account.accountId;
-    return html`
+                        ${telegramAccounts.map((account) => {
+                          const probe = account.probe as
+                            | { bot?: { username?: string } }
+                            | undefined;
+                          const botUsername = probe?.bot?.username;
+                          const label = account.name || account.accountId;
+                          return html`
                                 <div class="group-item">
                                     <div class="group-label">
                                         <div class="group-title">${botUsername ? `@${botUsername}` : label}</div>
@@ -48,9 +52,10 @@ export function renderTelegramCard(params: {
                                     </div>
                                 </div>
                             `;
-  })}
+                        })}
                     </div>
-                ` : html`
+                `
+                    : html`
                     <div class="group-list">
                         <div class="group-item">
                             <div class="group-label">
@@ -78,14 +83,19 @@ export function renderTelegramCard(params: {
                             </div>
                         </div>
                     </div>
-                `}
+                `
+                }
 
-                ${telegram?.lastError ? html`
+                ${
+                  telegram?.lastError
+                    ? html`
                     <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
                         <div style="color: var(--danger); font-size: 12px; font-weight: 700;">Erro de Protocolo</div>
                         <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${telegram.lastError}</div>
                     </div>
-                ` : nothing}
+                `
+                    : nothing
+                }
 
                 ${renderChannelConfigSection({ channelId: "telegram", props })}
             </div>
@@ -104,7 +114,9 @@ export function renderTelegramCard(params: {
                             </div>
                         </div>
                         
-                        ${telegram?.probe ? html`
+                        ${
+                          telegram?.probe
+                            ? html`
                              <div style="width: 100%; height: 1px; background: var(--border-subtle);"></div>
                              <div style="width: 100%;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
@@ -116,9 +128,13 @@ export function renderTelegramCard(params: {
                                     ${telegram.probe.error ? html`<br/><span style="color: var(--danger);">${telegram.probe.error}</span>` : ""}
                                 </div>
                             </div>
-                        ` : html`
-                            <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%;">Nenhum diagnóstico recente.</div>
-                        `}
+                        `
+                            : html`
+                                <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%">
+                                  Nenhum diagnóstico recente.
+                                </div>
+                              `
+                        }
                     </div>
                 </div>
             </div>

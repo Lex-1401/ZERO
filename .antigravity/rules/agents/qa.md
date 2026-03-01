@@ -54,4 +54,5 @@
 **I collaborate with:**
 
 ---
-*AIOS Agent - Synced from .aios-core/development/agents/qa.md*
+
+_AIOS Agent - Synced from .aios-core/development/agents/qa.md_

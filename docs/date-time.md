@@ -23,13 +23,13 @@ Você pode substituir este comportamento em `~/.zero/zero.json`:
 
 ```json5
 {
-  "agents": {
-    "defaults": {
-      "envelopeTimezone": "local", // "utc" | "local" | "user" | fuso horário IANA
-      "envelopeTimestamp": "on", // "on" | "off"
-      "envelopeElapsed": "on" // "on" | "off"
-    }
-  }
+  agents: {
+    defaults: {
+      envelopeTimezone: "local", // "utc" | "local" | "user" | fuso horário IANA
+      envelopeTimestamp: "on", // "on" | "off"
+      envelopeElapsed: "on", // "on" | "off"
+    },
+  },
 }
 ```
 
@@ -82,12 +82,12 @@ System: [2026-01-12 12:19:17 BRT] Modelo alternado.
 
 ```json5
 {
-  "agents": {
-    "defaults": {
-      "userTimezone": "America/Sao_Paulo",
-      "timeFormat": "auto" // auto | 12 | 24
-    }
-  }
+  agents: {
+    defaults: {
+      userTimezone: "America/Sao_Paulo",
+      timeFormat: "auto", // auto | 12 | 24
+    },
+  },
 }
 ```
 

@@ -155,10 +155,10 @@ Next steps:
 ### Step 1: Validate Squad Exists
 
 ```javascript
-const { SquadLoader } = require('../scripts/squad/squad-loader');
+const { SquadLoader } = require("../scripts/squad/squad-loader");
 const loader = new SquadLoader();
 
-const squadPath = path.join('./squads', squadName);
+const squadPath = path.join("./squads", squadName);
 const exists = await loader.squadExists(squadName);
 
 if (!exists) {
@@ -180,11 +180,11 @@ if (!componentName) {
 
 // Validate name format
 if (!isValidKebabCase(componentName)) {
-  throw new Error('Component name must be kebab-case');
+  throw new Error("Component name must be kebab-case");
 }
 
 // For tasks, require agent
-if (componentType === 'task' && !agentId) {
+if (componentType === "task" && !agentId) {
   const agents = await listAgents(squadPath);
   agentId = await promptAgentSelection(agents);
 }
@@ -193,7 +193,7 @@ if (componentType === 'task' && !agentId) {
 ### Step 3: Create Component File
 
 ```javascript
-const { SquadExtender } = require('../scripts/squad/squad-extender');
+const { SquadExtender } = require("../scripts/squad/squad-extender");
 const extender = new SquadExtender();
 
 const result = await extender.addComponent(squadPath, {
@@ -201,7 +201,7 @@ const result = await extender.addComponent(squadPath, {
   name: componentName,
   agentId: agentId,
   storyId: storyId,
-  description: description
+  description: description,
 });
 
 // result = {
@@ -216,7 +216,7 @@ const result = await extender.addComponent(squadPath, {
 ```javascript
 const manifestUpdated = await extender.updateManifest(squadPath, {
   type: componentType,
-  file: result.fileName
+  file: result.fileName,
 });
 
 // Creates backup before updating
@@ -227,14 +227,14 @@ const manifestUpdated = await extender.updateManifest(squadPath, {
 ### Step 5: Validate
 
 ```javascript
-const { SquadValidator } = require('../scripts/squad/squad-validator');
+const { SquadValidator } = require("../scripts/squad/squad-validator");
 const validator = new SquadValidator();
 
 const validationResult = await validator.validate(squadPath);
 
 if (!validationResult.valid) {
-  console.log('Validation errors:', validationResult.errors);
-  console.log('Suggestions:', validationResult.suggestions);
+  console.log("Validation errors:", validationResult.errors);
+  console.log("Suggestions:", validationResult.suggestions);
 }
 ```
 
@@ -245,7 +245,7 @@ console.log(`
 Creating ${componentType}...
   Created: ${result.relativePath}
   Updated: squad.yaml (added to components.${componentType}s)
-  Validation: ${validationResult.valid ? 'PASS' : 'FAIL'}
+  Validation: ${validationResult.valid ? "PASS" : "FAIL"}
 
 Next steps:
   1. Edit ${result.relativePath}
@@ -258,16 +258,16 @@ Next steps:
 
 Each component type uses a template from `.aios-core/development/templates/squad/`:
 
-| Type | Template | Key Fields |
-|------|----------|------------|
-| agent | agent-template.md | name, id, role, commands |
-| task | task-template.md | responsavel, entrada, saida, checklist |
-| workflow | workflow-template.md | steps, conditions, triggers |
-| checklist | checklist-template.md | items, categories |
-| template | template-template.md | placeholders, structure |
-| tool | tool-template.js | functions, exports |
-| script | script-template.js | main, helpers |
-| data | data-template.yaml | schema, content |
+| Type      | Template              | Key Fields                             |
+| --------- | --------------------- | -------------------------------------- |
+| agent     | agent-template.md     | name, id, role, commands               |
+| task      | task-template.md      | responsavel, entrada, saida, checklist |
+| workflow  | workflow-template.md  | steps, conditions, triggers            |
+| checklist | checklist-template.md | items, categories                      |
+| template  | template-template.md  | placeholders, structure                |
+| tool      | tool-template.js      | functions, exports                     |
+| script    | script-template.js    | main, helpers                          |
+| data      | data-template.yaml    | schema, content                        |
 
 ## Error Handling
 
@@ -322,15 +322,20 @@ recovery: Restore from backup (.squad.yaml.bak)
 
 ```javascript
 // Validate component name - no path separators
-if (componentName.includes('/') || componentName.includes('\\') || componentName.includes('..')) {
-  throw new Error('Invalid component name - path traversal not allowed');
+if (componentName.includes("/") || componentName.includes("\\") || componentName.includes("..")) {
+  throw new Error("Invalid component name - path traversal not allowed");
 }
 ```
 
 ### Overwrite Protection
 
 ```javascript
-if (await fs.access(targetPath).then(() => true).catch(() => false)) {
+if (
+  await fs
+    .access(targetPath)
+    .then(() => true)
+    .catch(() => false)
+) {
   if (!force) {
     throw new Error(`File already exists: ${targetPath}. Use --force to overwrite`);
   }
@@ -340,7 +345,7 @@ if (await fs.access(targetPath).then(() => true).catch(() => false)) {
 ### Backup Before Update
 
 ```javascript
-const backupPath = manifestPath + '.bak';
+const backupPath = manifestPath + ".bak";
 await fs.copyFile(manifestPath, backupPath);
 ```
 
@@ -408,4 +413,4 @@ tags:
 
 ---
 
-*Task definition for *extend-squad command*
+*Task definition for *extend-squad command\*

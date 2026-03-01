@@ -60,8 +60,9 @@ graph TD
 To overcome the inherent latency of O1-style reasoning, ZERO uses **Speculative Context Injection**:
 
 - **Proactive Scanning**: While the user is typing or between cycles, the engine scans the current workspace.
-- **Context Priming**: It identifies relevant code blocks, `.env` structures, and README files, injecting them into the agent's context *before* the agent explicitly requests them via a read tool.
+- **Context Priming**: It identifies relevant code blocks, `.env` structures, and README files, injecting them into the agent's context _before_ the agent explicitly requests them via a read tool.
 - **Latency Reduction**: This reduces total task time by 30-45% for complex coding operations.
 
 ---
-*“Autonomia não é apenas fazer, é saber o que fazer quando o que se faz falha.”* ∅
+
+_“Autonomia não é apenas fazer, é saber o que fazer quando o que se faz falha.”_ ∅

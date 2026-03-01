@@ -26,26 +26,35 @@ export function renderInstances(props: InstancesProps) {
             </button>
         </div>
 
-        ${props.lastError ? html`
+        ${
+          props.lastError
+            ? html`
             <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); margin-bottom: 24px; padding: 12px 16px;">
                 <div style="color: var(--danger); font-size: 13px; font-weight: 600;">${t("instances.error" as any)}</div>
                 <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;">${props.lastError}</div>
             </div>
-        ` : nothing}
+        `
+            : nothing
+        }
 
         <div class="group-list">
-            ${props.entries.length === 0 ? html`
+            ${
+              props.entries.length === 0
+                ? html`
                 <div class="group-item" style="justify-content: center; padding: 48px; color: var(--text-dim);">
                     ${t("instances.none" as any)}
                 </div>
-            ` : props.entries.map((entry) => renderEntry(entry))}
+            `
+                : props.entries.map((entry) => renderEntry(entry))
+            }
         </div>
     </div>
   `;
 }
 
 function renderEntry(entry: PresenceEntry) {
-  const lastInput = entry.lastInputSeconds != null ? `${entry.lastInputSeconds}s` : t("common.none" as any);
+  const lastInput =
+    entry.lastInputSeconds != null ? `${entry.lastInputSeconds}s` : t("common.none" as any);
   const roles = Array.isArray(entry.roles) ? entry.roles.filter(Boolean) : [];
 
   return html`

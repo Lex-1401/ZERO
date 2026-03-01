@@ -74,43 +74,63 @@ function parseFrontmatterBool(value: string | undefined, fallback: boolean): boo
 export function resolveZEROMetadata(
   frontmatter: ParsedSkillFrontmatter,
 ): ZEROSkillMetadata | undefined {
+  let zeroObj: Record<string, unknown> = {};
+
   const raw = getFrontmatterValue(frontmatter, "metadata");
-  if (!raw) return undefined;
-  try {
-    const parsed = JSON5.parse(raw) as { zero?: unknown };
-    if (!parsed || typeof parsed !== "object") return undefined;
-    const zero = (parsed as { zero?: unknown }).zero;
-    if (!zero || typeof zero !== "object") return undefined;
-    const zeroObj = zero as Record<string, unknown>;
-    const requiresRaw =
-      typeof zeroObj.requires === "object" && zeroObj.requires !== null
-        ? (zeroObj.requires as Record<string, unknown>)
-        : undefined;
-    const installRaw = Array.isArray(zeroObj.install) ? (zeroObj.install as unknown[]) : [];
-    const install = installRaw
-      .map((entry) => parseInstallSpec(entry))
-      .filter((entry): entry is SkillInstallSpec => Boolean(entry));
-    const osRaw = normalizeStringList(zeroObj.os);
-    return {
-      always: typeof zeroObj.always === "boolean" ? zeroObj.always : undefined,
-      emoji: typeof zeroObj.emoji === "string" ? zeroObj.emoji : undefined,
-      homepage: typeof zeroObj.homepage === "string" ? zeroObj.homepage : undefined,
-      skillKey: typeof zeroObj.skillKey === "string" ? zeroObj.skillKey : undefined,
-      primaryEnv: typeof zeroObj.primaryEnv === "string" ? zeroObj.primaryEnv : undefined,
-      os: osRaw.length > 0 ? osRaw : undefined,
-      requires: requiresRaw
-        ? {
-            bins: normalizeStringList(requiresRaw.bins),
-            anyBins: normalizeStringList(requiresRaw.anyBins),
-            env: normalizeStringList(requiresRaw.env),
-            config: normalizeStringList(requiresRaw.config),
-          }
-        : undefined,
-      install: install.length > 0 ? install : undefined,
-    };
-  } catch {
-    return undefined;
+  if (raw) {
+    try {
+      const parsed = JSON5.parse(raw) as { zero?: unknown };
+      if (parsed && typeof parsed === "object" && typeof parsed.zero === "object" && parsed.zero !== null) {
+        zeroObj = { ...parsed.zero };
+      }
+    } catch {
+      // ignore
+    }
   }
+
+  const topRequiresRaw = getFrontmatterValue(frontmatter, "requires");
+  if (topRequiresRaw) {
+    try {
+      const parsedRequires = JSON5.parse(topRequiresRaw);
+      if (parsedRequires && typeof parsedRequires === "object") {
+        zeroObj.requires = {
+          ...((zeroObj.requires as object) || {}),
+          ...parsedRequires,
+        };
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  if (Object.keys(zeroObj).length === 0) return undefined;
+
+  const requiresRaw =
+    typeof zeroObj.requires === "object" && zeroObj.requires !== null
+      ? (zeroObj.requires as Record<string, unknown>)
+      : undefined;
+  const installRaw = Array.isArray(zeroObj.install) ? (zeroObj.install as unknown[]) : [];
+  const install = installRaw
+    .map((entry) => parseInstallSpec(entry))
+    .filter((entry): entry is SkillInstallSpec => Boolean(entry));
+  const osRaw = normalizeStringList(zeroObj.os);
+  return {
+    always: typeof zeroObj.always === "boolean" ? zeroObj.always : undefined,
+    emoji: typeof zeroObj.emoji === "string" ? zeroObj.emoji : undefined,
+    homepage: typeof zeroObj.homepage === "string" ? zeroObj.homepage : undefined,
+    skillKey: typeof zeroObj.skillKey === "string" ? zeroObj.skillKey : undefined,
+    primaryEnv: typeof zeroObj.primaryEnv === "string" ? zeroObj.primaryEnv : undefined,
+    os: osRaw.length > 0 ? osRaw : undefined,
+    requires: requiresRaw
+      ? {
+        bins: normalizeStringList(requiresRaw.bins),
+        anyBins: normalizeStringList(requiresRaw.anyBins),
+        env: normalizeStringList(requiresRaw.env),
+        config: normalizeStringList(requiresRaw.config),
+      }
+      : undefined,
+    install: install.length > 0 ? install : undefined,
+  };
 }
 
 export function resolveSkillInvocationPolicy(

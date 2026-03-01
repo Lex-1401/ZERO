@@ -99,7 +99,6 @@ export const configHandlers: GatewayRequestHandlers = {
     respond(true, snapshot, undefined);
   },
   "config.schema": ({ params, respond }) => {
-    console.log("[debug] config.schema request received");
     if (!validateConfigSchemaParams(params)) {
       respond(
         false,
@@ -113,7 +112,7 @@ export const configHandlers: GatewayRequestHandlers = {
     }
     const cfg = loadConfig();
     const workspaceDir = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));
-    console.log("[debug] config.schema loading plugins...");
+
     const pluginRegistry = loadZEROPlugins({
       config: cfg,
       workspaceDir,
@@ -124,7 +123,7 @@ export const configHandlers: GatewayRequestHandlers = {
         debug: () => {},
       },
     });
-    console.log("[debug] config.schema building schema...");
+
     const schema = buildConfigSchema({
       plugins: pluginRegistry.plugins.map((plugin) => ({
         id: plugin.id,
@@ -141,7 +140,7 @@ export const configHandlers: GatewayRequestHandlers = {
         configUiHints: entry.configSchema?.uiHints,
       })),
     });
-    console.log("[debug] config.schema done, responding.");
+
     respond(true, schema, undefined);
   },
   "config.set": async ({ params, respond }) => {

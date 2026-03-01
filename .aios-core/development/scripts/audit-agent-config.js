@@ -9,58 +9,58 @@
  * @created 2025-01-16 (Story 6.1.2.6)
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * List of all AIOS agents
  */
 const AGENTS = [
-  'aios-master',
-  'dev',
-  'qa',
-  'architect',
-  'po',
-  'pm',
-  'sm',
-  'analyst',
-  'ux-expert',
-  'data-engineer',
-  'devops',
-  'db-sage',
-  'security',
+  "aios-master",
+  "dev",
+  "qa",
+  "architect",
+  "po",
+  "pm",
+  "sm",
+  "analyst",
+  "ux-expert",
+  "data-engineer",
+  "devops",
+  "db-sage",
+  "security",
 ];
 
 /**
  * Core config sections that can be lazy loaded
  */
 const LAZY_LOADABLE_SECTIONS = [
-  'pvMindContext',
-  'expansionPacks',
-  'registry',
-  'toolConfigurations',
-  'hybridOpsConfig',
+  "pvMindContext",
+  "expansionPacks",
+  "registry",
+  "toolConfigurations",
+  "hybridOpsConfig",
 ];
 
 /**
  * Always-loaded sections (small, frequently needed)
  */
 const ALWAYS_LOADED_SECTIONS = [
-  'frameworkDocsLocation',
-  'projectDocsLocation',
-  'devLoadAlwaysFiles',
-  'lazyLoading',
+  "frameworkDocsLocation",
+  "projectDocsLocation",
+  "devLoadAlwaysFiles",
+  "lazyLoading",
 ];
 
 /**
  * Extracts dependencies from agent YAML/Markdown
  */
 async function extractAgentDependencies(agentId) {
-  const agentPath = path.join('.aios-core', 'agents', `${agentId}.md`);
+  const agentPath = path.join(".aios-core", "agents", `${agentId}.md`);
 
   try {
-    const content = await fs.readFile(agentPath, 'utf8');
+    const content = await fs.readFile(agentPath, "utf8");
 
     // Extract YAML block
     const yamlMatch = content.match(/```yaml\n([\s\S]+?)\n```/);
@@ -74,7 +74,7 @@ async function extractAgentDependencies(agentId) {
     return {
       agentId,
       name: agentConfig.agent?.name || agentId,
-      title: agentConfig.agent?.title || 'Unknown',
+      title: agentConfig.agent?.title || "Unknown",
       dependencies: agentConfig.dependencies || {},
       commands: agentConfig.commands || [],
       customization: agentConfig.agent?.customization || null,
@@ -100,26 +100,25 @@ function analyzeConfigNeeds(agentData) {
     const tools = agentData.dependencies.tools;
 
     // pvMindContext needed for hybrid-ops agents
-    if (tools.includes('supabase') || tools.includes('n8n')) {
-      needs.lazy.push('pvMindContext');
-      needs.lazy.push('hybridOpsConfig');
+    if (tools.includes("supabase") || tools.includes("n8n")) {
+      needs.lazy.push("pvMindContext");
+      needs.lazy.push("hybridOpsConfig");
     }
 
     // toolConfigurations needed if using external tools
     if (tools.length > 0) {
-      needs.lazy.push('toolConfigurations');
+      needs.lazy.push("toolConfigurations");
     }
   }
 
   // expansion_packs usage
   if (agentData.dependencies.expansion_packs) {
-    needs.lazy.push('expansionPacks');
+    needs.lazy.push("expansionPacks");
   }
 
   // Registry needed for meta operations
-  if (agentData.agentId === 'aios-master' ||
-      agentData.customization?.includes('registry')) {
-    needs.lazy.push('registry');
+  if (agentData.agentId === "aios-master" || agentData.customization?.includes("registry")) {
+    needs.lazy.push("registry");
   }
 
   return needs;
@@ -130,11 +129,11 @@ function analyzeConfigNeeds(agentData) {
  */
 function estimateConfigSize(sectionName) {
   const sizes = {
-    pvMindContext: 75,        // 75KB
-    expansionPacks: 20,       // 20KB
-    registry: 15,             // 15KB
-    toolConfigurations: 10,   // 10KB
-    hybridOpsConfig: 25,      // 25KB
+    pvMindContext: 75, // 75KB
+    expansionPacks: 20, // 20KB
+    registry: 15, // 15KB
+    toolConfigurations: 10, // 10KB
+    hybridOpsConfig: 25, // 25KB
     frameworkDocsLocation: 0.1,
     projectDocsLocation: 0.1,
     devLoadAlwaysFiles: 1,
@@ -152,16 +151,16 @@ function calculateSavings(agentNeeds) {
   let totalWithLazy = 0;
 
   // Without lazy loading: everyone loads everything
-  LAZY_LOADABLE_SECTIONS.forEach(section => {
+  LAZY_LOADABLE_SECTIONS.forEach((section) => {
     totalWithoutLazy += estimateConfigSize(section);
   });
 
   // With lazy loading: only load what's needed
-  agentNeeds.always.forEach(section => {
+  agentNeeds.always.forEach((section) => {
     totalWithLazy += estimateConfigSize(section);
   });
 
-  agentNeeds.lazy.forEach(section => {
+  agentNeeds.lazy.forEach((section) => {
     totalWithLazy += estimateConfigSize(section);
   });
 
@@ -169,7 +168,7 @@ function calculateSavings(agentNeeds) {
     without: totalWithoutLazy,
     with: totalWithLazy,
     savings: totalWithoutLazy - totalWithLazy,
-    savingsPercent: ((totalWithoutLazy - totalWithLazy) / totalWithoutLazy * 100).toFixed(1),
+    savingsPercent: (((totalWithoutLazy - totalWithLazy) / totalWithoutLazy) * 100).toFixed(1),
   };
 }
 
@@ -192,7 +191,7 @@ function generateAuditReport(auditResults) {
   let totalSavingKB = 0;
   let agentsWithSavings = 0;
 
-  auditResults.forEach(result => {
+  auditResults.forEach((result) => {
     if (result.savings.savings > 0) {
       totalSavingKB += result.savings.savings;
       agentsWithSavings++;
@@ -202,7 +201,7 @@ function generateAuditReport(auditResults) {
   const avgSavings = (totalSavingKB / auditResults.length).toFixed(1);
 
   report += `**Lazy Loading Impact:**
-- Average savings per agent: **${avgSavings} KB** (${((totalSavingKB / auditResults.length) / 145 * 100).toFixed(1)}% reduction)
+- Average savings per agent: **${avgSavings} KB** (${((totalSavingKB / auditResults.length / 145) * 100).toFixed(1)}% reduction)
 - Agents benefiting from lazy loading: **${agentsWithSavings}/${auditResults.length}**
 - Total config saved across all agents: **${totalSavingKB.toFixed(1)} KB**
 
@@ -215,9 +214,9 @@ function generateAuditReport(auditResults) {
   // Sort by savings (highest first)
   auditResults.sort((a, b) => b.savings.savings - a.savings.savings);
 
-  auditResults.forEach(result => {
-    const savingsEmoji = result.savings.savings > 50 ? '🟢' :
-      result.savings.savings > 20 ? '🟡' : '🔴';
+  auditResults.forEach((result) => {
+    const savingsEmoji =
+      result.savings.savings > 50 ? "🟢" : result.savings.savings > 20 ? "🟡" : "🔴";
 
     report += `### ${savingsEmoji} ${result.agent.name} (@${result.agent.agentId})
 
@@ -226,10 +225,10 @@ function generateAuditReport(auditResults) {
 **Config Needs:**
 `;
 
-    report += `- **Always Loaded:** ${result.needs.always.length} sections (${result.needs.always.map(s => `\`${s}\``).join(', ')})\n`;
+    report += `- **Always Loaded:** ${result.needs.always.length} sections (${result.needs.always.map((s) => `\`${s}\``).join(", ")})\n`;
 
     if (result.needs.lazy.length > 0) {
-      report += `- **Lazy Loaded:** ${result.needs.lazy.length} sections (${result.needs.lazy.map(s => `\`${s}\``).join(', ')})\n`;
+      report += `- **Lazy Loaded:** ${result.needs.lazy.length} sections (${result.needs.lazy.map((s) => `\`${s}\``).join(", ")})\n`;
     }
 
     report += `
@@ -242,16 +241,16 @@ function generateAuditReport(auditResults) {
 
     // List dependencies
     if (Object.keys(result.agent.dependencies).length > 0) {
-      report += '**Dependencies:**\n';
+      report += "**Dependencies:**\n";
       Object.entries(result.agent.dependencies).forEach(([type, items]) => {
         if (Array.isArray(items) && items.length > 0) {
           report += `- ${type}: ${items.length} items\n`;
         }
       });
-      report += '\n';
+      report += "\n";
     }
 
-    report += '---\n\n';
+    report += "---\n\n";
   });
 
   report += `## 🎯 Recommendations
@@ -259,31 +258,33 @@ function generateAuditReport(auditResults) {
 ### High Priority (Agents with >50KB savings)
 `;
 
-  const highPriority = auditResults.filter(r => r.savings.savings > 50);
+  const highPriority = auditResults.filter((r) => r.savings.savings > 50);
   if (highPriority.length > 0) {
-    highPriority.forEach(r => {
+    highPriority.forEach((r) => {
       report += `- **@${r.agent.agentId}**: ${r.savings.savings.toFixed(1)} KB savings\n`;
     });
   } else {
-    report += '*None - all agents have reasonable config size*\n';
+    report += "*None - all agents have reasonable config size*\n";
   }
 
-  report += '\n### Medium Priority (Agents with 20-50KB savings)\n';
+  report += "\n### Medium Priority (Agents with 20-50KB savings)\n";
 
-  const mediumPriority = auditResults.filter(r => r.savings.savings >= 20 && r.savings.savings <= 50);
+  const mediumPriority = auditResults.filter(
+    (r) => r.savings.savings >= 20 && r.savings.savings <= 50,
+  );
   if (mediumPriority.length > 0) {
-    mediumPriority.forEach(r => {
+    mediumPriority.forEach((r) => {
       report += `- **@${r.agent.agentId}**: ${r.savings.savings.toFixed(1)} KB savings\n`;
     });
   } else {
-    report += '*None*\n';
+    report += "*None*\n";
   }
 
-  report += '\n### Low Priority (Agents with <20KB savings)\n';
+  report += "\n### Low Priority (Agents with <20KB savings)\n";
 
-  const lowPriority = auditResults.filter(r => r.savings.savings < 20);
+  const lowPriority = auditResults.filter((r) => r.savings.savings < 20);
   if (lowPriority.length > 0) {
-    lowPriority.forEach(r => {
+    lowPriority.forEach((r) => {
       report += `- **@${r.agent.agentId}**: ${r.savings.savings.toFixed(1)} KB savings\n`;
     });
   }
@@ -310,7 +311,7 @@ function generateAuditReport(auditResults) {
  * Main audit function
  */
 async function auditAllAgents() {
-  console.log('🔍 Auditing all 13 AIOS agents...\n');
+  console.log("🔍 Auditing all 13 AIOS agents...\n");
 
   const auditResults = [];
 
@@ -319,7 +320,7 @@ async function auditAllAgents() {
 
     const agentData = await extractAgentDependencies(agentId);
     if (!agentData) {
-      console.log('   ⚠️ Skipped (parsing failed)\n');
+      console.log("   ⚠️ Skipped (parsing failed)\n");
       continue;
     }
 
@@ -347,10 +348,10 @@ if (require.main === module) {
 
       const report = generateAuditReport(results);
 
-      const outputPath = 'docs/architecture/agent-config-audit.md';
-      await fs.writeFile(outputPath, report, 'utf8');
+      const outputPath = "docs/architecture/agent-config-audit.md";
+      await fs.writeFile(outputPath, report, "utf8");
 
-      console.log('✅ Audit complete!');
+      console.log("✅ Audit complete!");
       console.log(`📄 Report generated: ${outputPath}`);
       console.log(`📊 Audited ${results.length} agents`);
 
@@ -360,9 +361,8 @@ if (require.main === module) {
 
       console.log(`💾 Average savings: ${avgSavings.toFixed(1)} KB per agent`);
       console.log(`🎯 Target: 18% reduction (current: ${((avgSavings / 145) * 100).toFixed(1)}%)`);
-
     } catch (error) {
-      console.error('❌ Audit failed:', error);
+      console.error("❌ Audit failed:", error);
       process.exit(1);
     }
   })();

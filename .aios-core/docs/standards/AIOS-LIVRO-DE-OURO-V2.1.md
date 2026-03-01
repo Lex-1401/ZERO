@@ -1,4 +1,5 @@
 # AIOS Framework - Livro de Ouro v2.1
+
 ## The Complete Open-Source AI Orchestration System
 
 **Versão:** 2.1.0-post-5-sprints  
@@ -9,7 +10,7 @@
 ---
 
 > **"Structure is Sacred. Tone is Flexible."**  
-> *— Fundamento filosófico do AIOS*
+> _— Fundamento filosófico do AIOS_
 
 ---
 
@@ -33,15 +34,18 @@
 ### Breaking Changes from v2.0
 
 ⚠️ **Business Model Update:**
+
 - Workers are now **open-source** (previously proprietary)
 - Clones remain **proprietary** (DNA Mental™)
 - Expansion Packs remain **proprietary**
 
 ⚠️ **Installation Method:**
+
 - Old: Manual clone + configuration
 - New: `npx @SynkraAI/aios@latest init` (5 minutes)
 
 ⚠️ **Project Structure:**
+
 - Old: Flat `.aios-core/` directory
 - New: Modular `core/development/product/infrastructure/`
 
@@ -147,15 +151,15 @@ Este documento descreve o **AIOS Framework v2.1** completo - a arquitetura, filo
 
 **Competitive Analysis:**
 
-| Feature | LangChain | CrewAI | AutoGen | **AIOS v2.1** |
-|---------|-----------|---------|---------|---------------|
-| Agents | ✅ Open | ✅ Open | ✅ Open | ✅ **Open (11)** |
-| Workers | ✅ Open | ✅ Open | ✅ Open | ✅ **Open (97+)** |
-| Orchestration | ✅ Open | ✅ Open | ✅ Open | ✅ **Open** |
-| Service Discovery | ⚠️ Basic | ⚠️ Basic | ❌ None | ✅ **Built-in** |
-| Task-First | ❌ None | ❌ None | ❌ None | ✅ **Unique** |
-| **Cognitive Clones** | ❌ None | ❌ None | ❌ None | 🔒 **Proprietary** ⭐ |
-| Quality Gates | ⚠️ Basic | ⚠️ Basic | ⚠️ Basic | ✅ **3 Layers** |
+| Feature              | LangChain | CrewAI   | AutoGen  | **AIOS v2.1**         |
+| -------------------- | --------- | -------- | -------- | --------------------- |
+| Agents               | ✅ Open   | ✅ Open  | ✅ Open  | ✅ **Open (11)**      |
+| Workers              | ✅ Open   | ✅ Open  | ✅ Open  | ✅ **Open (97+)**     |
+| Orchestration        | ✅ Open   | ✅ Open  | ✅ Open  | ✅ **Open**           |
+| Service Discovery    | ⚠️ Basic  | ⚠️ Basic | ❌ None  | ✅ **Built-in**       |
+| Task-First           | ❌ None   | ❌ None  | ❌ None  | ✅ **Unique**         |
+| **Cognitive Clones** | ❌ None   | ❌ None  | ❌ None  | 🔒 **Proprietary** ⭐ |
+| Quality Gates        | ⚠️ Basic  | ⚠️ Basic | ⚠️ Basic | ✅ **3 Layers**       |
 
 **Strategic Rationale:**
 
@@ -302,8 +306,10 @@ Usei AIOS v2.0. Quero entender o que mudou em v2.1 e como migrar.
 **Baseado nas suas respostas, você será direcionado para:**
 
 ### 🎯 TRACK 1: QUICK START (15-30 min)
+
 **Melhor para:** Resposta A ou D na P1 + A na P3  
 **Você vai ler:**
+
 1. [What's New in v2.1](#whats-new-summary) (5 min)
 2. [Installation Quick Guide](#install-quick) (10 min)
 3. [First Steps](#first-steps) (10 min)
@@ -312,8 +318,10 @@ Usei AIOS v2.0. Quero entender o que mudou em v2.1 e como migrar.
 ---
 
 ### 🚀 TRACK 2: DEEP DIVE INICIAL (1.5-2 horas)
+
 **Melhor para:** Resposta B na P1 + B na P3  
 **Você vai ler:**
+
 1. Layer 1 completo: [5 Essays](#layer-1-understanding) (75 min)
 2. [Quick Reference: Agents + Workers](#component-catalog) (20 min)
 3. [Getting Started: Complete Installation](#complete-install) (30 min)
@@ -322,8 +330,10 @@ Usei AIOS v2.0. Quero entender o que mudou em v2.1 e como migrar.
 ---
 
 ### 🎓 TRACK 3: MASTERY PATH (Semanas)
+
 **Melhor para:** Resposta C ou E na P1 + C na P3  
 **Você vai seguir:**
+
 1. Layer 1: [Understanding Essays](#layer-1-understanding) (75 min)
 2. Layer 2: [Complete Component Library](#layer-2-component-library) (4-5 horas)
 3. Layer 3: [Complete Usage Guide](#layer-3-usage-guide) (3-4 horas)
@@ -334,8 +344,10 @@ Usei AIOS v2.0. Quero entender o que mudou em v2.1 e como migrar.
 ---
 
 ### 📊 TRACK 4: DECISION MAKER PATH (30-45 min)
+
 **Melhor para:** Resposta D na P1 (qualquer tempo)  
 **Você vai ler:**
+
 1. [Executive Summary](#executive-summary) (10 min)
 2. [What's New in v2.1 - Business Impact](#business-impact) (10 min)
 3. [ROI Analysis](#roi-analysis) (10 min)
@@ -345,8 +357,10 @@ Usei AIOS v2.0. Quero entender o que mudou em v2.1 e como migrar.
 ---
 
 ### 🎯 TRACK 5: TARGETED LEARNING (Variável)
+
 **Melhor para:** Resposta D na P3 (precisa de algo específico)  
 **Use o índice visual para ir direto ao tópico:**
+
 - [Como usar Service Discovery?](#service-discovery-guide)
 - [Como funciona Task-First Architecture?](#task-first-guide)
 - [Como migrar de v2.0 para v2.1?](#migration-guide)
@@ -357,8 +371,10 @@ Usei AIOS v2.0. Quero entender o que mudou em v2.1 e como migrar.
 ---
 
 ### 🔄 TRACK 6: v2.0 UPGRADE PATH (45-60 min)
+
 **Melhor para:** Resposta D na P5 (usuário v2.0)  
 **Você vai ler:**
+
 1. [Breaking Changes Summary](#breaking-changes) (10 min)
 2. [Migration Guide v2.0 → v2.1](#migration-guide) (20 min)
 3. [What's New - Technical Deep Dive](#whats-new-technical) (20 min)
@@ -370,15 +386,19 @@ Usei AIOS v2.0. Quero entender o que mudou em v2.1 e como migrar.
 ## 🎯 CASOS DE USO ESPECIAIS
 
 ### 🏛️ Para Brownfield Projects
+
 **Você disse que tem projeto existente?**  
 Adicione este material ao seu track escolhido:
+
 - [Brownfield Integration Guide](#brownfield-guide) (30 min)
 - [Incremental Migration Strategy](#incremental-migration) (15 min)
 - [Real Example: Subdirectory Migration](#subdirectory-example) - Caso real
 
 ### 🔧 Para Framework Developers
+
 **Você quer contribuir com AIOS?**  
 Seu caminho específico:
+
 1. Track 3 (Mastery Path) completo
 2. [Architecture Deep Dive](#architecture-deep-dive) (2 horas)
 3. [Decision History](#decision-history) - Entenda o "porquê"
@@ -386,8 +406,10 @@ Seu caminho específico:
 5. [Open Issues & Roadmap](#roadmap) - Encontre onde contribuir
 
 ### 👔 Para Non-Technical Leaders
+
 **Você não codifica mas precisa entender?**  
 Track customizado:
+
 1. [Executive Summary](#executive-summary) (10 min)
 2. [Essay 1: Por Que AIOS Existe](#essay-1) - Conceitos sem código (15 min)
 3. [Business Model v2.1](#business-model) (15 min)
@@ -435,5 +457,3 @@ Clique no track que escolheu e **comece sua jornada AIOS v2.1**:
 **Pronto?** Escolha seu track acima e comece! ↑
 
 ---
-
-

@@ -21,20 +21,20 @@ The session update pattern enables intelligent greeting adaptation by tracking c
 All agent commands should be wrapped with session updates:
 
 ```javascript
-const { updateSessionAfterCommand } = require('./.aios-core/scripts/command-execution-hook');
+const { updateSessionAfterCommand } = require("./.aios-core/scripts/command-execution-hook");
 
 async function executeCommand(agentId, commandName, commandFn) {
   try {
     const result = await commandFn();
-    
+
     // Update session after successful execution
     await updateSessionAfterCommand(agentId, commandName, { result });
-    
+
     return result;
   } catch (error) {
     // Still update session even on error
-    await updateSessionAfterCommand(agentId, commandName, { 
-      result: { error: error.message } 
+    await updateSessionAfterCommand(agentId, commandName, {
+      result: { error: error.message },
     });
     throw error;
   }
@@ -46,11 +46,11 @@ async function executeCommand(agentId, commandName, commandFn) {
 When switching agents, record the transition:
 
 ```javascript
-const { updateSessionAfterCommand } = require('./.aios-core/scripts/command-execution-hook');
+const { updateSessionAfterCommand } = require("./.aios-core/scripts/command-execution-hook");
 
 async function switchAgent(fromAgent, toAgent) {
-  await updateSessionAfterCommand(toAgent, 'agent-activation', {
-    previousAgent: fromAgent
+  await updateSessionAfterCommand(toAgent, "agent-activation", {
+    previousAgent: fromAgent,
   });
 }
 ```
@@ -60,10 +60,10 @@ async function switchAgent(fromAgent, toAgent) {
 The greeting system automatically uses session state:
 
 ```javascript
-const { generateGreeting } = require('./.aios-core/scripts/generate-greeting');
+const { generateGreeting } = require("./.aios-core/scripts/generate-greeting");
 
 // Session context is loaded automatically
-const greeting = await generateGreeting('dev');
+const greeting = await generateGreeting("dev");
 console.log(greeting);
 ```
 
@@ -103,16 +103,19 @@ console.log(greeting);
 ## Session Types
 
 ### New Session
+
 - **Criteria:** No command history
 - **Greeting:** Full introduction, all commands, project status
 - **Use Case:** First interaction in conversation
 
 ### Existing Session
+
 - **Criteria:** 1-2 commands in history
 - **Greeting:** Quick commands only, abbreviated status
 - **Use Case:** User returning to same agent
 
 ### Workflow Session
+
 - **Criteria:** 3+ commands OR agent transitions
 - **Greeting:** Minimal presentation, workflow suggestions
 - **Use Case:** Multi-agent collaboration flow
@@ -120,18 +123,21 @@ console.log(greeting);
 ## Implementation Checklist
 
 ### Phase 1: Core Integration (Story 6.1.4)
+
 - [x] Create `command-execution-hook.js`
 - [x] Update `generate-greeting.js` to load session
 - [x] Modify `greeting-builder.js` to adapt to session type
 - [ ] Document pattern (this file)
 
 ### Phase 2: Agent Integration (Future)
+
 - [ ] Wrap QA commands with session updates
 - [ ] Wrap Dev commands with session updates
 - [ ] Wrap PM/PO/SM commands with session updates
 - [ ] Add agent transition tracking to `/AIOS/agents/*` commands
 
 ### Phase 3: Advanced Features (Future)
+
 - [ ] Workflow pattern detection (e.g., "QA → Dev → QA" cycle)
 - [ ] Smart command suggestions based on history
 - [ ] Session persistence across conversations
@@ -143,15 +149,15 @@ console.log(greeting);
 
 ```javascript
 // First activation
-await updateSessionAfterCommand('dev', 'agent-activation');
+await updateSessionAfterCommand("dev", "agent-activation");
 // → sessionType: 'new'
 
 // Execute command
-await updateSessionAfterCommand('dev', 'develop-yolo');
+await updateSessionAfterCommand("dev", "develop-yolo");
 // → sessionType: 'existing'
 
 // Next activation shows abbreviated greeting
-const greeting = await generateGreeting('dev');
+const greeting = await generateGreeting("dev");
 // Uses 'existing' session type
 ```
 
@@ -159,44 +165,49 @@ const greeting = await generateGreeting('dev');
 
 ```javascript
 // QA reviews code
-await updateSessionAfterCommand('qa', 'review');
+await updateSessionAfterCommand("qa", "review");
 // → sessionType: 'existing'
 
 // QA finds issues
-await updateSessionAfterCommand('qa', 'gate');
+await updateSessionAfterCommand("qa", "gate");
 // → sessionType: 'existing'
 
 // Switch to Dev
-await updateSessionAfterCommand('dev', 'agent-activation', {
-  previousAgent: 'qa'
+await updateSessionAfterCommand("dev", "agent-activation", {
+  previousAgent: "qa",
 });
 // → sessionType: 'workflow' (agent transition detected)
 
 // Dev applies fixes
-await updateSessionAfterCommand('dev', 'apply-qa-fixes');
+await updateSessionAfterCommand("dev", "apply-qa-fixes");
 // → sessionType: 'workflow'
 
 // Next greeting shows workflow context
-const greeting = await generateGreeting('dev');
+const greeting = await generateGreeting("dev");
 // Includes: "Continuing from @qa review..."
 ```
 
 ## Performance Considerations
 
 ### Session File Location
+
 - **Path:** `.aios-core/.session/current-session.json`
 - **Size:** ~1-2KB (with history limit)
 - **I/O:** Read on greeting, write after command
 - **Impact:** <10ms per operation
 
 ### Caching Strategy
+
 Session state is not cached (always fresh reads) to ensure accuracy across:
+
 - Multiple terminal sessions
 - Concurrent agent activations
 - Manual session edits
 
 ### Error Handling
+
 All session operations are non-blocking:
+
 - Failed reads → Default to 'new' session
 - Failed writes → Log warning, continue execution
 - Corrupted JSON → Reset to empty session
@@ -204,16 +215,19 @@ All session operations are non-blocking:
 ## Testing
 
 ### Unit Tests
+
 ```bash
 node tests/unit/command-execution-hook.test.js
 ```
 
 ### Integration Tests
+
 ```bash
 node tests/integration/session-workflow.test.js
 ```
 
 ### Manual Testing
+
 ```bash
 # Clear session
 rm .aios-core/.session/current-session.json
@@ -231,6 +245,7 @@ node .aios-core/scripts/generate-greeting.js dev
 ## Troubleshooting
 
 ### Session Not Updating
+
 **Symptom:** Greetings always show "new" session
 **Solution:** Check session file permissions and path
 
@@ -240,20 +255,23 @@ cat .aios-core/.session/current-session.json
 ```
 
 ### Wrong Session Type
+
 **Symptom:** Workflow session detected too early/late
 **Solution:** Adjust thresholds in `determineSessionType()`
 
 ```javascript
 // In command-execution-hook.js
 function determineSessionType(commandHistory) {
-  if (commandHistory.length >= 3) { // Adjust this threshold
-    return 'workflow';
+  if (commandHistory.length >= 3) {
+    // Adjust this threshold
+    return "workflow";
   }
   // ...
 }
 ```
 
 ### Commands Not Tracked
+
 **Symptom:** Command history empty
 **Solution:** Ensure commands call `updateSessionAfterCommand()`
 
@@ -265,19 +283,23 @@ await updateSessionAfterCommand(agentId, commandName);
 ## Migration Notes
 
 ### From Inline Greeting Logic
+
 Old approach (deprecated):
+
 ```javascript
 // STEP 3: Generate contextual greeting using inline logic
 // 1. Detect session type from conversation history...
 ```
 
 New approach (Story 6.1.4):
+
 ```javascript
 // STEP 3: Execute unified greeting generator
-node .aios-core/scripts/generate-greeting.js [agent-id]
+node.aios - core / scripts / generate - greeting.js[agent - id];
 ```
 
 ### Backward Compatibility
+
 - Session updates are optional (system defaults to 'new')
 - Agents work without integration (degraded UX only)
 - No breaking changes to existing commands
@@ -285,12 +307,14 @@ node .aios-core/scripts/generate-greeting.js [agent-id]
 ## Future Enhancements
 
 ### Planned (Post-Story 6.1.4)
+
 1. **Workflow Pattern Library:** Detect common sequences (e.g., "review → fix → test")
 2. **Smart Suggestions:** Recommend next command based on history
 3. **Session Analytics:** Track which workflows are most common
 4. **Cross-Conversation Persistence:** Link sessions across Claude conversations
 
 ### Under Consideration
+
 - Session branching for parallel workflows
 - Command rollback/undo tracking
 - Session export for debugging
@@ -299,9 +323,9 @@ node .aios-core/scripts/generate-greeting.js [agent-id]
 ---
 
 **Related Documentation:**
+
 - [Story 6.1.4 Implementation](../../stories/aios migration/story-6.1.4.md)
 - [Agent Configuration Guide](../config/agent-config-requirements.yaml)
 - [Greeting System Architecture](./greeting-system-architecture.md)
 
 **Last Updated:** 2025-01-18 (Story 6.1.4)
-

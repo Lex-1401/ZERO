@@ -9,7 +9,9 @@
   --user-bubble: #7fb8d4;
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.12);
-  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
   --radius-lg: 12px;
   --radius-md: 10px;
   --radius-sm: 8px;

@@ -28,7 +28,7 @@
     },
     "auth": {
       "mode": "token",
-      "token": "admin123"
+      "token": "4f9d2e7a1b8c5d6e2a9f3b7c4d1e8a0f2b5d7e9a1c4b6d3e8f0a2c5b7d9e1a3"
     },
     "http": {
       "endpoints": {
@@ -39,9 +39,7 @@
     },
     "cors": {
       "enabled": true,
-      "allowedOrigins": [
-        "*"
-      ]
+      "allowedOrigins": ["http://localhost:18789", "http://127.0.0.1:18789", "*"]
     }
   }
 }

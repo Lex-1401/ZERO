@@ -34,6 +34,7 @@ export function createGraphTools(options: { config: ZEROConfig; agentId: string 
     createGraphUpsertRelationTool(options),
     createGraphSearchTool(options),
     createGraphReadContextTool(options),
+    createCanvasPostTool(options),
   ];
 }
 
@@ -164,6 +165,40 @@ function createGraphReadContextTool(options: {
 
       const text = manager.graph.getGraphContext(params.names);
       return jsonResult({ context: text });
+    },
+  };
+}
+
+function createCanvasPostTool(options: { config: ZEROConfig; agentId: string }): AnyAgentTool {
+  return {
+    name: "canvas_post",
+    label: "Post to Infinite Canvas",
+    description: "Post a snippet or note to a specific location on the persistent spatial canvas.",
+    parameters: Type.Object({
+      name: Type.String({ description: "Label or title for the note" }),
+      content: Type.String({ description: "Content of the note" }),
+      x: Type.Number({ description: "X coordinate" }),
+      y: Type.Number({ description: "Y coordinate" }),
+      id: Type.Optional(Type.String({ description: "Note ID to update" })),
+    }),
+    execute: async (_toolCallId, args) => {
+      const params = args as any;
+      const manager = await MemoryIndexManager.get({
+        cfg: options.config,
+        agentId: options.agentId,
+      });
+      if (!manager) return jsonResult({ error: "Memory system unavailable" });
+
+      const id = manager.graph.addEntity({
+        name: params.name,
+        type: "Note",
+        description: params.content,
+        id: params.id,
+        x: params.x,
+        y: params.y,
+      });
+
+      return jsonResult({ status: "success", note_id: id });
     },
   };
 }

@@ -62,12 +62,16 @@ export function renderGoogleChatCard(params: {
                     </div>
                 </div>
 
-                ${googleChat?.lastError ? html`
+                ${
+                  googleChat?.lastError
+                    ? html`
                     <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
                         <div style="color: var(--danger); font-size: 12px; font-weight: 700;">Erro de Protocolo</div>
                         <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${googleChat.lastError}</div>
                     </div>
-                ` : nothing}
+                `
+                    : nothing
+                }
 
                 ${renderChannelConfigSection({ channelId: "googlechat", props })}
             </div>
@@ -86,7 +90,9 @@ export function renderGoogleChatCard(params: {
                             </div>
                         </div>
                         
-                        ${googleChat?.probe ? html`
+                        ${
+                          googleChat?.probe
+                            ? html`
                             <div style="width: 100%; height: 1px; background: var(--border-subtle);"></div>
                             <div style="width: 100%;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
@@ -98,9 +104,13 @@ export function renderGoogleChatCard(params: {
                                     ${googleChat.probe.error ? html`<br/><span style="color: var(--danger);">${googleChat.probe.error}</span>` : ""}
                                 </div>
                             </div>
-                        ` : html`
-                            <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%;">Nenhum diagnóstico pendente.</div>
-                        `}
+                        `
+                            : html`
+                                <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%">
+                                  Nenhum diagnóstico pendente.
+                                </div>
+                              `
+                        }
                     </div>
                 </div>
             </div>

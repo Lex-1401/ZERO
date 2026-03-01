@@ -65,7 +65,6 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     process.argv.includes("--version") ||
     process.argv.includes("-v")
   ) {
-    console.log(ctx.programVersion);
     process.exit(0);
   }
 

@@ -53,9 +53,9 @@ Exemplo:
 {
   tools: {
     exec: {
-      pathPrepend: ["~/bin", "/opt/oss/bin"]
-    }
-  }
+      pathPrepend: ["~/bin", "/opt/oss/bin"],
+    },
+  },
 }
 ```
 
@@ -113,7 +113,7 @@ modo lista de permissão.
 Primeiro plano:
 
 ```json
-{"tool":"exec","command":"ls -la"}
+{ "tool": "exec", "command": "ls -la" }
 ```
 
 Segundo plano + poll:
@@ -134,13 +134,13 @@ Enviar teclas (estilo tmux):
 Enviar (enviar apenas CR):
 
 ```json
-{"tool":"process","action":"submit","sessionId":"<id>"}
+{ "tool": "process", "action": "submit", "sessionId": "<id>" }
 ```
 
 Colar (entre colchetes por padrão):
 
 ```json
-{"tool":"process","action":"paste","sessionId":"<id>","text":"line1\nline2\n"}
+{ "tool": "process", "action": "paste", "sessionId": "<id>", "text": "line1\nline2\n" }
 ```
 
 ## apply_patch (experimental)
@@ -152,9 +152,9 @@ Ative-a explicitamente:
 {
   tools: {
     exec: {
-      applyPatch: { enabled: true, allowModels: ["gpt-5.2"] }
-    }
-  }
+      applyPatch: { enabled: true, allowModels: ["gpt-5.2"] },
+    },
+  },
 }
 ```
 

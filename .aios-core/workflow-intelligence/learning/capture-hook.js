@@ -10,11 +10,11 @@
  * await onTaskComplete('develop', { sessionId: 'abc123', agentId: '@dev' });
  */
 
-'use strict';
+"use strict";
 
-const { createPatternCapture } = require('./pattern-capture');
-const { createPatternValidator } = require('./pattern-validator');
-const { createPatternStore } = require('./pattern-store');
+const { createPatternCapture } = require("./pattern-capture");
+const { createPatternValidator } = require("./pattern-validator");
+const { createPatternStore } = require("./pattern-store");
 
 /**
  * Singleton instances
@@ -28,7 +28,7 @@ let store = null;
  * @returns {boolean} True if enabled
  */
 function isEnabled() {
-  return process.env.AIOS_PATTERN_CAPTURE !== 'false';
+  return process.env.AIOS_PATTERN_CAPTURE !== "false";
 }
 
 /**
@@ -55,7 +55,7 @@ function getInstances() {
  */
 async function onTaskComplete(taskName, context = {}) {
   if (!isEnabled()) {
-    return { success: false, reason: 'disabled' };
+    return { success: false, reason: "disabled" };
   }
 
   try {
@@ -70,13 +70,13 @@ async function onTaskComplete(taskName, context = {}) {
         st.save(result.pattern);
         return {
           success: true,
-          action: 'stored',
+          action: "stored",
           patternId: result.pattern.id,
         };
       } else {
         return {
           success: false,
-          reason: 'validation_failed',
+          reason: "validation_failed",
           errors: validation.errors,
         };
       }
@@ -84,16 +84,16 @@ async function onTaskComplete(taskName, context = {}) {
 
     return {
       success: false,
-      reason: result.reason || 'not_captured',
+      reason: result.reason || "not_captured",
     };
   } catch (error) {
     // Silent failure - capture is non-critical
-    if (process.env.AIOS_DEBUG === 'true') {
-      console.debug('[PatternCapture] Hook failed:', error.message);
+    if (process.env.AIOS_DEBUG === "true") {
+      console.debug("[PatternCapture] Hook failed:", error.message);
     }
     return {
       success: false,
-      reason: 'error',
+      reason: "error",
       error: error.message,
     };
   }

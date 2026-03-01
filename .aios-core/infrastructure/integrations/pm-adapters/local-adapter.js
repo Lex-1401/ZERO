@@ -10,10 +10,10 @@
  * @see Story 3.20 - PM Tool-Agnostic Integration (TR-3.20.5)
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
-const { PMAdapter } = require('../../scripts/pm-adapter');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
+const { PMAdapter } = require("../../scripts/pm-adapter");
 
 /**
  * Local adapter - standalone mode with no external PM tool
@@ -50,13 +50,13 @@ class LocalAdapter extends PMAdapter {
       }
 
       // Read story and extract frontmatter (YAML between first --- and second ---)
-      const storyContent = fs.readFileSync(storyPath, 'utf8');
+      const storyContent = fs.readFileSync(storyPath, "utf8");
       const frontmatterMatch = storyContent.match(/^---\r?\n([\s\S]*?)\r?\n---/);
 
       if (!frontmatterMatch) {
         return {
           success: false,
-          error: 'Invalid story file: missing YAML frontmatter',
+          error: "Invalid story file: missing YAML frontmatter",
         };
       }
 
@@ -65,7 +65,7 @@ class LocalAdapter extends PMAdapter {
       if (!story || !story.id) {
         return {
           success: false,
-          error: 'Invalid story file: missing id field in frontmatter',
+          error: "Invalid story file: missing id field in frontmatter",
         };
       }
 
@@ -76,9 +76,8 @@ class LocalAdapter extends PMAdapter {
         success: true,
         url: `file://${path.resolve(storyPath)}`,
       };
-
     } catch (error) {
-      console.error('❌ Error validating local story:', error);
+      console.error("❌ Error validating local story:", error);
       return {
         success: false,
         error: error.message,
@@ -100,7 +99,7 @@ class LocalAdapter extends PMAdapter {
 
     return {
       success: true,
-      updates: null,  // No updates from external source
+      updates: null, // No updates from external source
     };
   }
 
@@ -117,7 +116,7 @@ class LocalAdapter extends PMAdapter {
     if (!storyData || !storyData.id) {
       return {
         success: false,
-        error: 'Story data missing required field: id',
+        error: "Story data missing required field: id",
       };
     }
 
@@ -125,7 +124,7 @@ class LocalAdapter extends PMAdapter {
 
     return {
       success: true,
-      url: null,  // No external URL in local mode
+      url: null, // No external URL in local mode
     };
   }
 
@@ -156,7 +155,7 @@ class LocalAdapter extends PMAdapter {
    * @returns {Promise<{success: boolean, error?: string}>}
    */
   async testConnection() {
-    console.log('✅ Local-only mode: No PM tool connection needed');
+    console.log("✅ Local-only mode: No PM tool connection needed");
 
     return {
       success: true,
@@ -168,7 +167,7 @@ class LocalAdapter extends PMAdapter {
    * @returns {string} "Local" (overrides base class to return cleaner name)
    */
   getName() {
-    return 'Local';
+    return "Local";
   }
 }
 

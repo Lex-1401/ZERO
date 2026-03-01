@@ -4,10 +4,7 @@ import { createServer } from "node:http";
 import { delimiter, dirname, join } from "node:path";
 
 const CLIENT_ID_KEYS = ["ZERO_GEMINI_OAUTH_CLIENT_ID", "GEMINI_CLI_OAUTH_CLIENT_ID"];
-const CLIENT_SECRET_KEYS = [
-  "ZERO_GEMINI_OAUTH_CLIENT_SECRET",
-  "GEMINI_CLI_OAUTH_CLIENT_SECRET",
-];
+const CLIENT_SECRET_KEYS = ["ZERO_GEMINI_OAUTH_CLIENT_SECRET", "GEMINI_CLI_OAUTH_CLIENT_SECRET"];
 const REDIRECT_URI = "http://localhost:8085/oauth2callback";
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -67,8 +64,25 @@ export function extractGeminiCliCredentials(): { clientId: string; clientSecret:
     const geminiCliDir = dirname(dirname(resolvedPath));
 
     const searchPaths = [
-      join(geminiCliDir, "node_modules", "@google", "gemini-cli-core", "dist", "src", "code_assist", "oauth2.js"),
-      join(geminiCliDir, "node_modules", "@google", "gemini-cli-core", "dist", "code_assist", "oauth2.js"),
+      join(
+        geminiCliDir,
+        "node_modules",
+        "@google",
+        "gemini-cli-core",
+        "dist",
+        "src",
+        "code_assist",
+        "oauth2.js",
+      ),
+      join(
+        geminiCliDir,
+        "node_modules",
+        "@google",
+        "gemini-cli-core",
+        "dist",
+        "code_assist",
+        "oauth2.js",
+      ),
     ];
 
     let content: string | null = null;
@@ -299,7 +313,10 @@ async function waitForLocalCallback(params: {
   });
 }
 
-async function exchangeCodeForTokens(code: string, verifier: string): Promise<GeminiCliOAuthCredentials> {
+async function exchangeCodeForTokens(
+  code: string,
+  verifier: string,
+): Promise<GeminiCliOAuthCredentials> {
   const { clientId, clientSecret } = resolveOAuthClientConfig();
   const body = new URLSearchParams({
     client_id: clientId,
@@ -478,7 +495,9 @@ function isVpcScAffected(payload: unknown): boolean {
   if (!Array.isArray(details)) return false;
   return details.some(
     (item) =>
-      typeof item === "object" && item && (item as { reason?: string }).reason === "SECURITY_POLICY_VIOLATED",
+      typeof item === "object" &&
+      item &&
+      (item as { reason?: string }).reason === "SECURITY_POLICY_VIOLATED",
   );
 }
 
@@ -508,7 +527,9 @@ async function pollOperation(
   throw new Error("Operation polling timeout");
 }
 
-export async function loginGeminiCliOAuth(ctx: GeminiCliOAuthContext): Promise<GeminiCliOAuthCredentials> {
+export async function loginGeminiCliOAuth(
+  ctx: GeminiCliOAuthContext,
+): Promise<GeminiCliOAuthCredentials> {
   const needsManual = shouldUseManualOAuthFlow(ctx.isRemote);
   await ctx.note(
     needsManual

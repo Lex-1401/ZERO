@@ -31,10 +31,10 @@ Quando o TLS está habilitado, os registros TXT de descoberta incluem `bridgeTls
 
 ## Handshake + emparelhamento
 
-1) O cliente envia `hello` com os metadados do nó + token (se já estiver emparelhado).
-2) Se não estiver emparelhado, o gateway responde com `error` (`NOT_PAIRED`/`UNAUTHORIZED`).
-3) O cliente envia `pair-request`.
-4) O gateway aguarda pela aprovação e, em seguida, envia `pair-ok` e `hello-ok`.
+1. O cliente envia `hello` com os metadados do nó + token (se já estiver emparelhado).
+2. Se não estiver emparelhado, o gateway responde com `error` (`NOT_PAIRED`/`UNAUTHORIZED`).
+3. O cliente envia `pair-request`.
+4. O gateway aguarda pela aprovação e, em seguida, envia `pair-ok` e `hello-ok`.
 
 O `hello-ok` retorna o `serverName` e pode incluir a `canvasHostUrl`.
 

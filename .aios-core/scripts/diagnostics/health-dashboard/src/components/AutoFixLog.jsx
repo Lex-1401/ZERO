@@ -1,5 +1,5 @@
-import React from 'react';
-import './AutoFixLog.css';
+import React from "react";
+import "./AutoFixLog.css";
 
 /**
  * Self-healing / auto-fix history log
@@ -41,11 +41,7 @@ function AutoFixLog({ items = [], maxItems = 5 }) {
                   Backup: <code>{item.backup}</code>
                 </div>
               )}
-              {item.timestamp && (
-                <div className="autofix-time">
-                  {formatTime(item.timestamp)}
-                </div>
-              )}
+              {item.timestamp && <div className="autofix-time">{formatTime(item.timestamp)}</div>}
             </div>
           </li>
         ))}

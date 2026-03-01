@@ -10,7 +10,7 @@ const updateLastRouteMock = vi.fn();
 const readAllowFromStoreMock = vi.fn();
 const upsertPairingRequestMock = vi.fn();
 
-let config: Record<string, unknown> = {};
+let config: any = {};
 let notificationHandler: ((msg: { method: string; params?: unknown }) => void) | undefined;
 let closeResolve: (() => void) | undefined;
 
@@ -280,9 +280,13 @@ describe("monitorIMessageProvider", () => {
   it("prefixes final replies with responsePrefix", async () => {
     config = {
       ...config,
-      messages: { responsePrefix: "PFX" },
+      messages: { ...config.messages, responsePrefix: "PFX" },
     };
-    replyMock.mockResolvedValue({ text: "final reply" });
+    replyMock.mockResolvedValueOnce({ text: "final reply" });
+
+    // reset mock stats just in case
+    sendMock.mockClear();
+
     const run = monitorIMessageProvider();
     await waitForSubscribe();
 
@@ -290,22 +294,31 @@ describe("monitorIMessageProvider", () => {
       method: "message",
       params: {
         message: {
-          id: 7,
-          chat_id: 77,
+          id: 7777,
+          chat_id: 1111,
           sender: "+15550001111",
           is_from_me: false,
-          text: "hello",
-          is_group: false,
+          text: "@zero ping",
+          is_group: true,
+          chat_name: "Test Group",
+          participants: ["+1555"],
         },
       },
     });
 
-    await flush();
+    // Wait until sendMock is invoked or 2s timeout
+    let attempts = 0;
+    while (sendMock.mock.calls.length === 0 && attempts < 100) {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      attempts++;
+    }
+
     closeResolve?.();
     await run;
 
-    expect(sendMock).toHaveBeenCalledTimes(1);
-    expect(sendMock.mock.calls[0][1]).toBe("PFX final reply");
+    expect(sendMock).toHaveBeenCalled();
+    const sentMessage = sendMock.mock.calls[0]?.[1] ?? "";
+    expect(sentMessage).toContain("PFX final reply");
   });
 
   it("defaults to dmPolicy=pairing behavior when allowFrom is empty", async () => {

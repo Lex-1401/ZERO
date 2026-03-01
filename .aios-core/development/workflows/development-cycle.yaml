@@ -18,7 +18,6 @@ workflow:
     Implementa o fluxo PO → Executor → Quality Gate → DevOps → Push
     com suporte a executor dinâmico, self-healing e checkpoints humanos.
   orchestrator: "@po"
-
   # ============================================
   # Triggers
   # ============================================
@@ -118,13 +117,13 @@ workflow:
     2_development:
       id: development
       name: "Development"
-      agent: "${story.executor}"  # Dynamic from Story 11.1
+      agent: "${story.executor}" # Dynamic from Story 11.1
       task: "develop"
       description: >-
         Executor dinâmico desenvolve a story baseado na atribuição.
         Usa terminal spawning para contexto limpo (Story 11.2).
 
-      spawn_in_terminal: true  # Use TerminalSpawner
+      spawn_in_terminal: true # Use TerminalSpawner
 
       inputs:
         - validated_story:
@@ -184,8 +183,8 @@ workflow:
         auto_fix: true
 
       on_success: 4_quality_gate
-      on_failure: 4_quality_gate  # Continue even if self-healing fails
-      on_skip: 4_quality_gate     # Skip if condition not met
+      on_failure: 4_quality_gate # Continue even if self-healing fails
+      on_skip: 4_quality_gate # Skip if condition not met
 
     # ----------------------------------------
     # Phase 4: Quality Gate
@@ -193,13 +192,13 @@ workflow:
     4_quality_gate:
       id: quality_gate
       name: "Quality Gate"
-      agent: "${story.quality_gate}"  # Dynamic, different from executor
+      agent: "${story.quality_gate}" # Dynamic, different from executor
       task: "quality-review"
       description: >-
         Quality gate executado por agente DIFERENTE do executor.
         Valida código, testes, arquitetura e padrões.
 
-      spawn_in_terminal: true  # Use TerminalSpawner
+      spawn_in_terminal: true # Use TerminalSpawner
 
       inputs:
         - implementation:
@@ -238,7 +237,7 @@ workflow:
         DevOps executa push ao final de cada story aprovada.
         Cria PR automaticamente com referência à story.
 
-      spawn_in_terminal: true  # Use TerminalSpawner
+      spawn_in_terminal: true # Use TerminalSpawner
 
       inputs:
         - reviewed_code:
@@ -280,7 +279,7 @@ workflow:
         PO pausa entre stories para perguntar: GO / PAUSE / REVIEW / ABORT.
         Requer interação humana para decisão.
 
-      elicit: true  # REQUIRES human interaction
+      elicit: true # REQUIRES human interaction
 
       inputs:
         - story_file
@@ -313,7 +312,7 @@ workflow:
           description: "Stop the epic"
           action: abort_epic
 
-      on_go: 1_validation  # Loop back with next story
+      on_go: 1_validation # Loop back with next story
       on_pause: workflow_paused
       on_review: show_summary_then_checkpoint
       on_abort: workflow_aborted

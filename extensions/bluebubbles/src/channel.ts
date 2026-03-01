@@ -106,8 +106,7 @@ export const bluebubblesPlugin: ChannelPlugin<ResolvedBlueBubblesAccount> = {
       baseUrl: account.baseUrl,
     }),
     resolveAllowFrom: ({ cfg, accountId }) =>
-      (resolveBlueBubblesAccount({ cfg: cfg as ZeroConfig, accountId }).config.allowFrom ??
-        []).map(
+      (resolveBlueBubblesAccount({ cfg: cfg as ZeroConfig, accountId }).config.allowFrom ?? []).map(
         (entry) => String(entry),
       ),
     formatAllowFrom: ({ allowFrom }) =>
@@ -257,9 +256,9 @@ export const bluebubblesPlugin: ChannelPlugin<ResolvedBlueBubblesAccount> = {
             ...next.channels?.bluebubbles,
             enabled: true,
             accounts: {
-              ...(next.channels?.bluebubbles?.accounts ?? {}),
+              ...next.channels?.bluebubbles?.accounts,
               [accountId]: {
-                ...(next.channels?.bluebubbles?.accounts?.[accountId] ?? {}),
+                ...next.channels?.bluebubbles?.accounts?.[accountId],
                 enabled: true,
                 ...(input.httpUrl ? { serverUrl: input.httpUrl } : {}),
                 ...(input.password ? { password: input.password } : {}),

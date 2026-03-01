@@ -12,11 +12,11 @@ O ZERO extrai variáveis de ambiente de múltiplas fontes. A regra fundamental �
 
 ## Precedência (mais alta → mais baixa)
 
-1) **Ambiente do processo** (o que o processo do Gateway já possui do shell pai ou daemon).
-2) **`.env` no diretório de trabalho atual** (padrão dotenv; não substitui).
-3) **`.env` global** em `~/.zero/.env` (também conhecido como `$ZERO_STATE_DIR/.env`; não substitui).
-4) **Bloco `env` da configuração** em `~/.zero/zero.json` (aplicado apenas se estiver ausente).
-5) **Importação opcional de shell de login** (`env.shellEnv.enabled` ou `ZERO_LOAD_SHELL_ENV=1`), aplicada apenas para chaves esperadas que estejam ausentes.
+1. **Ambiente do processo** (o que o processo do Gateway já possui do shell pai ou daemon).
+2. **`.env` no diretório de trabalho atual** (padrão dotenv; não substitui).
+3. **`.env` global** em `~/.zero/.env` (também conhecido como `$ZERO_STATE_DIR/.env`; não substitui).
+4. **Bloco `env` da configuração** em `~/.zero/zero.json` (aplicado apenas se estiver ausente).
+5. **Importação opcional de shell de login** (`env.shellEnv.enabled` ou `ZERO_LOAD_SHELL_ENV=1`), aplicada apenas para chaves esperadas que estejam ausentes.
 
 Se o arquivo de configuração estiver totalmente ausente, o passo 4 é pulado; a importação do shell ainda ocorre se estiver ativada.
 
@@ -26,12 +26,12 @@ Duas formas equivalentes de definir variáveis de ambiente inline (ambas não su
 
 ```json5
 {
-  "env": {
-    "OPENROUTER_API_KEY": "sk-or-...",
-    "vars": {
-      "GROQ_API_KEY": "gsk-..."
-    }
-  }
+  env: {
+    OPENROUTER_API_KEY: "sk-or-...",
+    vars: {
+      GROQ_API_KEY: "gsk-...",
+    },
+  },
 }
 ```
 
@@ -41,12 +41,12 @@ Duas formas equivalentes de definir variáveis de ambiente inline (ambas não su
 
 ```json5
 {
-  "env": {
-    "shellEnv": {
-      "enabled": true,
-      "timeoutMs": 15000
-    }
-  }
+  env: {
+    shellEnv: {
+      enabled: true,
+      timeoutMs: 15000,
+    },
+  },
 }
 ```
 
@@ -61,13 +61,13 @@ Você pode referenciar variáveis de ambiente diretamente nos valores de string 
 
 ```json5
 {
-  "models": {
-    "providers": {
+  models: {
+    providers: {
       "vercel-gateway": {
-        "apiKey": "${VERCEL_GATEWAY_API_KEY}"
-      }
-    }
-  }
+        apiKey: "${VERCEL_GATEWAY_API_KEY}",
+      },
+    },
+  },
 }
 ```
 

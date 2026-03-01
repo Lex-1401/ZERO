@@ -1,14 +1,9 @@
-import { mkdtempSync, writeFileSync, rmSync, readFileSync, existsSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { ZEROConfig } from "../config/config.js";
 import { logVerbose } from "../globals.js";
-import {
-  TtsResult,
-  TtsTelephonyResult,
-  TtsStatusEntry,
-  TtsUserPrefs
-} from "./tts.types.js";
+import { TtsResult, TtsTelephonyResult, TtsStatusEntry, TtsUserPrefs } from "./tts.types.js";
 import {
   normalizeTtsAutoMode,
   parseTtsDirectives,
@@ -18,19 +13,14 @@ import {
   resolveEdgeOutputFormat,
   isValidVoiceId,
   OPENAI_TTS_MODELS,
-  OPENAI_TTS_VOICES
+  OPENAI_TTS_VOICES,
 } from "./tts.utils.js";
 import {
   resolveTtsConfig,
   resolveTtsPrefsPath,
   getTtsProvider,
-  resolveModelOverridePolicy
 } from "./tts.config.js";
-import {
-  openaiTTS,
-  elevenLabsTTS,
-  edgeTTS
-} from "./tts.process.js";
+import { openaiTTS, elevenLabsTTS, edgeTTS } from "./tts.process.js";
 import { TtsProvider, TtsAutoMode } from "../config/types.tts.js";
 
 let lastTtsAttempt: TtsStatusEntry | undefined;
@@ -52,13 +42,14 @@ export function isTtsProviderConfigured(config: any, provider: TtsProvider): boo
 
 export function resolveTtsApiKey(config: any, provider: TtsProvider): string | undefined {
   if (provider === "openai") return config.openai?.apiKey || process.env.OPENAI_API_KEY;
-  if (provider === "elevenlabs") return config.elevenlabs?.apiKey || process.env.ELEVENLABS_API_KEY || process.env.XI_API_KEY;
+  if (provider === "elevenlabs")
+    return config.elevenlabs?.apiKey || process.env.ELEVENLABS_API_KEY || process.env.XI_API_KEY;
   return undefined;
 }
 
 export function resolveTtsProviderOrder(primary: TtsProvider): TtsProvider[] {
   const all: TtsProvider[] = ["openai", "elevenlabs", "edge"];
-  const filtered = all.filter(p => p !== primary);
+  const filtered = all.filter((p) => p !== primary);
   return [primary, ...filtered];
 }
 
@@ -107,7 +98,11 @@ export function setTtsProvider(prefsPath: string, provider: TtsProvider) {
   writePrefs(prefsPath, prefs);
 }
 
-export function resolveTtsAutoMode(params: { config: any, prefsPath: string, sessionAuto?: TtsAutoMode }): TtsAutoMode {
+export function resolveTtsAutoMode(params: {
+  config: any;
+  prefsPath: string;
+  sessionAuto?: TtsAutoMode;
+}): TtsAutoMode {
   if (params.sessionAuto) return params.sessionAuto;
   const prefs = readPrefs(params.prefsPath);
   return prefs.tts?.auto ?? params.config.auto ?? "off";
@@ -117,15 +112,15 @@ export function isTtsEnabled(config: any): boolean {
   return config.auto !== "off";
 }
 
-export function setTtsEnabled(config: any, enabled: boolean) {
+export function setTtsEnabled(_config: any, _enabled: boolean) {
   // In v1.0, we prioritize the auto mode settings.
 }
 
-export async function textToSpeechTelephony(params: any): Promise<TtsTelephonyResult> {
+export async function textToSpeechTelephony(_params: any): Promise<TtsTelephonyResult> {
   return { success: false, error: "Telephony TTS not implemented in this build" };
 }
 
-export function buildTtsSystemPromptHint(config: any): string {
+export function buildTtsSystemPromptHint(_config: any): string {
   return "TTS is active. Keep responses suitable for voice output (avoid heavy markdown).";
 }
 
@@ -150,7 +145,7 @@ export async function textToSpeech(params: {
         model: config.openai.model,
         voice: config.openai.voice,
         responseFormat: "mp3",
-        timeoutMs: config.timeoutMs
+        timeoutMs: config.timeoutMs,
       });
       writeFileSync(audioPath, buf);
     } else if (config.provider === "elevenlabs") {
@@ -162,7 +157,7 @@ export async function textToSpeech(params: {
         modelId: config.elevenlabs.modelId,
         outputFormat: "mp3_44100_128",
         voiceSettings: config.elevenlabs.voiceSettings,
-        timeoutMs: config.timeoutMs
+        timeoutMs: config.timeoutMs,
       });
       writeFileSync(audioPath, buf);
     } else {
@@ -170,7 +165,7 @@ export async function textToSpeech(params: {
         text: params.text,
         outputPath: audioPath,
         config: config.edge,
-        timeoutMs: config.timeoutMs
+        timeoutMs: config.timeoutMs,
       });
     }
 
@@ -180,7 +175,7 @@ export async function textToSpeech(params: {
       audioPath,
       latencyMs: Date.now() - providerStart,
       provider: config.provider,
-      voiceCompatible: true
+      voiceCompatible: true,
     };
   } catch (err) {
     return { success: false, error: (err as Error).message };
@@ -194,10 +189,15 @@ export async function maybeApplyTtsToPayload(params: any): Promise<any> {
 
   if (text.length < 10) return params.payload;
 
+  const shouldApplyTts = params.ttsAuto === "always" || isTtsEnabled(config);
+  if (!shouldApplyTts) {
+    return params.payload;
+  }
+
   const result = await textToSpeech({
     text: directives.cleanedText || text,
     cfg: params.cfg,
-    overrides: directives.overrides
+    overrides: directives.overrides,
   });
 
   if (result.success) {
@@ -206,7 +206,14 @@ export async function maybeApplyTtsToPayload(params: any): Promise<any> {
   return params.payload;
 }
 
-export { getTtsProvider, resolveTtsConfig, normalizeTtsAutoMode, resolveTtsPrefsPath, OPENAI_TTS_MODELS, OPENAI_TTS_VOICES };
+export {
+  getTtsProvider,
+  resolveTtsConfig,
+  normalizeTtsAutoMode,
+  resolveTtsPrefsPath,
+  OPENAI_TTS_MODELS,
+  OPENAI_TTS_VOICES,
+};
 
 export const _test = {
   isValidVoiceId,

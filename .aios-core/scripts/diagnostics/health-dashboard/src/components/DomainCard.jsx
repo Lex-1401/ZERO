@@ -1,23 +1,23 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, StatusBadge } from './shared';
-import HealthScore from './HealthScore';
-import './DomainCard.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Card, StatusBadge } from "./shared";
+import HealthScore from "./HealthScore";
+import "./DomainCard.css";
 
 const DOMAIN_ICONS = {
-  project: '\uD83D\uDD27',   // wrench
-  local: '\uD83D\uDCBB',     // laptop
-  repository: '\uD83D\uDCE6', // package
-  deployment: '\uD83D\uDE80', // rocket
-  services: '\uD83D\uDD17'   // link
+  project: "\uD83D\uDD27", // wrench
+  local: "\uD83D\uDCBB", // laptop
+  repository: "\uD83D\uDCE6", // package
+  deployment: "\uD83D\uDE80", // rocket
+  services: "\uD83D\uDD17", // link
 };
 
 const DOMAIN_LABELS = {
-  project: 'Project Coherence',
-  local: 'Local Environment',
-  repository: 'Repository Health',
-  deployment: 'Deployment',
-  services: 'Service Integration'
+  project: "Project Coherence",
+  local: "Local Environment",
+  repository: "Repository Health",
+  deployment: "Deployment",
+  services: "Service Integration",
 };
 
 /**
@@ -26,7 +26,7 @@ const DOMAIN_LABELS = {
 function DomainCard({ domain, data }) {
   const navigate = useNavigate();
 
-  const icon = DOMAIN_ICONS[domain] || '\u2699';
+  const icon = DOMAIN_ICONS[domain] || "\u2699";
   const label = DOMAIN_LABELS[domain] || domain;
 
   const handleClick = () => {
@@ -38,12 +38,12 @@ function DomainCard({ domain, data }) {
     critical: 0,
     high: 0,
     medium: 0,
-    low: 0
+    low: 0,
   };
 
   if (data?.checks) {
-    data.checks.forEach(check => {
-      if (check.status === 'failed' && check.severity) {
+    data.checks.forEach((check) => {
+      if (check.status === "failed" && check.severity) {
         const key = check.severity.toLowerCase();
         if (issueCounts.hasOwnProperty(key)) {
           issueCounts[key]++;
@@ -53,7 +53,7 @@ function DomainCard({ domain, data }) {
   }
 
   const totalIssues = Object.values(issueCounts).reduce((a, b) => a + b, 0);
-  const passedChecks = data?.checks?.filter(c => c.status === 'passed').length || 0;
+  const passedChecks = data?.checks?.filter((c) => c.status === "passed").length || 0;
   const totalChecks = data?.checks?.length || 0;
 
   return (
@@ -66,7 +66,7 @@ function DomainCard({ domain, data }) {
             {passedChecks}/{totalChecks} checks passed
           </span>
         </div>
-        <StatusBadge status={data?.status || 'healthy'} size="sm" />
+        <StatusBadge status={data?.status || "healthy"} size="sm" />
       </div>
 
       <div className="domain-card-body">

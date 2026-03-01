@@ -4,24 +4,24 @@
  * Date: 2025-11-16
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const AGENTS_DIR = path.join(__dirname, '..', 'agents');
-const CLAUDE_AGENTS_DIR = path.join(__dirname, '..', '..', '.claude', 'commands', 'AIOS', 'agents');
+const AGENTS_DIR = path.join(__dirname, "..", "agents");
+const CLAUDE_AGENTS_DIR = path.join(__dirname, "..", "..", ".claude", "commands", "AIOS", "agents");
 
 const AGENTS = [
-  'dev.md',
-  'qa.md',
-  'po.md',
-  'sm.md',
-  'pm.md',
-  'architect.md',
-  'analyst.md',
-  'data-engineer.md',
-  'devops.md',
-  'aios-master.md',
-  'ux-design-expert.md',
+  "dev.md",
+  "qa.md",
+  "po.md",
+  "sm.md",
+  "pm.md",
+  "architect.md",
+  "analyst.md",
+  "data-engineer.md",
+  "devops.md",
+  "aios-master.md",
+  "ux-design-expert.md",
 ];
 
 const INLINE_GREETING_LOGIC = `
@@ -61,34 +61,35 @@ const INLINE_GREETING_LOGIC = `
   - STEP 5: HALT and await user input
 `;
 
-const OLD_PATTERN = / {2}- STEP 3: Execute \/greet slash command to generate contextual greeting\n {2}- STEP 4: Display the greeting returned by \/greet command\n {2}- STEP 5: HALT and await user input/;
+const OLD_PATTERN =
+  / {2}- STEP 3: Execute \/greet slash command to generate contextual greeting\n {2}- STEP 4: Display the greeting returned by \/greet command\n {2}- STEP 5: HALT and await user input/;
 
 function updateAgent(agentFile) {
   const filePath = path.join(AGENTS_DIR, agentFile);
 
   // Skip po.md as it's already updated
-  if (agentFile === 'po.md') {
+  if (agentFile === "po.md") {
     console.log(`✓ ${agentFile} - Already updated (test case)`);
-    return { updated: false, reason: 'already-updated' };
+    return { updated: false, reason: "already-updated" };
   }
 
   try {
-    let content = fs.readFileSync(filePath, 'utf8');
+    let content = fs.readFileSync(filePath, "utf8");
 
     // Check if already has inline logic
-    if (content.includes('Generate contextual greeting using inline logic')) {
+    if (content.includes("Generate contextual greeting using inline logic")) {
       console.log(`✓ ${agentFile} - Already has inline greeting logic`);
-      return { updated: false, reason: 'already-has-inline' };
+      return { updated: false, reason: "already-has-inline" };
     }
 
     // Check if has old /greet pattern
     if (!OLD_PATTERN.test(content)) {
       console.log(`⚠ ${agentFile} - Different activation pattern, skipping`);
-      return { updated: false, reason: 'different-pattern' };
+      return { updated: false, reason: "different-pattern" };
     }
 
     // Create backup
-    const backupPath = filePath + '.backup-pre-inline';
+    const backupPath = filePath + ".backup-pre-inline";
     fs.writeFileSync(backupPath, content);
 
     // Replace old pattern with inline logic
@@ -103,15 +104,14 @@ function updateAgent(agentFile) {
 
     console.log(`✅ ${agentFile} - Updated successfully`);
     return { updated: true };
-
   } catch (error) {
     console.error(`❌ ${agentFile} - Error: ${error.message}`);
-    return { updated: false, reason: 'error', error: error.message };
+    return { updated: false, reason: "error", error: error.message };
   }
 }
 
 function main() {
-  console.log('🚀 Applying inline greeting logic to all 11 agents...\n');
+  console.log("🚀 Applying inline greeting logic to all 11 agents...\n");
 
   const results = {
     updated: 0,
@@ -119,27 +119,27 @@ function main() {
     errors: 0,
   };
 
-  AGENTS.forEach(agent => {
+  AGENTS.forEach((agent) => {
     const result = updateAgent(agent);
     if (result.updated) {
       results.updated++;
-    } else if (result.reason === 'error') {
+    } else if (result.reason === "error") {
       results.errors++;
     } else {
       results.skipped++;
     }
   });
 
-  console.log('\n📊 Summary:');
+  console.log("\n📊 Summary:");
   console.log(`   ✅ Updated: ${results.updated}`);
   console.log(`   ⏭️  Skipped: ${results.skipped}`);
   console.log(`   ❌ Errors: ${results.errors}`);
   console.log(`   📝 Total: ${AGENTS.length}`);
 
   if (results.updated > 0) {
-    console.log('\n✅ All agents updated successfully!');
-    console.log('📋 Backups created with .backup-pre-inline extension');
-    console.log('🔄 Files synchronized to .claude/commands/AIOS/agents/');
+    console.log("\n✅ All agents updated successfully!");
+    console.log("📋 Backups created with .backup-pre-inline extension");
+    console.log("🔄 Files synchronized to .claude/commands/AIOS/agents/");
   }
 }
 

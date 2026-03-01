@@ -32,13 +32,13 @@ Detalhes: [Plugins](/plugin)
 
 ## Configuração
 
-1) Instale o plugin Matrix:
+1. Instale o plugin Matrix:
    - Do npm: `zero plugins install @zero/matrix`
    - De um checkout local: `zero plugins install ./extensions/matrix`
-2) Crie uma conta Matrix em um homeserver:
+2. Crie uma conta Matrix em um homeserver:
    - Navegue por opções de hospedagem em [https://matrix.org/ecosystem/hosting/](https://matrix.org/ecosystem/hosting/)
    - Ou hospede você mesmo.
-3) Obtenha um token de acesso para a conta do bot:
+3. Obtenha um token de acesso para a conta do bot:
    - Use a API de login do Matrix com `curl` no seu servidor doméstico:
 
    ```bash
@@ -57,14 +57,15 @@ Detalhes: [Plugins](/plugin)
 
    - Substitua `matrix.exemplo.org` com a URL do seu homeserver.
    - Ou defina `channels.matrix.userId` + `channels.matrix.password`: O ZERO chama o mesmo endpoint de login, armazena o token de acesso em `~/.zero/credentials/matrix/credentials.json`, e o reutiliza na próxima inicialização.
-4) Configure as credenciais:
+
+4. Configure as credenciais:
    - Env: `MATRIX_HOMESERVER`, `MATRIX_ACCESS_TOKEN` (ou `MATRIX_USER_ID` + `MATRIX_PASSWORD`)
    - Ou config: `channels.matrix.*`
    - Se ambos estiverem definidos, a config tem precedência.
    - Com token de acesso: ID de usuário é buscado automaticamente via `/whoami`.
    - Quando definido, `channels.matrix.userId` deve ser o ID Matrix completo (exemplo: `@bot:exemplo.org`).
-5) Reinicie o gateway (ou termine o onboarding).
-6) Inicie uma DM com o bot ou convide-o para uma sala de qualquer cliente Matrix (Element, Beeper, etc.; veja <https://matrix.org/ecosystem/clients/>). Beeper requer E2EE, então defina `channels.matrix.encryption: true` e verifique o dispositivo.
+5. Reinicie o gateway (ou termine o onboarding).
+6. Inicie uma DM com o bot ou convide-o para uma sala de qualquer cliente Matrix (Element, Beeper, etc.; veja <https://matrix.org/ecosystem/clients/>). Beeper requer E2EE, então defina `channels.matrix.encryption: true` e verifique o dispositivo.
 
 Configuração mínima (token de acesso, ID de usuário auto-buscado):
 
@@ -75,9 +76,9 @@ Configuração mínima (token de acesso, ID de usuário auto-buscado):
       enabled: true,
       homeserver: "https://matrix.exemplo.org",
       accessToken: "syt_***",
-      dm: { policy: "pairing" }
-    }
-  }
+      dm: { policy: "pairing" },
+    },
+  },
 }
 ```
 
@@ -91,9 +92,9 @@ Configuração E2EE (criptografia ponta-a-ponta ativada):
       homeserver: "https://matrix.exemplo.org",
       accessToken: "syt_***",
       encryption: true,
-      dm: { policy: "pairing" }
-    }
-  }
+      dm: { policy: "pairing" },
+    },
+  },
 }
 ```
 
@@ -146,11 +147,11 @@ Uma vez verificado, o bot pode descriptografar mensagens em salas criptografadas
       groupPolicy: "allowlist",
       groups: {
         "!roomId:exemplo.org": { allow: true },
-        "#alias:exemplo.org": { allow: true }
+        "#alias:exemplo.org": { allow: true },
       },
-      groupAllowFrom: ["@dono:exemplo.org"]
-    }
-  }
+      groupAllowFrom: ["@dono:exemplo.org"],
+    },
+  },
 }
 ```
 
@@ -174,17 +175,17 @@ Uma vez verificado, o bot pode descriptografar mensagens em salas criptografadas
 
 ## Capacidades
 
-| Recurso | Status |
-| :--- | :--- |
-| Mensagens diretas | ✅ Suportado |
-| Salas | ✅ Suportado |
-| Threads | ✅ Suportado |
-| Mídia | ✅ Suportado |
-| E2EE | ✅ Suportado (módulo crypto necessário) |
-| Reações | ✅ Suportado (enviar/ler via ferramentas) |
-| Enquetes | ✅ Envio suportado; inícios de enquete de entrada convertidos para texto (respostas/finais ignorados) |
-| Localização | ✅ Suportado (geo URI; altitude ignorada) |
-| Comandos nativos | ✅ Suportado |
+| Recurso           | Status                                                                                                |
+| :---------------- | :---------------------------------------------------------------------------------------------------- |
+| Mensagens diretas | ✅ Suportado                                                                                          |
+| Salas             | ✅ Suportado                                                                                          |
+| Threads           | ✅ Suportado                                                                                          |
+| Mídia             | ✅ Suportado                                                                                          |
+| E2EE              | ✅ Suportado (módulo crypto necessário)                                                               |
+| Reações           | ✅ Suportado (enviar/ler via ferramentas)                                                             |
+| Enquetes          | ✅ Envio suportado; inícios de enquete de entrada convertidos para texto (respostas/finais ignorados) |
+| Localização       | ✅ Suportado (geo URI; altitude ignorada)                                                             |
+| Comandos nativos  | ✅ Suportado                                                                                          |
 
 ## Referência de configuração (Matrix)
 

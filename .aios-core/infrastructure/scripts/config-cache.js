@@ -132,7 +132,7 @@ class ConfigCache {
    */
   getStats() {
     const total = this.hits + this.misses;
-    const hitRate = total > 0 ? (this.hits / total * 100).toFixed(1) : '0.0';
+    const hitRate = total > 0 ? ((this.hits / total) * 100).toFixed(1) : "0.0";
 
     return {
       size: this.size,
@@ -203,15 +203,19 @@ class ConfigCache {
    * @returns {string} JSON string
    */
   toJSON() {
-    return JSON.stringify({
-      size: this.size,
-      stats: this.getStats(),
-      entries: this.entries().map(e => ({
-        key: e.key,
-        age: e.ageSeconds,
-        expires: e.expiresSeconds,
-      })),
-    }, null, 2);
+    return JSON.stringify(
+      {
+        size: this.size,
+        stats: this.getStats(),
+        entries: this.entries().map((e) => ({
+          key: e.key,
+          age: e.ageSeconds,
+          expires: e.expiresSeconds,
+        })),
+      },
+      null,
+      2,
+    );
   }
 }
 
@@ -236,76 +240,76 @@ if (require.main === module) {
   const command = process.argv[2];
 
   switch (command) {
-    case 'stats':
-      console.log('\n📊 Config Cache Statistics:\n');
+    case "stats":
+      console.log("\n📊 Config Cache Statistics:\n");
       console.log(JSON.stringify(globalConfigCache.getStats(), null, 2));
-      console.log('');
+      console.log("");
       break;
 
-    case 'entries':
-      console.log('\n📋 Cache Entries:\n');
+    case "entries":
+      console.log("\n📋 Cache Entries:\n");
       const entries = globalConfigCache.entries();
 
       if (entries.length === 0) {
-        console.log('  (empty)');
+        console.log("  (empty)");
       } else {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           console.log(`  ${entry.key}`);
           console.log(`    Age: ${entry.ageSeconds}s`);
           console.log(`    Expires in: ${entry.expiresSeconds}s`);
-          console.log('');
+          console.log("");
         });
       }
       break;
 
-    case 'clear':
+    case "clear":
       globalConfigCache.clear();
-      console.log('✅ Cache cleared');
+      console.log("✅ Cache cleared");
       break;
 
-    case 'test':
-      console.log('\n🧪 Testing config cache...\n');
+    case "test":
+      console.log("\n🧪 Testing config cache...\n");
 
       // Test 1: Set and get
-      console.log('Test 1: Set and get values');
-      globalConfigCache.set('test-key-1', 'test-value-1');
-      globalConfigCache.set('test-key-2', { foo: 'bar' });
+      console.log("Test 1: Set and get values");
+      globalConfigCache.set("test-key-1", "test-value-1");
+      globalConfigCache.set("test-key-2", { foo: "bar" });
 
-      const val1 = globalConfigCache.get('test-key-1');
-      const val2 = globalConfigCache.get('test-key-2');
+      const val1 = globalConfigCache.get("test-key-1");
+      const val2 = globalConfigCache.get("test-key-2");
 
       console.log(`  test-key-1: ${val1} ✅`);
       console.log(`  test-key-2: ${JSON.stringify(val2)} ✅`);
-      console.log('');
+      console.log("");
 
       // Test 2: Cache miss
-      console.log('Test 2: Cache miss');
-      const val3 = globalConfigCache.get('nonexistent-key');
+      console.log("Test 2: Cache miss");
+      const val3 = globalConfigCache.get("nonexistent-key");
       console.log(`  nonexistent-key: ${val3} (expected: null) ✅`);
-      console.log('');
+      console.log("");
 
       // Test 3: Statistics
-      console.log('Test 3: Statistics');
+      console.log("Test 3: Statistics");
       const stats = globalConfigCache.getStats();
       console.log(`  Hits: ${stats.hits}`);
       console.log(`  Misses: ${stats.misses}`);
       console.log(`  Hit Rate: ${stats.hitRate}`);
       console.log(`  Size: ${stats.size} ✅`);
-      console.log('');
+      console.log("");
 
       // Test 4: TTL (short TTL for testing)
-      console.log('Test 4: TTL expiration (testing with 1s TTL)');
+      console.log("Test 4: TTL expiration (testing with 1s TTL)");
       const testCache = new ConfigCache(1000); // 1 second TTL
-      testCache.set('expiring-key', 'expiring-value');
+      testCache.set("expiring-key", "expiring-value");
 
-      console.log(`  Immediate get: ${testCache.get('expiring-key')} ✅`);
-      console.log('  Waiting 1.5 seconds...');
+      console.log(`  Immediate get: ${testCache.get("expiring-key")} ✅`);
+      console.log("  Waiting 1.5 seconds...");
 
       setTimeout(() => {
-        const expired = testCache.get('expiring-key');
+        const expired = testCache.get("expiring-key");
         console.log(`  After expiration: ${expired} (expected: null) ✅`);
-        console.log('');
-        console.log('✅ All tests passed!\n');
+        console.log("");
+        console.log("✅ All tests passed!\n");
       }, 1500);
 
       break;

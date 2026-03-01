@@ -518,7 +518,7 @@ tool:
                 url: "https://api.example.com/data"
           connections:
             Start:
-              main: [[{node: "Fetch Data", type: "main", index: 0}]]
+              main: [[{ node: "Fetch Data", type: "main", index: 0 }]]
         output:
           workflow_id: "wf_new123"
           name: "Data Processor"

@@ -1,8 +1,13 @@
 {
   "name": "@zero/nostr",
   "version": "2026.1.25",
-  "type": "module",
   "description": "Zero Nostr channel plugin for NIP-04 encrypted DMs",
+  "type": "module",
+  "dependencies": {
+    "nostr-tools": "^2.23.1",
+    "zero": "workspace:*",
+    "zod": "^4.3.6"
+  },
   "zero": {
     "extensions": [
       "./index.ts"
@@ -22,10 +27,5 @@
       "localPath": "extensions/nostr",
       "defaultChoice": "npm"
     }
-  },
-  "dependencies": {
-    "zero": "workspace:*",
-    "nostr-tools": "^2.23.1",
-    "zod": "^4.3.6"
   }
 }

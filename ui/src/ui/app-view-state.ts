@@ -13,96 +13,82 @@ import type {
   HealthSnapshot,
   LogEntry,
   LogLevel,
-
   PresenceEntry,
   SessionsListResult,
   SkillStatusReport,
   StatusSummary,
   ConfigUiHints,
   TelemetrySummary,
+  UpdateCheckResult,
 } from "./types";
 import type { ChatQueueItem, CronFormState } from "./ui-types";
 import type { EventLogEntry } from "./app-events";
 import type { SkillMessage } from "./controllers/skills";
-import type {
-  ExecApprovalsFile,
-  ExecApprovalsSnapshot,
-} from "./controllers/exec-approvals";
+import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals";
 import type { DevicePairingList } from "./controllers/devices";
 import type { ExecApprovalRequest } from "./controllers/exec-approval";
-
+import type { UpdateStore } from "./stores/update-store";
+import type { ModelStore } from "./stores/model-store";
+import type { ChannelStore } from "./stores/channel-store";
+import type { AgentStore } from "./stores/agent-store";
+import type { SkillStore } from "./stores/skill-store";
+import type { PresenceStore } from "./stores/presence-store";
+import type { DebugStore } from "./stores/debug-store";
+import type { GraphStore } from "./stores/graph-store";
+import type { UIStore } from "./stores/ui-store";
+import type { MissionControlStore } from "./stores/mission-control-store";
+import type { NostrStore } from "./stores/nostr-store";
+import type { SessionStore } from "./stores/session-store";
+import type { CronStore } from "./stores/cron-store";
+import type { PlaygroundStore } from "./stores/playground-store";
+import type { ConfigStore } from "./stores/config-store";
+import type { DeviceStore } from "./stores/device-store";
+import type { ExecApprovalStore } from "./stores/exec-approval-store";
+import type { ChatStore } from "./stores/chat-store";
+import type { LogsStore } from "./stores/logs-store";
+import type { TaskStore } from "./stores/task-store";
+import type { DocsStore } from "./stores/docs-store";
 
 export type AppViewState = {
-  settings: UiSettings;
-  password: string;
-  tab: Tab;
-  onboarding: boolean;
+  // Domain Stores (Reactive Containers)
+  updateStore: UpdateStore;
+  modelStore: ModelStore;
+  channelStore: ChannelStore;
+  agentStore: AgentStore;
+  skillStore: SkillStore;
+  presenceStore: PresenceStore;
+  debugStore: DebugStore;
+  graphStore: GraphStore;
+  uiStore: UIStore;
+  missionControlStore: MissionControlStore;
+  nostrStore: NostrStore;
+  sessionStore: SessionStore;
+  cronStore: CronStore;
+  playgroundStore: PlaygroundStore;
+  configStore: ConfigStore;
+  deviceStore: DeviceStore;
+  execApprovalStore: ExecApprovalStore;
+  chatStore: ChatStore;
+  logsStore: LogsStore;
+  taskStore: TaskStore;
+  docsStore: DocsStore;
+
+  // Global Config/Context (Shared)
+  readonly connected: boolean;
   basePath: string;
-  connected: boolean;
-  theme: ThemeMode;
-  themeResolved: "light" | "dark";
-  hello: GatewayHelloOk | null;
+  client: GatewayBrowserClient | null;
   lastError: string | null;
-  eventLog: EventLogEntry[];
-  setupRecommendations: unknown[];
-  setupLoading: boolean;
-  setupStep: "scan" | "persona";
+  password: string;
   assistantName: string;
   assistantAvatar: string | null;
   assistantAgentId: string | null;
-  sessionKey: string;
-  chatLoading: boolean;
-  chatSending: boolean;
-  chatMessage: string;
-  chatMessages: unknown[];
-  chatToolMessages: unknown[];
-  chatStream: string | null;
-  chatRunId: string | null;
-  chatAvatarUrl: string | null;
-  chatThinkingLevel: string | null;
-  chatRecording: boolean;
-  chatRecordingStartTime: number | null;
-  chatQueue: ChatQueueItem[];
-  chatAttachments: File[];
-  chatModel: string | null;
-  models: unknown[];
-  modelsLoading: boolean;
-  nodesLoading: boolean;
-  nodes: Array<Record<string, unknown>>;
-  devicesLoading: boolean;
-  devicesError: string | null;
-  devicesList: DevicePairingList | null;
-  execApprovalsLoading: boolean;
-  execApprovalsSaving: boolean;
-  execApprovalsDirty: boolean;
-  execApprovalsSnapshot: ExecApprovalsSnapshot | null;
-  execApprovalsForm: ExecApprovalsFile | null;
-  execApprovalsSelectedAgent: string | null;
-  execApprovalsTarget: "gateway" | "node";
-  execApprovalsTargetNodeId: string | null;
-  execApprovalQueue: ExecApprovalRequest[];
-  execApprovalBusy: boolean;
-  execApprovalError: string | null;
-  configLoading: boolean;
-  configRaw: string;
-  configRawOriginal: string;
-  configValid: boolean | null;
-  configIssues: unknown[];
-  configSaving: boolean;
-  configApplying: boolean;
-  updateRunning: boolean;
-  applySessionKey: string;
-  configSnapshot: ConfigSnapshot | null;
-  configSchema: unknown | null;
-  configSchemaVersion: string | null;
-  configSchemaLoading: boolean;
-  configUiHints: ConfigUiHints;
-  configForm: Record<string, unknown> | null;
-  configFormOriginal: Record<string, unknown> | null;
-  configFormMode: "form" | "raw";
-  configSearchQuery: string;
-  configActiveSection: string | null;
-  configActiveSubsection: string | null;
+
+  // ---------------------------------------------------------------------------
+  // Flattened properties (The Bridge Layer)
+  // These are required by legacy controllers and view renderers.
+  // ---------------------------------------------------------------------------
+
+  // Channels
   channelsLoading: boolean;
   channelsSnapshot: ChannelsStatusSnapshot | null;
   channelsError: string | null;
@@ -111,93 +97,196 @@ export type AppViewState = {
   whatsappLoginQrDataUrl: string | null;
   whatsappLoginConnected: boolean | null;
   whatsappBusy: boolean;
-  nostrProfileFormState: Record<string, unknown> | null;
-  nostrProfileAccountId: string | null;
 
+  // Config
+  applySessionKey: string;
+  configLoading: boolean;
+  configRaw: string;
+  configRawOriginal: string;
+  configValid: boolean | null;
+  configIssues: unknown[];
+  configSaving: boolean;
+  configApplying: boolean;
+  updateRunning: boolean;
+  configSnapshot: ConfigSnapshot | null;
+  configSchema: unknown | null;
+  configSchemaVersion: string | null;
+  configSchemaLoading: boolean;
+  configUiHints: ConfigUiHints;
+  configForm: Record<string, unknown> | null;
+  configFormOriginal: Record<string, unknown> | null;
   configFormDirty: boolean;
+  configFormMode: "form" | "raw";
+  configSearchQuery: string;
+  configActiveSection: string | null;
+  configActiveSubsection: string | null;
+
+  // Presence
   presenceLoading: boolean;
   presenceEntries: PresenceEntry[];
+  presenceList: any[]; // Some places use list, some entries
   presenceError: string | null;
   presenceStatus: string | null;
-  agentsLoading: boolean;
-  agentsList: AgentsListResult | null;
-  agentsError: string | null;
+
+  // Sessions
   sessionsLoading: boolean;
   sessionsResult: SessionsListResult | null;
   sessionsError: string | null;
+  sessionsDeletedKey: string | null;
+  sessionsPatchingKey: string | null;
+  sessionsCompacting: boolean;
+  sessionsViewMode: "list" | "grid";
   sessionsFilterActive: string;
   sessionsFilterLimit: string;
   sessionsIncludeGlobal: boolean;
   sessionsIncludeUnknown: boolean;
+
+  // Cron
   cronLoading: boolean;
   cronJobs: CronJob[];
   cronStatus: CronStatus | null;
-  cronError: string | null;
-  cronForm: CronFormState;
-  cronRunsJobId: string | null;
   cronRuns: CronRunLogEntry[];
+  cronFormMode: "add" | "edit";
+  cronFormJobId: string | null;
+  cronFormState: CronFormState;
+  cronRunsLoading: boolean;
+  cronFormSaving: boolean;
+  cronError: string | null;
+  cronForm: any;
+  cronRunsJobId: string | null;
   cronBusy: boolean;
+
+  // Skills
   skillsLoading: boolean;
   skillsReport: SkillStatusReport | null;
   skillsError: string | null;
-  docsLoading: boolean;
-  docsList: unknown[];
-  docsSelectedId: string | null;
-  docsContent: string | null;
-  docsError: string | null;
-  skillsFilter: string;
+  skillsTab: "installed" | "marketplace";
+  skillsSearchQuery: string;
+  skillsInstallingKey: string | null;
+  skillsBusyKey: string | null;
   skillEdits: Record<string, string>;
   skillMessages: Record<string, SkillMessage>;
-  skillsBusyKey: string | null;
-  skillsTab: "installed" | "marketplace";
-  marketplaceSkills: Array<{ name: string; description: string; link: string }>;
+
+  // Nodes / Devices
+  nodesLoading: boolean;
+  nodes: Array<Record<string, unknown>>;
+  devicesLoading: boolean;
+  devicesError: string | null;
+  devicesList: DevicePairingList | null;
+
+  // Exec Approvals
+  execApprovalsLoading: boolean;
+  execApprovalsSaving: boolean;
+  execApprovalsDirty: boolean;
+  execApprovalsState: ExecApprovalsSnapshot | null;
+  execApprovalsViewMode: "queue" | "history";
+  execApprovalsActiveFile: ExecApprovalsFile | null;
+  execApprovalsFiles: ExecApprovalsFile[];
+  execApprovalsError: string | null;
+  execApprovalsSnapshot: ExecApprovalsSnapshot | null;
+  execApprovalsForm: any;
+  execApprovalsSelectedAgent: string | null;
+
+  // Exec Approval (Singular Aliases for UI)
+  execApprovalQueue: ExecApprovalRequest[];
+  execApprovalBusy: boolean;
+  execApprovalError: string | null;
+
+  // Chat
+  sessionKey: string;
+  chatLoading: boolean;
+  chatMessages: any[];
+  chatStream: string | null;
+  chatStreamStartedAt: number | null;
+  chatRunId: string | null;
+  chatCompactionStatus: any | null;
+  chatAvatarUrl: string | null;
+  chatThinkingLevel: string | null;
+  chatQueue: ChatQueueItem[];
+  chatAttachments: File[];
+  chatRecording: boolean;
+  chatRecordingStartTime: number | null;
+  chatSending: boolean;
+  chatMessage: string;
+
+  // Debug
   debugLoading: boolean;
   debugStatus: StatusSummary | null;
   debugHealth: HealthSnapshot | null;
   debugModels: unknown[];
-  debugHeartbeat: unknown | null;
+  debugHeartbeat: any | null;
   debugCallMethod: string;
   debugCallParams: string;
   debugCallResult: string | null;
   debugCallError: string | null;
+
+  // Logs
   logsLoading: boolean;
   logsError: string | null;
+  logsCursor: number | null;
+  logsLines: LogEntry[];
+  logsAutoFollow: boolean;
+  logsAtBottom: boolean;
+  logsFilter: LogLevel[];
+  logsLimit: number;
+  logsSearchQuery: string;
   logsFile: string | null;
   logsEntries: LogEntry[];
-  logsFilterText: string;
-  logsLevelFilters: Record<LogLevel, boolean>;
-  logsAutoFollow: boolean;
   logsTruncated: boolean;
-  logsCursor: number | null;
   logsLastFetchAt: number | null;
-  logsLimit: number;
   logsMaxBytes: number;
-  sidebarCollapsed: boolean;
-  zenMode: boolean;
-  sidebarOpen: boolean;
-  mobileNavOpen: boolean;
-  sidebarContent: string | null;
-  sidebarError: string | null;
-  splitRatio: number;
-  toggleMobileNav: () => void;
-  toggleSidebar: () => void;
-  toggleZenMode: (value?: boolean) => void;
-  chatStreamStartedAt: number | null;
-  compactionStatus: unknown;
+
+  // Agents
+  agentsLoading: boolean;
+  agentsError: string | null;
+  agentsList: AgentsListResult | null;
+  agentsDefaultId: string | null;
+  agentsSelectedId: string | null;
+
+  // Graph
   graphLoading: boolean;
-  graphData: { nodes: unknown[]; edges: unknown[] } | null;
   graphError: string | null;
+  graphData: { nodes: any[]; edges: any[] } | null;
   graphMode: "memory" | "actions";
+
+  // Playground
+  playgroundLoading: boolean;
   playgroundSystemPrompt: string;
   playgroundUserPrompt: string;
   playgroundOutput: string;
   playgroundModel: string;
   playgroundTemperature: number;
   playgroundMaxTokens: number;
-  playgroundLoading: boolean;
+
+  // Docs
+  docsLoading: boolean;
+  docsError: string | null;
+  docsList: any[];
+  docsSelectedId: string | null;
+  docsContent: string | null;
+
+  // Update
+  updateStatus: UpdateCheckResult | null;
+  updateLoading: boolean;
+  updateError: string | null;
+
+  // Mission Control
   missionControlLoading: boolean;
-  missionControlSummary: TelemetrySummary | null;
-  client: GatewayBrowserClient | null;
+  missionControlSummary: any;
+  missionControlError: string | null;
+
+  // Models
+  modelsLoading: boolean;
+  models: any[];
+  modelsError: string | null;
+
+  // Nostr
+  nostrProfileFormState: Record<string, unknown> | null;
+  nostrProfileAccountId: string | null;
+
+  // ---------------------------------------------------------------------------
+  // Orchestration Methods
+  // ---------------------------------------------------------------------------
   connect: () => void;
   setTab: (tab: Tab) => void;
   setTheme: (theme: ThemeMode, context?: ThemeTransitionContext) => void;
@@ -239,6 +328,7 @@ export type AppViewState = {
   handleLoadDebug: () => Promise<void>;
   handleLoadLogs: () => Promise<void>;
   handleLoadMissionControl: () => Promise<void>;
+  handleLoadTasks: () => Promise<void>;
   handleDebugCall: () => Promise<void>;
   handleRunUpdate: () => Promise<void>;
   setPassword: (next: string) => void;
@@ -259,15 +349,16 @@ export type AppViewState = {
   handleSplitRatioChange: (ratio: number) => void;
   exportLogs: (lines: string[], label: string) => void;
   handlePlaygroundRun: () => Promise<void>;
-  handlePlaygroundUpdate: (patch: Partial<{
-    systemPrompt: string;
-    userPrompt: string;
-    model: string;
-    temperature: number;
-    maxTokens: number;
-    output: string;
-  }>) => void;
-  interfaceDropdownOpen: boolean;
+  handlePlaygroundUpdate: (
+    patch: Partial<{
+      systemPrompt: string;
+      userPrompt: string;
+      model: string;
+      temperature: number;
+      maxTokens: number;
+      output: string;
+    }>,
+  ) => void;
   toggleInterfaceDropdown: (value?: boolean) => void;
   handlePanic: () => Promise<void>;
   handleSetupApply: () => Promise<void>;
@@ -280,17 +371,11 @@ export type AppViewState = {
   handleNostrProfileSave: () => Promise<void>;
   handleNostrProfileImport: () => Promise<void>;
   handleNostrProfileToggleAdvanced: () => void;
-  updateStatusLoading: boolean;
-  updateStatus: import("./types").UpdateCheckResult | null;
-  updateStatusError: string | null;
-  isUpdating: boolean;
   handleLoadUpdateStatus: (opts?: { fetchGit?: boolean }) => Promise<void>;
   handleRunSoftwareUpdate: () => Promise<void>;
-  tourActive: boolean;
-  tourStep: number;
+  handleStartTour: () => void;
   handleTourNext: () => void;
   handleTourPrev: () => void;
   handleTourFinish: () => void;
   handleTourSkip: () => void;
-  handleStartTour: () => void;
 };

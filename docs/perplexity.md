@@ -33,11 +33,11 @@ O ZERO pode usar o Perplexity Sonar para a habilidade `web_search`. Você pode s
         perplexity: {
           apiKey: "pplx-...",
           baseUrl: "https://api.perplexity.ai",
-          model: "perplexity/sonar-pro"
-        }
-      }
-    }
-  }
+          model: "perplexity/sonar-pro",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -51,11 +51,11 @@ O ZERO pode usar o Perplexity Sonar para a habilidade `web_search`. Você pode s
         provider: "perplexity",
         perplexity: {
           apiKey: "pplx-...",
-          baseUrl: "https://api.perplexity.ai"
-        }
-      }
-    }
-  }
+          baseUrl: "https://api.perplexity.ai",
+        },
+      },
+    },
+  },
 }
 ```
 

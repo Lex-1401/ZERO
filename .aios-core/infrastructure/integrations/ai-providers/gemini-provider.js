@@ -9,8 +9,8 @@
  * @see Epic GEMINI-INT - Story 4: JSON Output Integration
  */
 
-const { spawn, execSync } = require('child_process');
-const { AIProvider } = require('./ai-provider');
+const { spawn, execSync } = require("child_process");
+const { AIProvider } = require("./ai-provider");
 
 /**
  * Gemini CLI provider implementation
@@ -29,12 +29,12 @@ class GeminiProvider extends AIProvider {
    */
   constructor(config = {}) {
     super({
-      name: 'gemini',
-      command: 'gemini',
+      name: "gemini",
+      command: "gemini",
       timeout: config.timeout || 300000,
       maxRetries: config.maxRetries || 3,
       options: {
-        model: config.model || 'gemini-2.0-flash',
+        model: config.model || "gemini-2.0-flash",
         previewFeatures: config.previewFeatures !== false, // Default true
         jsonOutput: config.jsonOutput || false,
         ...config,
@@ -48,8 +48,8 @@ class GeminiProvider extends AIProvider {
    */
   async checkAvailability() {
     try {
-      const version = execSync('gemini --version', {
-        encoding: 'utf8',
+      const version = execSync("gemini --version", {
+        encoding: "utf8",
         timeout: 5000,
         windowsHide: true,
       }).trim();
@@ -59,12 +59,12 @@ class GeminiProvider extends AIProvider {
 
       // Check authentication
       try {
-        const authStatus = execSync('gemini auth status 2>&1', {
-          encoding: 'utf8',
+        const authStatus = execSync("gemini auth status 2>&1", {
+          encoding: "utf8",
           timeout: 5000,
           windowsHide: true,
         });
-        this.isAuthenticated = !authStatus.toLowerCase().includes('not authenticated');
+        this.isAuthenticated = !authStatus.toLowerCase().includes("not authenticated");
       } catch {
         this.isAuthenticated = false;
       }
@@ -96,24 +96,24 @@ class GeminiProvider extends AIProvider {
 
     // JSON output mode for programmatic integration
     if (useJsonOutput) {
-      args.push('--output-format', 'json');
+      args.push("--output-format", "json");
     }
 
     // Model selection (if specified)
     if (options.model || this.options.model) {
-      args.push('--model', options.model || this.options.model);
+      args.push("--model", options.model || this.options.model);
     }
 
     return new Promise((resolve, reject) => {
-      let stdout = '';
-      let stderr = '';
+      let stdout = "";
+      let stderr = "";
 
       // Spawn gemini directly without shell interpolation (safer)
       const child = spawn(this.command, args, {
         cwd: workingDir,
         env: { ...process.env, ...options.env },
         windowsHide: true,
-        stdio: ['pipe', 'pipe', 'pipe'],
+        stdio: ["pipe", "pipe", "pipe"],
       });
 
       // Write prompt via stdin to avoid shell injection
@@ -121,19 +121,19 @@ class GeminiProvider extends AIProvider {
       child.stdin.end();
 
       const timeoutId = setTimeout(() => {
-        child.kill('SIGTERM');
+        child.kill("SIGTERM");
         reject(new Error(`Gemini execution timed out after ${timeout}ms`));
       }, timeout);
 
-      child.stdout.on('data', (data) => {
+      child.stdout.on("data", (data) => {
         stdout += data.toString();
       });
 
-      child.stderr.on('data', (data) => {
+      child.stderr.on("data", (data) => {
         stderr += data.toString();
       });
 
-      child.on('close', (code) => {
+      child.on("close", (code) => {
         clearTimeout(timeoutId);
         const duration = Date.now() - startTime;
 
@@ -148,7 +148,7 @@ class GeminiProvider extends AIProvider {
                 data: parsed,
                 metadata: {
                   duration,
-                  provider: 'gemini',
+                  provider: "gemini",
                   model: options.model || this.options.model,
                   stats: parsed.stats,
                 },
@@ -160,7 +160,7 @@ class GeminiProvider extends AIProvider {
                 output: stdout.trim(),
                 metadata: {
                   duration,
-                  provider: 'gemini',
+                  provider: "gemini",
                   model: options.model || this.options.model,
                   jsonParseError: parseError.message,
                 },
@@ -172,7 +172,7 @@ class GeminiProvider extends AIProvider {
               output: stdout.trim(),
               metadata: {
                 duration,
-                provider: 'gemini',
+                provider: "gemini",
                 model: options.model || this.options.model,
               },
             });
@@ -182,7 +182,7 @@ class GeminiProvider extends AIProvider {
         }
       });
 
-      child.on('error', (error) => {
+      child.on("error", (error) => {
         clearTimeout(timeoutId);
         reject(new Error(`Gemini spawn error: ${error.message}`));
       });
@@ -208,8 +208,8 @@ class GeminiProvider extends AIProvider {
    */
   async executeWithModel(prompt, modelType, options = {}) {
     const modelMap = {
-      flash: 'gemini-2.0-flash',
-      pro: 'gemini-2.0-pro',
+      flash: "gemini-2.0-flash",
+      pro: "gemini-2.0-pro",
     };
 
     return this.execute(prompt, {
@@ -229,7 +229,7 @@ class GeminiProvider extends AIProvider {
     const response = await this.executeJson(prompt, options);
 
     if (!response.success) {
-      throw new Error(response.error || 'Execution failed');
+      throw new Error(response.error || "Execution failed");
     }
 
     // If already parsed by executeJson
@@ -248,7 +248,7 @@ class GeminiProvider extends AIProvider {
    */
   parseJsonFromOutput(output) {
     if (!output) {
-      throw new Error('Empty output');
+      throw new Error("Empty output");
     }
 
     // Try direct parse first
@@ -288,7 +288,7 @@ class GeminiProvider extends AIProvider {
       }
     }
 
-    throw new Error('No valid JSON found in output');
+    throw new Error("No valid JSON found in output");
   }
 
   /**
@@ -305,7 +305,7 @@ class GeminiProvider extends AIProvider {
     const errors = this.validateSchema(data, schema);
 
     if (errors.length > 0) {
-      throw new Error(`Schema validation failed: ${errors.join(', ')}`);
+      throw new Error(`Schema validation failed: ${errors.join(", ")}`);
     }
 
     return data;
@@ -320,7 +320,7 @@ class GeminiProvider extends AIProvider {
   validateSchema(data, schema) {
     const errors = [];
 
-    if (!schema || typeof schema !== 'object') {
+    if (!schema || typeof schema !== "object") {
       return errors;
     }
 
@@ -334,10 +334,10 @@ class GeminiProvider extends AIProvider {
     }
 
     // Check field types
-    if (schema.properties && typeof schema.properties === 'object') {
+    if (schema.properties && typeof schema.properties === "object") {
       for (const [field, spec] of Object.entries(schema.properties)) {
         if (field in data && spec.type) {
-          const actualType = Array.isArray(data[field]) ? 'array' : typeof data[field];
+          const actualType = Array.isArray(data[field]) ? "array" : typeof data[field];
           if (actualType !== spec.type) {
             errors.push(`Field ${field} should be ${spec.type}, got ${actualType}`);
           }

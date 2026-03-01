@@ -182,6 +182,7 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -202,24 +203,30 @@ updated_at: 2025-11-17
 ---
 
 checklists:
-  - change-checklist.md
+
+- change-checklist.md
+
 ---
 
 # Review Proposal - AIOS Developer Task
 
 ## Purpose
+
 Review and provide feedback on modification proposals submitted through the collaborative modification system.
 
 ## Command Pattern
+
 ```
 *review-proposal <proposal-id> [options]
 ```
 
 ## Parameters
+
 - `proposal-id`: ID of the proposal to review
 - `options`: Review configuration
 
 ### Options
+
 - `--action <action>`: Review action (approve, reject, request-changes, comment)
 - `--comment <text>`: Review comment or feedback
 - `--conditions <text>`: Conditions for approval
@@ -229,6 +236,7 @@ Review and provide feedback on modification proposals submitted through the coll
 - `--fast-review`: Skip detailed analysis
 
 ## Examples
+
 ```bash
 # Approve proposal with conditions
 *review-proposal proposal-1234567-abc123 --action approve --comment "Looks good with minor changes" --conditions "Add comprehensive tests before merging"
@@ -243,15 +251,15 @@ Review and provide feedback on modification proposals submitted through the coll
 ## Implementation
 
 ```javascript
-const fs = require('fs').promises;
-const path = require('path');
-const chalk = require('chalk');
-const inquirer = require('inquirer');
+const fs = require("fs").promises;
+const path = require("path");
+const chalk = require("chalk");
+const inquirer = require("inquirer");
 
 class ReviewProposalTask {
   constructor() {
-    this.taskName = 'review-proposal';
-    this.description = 'Review modification proposals';
+    this.taskName = "review-proposal";
+    this.description = "Review modification proposals";
     this.rootPath = process.cwd();
     this.proposalSystem = null;
     this.impactAnalyzer = null;
@@ -261,17 +269,17 @@ class ReviewProposalTask {
 
   async execute(params) {
     try {
-      console.log(chalk.blue('📋 AIOS Proposal Review'));
-      console.log(chalk.gray('Reviewing modification proposal\n'));
+      console.log(chalk.blue("📋 AIOS Proposal Review"));
+      console.log(chalk.gray("Reviewing modification proposal\n"));
 
       // Parse and validate parameters
       const config = await this.parseParameters(params);
-      
+
       // Initialize dependencies
       await this.initializeDependencies();
 
       // Load proposal
-      console.log(chalk.gray('Loading proposal...'));
+      console.log(chalk.gray("Loading proposal..."));
       const proposal = await this.loadProposal(config.proposalId);
 
       // Display proposal summary
@@ -280,7 +288,7 @@ class ReviewProposalTask {
       // Perform review analysis if not fast review
       let reviewAnalysis = null;
       if (!config.fastReview) {
-        console.log(chalk.gray('Analyzing proposal impact...'));
+        console.log(chalk.gray("Analyzing proposal impact..."));
         reviewAnalysis = await this.analyzeProposal(proposal);
         await this.displayReviewAnalysis(reviewAnalysis);
       }
@@ -289,7 +297,7 @@ class ReviewProposalTask {
       const reviewDetails = await this.getReviewDetails(proposal, reviewAnalysis, config);
 
       // Process review
-      console.log(chalk.gray('Processing review...'));
+      console.log(chalk.gray("Processing review..."));
       const result = await this.processReview(proposal, reviewDetails, config);
 
       // Update proposal status
@@ -299,13 +307,13 @@ class ReviewProposalTask {
       await this.notifyReviewComplete(proposal, result);
 
       // Display success
-      console.log(chalk.green('\n✅ Review submitted successfully'));
+      console.log(chalk.green("\n✅ Review submitted successfully"));
       console.log(chalk.gray(`   Proposal: ${proposal.proposalId}`));
       console.log(chalk.gray(`   Action: ${result.action}`));
       console.log(chalk.gray(`   Reviewer: ${result.reviewer}`));
-      
+
       if (result.nextSteps) {
-        console.log(chalk.blue('\n📌 Next Steps:'));
+        console.log(chalk.blue("\n📌 Next Steps:"));
         result.nextSteps.forEach((step, index) => {
           console.log(chalk.gray(`   ${index + 1}. ${step}`));
         });
@@ -317,9 +325,8 @@ class ReviewProposalTask {
         reviewAction: result.action,
         reviewStatus: result.status,
         reviewer: result.reviewer,
-        timestamp: result.timestamp
+        timestamp: result.timestamp,
       };
-
     } catch (error) {
       console.error(chalk.red(`\n❌ Review failed: ${error.message}`));
       throw error;
@@ -328,46 +335,48 @@ class ReviewProposalTask {
 
   async parseParameters(params) {
     if (params.length < 1) {
-      throw new Error('Usage: *review-proposal <proposal-id> [options]');
+      throw new Error("Usage: *review-proposal <proposal-id> [options]");
     }
 
     const config = {
       proposalId: params[0],
       action: null,
-      comment: '',
-      conditions: '',
+      comment: "",
+      conditions: "",
       suggestions: null,
       priority: null,
       assignees: [],
-      fastReview: false
+      fastReview: false,
     };
 
     // Parse options
     for (let i = 1; i < params.length; i++) {
       const param = params[i];
-      
-      if (param === '--fast-review') {
+
+      if (param === "--fast-review") {
         config.fastReview = true;
-      } else if (param.startsWith('--action') && params[i + 1]) {
+      } else if (param.startsWith("--action") && params[i + 1]) {
         config.action = params[++i];
-      } else if (param.startsWith('--comment') && params[i + 1]) {
+      } else if (param.startsWith("--comment") && params[i + 1]) {
         config.comment = params[++i];
-      } else if (param.startsWith('--conditions') && params[i + 1]) {
+      } else if (param.startsWith("--conditions") && params[i + 1]) {
         config.conditions = params[++i];
-      } else if (param.startsWith('--suggestions') && params[i + 1]) {
+      } else if (param.startsWith("--suggestions") && params[i + 1]) {
         config.suggestions = params[++i];
-      } else if (param.startsWith('--priority') && params[i + 1]) {
+      } else if (param.startsWith("--priority") && params[i + 1]) {
         config.priority = params[++i];
-      } else if (param.startsWith('--assignees') && params[i + 1]) {
-        config.assignees = params[++i].split(',').map(a => a.trim());
+      } else if (param.startsWith("--assignees") && params[i + 1]) {
+        config.assignees = params[++i].split(",").map((a) => a.trim());
       }
     }
 
     // Validate action if provided
     if (config.action) {
-      const validActions = ['approve', 'reject', 'request-changes', 'comment'];
+      const validActions = ["approve", "reject", "request-changes", "comment"];
       if (!validActions.includes(config.action)) {
-        throw new Error(`Invalid action: ${config.action}. Must be one of: ${validActions.join(', ')}`);
+        throw new Error(
+          `Invalid action: ${config.action}. Must be one of: ${validActions.join(", ")}`,
+        );
       }
     }
 
@@ -376,18 +385,17 @@ class ReviewProposalTask {
 
   async initializeDependencies() {
     try {
-      const ProposalSystem = require('../scripts/proposal-system');
+      const ProposalSystem = require("../scripts/proposal-system");
       this.proposalSystem = new ProposalSystem({ rootPath: this.rootPath });
 
-      const ImpactAnalyzer = require('../scripts/dependency-impact-analyzer');
+      const ImpactAnalyzer = require("../scripts/dependency-impact-analyzer");
       this.impactAnalyzer = new ImpactAnalyzer({ rootPath: this.rootPath });
 
-      const NotificationService = require('../scripts/notification-service');
+      const NotificationService = require("../scripts/notification-service");
       this.notificationService = new NotificationService({ rootPath: this.rootPath });
 
       // const DiffGenerator = require('../scripts/diff-generator'); // Archived in archived-utilities/ (Story 3.1.2)
       // this.diffGenerator = new DiffGenerator({ rootPath: this.rootPath });
-
     } catch (error) {
       throw new Error(`Failed to initialize dependencies: ${error.message}`);
     }
@@ -395,11 +403,11 @@ class ReviewProposalTask {
 
   async loadProposal(proposalId) {
     try {
-      const proposalFile = path.join(this.rootPath, '.aios', 'proposals', `${proposalId}.json`);
-      const content = await fs.readFile(proposalFile, 'utf-8');
+      const proposalFile = path.join(this.rootPath, ".aios", "proposals", `${proposalId}.json`);
+      const content = await fs.readFile(proposalFile, "utf-8");
       return JSON.parse(content);
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if (error.code === "ENOENT") {
         throw new Error(`Proposal not found: ${proposalId}`);
       }
       throw error;
@@ -407,9 +415,9 @@ class ReviewProposalTask {
   }
 
   async displayProposalSummary(proposal) {
-    console.log(chalk.blue('\n📄 Proposal Summary'));
-    console.log(chalk.gray('━'.repeat(50)));
-    
+    console.log(chalk.blue("\n📄 Proposal Summary"));
+    console.log(chalk.gray("━".repeat(50)));
+
     console.log(`ID: ${chalk.white(proposal.proposalId)}`);
     console.log(`Title: ${chalk.white(proposal.title)}`);
     console.log(`Component: ${chalk.white(proposal.componentPath)}`);
@@ -417,33 +425,37 @@ class ReviewProposalTask {
     console.log(`Priority: ${this.formatPriority(proposal.priority)}`);
     console.log(`Status: ${this.formatStatus(proposal.status)}`);
     console.log(`Created by: ${chalk.white(proposal.metadata.createdBy)}`);
-    console.log(`Created at: ${chalk.white(new Date(proposal.metadata.createdAt).toLocaleString())}`);
-    
+    console.log(
+      `Created at: ${chalk.white(new Date(proposal.metadata.createdAt).toLocaleString())}`,
+    );
+
     if (proposal.assignees && proposal.assignees.length > 0) {
-      console.log(`Assignees: ${chalk.white(proposal.assignees.join(', '))}`);
-    }
-    
-    if (proposal.tags && proposal.tags.length > 0) {
-      console.log(`Tags: ${chalk.gray(proposal.tags.join(', '))}`);
+      console.log(`Assignees: ${chalk.white(proposal.assignees.join(", "))}`);
     }
 
-    console.log(chalk.blue('\n📝 Description:'));
-    console.log(chalk.gray(proposal.description || 'No description provided'));
+    if (proposal.tags && proposal.tags.length > 0) {
+      console.log(`Tags: ${chalk.gray(proposal.tags.join(", "))}`);
+    }
+
+    console.log(chalk.blue("\n📝 Description:"));
+    console.log(chalk.gray(proposal.description || "No description provided"));
 
     // Show modification-specific info
-    if (proposal.modificationType === 'deprecate' && proposal.deprecationInfo) {
-      console.log(chalk.yellow('\n⚠️ Deprecation Info:'));
-      console.log(`Target removal: ${proposal.deprecationInfo.targetRemovalDate || 'Not specified'}`);
+    if (proposal.modificationType === "deprecate" && proposal.deprecationInfo) {
+      console.log(chalk.yellow("\n⚠️ Deprecation Info:"));
+      console.log(
+        `Target removal: ${proposal.deprecationInfo.targetRemovalDate || "Not specified"}`,
+      );
     }
 
-    if (proposal.modificationType === 'enhance' && proposal.enhancementInfo) {
-      console.log(chalk.green('\n✨ Enhancement Info:'));
-      console.log(`New capabilities: ${proposal.enhancementInfo.newCapabilities.join(', ')}`);
+    if (proposal.modificationType === "enhance" && proposal.enhancementInfo) {
+      console.log(chalk.green("\n✨ Enhancement Info:"));
+      console.log(`New capabilities: ${proposal.enhancementInfo.newCapabilities.join(", ")}`);
     }
 
-    if (proposal.modificationType === 'refactor' && proposal.refactorInfo) {
-      console.log(chalk.blue('\n🔧 Refactor Info:'));
-      console.log(`Breaking changes: ${proposal.refactorInfo.breakingChanges ? 'Yes' : 'No'}`);
+    if (proposal.modificationType === "refactor" && proposal.refactorInfo) {
+      console.log(chalk.blue("\n🔧 Refactor Info:"));
+      console.log(`Breaking changes: ${proposal.refactorInfo.breakingChanges ? "Yes" : "No"}`);
     }
   }
 
@@ -454,7 +466,7 @@ class ReviewProposalTask {
       conflicts: await this.checkForConflicts(proposal),
       testCoverage: await this.analyzeTestCoverage(proposal),
       securityIssues: await this.checkSecurityIssues(proposal),
-      recommendations: []
+      recommendations: [],
     };
 
     // Generate recommendations based on analysis
@@ -466,47 +478,48 @@ class ReviewProposalTask {
   async analyzeCodeQuality(proposal) {
     try {
       const component = await fs.readFile(
-        path.resolve(this.rootPath, proposal.componentPath), 
-        'utf-8'
+        path.resolve(this.rootPath, proposal.componentPath),
+        "utf-8",
       );
 
       const quality = {
         complexity: this.calculateComplexity(component),
         maintainability: this.assessMaintainability(component),
         documentation: this.checkDocumentation(component),
-        codeStyle: this.checkCodeStyle(component)
+        codeStyle: this.checkCodeStyle(component),
       };
 
       return quality;
     } catch (error) {
       return {
-        error: `Could not analyze code quality: ${error.message}`
+        error: `Could not analyze code quality: ${error.message}`,
       };
     }
   }
 
   async checkForConflicts(proposal) {
     // Check for other pending proposals on the same component
-    const indexFile = path.join(this.rootPath, '.aios', 'proposals', 'index.json');
-    
+    const indexFile = path.join(this.rootPath, ".aios", "proposals", "index.json");
+
     try {
-      const content = await fs.readFile(indexFile, 'utf-8');
+      const content = await fs.readFile(indexFile, "utf-8");
       const index = JSON.parse(content);
-      
-      const conflicts = index.proposals.filter(p => 
-        p.proposalId !== proposal.proposalId &&
-        p.componentPath === proposal.componentPath &&
-        (p.status === 'pending_review' || p.status === 'approved')
+
+      const conflicts = index.proposals.filter(
+        (p) =>
+          p.proposalId !== proposal.proposalId &&
+          p.componentPath === proposal.componentPath &&
+          (p.status === "pending_review" || p.status === "approved"),
       );
 
       return {
         hasConflicts: conflicts.length > 0,
-        conflictingProposals: conflicts
+        conflictingProposals: conflicts,
       };
     } catch (error) {
       return {
         hasConflicts: false,
-        conflictingProposals: []
+        conflictingProposals: [],
       };
     }
   }
@@ -514,8 +527,20 @@ class ReviewProposalTask {
   async analyzeTestCoverage(proposal) {
     // Check if component has tests
     const testPaths = [
-      path.join(this.rootPath, 'tests', 'unit', proposal.componentType, `${path.basename(proposal.componentPath, path.extname(proposal.componentPath))}.test.js`),
-      path.join(this.rootPath, 'tests', 'integration', proposal.componentType, `${path.basename(proposal.componentPath, path.extname(proposal.componentPath))}.test.js`)
+      path.join(
+        this.rootPath,
+        "tests",
+        "unit",
+        proposal.componentType,
+        `${path.basename(proposal.componentPath, path.extname(proposal.componentPath))}.test.js`,
+      ),
+      path.join(
+        this.rootPath,
+        "tests",
+        "integration",
+        proposal.componentType,
+        `${path.basename(proposal.componentPath, path.extname(proposal.componentPath))}.test.js`,
+      ),
     ];
 
     let hasTests = false;
@@ -531,57 +556,57 @@ class ReviewProposalTask {
 
     return {
       hasTests: hasTests,
-      recommendation: hasTests ? 
-        'Component has test coverage' : 
-        'Component lacks test coverage - tests should be added'
+      recommendation: hasTests
+        ? "Component has test coverage"
+        : "Component lacks test coverage - tests should be added",
     };
   }
 
   async checkSecurityIssues(proposal) {
     try {
       const component = await fs.readFile(
-        path.resolve(this.rootPath, proposal.componentPath), 
-        'utf-8'
+        path.resolve(this.rootPath, proposal.componentPath),
+        "utf-8",
       );
 
       const issues = [];
 
       // Check for common security patterns
-      if (component.includes('eval(') || component.includes('Function(')) {
-        issues.push('Uses dynamic code execution (eval/Function)');
+      if (component.includes("eval(") || component.includes("Function(")) {
+        issues.push("Uses dynamic code execution (eval/Function)");
       }
 
-      if (component.includes('innerHTML') || component.includes('dangerouslySetInnerHTML')) {
-        issues.push('Potential XSS vulnerability with innerHTML usage');
+      if (component.includes("innerHTML") || component.includes("dangerouslySetInnerHTML")) {
+        issues.push("Potential XSS vulnerability with innerHTML usage");
       }
 
-      if (component.includes('exec(') || component.includes('spawn(')) {
-        issues.push('Executes external processes - needs security review');
+      if (component.includes("exec(") || component.includes("spawn(")) {
+        issues.push("Executes external processes - needs security review");
       }
 
-      if (component.includes('fs.') && proposal.modificationType === 'enhance') {
-        issues.push('File system operations in enhancement - verify path validation');
+      if (component.includes("fs.") && proposal.modificationType === "enhance") {
+        issues.push("File system operations in enhancement - verify path validation");
       }
 
       return {
         hasIssues: issues.length > 0,
-        issues: issues
+        issues: issues,
       };
     } catch (error) {
       return {
         hasIssues: false,
-        issues: []
+        issues: [],
       };
     }
   }
 
   async displayReviewAnalysis(analysis) {
-    console.log(chalk.blue('\n🔍 Review Analysis'));
-    console.log(chalk.gray('━'.repeat(50)));
+    console.log(chalk.blue("\n🔍 Review Analysis"));
+    console.log(chalk.gray("━".repeat(50)));
 
     // Code Quality
     if (analysis.codeQuality && !analysis.codeQuality.error) {
-      console.log(chalk.blue('\n📊 Code Quality:'));
+      console.log(chalk.blue("\n📊 Code Quality:"));
       console.log(`  Complexity: ${this.formatScore(analysis.codeQuality.complexity)}`);
       console.log(`  Maintainability: ${this.formatScore(analysis.codeQuality.maintainability)}`);
       console.log(`  Documentation: ${this.formatScore(analysis.codeQuality.documentation)}`);
@@ -590,38 +615,38 @@ class ReviewProposalTask {
 
     // Impact Analysis
     if (analysis.impact) {
-      console.log(chalk.blue('\n💥 Impact Summary:'));
-      console.log(`  Affected components: ${analysis.impact.affectedComponents || 'Unknown'}`);
-      console.log(`  Risk level: ${this.formatRiskLevel(analysis.impact.riskLevel || 'Unknown')}`);
+      console.log(chalk.blue("\n💥 Impact Summary:"));
+      console.log(`  Affected components: ${analysis.impact.affectedComponents || "Unknown"}`);
+      console.log(`  Risk level: ${this.formatRiskLevel(analysis.impact.riskLevel || "Unknown")}`);
     }
 
     // Conflicts
     if (analysis.conflicts.hasConflicts) {
-      console.log(chalk.yellow('\n⚠️ Conflicts Detected:'));
-      analysis.conflicts.conflictingProposals.forEach(conflict => {
+      console.log(chalk.yellow("\n⚠️ Conflicts Detected:"));
+      analysis.conflicts.conflictingProposals.forEach((conflict) => {
         console.log(`  - ${conflict.proposalId}: ${conflict.title} (${conflict.status})`);
       });
     } else {
-      console.log(chalk.green('\n✅ No conflicts detected'));
+      console.log(chalk.green("\n✅ No conflicts detected"));
     }
 
     // Test Coverage
-    console.log(chalk.blue('\n🧪 Test Coverage:'));
+    console.log(chalk.blue("\n🧪 Test Coverage:"));
     console.log(`  ${analysis.testCoverage.recommendation}`);
 
     // Security Issues
     if (analysis.securityIssues.hasIssues) {
-      console.log(chalk.red('\n🔒 Security Concerns:'));
-      analysis.securityIssues.issues.forEach(issue => {
+      console.log(chalk.red("\n🔒 Security Concerns:"));
+      analysis.securityIssues.issues.forEach((issue) => {
         console.log(`  - ${issue}`);
       });
     } else {
-      console.log(chalk.green('\n🔒 No security issues detected'));
+      console.log(chalk.green("\n🔒 No security issues detected"));
     }
 
     // Recommendations
     if (analysis.recommendations.length > 0) {
-      console.log(chalk.blue('\n💡 Recommendations:'));
+      console.log(chalk.blue("\n💡 Recommendations:"));
       analysis.recommendations.forEach((rec, index) => {
         console.log(`  ${index + 1}. ${rec}`);
       });
@@ -635,13 +660,13 @@ class ReviewProposalTask {
       conditions: config.conditions,
       suggestions: null,
       priority: config.priority,
-      assignees: config.assignees
+      assignees: config.assignees,
     };
 
     // Load suggestions if provided
     if (config.suggestions) {
       try {
-        details.suggestions = await fs.readFile(config.suggestions, 'utf-8');
+        details.suggestions = await fs.readFile(config.suggestions, "utf-8");
       } catch (error) {
         console.warn(chalk.yellow(`Could not load suggestions file: ${error.message}`));
       }
@@ -655,7 +680,7 @@ class ReviewProposalTask {
     }
 
     // Set reviewer info
-    details.reviewer = process.env.USER || 'aios-reviewer';
+    details.reviewer = process.env.USER || "aios-reviewer";
     details.reviewTimestamp = new Date().toISOString();
 
     return details;
@@ -666,55 +691,55 @@ class ReviewProposalTask {
 
     // Main action
     questions.push({
-      type: 'list',
-      name: 'action',
-      message: 'Review action:',
+      type: "list",
+      name: "action",
+      message: "Review action:",
       choices: [
-        { name: '✅ Approve', value: 'approve' },
-        { name: '❌ Reject', value: 'reject' },
-        { name: '🔄 Request Changes', value: 'request-changes' },
-        { name: '💬 Add Comment Only', value: 'comment' }
-      ]
+        { name: "✅ Approve", value: "approve" },
+        { name: "❌ Reject", value: "reject" },
+        { name: "🔄 Request Changes", value: "request-changes" },
+        { name: "💬 Add Comment Only", value: "comment" },
+      ],
     });
 
     // Comment
     questions.push({
-      type: 'editor',
-      name: 'comment',
-      message: 'Review comment:',
-      default: this.getCommentTemplate(proposal, analysis)
+      type: "editor",
+      name: "comment",
+      message: "Review comment:",
+      default: this.getCommentTemplate(proposal, analysis),
     });
 
     // Approval conditions
     questions.push({
-      type: 'input',
-      name: 'conditions',
-      message: 'Conditions for approval (if any):',
-      when: (answers) => answers.action === 'approve'
+      type: "input",
+      name: "conditions",
+      message: "Conditions for approval (if any):",
+      when: (answers) => answers.action === "approve",
     });
 
     // Priority update
     questions.push({
-      type: 'list',
-      name: 'priority',
-      message: 'Update priority?',
+      type: "list",
+      name: "priority",
+      message: "Update priority?",
       choices: [
-        { name: 'Keep current', value: null },
-        { name: 'Low', value: 'low' },
-        { name: 'Medium', value: 'medium' },
-        { name: 'High', value: 'high' },
-        { name: 'Critical', value: 'critical' }
+        { name: "Keep current", value: null },
+        { name: "Low", value: "low" },
+        { name: "Medium", value: "medium" },
+        { name: "High", value: "high" },
+        { name: "Critical", value: "critical" },
       ],
-      default: 0
+      default: 0,
     });
 
     // Additional assignees
     questions.push({
-      type: 'input',
-      name: 'additionalAssignees',
-      message: 'Add additional reviewers (comma-separated):',
-      when: (answers) => answers.action === 'request-changes',
-      filter: (input) => input ? input.split(',').map(a => a.trim()) : []
+      type: "input",
+      name: "additionalAssignees",
+      message: "Add additional reviewers (comma-separated):",
+      when: (answers) => answers.action === "request-changes",
+      filter: (input) => (input ? input.split(",").map((a) => a.trim()) : []),
     });
 
     return questions;
@@ -733,8 +758,8 @@ class ReviewProposalTask {
       suggestions: reviewDetails.suggestions,
       metadata: {
         reviewDuration: this.calculateReviewDuration(proposal),
-        analysisPerformed: !config.fastReview
-      }
+        analysisPerformed: !config.fastReview,
+      },
     };
 
     // Store review
@@ -747,7 +772,7 @@ class ReviewProposalTask {
   }
 
   async storeReview(proposal, review) {
-    const reviewsDir = path.join(this.rootPath, '.aios', 'proposals', 'reviews');
+    const reviewsDir = path.join(this.rootPath, ".aios", "proposals", "reviews");
     await fs.mkdir(reviewsDir, { recursive: true });
 
     const reviewFile = path.join(reviewsDir, `${review.reviewId}.json`);
@@ -761,28 +786,28 @@ class ReviewProposalTask {
       reviewId: review.reviewId,
       reviewer: review.reviewer,
       action: review.action,
-      timestamp: review.timestamp
+      timestamp: review.timestamp,
     });
   }
 
   async updateProposalStatus(proposal, review) {
     // Update status based on review action
     switch (review.action) {
-      case 'approve':
-        proposal.status = 'approved';
+      case "approve":
+        proposal.status = "approved";
         proposal.approvedBy = review.reviewer;
         proposal.approvalTimestamp = review.timestamp;
         break;
-      case 'reject':
-        proposal.status = 'rejected';
+      case "reject":
+        proposal.status = "rejected";
         proposal.rejectedBy = review.reviewer;
         proposal.rejectionTimestamp = review.timestamp;
         break;
-      case 'request-changes':
-        proposal.status = 'changes_requested';
+      case "request-changes":
+        proposal.status = "changes_requested";
         proposal.lastReviewTimestamp = review.timestamp;
         break;
-      case 'comment':
+      case "comment":
         // Status remains unchanged for comments
         proposal.lastCommentTimestamp = review.timestamp;
         break;
@@ -803,7 +828,12 @@ class ReviewProposalTask {
     proposal.metadata.version++;
 
     // Save updated proposal
-    const proposalFile = path.join(this.rootPath, '.aios', 'proposals', `${proposal.proposalId}.json`);
+    const proposalFile = path.join(
+      this.rootPath,
+      ".aios",
+      "proposals",
+      `${proposal.proposalId}.json`,
+    );
     await fs.writeFile(proposalFile, JSON.stringify(proposal, null, 2));
 
     // Update index
@@ -811,19 +841,19 @@ class ReviewProposalTask {
   }
 
   async updateProposalIndex(proposal) {
-    const indexFile = path.join(this.rootPath, '.aios', 'proposals', 'index.json');
-    
+    const indexFile = path.join(this.rootPath, ".aios", "proposals", "index.json");
+
     try {
-      const content = await fs.readFile(indexFile, 'utf-8');
+      const content = await fs.readFile(indexFile, "utf-8");
       const index = JSON.parse(content);
-      
-      const proposalIndex = index.proposals.findIndex(p => p.proposalId === proposal.proposalId);
+
+      const proposalIndex = index.proposals.findIndex((p) => p.proposalId === proposal.proposalId);
       if (proposalIndex !== -1) {
         index.proposals[proposalIndex].status = proposal.status;
         index.proposals[proposalIndex].priority = proposal.priority;
         index.proposals[proposalIndex].lastModified = proposal.metadata.lastModified;
       }
-      
+
       await fs.writeFile(indexFile, JSON.stringify(index, null, 2));
     } catch (error) {
       console.warn(chalk.yellow(`Failed to update proposal index: ${error.message}`));
@@ -837,21 +867,21 @@ class ReviewProposalTask {
       // Notify proposal creator
       notifications.push({
         recipient: proposal.metadata.createdBy,
-        type: 'review_complete',
+        type: "review_complete",
         proposalId: proposal.proposalId,
         reviewAction: review.action,
-        reviewer: review.reviewer
+        reviewer: review.reviewer,
       });
 
       // Notify assignees if action requires it
-      if (review.action === 'request-changes' && proposal.assignees) {
-        proposal.assignees.forEach(assignee => {
+      if (review.action === "request-changes" && proposal.assignees) {
+        proposal.assignees.forEach((assignee) => {
           notifications.push({
             recipient: assignee,
-            type: 'changes_requested',
+            type: "changes_requested",
             proposalId: proposal.proposalId,
             reviewer: review.reviewer,
-            comment: review.comment
+            comment: review.comment,
           });
         });
       }
@@ -862,7 +892,6 @@ class ReviewProposalTask {
       }
 
       console.log(chalk.gray(`   Notifications sent: ${notifications.length}`));
-
     } catch (error) {
       console.warn(chalk.yellow(`Failed to send notifications: ${error.message}`));
     }
@@ -876,28 +905,29 @@ class ReviewProposalTask {
     const methodCount = (component.match(/\w+\s*\([^)]*\)\s*{/g) || []).length;
     const conditionalCount = (component.match(/if\s*\(|switch\s*\(/g) || []).length;
     const loopCount = (component.match(/for\s*\(|while\s*\(|\.forEach|\.map/g) || []).length;
-    
+
     const complexity = functionCount + methodCount + conditionalCount + loopCount;
-    
-    if (complexity > 50) return { score: 'high', value: complexity };
-    if (complexity > 20) return { score: 'medium', value: complexity };
-    return { score: 'low', value: complexity };
+
+    if (complexity > 50) return { score: "high", value: complexity };
+    if (complexity > 20) return { score: "medium", value: complexity };
+    return { score: "low", value: complexity };
   }
 
   assessMaintainability(component) {
     // Check for maintainability indicators
-    const hasComments = component.includes('//') || component.includes('/*');
-    const hasJSDoc = component.includes('/**');
-    const hasErrorHandling = component.includes('try') || component.includes('catch');
-    const hasModularStructure = component.includes('module.exports') || component.includes('export');
-    
+    const hasComments = component.includes("//") || component.includes("/*");
+    const hasJSDoc = component.includes("/**");
+    const hasErrorHandling = component.includes("try") || component.includes("catch");
+    const hasModularStructure =
+      component.includes("module.exports") || component.includes("export");
+
     let score = 0;
     if (hasComments) score += 25;
     if (hasJSDoc) score += 25;
     if (hasErrorHandling) score += 25;
     if (hasModularStructure) score += 25;
-    
-    return { score: score >= 75 ? 'good' : score >= 50 ? 'fair' : 'poor', value: score };
+
+    return { score: score >= 75 ? "good" : score >= 50 ? "fair" : "poor", value: score };
   }
 
   checkDocumentation(component) {
@@ -906,39 +936,39 @@ class ReviewProposalTask {
       /#+\s+\w+/g, // Markdown headers
       /@param/g, // Parameter documentation
       /@returns/g, // Return documentation
-      /@example/g // Example documentation
+      /@example/g, // Example documentation
     ];
-    
+
     let docScore = 0;
-    docPatterns.forEach(pattern => {
+    docPatterns.forEach((pattern) => {
       const matches = component.match(pattern);
       if (matches) docScore += matches.length;
     });
-    
-    return { score: docScore > 10 ? 'good' : docScore > 5 ? 'fair' : 'poor', value: docScore };
+
+    return { score: docScore > 10 ? "good" : docScore > 5 ? "fair" : "poor", value: docScore };
   }
 
   checkCodeStyle(component) {
     // Basic code style checks
     const issues = [];
-    
-    if (component.includes('\t')) {
-      issues.push('Uses tabs instead of spaces');
+
+    if (component.includes("\t")) {
+      issues.push("Uses tabs instead of spaces");
     }
-    
-    const lines = component.split('\n');
-    const longLines = lines.filter(line => line.length > 120).length;
+
+    const lines = component.split("\n");
+    const longLines = lines.filter((line) => line.length > 120).length;
     if (longLines > 0) {
       issues.push(`${longLines} lines exceed 120 characters`);
     }
-    
-    if (!component.includes('use strict') && !component.includes('"use strict"')) {
-      issues.push('Missing strict mode declaration');
+
+    if (!component.includes("use strict") && !component.includes('"use strict"')) {
+      issues.push("Missing strict mode declaration");
     }
-    
-    return { 
-      score: issues.length === 0 ? 'good' : issues.length <= 2 ? 'fair' : 'poor',
-      issues: issues 
+
+    return {
+      score: issues.length === 0 ? "good" : issues.length <= 2 ? "fair" : "poor",
+      issues: issues,
     };
   }
 
@@ -947,30 +977,32 @@ class ReviewProposalTask {
 
     // Code quality recommendations
     if (analysis.codeQuality && !analysis.codeQuality.error) {
-      if (analysis.codeQuality.complexity.score === 'high') {
-        recommendations.push('Consider refactoring to reduce code complexity');
+      if (analysis.codeQuality.complexity.score === "high") {
+        recommendations.push("Consider refactoring to reduce code complexity");
       }
-      if (analysis.codeQuality.documentation.score === 'poor') {
-        recommendations.push('Add comprehensive documentation and JSDoc comments');
+      if (analysis.codeQuality.documentation.score === "poor") {
+        recommendations.push("Add comprehensive documentation and JSDoc comments");
       }
-      if (analysis.codeQuality.maintainability.score === 'poor') {
-        recommendations.push('Improve code maintainability with better structure and error handling');
+      if (analysis.codeQuality.maintainability.score === "poor") {
+        recommendations.push(
+          "Improve code maintainability with better structure and error handling",
+        );
       }
     }
 
     // Test coverage recommendations
     if (!analysis.testCoverage.hasTests) {
-      recommendations.push('Add unit tests before approving this modification');
+      recommendations.push("Add unit tests before approving this modification");
     }
 
     // Security recommendations
     if (analysis.securityIssues.hasIssues) {
-      recommendations.push('Address security concerns before approval');
+      recommendations.push("Address security concerns before approval");
     }
 
     // Conflict recommendations
     if (analysis.conflicts.hasConflicts) {
-      recommendations.push('Resolve conflicts with other pending proposals');
+      recommendations.push("Resolve conflicts with other pending proposals");
     }
 
     return recommendations;
@@ -979,17 +1011,17 @@ class ReviewProposalTask {
   getCommentTemplate(proposal, analysis) {
     let template = `## Review for: ${proposal.title}\n\n`;
     template += `### Summary\n[Provide your overall assessment]\n\n`;
-    
+
     if (analysis && analysis.recommendations.length > 0) {
       template += `### Recommendations\n`;
       analysis.recommendations.forEach((rec, index) => {
         template += `${index + 1}. ${rec}\n`;
       });
-      template += '\n';
+      template += "\n";
     }
-    
+
     template += `### Details\n[Add specific feedback and suggestions]\n`;
-    
+
     return template;
   }
 
@@ -998,33 +1030,33 @@ class ReviewProposalTask {
       low: chalk.gray,
       medium: chalk.yellow,
       high: chalk.red,
-      critical: chalk.red.bold
+      critical: chalk.red.bold,
     };
     return colors[priority] ? colors[priority](priority.toUpperCase()) : priority;
   }
 
   formatStatus(status) {
     const statusMap = {
-      draft: chalk.gray('DRAFT'),
-      pending_review: chalk.yellow('PENDING REVIEW'),
-      approved: chalk.green('APPROVED'),
-      rejected: chalk.red('REJECTED'),
-      changes_requested: chalk.yellow('CHANGES REQUESTED'),
-      in_progress: chalk.blue('IN PROGRESS'),
-      completed: chalk.green('COMPLETED')
+      draft: chalk.gray("DRAFT"),
+      pending_review: chalk.yellow("PENDING REVIEW"),
+      approved: chalk.green("APPROVED"),
+      rejected: chalk.red("REJECTED"),
+      changes_requested: chalk.yellow("CHANGES REQUESTED"),
+      in_progress: chalk.blue("IN PROGRESS"),
+      completed: chalk.green("COMPLETED"),
     };
     return statusMap[status] || status;
   }
 
   formatScore(score) {
-    if (typeof score === 'object') {
+    if (typeof score === "object") {
       const colors = {
         good: chalk.green,
         fair: chalk.yellow,
         poor: chalk.red,
         low: chalk.green,
         medium: chalk.yellow,
-        high: chalk.red
+        high: chalk.red,
       };
       const color = colors[score.score] || chalk.gray;
       return color(`${score.score.toUpperCase()} (${score.value})`);
@@ -1037,17 +1069,17 @@ class ReviewProposalTask {
       low: chalk.green,
       medium: chalk.yellow,
       high: chalk.red,
-      critical: chalk.red.bold
+      critical: chalk.red.bold,
     };
     return colors[level] ? colors[level](level.toUpperCase()) : level;
   }
 
   getReviewStatus(action) {
     const statusMap = {
-      'approve': 'approved',
-      'reject': 'rejected',
-      'request-changes': 'changes_requested',
-      'comment': 'commented'
+      approve: "approved",
+      reject: "rejected",
+      "request-changes": "changes_requested",
+      comment: "commented",
     };
     return statusMap[action] || action;
   }
@@ -1056,42 +1088,42 @@ class ReviewProposalTask {
     const created = new Date(proposal.metadata.createdAt);
     const now = new Date();
     const duration = now - created;
-    
+
     const hours = Math.floor(duration / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) {
-      return `${days} day${days > 1 ? 's' : ''}`;
+      return `${days} day${days > 1 ? "s" : ""}`;
     }
-    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+    return `${hours} hour${hours !== 1 ? "s" : ""}`;
   }
 
   determineNextSteps(proposal, review) {
     const steps = [];
 
     switch (review.action) {
-      case 'approve':
-        steps.push('Proposal approved and ready for implementation');
-        steps.push('Assignees will be notified to begin work');
+      case "approve":
+        steps.push("Proposal approved and ready for implementation");
+        steps.push("Assignees will be notified to begin work");
         if (review.conditions) {
           steps.push(`Ensure conditions are met: ${review.conditions}`);
         }
         break;
-      
-      case 'reject':
-        steps.push('Proposal has been rejected');
-        steps.push('Creator should address feedback before resubmission');
+
+      case "reject":
+        steps.push("Proposal has been rejected");
+        steps.push("Creator should address feedback before resubmission");
         break;
-      
-      case 'request-changes':
-        steps.push('Changes have been requested');
-        steps.push('Proposal creator should address feedback');
-        steps.push('Resubmit for review after making changes');
+
+      case "request-changes":
+        steps.push("Changes have been requested");
+        steps.push("Proposal creator should address feedback");
+        steps.push("Resubmit for review after making changes");
         break;
-      
-      case 'comment':
-        steps.push('Comment added to proposal');
-        steps.push('No status change - review still pending');
+
+      case "comment":
+        steps.push("Comment added to proposal");
+        steps.push("No status change - review still pending");
         break;
     }
 
@@ -1105,6 +1137,7 @@ module.exports = ReviewProposalTask;
 ## Validation Rules
 
 ### Review Validation
+
 - Proposal must exist and be accessible
 - Review action must be valid
 - Reviewer must have appropriate permissions
@@ -1112,6 +1145,7 @@ module.exports = ReviewProposalTask;
 - Cannot approve high-risk changes without conditions
 
 ### Status Transitions
+
 - Draft → Pending Review (on submission)
 - Pending Review → Approved/Rejected/Changes Requested
 - Changes Requested → Pending Review (on update)
@@ -1119,6 +1153,7 @@ module.exports = ReviewProposalTask;
 - In Progress → Completed (on implementation finish)
 
 ### Review Requirements
+
 - All reviews must include comments
 - Approvals may include conditions
 - Rejections must include reasons
@@ -1127,32 +1162,37 @@ module.exports = ReviewProposalTask;
 ## Integration Points
 
 ### Proposal System
+
 - Loads and updates proposal data
 - Manages proposal lifecycle
 - Tracks review history
 - Handles status transitions
 
 ### Impact Analysis
+
 - Provides risk assessment for review
 - Identifies affected components
 - Helps inform review decisions
 - Highlights critical issues
 
 ### Notification Service
+
 - Notifies proposal creator of review
 - Alerts assignees of changes requested
 - Sends approval confirmations
 - Tracks notification delivery
 
 ### Diff Generator
+
 - Shows proposed changes clearly
 - Highlights modifications
 - Assists in code review
 - Supports multiple diff formats
 
 ## Security Considerations
+
 - Validate reviewer permissions
 - Audit all review actions
 - Prevent unauthorized status changes
 - Protect sensitive proposal information
-- Log all review activities for compliance 
+- Log all review activities for compliance

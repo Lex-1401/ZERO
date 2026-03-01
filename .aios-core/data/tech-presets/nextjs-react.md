@@ -9,9 +9,9 @@
 ```yaml
 preset:
   id: nextjs-react
-  name: 'Next.js + React Fullstack Preset'
+  name: "Next.js + React Fullstack Preset"
   version: 1.0.0
-  description: 'Arquitetura otimizada para aplicações fullstack com Next.js 16+, React, TypeScript e padrões que maximizam a eficiência do Claude Code'
+  description: "Arquitetura otimizada para aplicações fullstack com Next.js 16+, React, TypeScript e padrões que maximizam a eficiência do Claude Code"
   technologies:
     - Next.js 16+ (App Router + Proxy)
     - React 18+
@@ -23,15 +23,15 @@ preset:
     - Vitest
     - Playwright
   suitable_for:
-    - 'Aplicações web fullstack'
-    - 'SaaS products'
-    - 'E-commerce'
-    - 'Dashboards administrativos'
-    - 'Aplicações com SSR/SSG'
+    - "Aplicações web fullstack"
+    - "SaaS products"
+    - "E-commerce"
+    - "Dashboards administrativos"
+    - "Aplicações com SSR/SSG"
   not_suitable_for:
-    - 'Aplicações mobile-only (use React Native)'
-    - 'Microsserviços backend puros (use Node.js puro ou NestJS)'
-    - 'Sites estáticos simples (use Astro)'
+    - "Aplicações mobile-only (use React Native)"
+    - "Microsserviços backend puros (use Node.js puro ou NestJS)"
+    - "Sites estáticos simples (use Astro)"
 ```
 
 ---
@@ -99,7 +99,7 @@ export type User = {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'user';
+  role: "admin" | "user";
 };
 ````
 
@@ -128,37 +128,37 @@ export type User = {
 ```typescript
 // src/features/auth/services/auth.service.ts
 
-import { AuthContract, AuthResult, User } from '../auth.contract';
-import { UserRepository } from '../repositories/user.repository';
-import { EventBus } from '@/shared/events/eventBus';
+import { AuthContract, AuthResult, User } from "../auth.contract";
+import { UserRepository } from "../repositories/user.repository";
+import { EventBus } from "@/shared/events/eventBus";
 
 export class AuthService implements AuthContract {
   constructor(
     private userRepo: UserRepository,
-    private eventBus: EventBus
+    private eventBus: EventBus,
   ) {}
 
   async login(email: string, password: string): Promise<AuthResult> {
     // 1. Validate input
     if (!email || !password) {
-      throw new ValidationError('Email and password are required');
+      throw new ValidationError("Email and password are required");
     }
 
     // 2. Find user
     const user = await this.userRepo.findByEmail(email);
     if (!user) {
-      throw new InvalidCredentialsError('Invalid credentials');
+      throw new InvalidCredentialsError("Invalid credentials");
     }
 
     // 3. Verify password
     const isValid = await this.verifyPassword(password, user.passwordHash);
     if (!isValid) {
-      throw new InvalidCredentialsError('Invalid credentials');
+      throw new InvalidCredentialsError("Invalid credentials");
     }
 
     // 4. Check if blocked
     if (user.isBlocked) {
-      throw new UserBlockedError('Account is blocked');
+      throw new UserBlockedError("Account is blocked");
     }
 
     // 5. Generate token
@@ -166,7 +166,7 @@ export class AuthService implements AuthContract {
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     // 6. Emit event
-    this.eventBus.emit('auth:login', user);
+    this.eventBus.emit("auth:login", user);
 
     return {
       user: this.sanitizeUser(user),
@@ -201,7 +201,7 @@ export const authService = new AuthService(userRepository, eventBus);
 ```typescript
 // src/features/auth/repositories/user.repository.ts
 
-import { db } from '@/lib/database';
+import { db } from "@/lib/database";
 
 export class UserRepository {
   async findByEmail(email: string): Promise<User | null> {
@@ -222,7 +222,7 @@ export class UserRepository {
         email: data.email,
         name: data.name,
         passwordHash: data.passwordHash,
-        role: data.role || 'user',
+        role: data.role || "user",
         createdAt: new Date(),
       },
     });
@@ -304,10 +304,10 @@ export const eventBus = new EventBus();
 
 // Typed events
 export type AppEvents = {
-  'auth:login': User;
-  'auth:logout': { userId: string };
-  'order:created': Order;
-  'order:paid': { orderId: string; amount: number };
+  "auth:login": User;
+  "auth:logout": { userId: string };
+  "order:created": Order;
+  "order:paid": { orderId: string; amount: number };
 };
 ```
 
@@ -315,16 +315,16 @@ export type AppEvents = {
 
 ```typescript
 // Feature A emits
-this.eventBus.emit('order:created', order);
+this.eventBus.emit("order:created", order);
 
 // Feature B reacts (doesn't know about Feature A)
-eventBus.on('order:created', async (order) => {
+eventBus.on("order:created", async (order) => {
   await emailService.sendOrderConfirmation(order);
 });
 
 // Feature C also reacts independently
-eventBus.on('order:created', async (order) => {
-  await analytics.track('purchase', { orderId: order.id });
+eventBus.on("order:created", async (order) => {
+  await analytics.track("purchase", { orderId: order.id });
 });
 ```
 
@@ -350,10 +350,10 @@ eventBus.on('order:created', async (order) => {
 
 export class UserBuilder {
   private data: Partial<User> = {
-    id: '1',
-    email: 'test@example.com',
-    name: 'Test User',
-    role: 'user',
+    id: "1",
+    email: "test@example.com",
+    name: "Test User",
+    role: "user",
     createdAt: new Date(),
     isBlocked: false,
   };
@@ -369,7 +369,7 @@ export class UserBuilder {
   }
 
   asAdmin(): this {
-    this.data.role = 'admin';
+    this.data.role = "admin";
     return this;
   }
 
@@ -387,9 +387,9 @@ export class UserBuilder {
 **Usage in Tests:**
 
 ```typescript
-describe('OrderService', () => {
-  it('should create order for authenticated user', async () => {
-    const user = new UserBuilder().withEmail('customer@example.com').build();
+describe("OrderService", () => {
+  it("should create order for authenticated user", async () => {
+    const user = new UserBuilder().withEmail("customer@example.com").build();
 
     const admin = new UserBuilder().asAdmin().build();
     const blocked = new UserBuilder().asBlocked().build();
@@ -527,22 +527,22 @@ export function middleware(request: NextRequest) {
 
 ```typescript
 // next.config.ts
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'https://api.example.com/:path*',
+        source: "/api/:path*",
+        destination: "https://api.example.com/:path*",
       },
     ];
   },
   async redirects() {
     return [
       {
-        source: '/old-route',
-        destination: '/new-route',
+        source: "/old-route",
+        destination: "/new-route",
         permanent: true,
       },
     ];
@@ -639,9 +639,9 @@ DO NOT pursue 100% - diminishing returns
 ### Test Template
 
 ```typescript
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
-describe('[Feature]Service', () => {
+describe("[Feature]Service", () => {
   let service: FeatureService;
   let mockRepo: MockType;
 
@@ -650,8 +650,8 @@ describe('[Feature]Service', () => {
     service = new FeatureService(mockRepo);
   });
 
-  describe('methodName', () => {
-    it('should handle happy path', async () => {
+  describe("methodName", () => {
+    it("should handle happy path", async () => {
       // Arrange
       const input = {
         /* test data */
@@ -669,8 +669,8 @@ describe('[Feature]Service', () => {
       });
     });
 
-    it('should handle validation error', async () => {
-      await expect(service.methodName(invalidInput)).rejects.toThrow('Error message');
+    it("should handle validation error", async () => {
+      await expect(service.methodName(invalidInput)).rejects.toThrow("Error message");
     });
   });
 });
@@ -790,7 +790,7 @@ abstract class VehicleFactory {
 
 // GOOD
 const vehicleFactory = {
-  createCar: (region: string) => (region === 'US' ? new USCar() : new EUCar()),
+  createCar: (region: string) => (region === "US" ? new USCar() : new EUCar()),
 };
 ```
 

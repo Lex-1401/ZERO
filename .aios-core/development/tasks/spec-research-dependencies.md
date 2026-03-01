@@ -1,5 +1,9 @@
 # Spec Pipeline: Research Dependencies
 
+---
+
+## execution_mode: programmatic # TOK-3: PTC-eligible (Bash batch) — multi-search + filter in single block
+
 > **Phase:** 3 - Research
 > **Owner Agent:** @analyst
 > **Pipeline:** spec-pipeline
@@ -16,7 +20,7 @@ Pesquisar e validar dependências externas necessárias para implementação. Us
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: spec-research
 
   elicit: false
@@ -51,7 +55,7 @@ autoClaude:
 
   verification:
     type: manual
-    note: 'Research findings should be reviewed'
+    note: "Research findings should be reviewed"
 
   contextRequirements:
     projectContext: true
@@ -67,11 +71,11 @@ autoClaude:
 ```yaml
 skip_conditions:
   - condition: "complexity.result === 'SIMPLE'"
-    reason: 'Simple tasks use existing patterns, no research needed'
-    action: 'Generate minimal research.json with existing dependencies only'
+    reason: "Simple tasks use existing patterns, no research needed"
+    action: "Generate minimal research.json with existing dependencies only"
 
-  - condition: 'no external dependencies identified in requirements'
-    reason: 'Pure internal implementation'
+  - condition: "no external dependencies identified in requirements"
+    reason: "Pure internal implementation"
     action: "Generate research.json noting 'no external dependencies'"
 ```
 
@@ -108,9 +112,9 @@ codebase_check:
   for_each: research_target
 
   search:
-    - package.json: 'Check if already installed'
-    - imports: 'Check if already used'
-    - patterns: 'Find similar implementations'
+    - package.json: "Check if already installed"
+    - imports: "Check if already used"
+    - patterns: "Find similar implementations"
 
   output:
     - existing: boolean
@@ -129,16 +133,16 @@ context7_research:
 
   process:
     1. resolve-library-id:
-      - Query: '{target} library documentation'
+      - Query: "{target} library documentation"
       - Select: Most relevant match
 
     2. query-docs:
-      - Query: 'How to {use case from requirements}'
+      - Query: "How to {use case from requirements}"
       - Extract: Setup instructions, code examples
 
   output:
     - verified: boolean
-    - source: 'context7'
+    - source: "context7"
     - docs_url: string
     - relevant_patterns: string[]
     - code_examples: string[]
@@ -151,18 +155,18 @@ exa_fallback:
   action: web_search
   tool: exa
 
-  condition: 'context7 returned no results OR target is API/concept'
+  condition: "context7 returned no results OR target is API/concept"
 
   for_each: unverified_target
 
   queries:
-    - '{target} documentation 2024'
-    - '{target} {framework} integration example'
-    - '{target} best practices'
+    - "{target} documentation 2024"
+    - "{target} {framework} integration example"
+    - "{target} best practices"
 
   output:
     - verified: boolean (mark as false if uncertain)
-    - source: 'exa'
+    - source: "exa"
     - urls: string[]
     - summary: string
 ```
@@ -300,16 +304,16 @@ generate_output:
 
 ```yaml
 command:
-  name: '*research-deps'
-  syntax: '*research-deps {story-id} [--force]'
+  name: "*research-deps"
+  syntax: "*research-deps {story-id} [--force]"
   agent: analyst
 
   flags:
-    --force: 'Research even if complexity is SIMPLE'
+    --force: "Research even if complexity is SIMPLE"
 
   examples:
-    - '*research-deps STORY-42'
-    - '*research-deps STORY-42 --force'
+    - "*research-deps STORY-42"
+    - "*research-deps STORY-42 --force"
 ```
 
 ### Pipeline Integration
@@ -355,23 +359,23 @@ tools:
 ```yaml
 errors:
   - id: context7-unavailable
-    condition: 'Context7 MCP not responding'
-    action: 'Use EXA as primary, log warning'
+    condition: "Context7 MCP not responding"
+    action: "Use EXA as primary, log warning"
     blocking: false
 
   - id: no-docs-found
-    condition: 'No documentation found for dependency'
-    action: 'Mark as unverified, add to unverifiedClaims'
+    condition: "No documentation found for dependency"
+    action: "Mark as unverified, add to unverifiedClaims"
     blocking: false
 
   - id: conflicting-dependency
-    condition: 'Dependency conflicts with existing'
+    condition: "Dependency conflicts with existing"
     action: "Add to recommendations with 'avoid' type"
     blocking: false
 
   - id: all-tools-failed
-    condition: 'Both Context7 and EXA failed'
-    action: 'Generate minimal output with manual research flag'
+    condition: "Both Context7 and EXA failed"
+    action: "Generate minimal output with manual research flag"
     blocking: false
 ```
 
@@ -431,11 +435,11 @@ query-docs: "How to create a store with zustand"
 
 ```yaml
 metadata:
-  story: '3.3'
-  epic: 'Epic 3 - Spec Pipeline'
-  created: '2026-01-28'
-  author: '@architect (Aria)'
-  version: '1.0.0'
+  story: "3.3"
+  epic: "Epic 3 - Spec Pipeline"
+  created: "2026-01-28"
+  author: "@architect (Aria)"
+  version: "1.0.0"
   tags:
     - spec-pipeline
     - research

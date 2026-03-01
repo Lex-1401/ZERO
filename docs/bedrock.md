@@ -31,9 +31,9 @@ As opções de configuração residem sob `models.bedrockDiscovery`:
       providerFilter: ["anthropic", "amazon"],
       refreshInterval: 3600,
       defaultContextWindow: 32000,
-      defaultMaxTokens: 4096
-    }
-  }
+      defaultMaxTokens: 4096,
+    },
+  },
 }
 ```
 
@@ -47,7 +47,7 @@ Notas:
 
 ## Configuração (manual)
 
-1) Certifique-se de que as credenciais da AWS estejam disponíveis no **host do gateway**:
+1. Certifique-se de que as credenciais da AWS estejam disponíveis no **host do gateway**:
 
 ```bash
 export AWS_ACCESS_KEY_ID="AKIA..."
@@ -60,7 +60,7 @@ export AWS_PROFILE="seu-perfil"
 export AWS_BEARER_TOKEN_BEDROCK="..."
 ```
 
-1) Adicione um provedor Bedrock e um modelo à sua configuração (não é necessário `apiKey`):
+1. Adicione um provedor Bedrock e um modelo à sua configuração (não é necessário `apiKey`):
 
 ```json5
 {
@@ -78,17 +78,17 @@ export AWS_BEARER_TOKEN_BEDROCK="..."
             input: ["text", "image"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 200000,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "amazon-bedrock/anthropic.claude-opus-4-5-20251101-v1:0" }
-    }
-  }
+      model: { primary: "amazon-bedrock/anthropic.claude-opus-4-5-20251101-v1:0" },
+    },
+  },
 }
 ```
 

@@ -3,6 +3,7 @@ summary: "Runtime do agente (p-mono embutido), contrato do espaço de trabalho e
 read_when:
   - Alterando o runtime do agente, a inicialização do espaço de trabalho ou o comportamento da sessão
 ---
+
 # Runtime do Agente ∅
 
 O ZERO executa um único runtime de agente embutido derivado do **p-mono**.
@@ -44,7 +45,7 @@ Para desativar inteiramente a criação de arquivos de inicialização (para esp
 
 ## Ferramentas integradas
 
-As ferramentas principais (read/exec/edit/write e ferramentas de sistema relacionadas) estão sempre disponíveis, sujeitas à política de ferramentas. `apply_patch` é opcional e controlado por `tools.exec.applyPatch`. O arquivo `TOOLS.md` **não** controla quais ferramentas existem; é uma orientação sobre como *você* quer que elas sejam usadas.
+As ferramentas principais (read/exec/edit/write e ferramentas de sistema relacionadas) estão sempre disponíveis, sujeitas à política de ferramentas. `apply_patch` é opcional e controlado por `tools.exec.applyPatch`. O arquivo `TOOLS.md` **não** controla quais ferramentas existem; é uma orientação sobre como _você_ quer que elas sejam usadas.
 
 ## Habilidades (Skills)
 
@@ -98,4 +99,4 @@ No mínimo, defina:
 
 ---
 
-*Próximo: [Chats de Grupo](/concepts/group-messages)* ∅
+_Próximo: [Chats de Grupo](/concepts/group-messages)_ ∅

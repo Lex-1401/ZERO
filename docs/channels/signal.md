@@ -11,11 +11,11 @@ Status: integração CLI externa. Gateway se comunica com `signal-cli` via HTTP 
 
 ## Configuração rápida (iniciante)
 
-1) Use um **número Signal separado** para o bot (recomendado).
-2) Instale `signal-cli` (Java necessário).
-3) Vincule o dispositivo do bot e inicie o daemon:
+1. Use um **número Signal separado** para o bot (recomendado).
+2. Instale `signal-cli` (Java necessário).
+3. Vincule o dispositivo do bot e inicie o daemon:
    - `signal-cli link -n "ZERO"`
-4) Configure o ZERO e inicie o gateway.
+4. Configure o ZERO e inicie o gateway.
 
 Configuração mínima:
 
@@ -27,9 +27,9 @@ Configuração mínima:
       account: "+15551234567",
       cliPath: "signal-cli",
       dmPolicy: "pairing",
-      allowFrom: ["+15557654321"]
-    }
-  }
+      allowFrom: ["+15557654321"],
+    },
+  },
 }
 ```
 
@@ -47,7 +47,7 @@ Desative com:
 
 ```json5
 {
-  channels: { signal: { configWrites: false } }
+  channels: { signal: { configWrites: false } },
 }
 ```
 
@@ -59,10 +59,10 @@ Desative com:
 
 ## Configuração (caminho rápido)
 
-1) Instale `signal-cli` (Java necessário).
-2) Vincule uma conta de bot:
+1. Instale `signal-cli` (Java necessário).
+2. Vincule uma conta de bot:
    - `signal-cli link -n "ZERO"` depois escaneie o QR no Signal.
-3) Configure Signal e inicie o gateway.
+3. Configure Signal e inicie o gateway.
 
 Exemplo:
 
@@ -74,9 +74,9 @@ Exemplo:
       account: "+15551234567",
       cliPath: "signal-cli",
       dmPolicy: "pairing",
-      allowFrom: ["+15557654321"]
-    }
-  }
+      allowFrom: ["+15557654321"],
+    },
+  },
 }
 ```
 
@@ -91,9 +91,9 @@ Se você quer gerenciar o `signal-cli` você mesmo (cold starts de JVM lentos, i
   channels: {
     signal: {
       httpUrl: "http://127.0.0.1:8080",
-      autoStart: false
-    }
-  }
+      autoStart: false,
+    },
+  },
 }
 ```
 

@@ -56,12 +56,12 @@ A configuração de TTS reside sob `messages.tts` no arquivo `zero.json`. O esqu
 
 ```json5
 {
-  "messages": {
-    "tts": {
-      "auto": "always",
-      "provider": "elevenlabs"
-    }
-  }
+  messages: {
+    tts: {
+      auto: "always",
+      provider: "elevenlabs",
+    },
+  },
 }
 ```
 
@@ -69,37 +69,37 @@ A configuração de TTS reside sob `messages.tts` no arquivo `zero.json`. O esqu
 
 ```json5
 {
-  "messages": {
-    "tts": {
-      "auto": "always",
-      "provider": "openai",
-      "summaryModel": "openai/gpt-4.1-mini",
-      "modelOverrides": {
-        "enabled": true
+  messages: {
+    tts: {
+      auto: "always",
+      provider: "openai",
+      summaryModel: "openai/gpt-4.1-mini",
+      modelOverrides: {
+        enabled: true,
       },
-      "openai": {
-        "apiKey": "sua_chave_openai",
-        "model": "gpt-4o-mini-tts",
-        "voice": "alloy"
+      openai: {
+        apiKey: "sua_chave_openai",
+        model: "gpt-4o-mini-tts",
+        voice: "alloy",
       },
-      "elevenlabs": {
-        "apiKey": "sua_chave_elevenlabs",
-        "baseUrl": "https://api.elevenlabs.io",
-        "voiceId": "voice_id",
-        "modelId": "eleven_multilingual_v2",
-        "seed": 42,
-        "applyTextNormalization": "auto",
-        "languageCode": "pt",
-        "voiceSettings": {
-          "stability": 0.5,
-          "similarityBoost": 0.75,
-          "style": 0.0,
-          "useSpeakerBoost": true,
-          "speed": 1.0
-        }
-      }
-    }
-  }
+      elevenlabs: {
+        apiKey: "sua_chave_elevenlabs",
+        baseUrl: "https://api.elevenlabs.io",
+        voiceId: "voice_id",
+        modelId: "eleven_multilingual_v2",
+        seed: 42,
+        applyTextNormalization: "auto",
+        languageCode: "pt",
+        voiceSettings: {
+          stability: 0.5,
+          similarityBoost: 0.75,
+          style: 0.0,
+          useSpeakerBoost: true,
+          speed: 1.0,
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -107,20 +107,20 @@ A configuração de TTS reside sob `messages.tts` no arquivo `zero.json`. O esqu
 
 ```json5
 {
-  "messages": {
-    "tts": {
-      "auto": "always",
-      "provider": "edge",
-      "edge": {
-        "enabled": true,
-        "voice": "pt-BR-AntonioNeural",
-        "lang": "pt-BR",
-        "outputFormat": "audio-24khz-48kbitrate-mono-mp3",
-        "rate": "+10%",
-        "pitch": "-5%"
-      }
-    }
-  }
+  messages: {
+    tts: {
+      auto: "always",
+      provider: "edge",
+      edge: {
+        enabled: true,
+        voice: "pt-BR-AntonioNeural",
+        lang: "pt-BR",
+        outputFormat: "audio-24khz-48kbitrate-mono-mp3",
+        rate: "+10%",
+        pitch: "-5%",
+      },
+    },
+  },
 }
 ```
 
@@ -128,13 +128,13 @@ A configuração de TTS reside sob `messages.tts` no arquivo `zero.json`. O esqu
 
 ```json5
 {
-  "messages": {
-    "tts": {
-      "edge": {
-        "enabled": false
-      }
-    }
-  }
+  messages: {
+    tts: {
+      edge: {
+        enabled: false,
+      },
+    },
+  },
 }
 ```
 
@@ -142,14 +142,14 @@ A configuração de TTS reside sob `messages.tts` no arquivo `zero.json`. O esqu
 
 ```json5
 {
-  "messages": {
-    "tts": {
-      "auto": "always",
-      "maxTextLength": 4000,
-      "timeoutMs": 30000,
-      "prefsPath": "~/.zero/settings/tts.json"
-    }
-  }
+  messages: {
+    tts: {
+      auto: "always",
+      maxTextLength: 4000,
+      timeoutMs: 30000,
+      prefsPath: "~/.zero/settings/tts.json",
+    },
+  },
 }
 ```
 
@@ -157,11 +157,11 @@ A configuração de TTS reside sob `messages.tts` no arquivo `zero.json`. O esqu
 
 ```json5
 {
-  "messages": {
-    "tts": {
-      "auto": "inbound"
-    }
-  }
+  messages: {
+    tts: {
+      auto: "inbound",
+    },
+  },
 }
 ```
 
@@ -169,11 +169,11 @@ A configuração de TTS reside sob `messages.tts` no arquivo `zero.json`. O esqu
 
 ```json5
 {
-  "messages": {
-    "tts": {
-      "auto": "always"
-    }
-  }
+  messages: {
+    tts: {
+      auto: "always",
+    },
+  },
 }
 ```
 

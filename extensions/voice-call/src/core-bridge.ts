@@ -51,10 +51,7 @@ type CoreAgentDeps = {
   ensureAgentWorkspace: (params?: { dir: string }) => Promise<void>;
   resolveStorePath: (store?: string, opts?: { agentId?: string }) => string;
   loadSessionStore: (storePath: string) => Record<string, unknown>;
-  saveSessionStore: (
-    storePath: string,
-    store: Record<string, unknown>,
-  ) => Promise<void>;
+  saveSessionStore: (storePath: string, store: Record<string, unknown>) => Promise<void>;
   resolveSessionFilePath: (
     sessionId: string,
     entry: unknown,
@@ -114,9 +111,7 @@ function resolveZeroRoot(): string {
     }
   }
 
-  throw new Error(
-    "Unable to resolve Zero root. Set ZERO_ROOT to the package root.",
-  );
+  throw new Error("Unable to resolve Zero root. Set ZERO_ROOT to the package root.");
 }
 
 async function importCoreModule<T>(relativePath: string): Promise<T> {

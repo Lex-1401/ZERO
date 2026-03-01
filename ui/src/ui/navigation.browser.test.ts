@@ -75,13 +75,9 @@ describe("control UI routing", () => {
     const app = mountApp("/chat");
     await app.updateComplete;
 
-    const link = app.querySelector<HTMLAnchorElement>(
-      'a.nav-item[href="/channels"]',
-    );
+    const link = app.querySelector<HTMLAnchorElement>('a.nav-item[href="/channels"]');
     expect(link).not.toBeNull();
-    link?.dispatchEvent(
-      new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }),
-    );
+    link?.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }));
 
     await app.updateComplete;
     expect(app.tab).toBe("channels");
@@ -168,10 +164,7 @@ describe("control UI routing", () => {
   });
 
   it("hydrates token from URL params even when settings already set", async () => {
-    localStorage.setItem(
-      "zero.control.settings.v1",
-      JSON.stringify({ token: "existing-token" }),
-    );
+    localStorage.setItem("zero.control.settings.v1", JSON.stringify({ token: "existing-token" }));
     const app = mountApp("/ui/overview?token=abc123");
     await app.updateComplete;
 

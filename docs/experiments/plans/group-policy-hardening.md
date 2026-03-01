@@ -3,6 +3,7 @@ summary: "Reforço da lista de permissões do Telegram: normalização de prefix
 read_when:
   - Revisando alterações históricas da lista de permissões do Telegram
 ---
+
 # Reforço da Lista de Permissões do Telegram
 
 **Data**: 05-01-2026  
@@ -24,7 +25,7 @@ Todos estes são aceitos para o mesmo ID:
 
 - `telegram:123456`
 - `TG:123456`
-- ` tg:123456 `
+- `tg:123456`
 
 ## Por que isso importa
 

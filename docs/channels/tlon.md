@@ -30,11 +30,11 @@ Detalhes: [Plugins](/plugin)
 
 ## Configuração
 
-1) Instale o plugin Tlon.
-2) Obtenha sua URL de ship e código de login.
-3) Configure `channels.tlon`.
-4) Reinicie o gateway.
-5) Mande DM para o bot ou mencione-o em um canal de grupo.
+1. Instale o plugin Tlon.
+2. Obtenha sua URL de ship e código de login.
+3. Configure `channels.tlon`.
+4. Reinicie o gateway.
+5. Mande DM para o bot ou mencione-o em um canal de grupo.
 
 Configuração mínima (conta única):
 
@@ -45,9 +45,9 @@ Configuração mínima (conta única):
       enabled: true,
       ship: "~sampel-palnet",
       url: "https://seu-host-ship",
-      code: "lidlut-tabwed-pillex-ridrup"
-    }
-  }
+      code: "lidlut-tabwed-pillex-ridrup",
+    },
+  },
 }
 ```
 
@@ -59,12 +59,9 @@ Auto-descoberta é ativada por padrão. Você também pode fixar canais manualme
 {
   channels: {
     tlon: {
-      groupChannels: [
-        "chat/~host-ship/general",
-        "chat/~host-ship/support"
-      ]
-    }
-  }
+      groupChannels: ["chat/~host-ship/general", "chat/~host-ship/support"],
+    },
+  },
 }
 ```
 
@@ -74,9 +71,9 @@ Desativar auto-descoberta:
 {
   channels: {
     tlon: {
-      autoDiscoverChannels: false
-    }
-  }
+      autoDiscoverChannels: false,
+    },
+  },
 }
 ```
 
@@ -88,9 +85,9 @@ Allowlist de DM (vazia = permitir todos):
 {
   channels: {
     tlon: {
-      dmAllowlist: ["~zod", "~nec"]
-    }
-  }
+      dmAllowlist: ["~zod", "~nec"],
+    },
+  },
 }
 ```
 
@@ -105,15 +102,15 @@ Autorização de grupo (restrita por padrão):
         channelRules: {
           "chat/~host-ship/general": {
             mode: "restricted",
-            allowedShips: ["~zod", "~nec"]
+            allowedShips: ["~zod", "~nec"],
           },
           "chat/~host-ship/announcements": {
-            mode: "open"
-          }
-        }
-      }
-    }
-  }
+            mode: "open",
+          },
+        },
+      },
+    },
+  },
 }
 ```
 

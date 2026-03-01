@@ -87,11 +87,9 @@ export class VoiceSession extends EventEmitter {
       ts: Date.now(),
       signal: "INTERRUPT_CORE",
     });
-    console.log(`[VoiceSession:${this.connId}] Speech started (Native VAD Pulse)`);
   }
 
   private handleSpeechEnd() {
-    console.log(`[VoiceSession:${this.connId}] Speech ended (Native VAD Pulse)`);
     this.dispatchTranscriptionPulse().catch((err) => {
       console.error(`[VoiceSession:${this.connId}] Transcription pulse failed:`, err);
     });
@@ -143,8 +141,6 @@ export class VoiceSession extends EventEmitter {
     const reactions = ["hum", "ok", "entendi", "sim"];
     const text = reactions[Math.floor(Math.random() * reactions.length)];
 
-    console.log(`[VoiceSession:${this.connId}] Backchannel reaction: ${text}`);
-
     // Disparar síntese sem interromper fluxo principal
     // Nota: speak() já lida com o playAudio reativo
     speak(text).catch(() => {});
@@ -171,7 +167,6 @@ export function getOrCreateVoiceSession(
       send,
     );
     activeSessions.set(connId, session);
-    console.log(`[CORE:Voice] Neural session established for ${connId}`);
   }
   return session;
 }
@@ -179,6 +174,5 @@ export function getOrCreateVoiceSession(
 export function closeVoiceSession(connId: string) {
   if (activeSessions.has(connId)) {
     activeSessions.delete(connId);
-    console.log(`[CORE:Voice] Neural session terminated for ${connId}`);
   }
 }

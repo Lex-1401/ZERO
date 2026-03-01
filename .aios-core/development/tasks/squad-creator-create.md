@@ -26,7 +26,7 @@ Checklist:
   - "[ ] Exibir proximos passos"
 ---
 
-# *create-squad
+# \*create-squad
 
 Cria um novo squad seguindo a arquitetura task-first do AIOS.
 
@@ -47,16 +47,16 @@ Cria um novo squad seguindo a arquitetura task-first do AIOS.
 
 ## Parametros
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `name` | string | - | Squad name (kebab-case, required) |
-| `--description` | string | "Custom squad" | Squad description |
-| `--author` | string | git user.name | Author name |
-| `--license` | string | MIT | License type |
-| `--template` | string | basic | Template: basic, etl, agent-only |
-| `--config-mode` | string | extend | Config inheritance: extend, override, none |
-| `--skip-validation` | flag | false | Skip initial validation |
-| `--yes` | flag | false | Skip interactive prompts, use defaults |
+| Parameter           | Type   | Default        | Description                                |
+| ------------------- | ------ | -------------- | ------------------------------------------ |
+| `name`              | string | -              | Squad name (kebab-case, required)          |
+| `--description`     | string | "Custom squad" | Squad description                          |
+| `--author`          | string | git user.name  | Author name                                |
+| `--license`         | string | MIT            | License type                               |
+| `--template`        | string | basic          | Template: basic, etl, agent-only           |
+| `--config-mode`     | string | extend         | Config inheritance: extend, override, none |
+| `--skip-validation` | flag   | false          | Skip initial validation                    |
+| `--yes`             | flag   | false          | Skip interactive prompts, use defaults     |
 
 ## Elicitacao Interativa
 
@@ -84,11 +84,11 @@ Cria um novo squad seguindo a arquitetura task-first do AIOS.
 
 ## Templates Disponiveis
 
-| Template | Description | Components |
-|----------|-------------|------------|
-| `basic` | Estrutura minima | 1 agent, 1 task |
-| `etl` | Processamento de dados | 2 agents, 3 tasks, scripts |
-| `agent-only` | Apenas agentes | 2 agents, sem tasks |
+| Template     | Description            | Components                 |
+| ------------ | ---------------------- | -------------------------- |
+| `basic`      | Estrutura minima       | 1 agent, 1 task            |
+| `etl`        | Processamento de dados | 2 agents, 3 tasks, scripts |
+| `agent-only` | Apenas agentes         | 2 agents, sem tasks        |
 
 ## Estrutura Gerada
 
@@ -168,9 +168,9 @@ components:
 config:
   extends: extend
   # SQS-10: References project-level files when docs/framework/ exists
-  coding-standards: ../../docs/framework/CODING-STANDARDS.md   # or config/coding-standards.md
-  tech-stack: ../../docs/framework/TECH-STACK.md               # or config/tech-stack.md
-  source-tree: ../../docs/framework/SOURCE-TREE.md             # or config/source-tree.md
+  coding-standards: ../../docs/framework/CODING-STANDARDS.md # or config/coding-standards.md
+  tech-stack: ../../docs/framework/TECH-STACK.md # or config/tech-stack.md
+  source-tree: ../../docs/framework/SOURCE-TREE.md # or config/source-tree.md
 
 dependencies:
   node: []
@@ -239,18 +239,18 @@ tags:
 
 ## Error Handling
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| `INVALID_NAME` | Name not kebab-case | Use lowercase with hyphens |
-| `SQUAD_EXISTS` | Squad already exists | Choose different name or delete existing |
-| `PERMISSION_DENIED` | Can't write to squads/ | Check directory permissions |
-| `VALIDATION_FAILED` | Generated squad invalid | Check error details, fix manually |
+| Error               | Cause                   | Resolution                               |
+| ------------------- | ----------------------- | ---------------------------------------- |
+| `INVALID_NAME`      | Name not kebab-case     | Use lowercase with hyphens               |
+| `SQUAD_EXISTS`      | Squad already exists    | Choose different name or delete existing |
+| `PERMISSION_DENIED` | Can't write to squads/  | Check directory permissions              |
+| `VALIDATION_FAILED` | Generated squad invalid | Check error details, fix manually        |
 
 ## Implementation
 
 ```javascript
-const { SquadGenerator } = require('./.aios-core/development/scripts/squad');
-const { SquadValidator } = require('./.aios-core/development/scripts/squad');
+const { SquadGenerator } = require("./.aios-core/development/scripts/squad");
+const { SquadValidator } = require("./.aios-core/development/scripts/squad");
 
 async function createSquad(options) {
   const {
@@ -263,12 +263,12 @@ async function createSquad(options) {
     skipValidation,
     includeAgent,
     includeTask,
-    aiosMinVersion
+    aiosMinVersion,
   } = options;
 
   // Validate name
   if (!/^[a-z][a-z0-9-]*[a-z0-9]$/.test(name)) {
-    throw new Error('INVALID_NAME: Squad name must be kebab-case');
+    throw new Error("INVALID_NAME: Squad name must be kebab-case");
   }
 
   // Generate squad
@@ -282,7 +282,7 @@ async function createSquad(options) {
     configMode,
     includeAgent,
     includeTask,
-    aiosMinVersion
+    aiosMinVersion,
   });
 
   // Validate (unless skipped)
@@ -290,7 +290,7 @@ async function createSquad(options) {
     const validator = new SquadValidator();
     const validation = await validator.validate(result.path);
     if (!validation.valid) {
-      console.warn('Warning: Generated squad has validation issues');
+      console.warn("Warning: Generated squad has validation issues");
       console.warn(validator.formatResult(validation, result.path));
     }
   }

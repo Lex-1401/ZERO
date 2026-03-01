@@ -117,4 +117,5 @@ Foco na preservação encriptada da inteligência estratégica e de segurança.
 - [ ] Dashboard visual exibido com métricas reais do repositório.
 
 ---
-*“A perfeição não é um estado, é um processo de verificação contínua.”* ∅
+
+_“A perfeição não é um estado, é um processo de verificação contínua.”_ ∅

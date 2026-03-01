@@ -77,9 +77,21 @@ function buildLearningSection(params: { isMinimal: boolean; availableTools: Set<
   return [
     "## Aprendizado Contínuo (Long-term Memory)",
     "- Seja PROATIVO: Ao identificar preferências do usuário, decisões técnicas ou fatos recorrentes, sugira salvá-los na memória.",
+    "- **Memória Procedural (Narrativa)**: Após concluir uma tarefa complexa com sucesso, narre o 'caminho das pedras' em linguagem natural e salve em `memory/procedures.md`. Foque no *como* e *porquê*, não apenas no que foi feito.",
     "- Exemplo: 'Notei que você prefere X. Posso salvar isso na sua memória local para economizar tokens futuramente?'",
     "- Transparência: Lembre o usuário que os aprendizados são salvos localmente em arquivos `.md` e ele tem controle total sobre eles.",
     "- Use `memory_store` apenas após a confirmação do usuário ou para fatos técnicos óbvios (ex: 'O projeto usa porta 3000').",
+    "",
+  ];
+}
+
+function buildTaskPrioritySection(isMinimal: boolean) {
+  if (isMinimal) return [];
+  return [
+    "## Priorização Dinâmica",
+    "- Antes de QUALQUER chamada de ferramenta em missões complexas, valide sua prioridade atual.",
+    "- Pergunte-se: 'Este próximo passo ainda é o caminho mais curto para o objetivo final? O contexto mudou?'",
+    "- Mantenha uma lista mental (ou em <think>) de tarefas pendentes e re-priorize-as agressivamente se encontrar bloqueios ou novas informações.",
     "",
   ];
 }
@@ -151,8 +163,16 @@ function buildACISection(params: { isMinimal: boolean; availableTools: Set<strin
     "Você possui um sistema avançado de memória procedural para tarefas de navegador.",
     "Siga este fluxo estrito para QUALQUER tarefa complexa de navegador (ex: login, formulários, flows multi-passo):",
     "1. **RECALL**: ANTES de tocar no navegador, chame `aci_recall(taskDescription)`. Se houver uma trajetória salva, SIGA-A.",
-    "2. **SEE**: Ao interagir com páginas, prefira `action='aci_scan'` em vez de screenshot puro. Isso lhe dá a visão estruturada dos elementos interativos.",
-    "3. **REMEMBER**: Após concluir uma tarefa nova ou difícil com sucesso, chame `aci_remember` para salvar a trajetória para o seu 'eu do futuro'.",
+    "2. **HEAL (Auto-Cura)**: Se um passo da trajetória falhar (ex: elemento ID não encontrado), não desista. Use a imagem ou `aci_scan` para buscar o elemento pelo `targetDescriptor` (nome, papel, texto similar). Se encontrar, execute a ação e atualize a memória com `aci_remember` corrigido.",
+    "3. **SEE**: Ao interagir com páginas, prefira `action='aci_scan'` em vez de screenshot puro. Isso lhe dá a visão estruturada dos elementos interativos.",
+    "4. **REMEMBER**: Após concluir uma tarefa nova ou difícil com sucesso, chame `aci_remember` incluindo os `targetDescriptor` para tornar a memória procedimental resiliente a mudanças de layout.",
+    "",
+    "## Visual Grounding",
+    "Se você precisar interagir com uma aplicação desktop que não possui CLI ou API:",
+    "1. Chame `nodes(action='ui_scan')` para obter uma imagem da tela E a árvore de acessibilidade (quando disponível).",
+    "2. Use a Árvore de Acessibilidade para localizar IDs, nomes de elementos e estados de controle; use a imagem (VLM) para confirmar o layout visual.",
+    "3. Use `nodes(action='run', command=['cliclick', 'click', 'x', 'y'])` para interagir visualmente.",
+    "4. IMPORTANTE: Após cada ação visual, chame `ui_scan` novamente para confirmar se o estado da interface mudou conforme o esperado (Clique-Confirmação).",
     "",
   ];
 }
@@ -463,6 +483,7 @@ export function buildAgentSystemPrompt(params: {
   lines.push(...buildSkillsSection({ skillsPrompt: params.skillsPrompt, isMinimal, readToolName }));
   lines.push(...buildMemorySection({ isMinimal, availableTools }));
   lines.push(...buildLearningSection({ isMinimal, availableTools }));
+  lines.push(...buildTaskPrioritySection(isMinimal));
 
   const hasGateway = availableTools.has("gateway");
   if (hasGateway && !isMinimal) {

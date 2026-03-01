@@ -51,10 +51,10 @@ Defina `gateway.http.endpoints.responses.enabled` como `true`:
   gateway: {
     http: {
       endpoints: {
-        responses: { enabled: true }
-      }
-    }
-  }
+        responses: { enabled: true },
+      },
+    },
+  },
 }
 ```
 
@@ -67,10 +67,10 @@ Defina `gateway.http.endpoints.responses.enabled` como `false`:
   gateway: {
     http: {
       endpoints: {
-        responses: { enabled: false }
-      }
-    }
-  }
+        responses: { enabled: false },
+      },
+    },
+  },
 }
 ```
 
@@ -194,7 +194,14 @@ Os padrões podem ser ajustados em `gateway.http.endpoints.responses`:
           maxBodyBytes: 20000000,
           files: {
             allowUrl: true,
-            allowedMimes: ["text/plain", "text/markdown", "text/html", "text/csv", "application/json", "application/pdf"],
+            allowedMimes: [
+              "text/plain",
+              "text/markdown",
+              "text/html",
+              "text/csv",
+              "application/json",
+              "application/pdf",
+            ],
             maxBytes: 5242880,
             maxChars: 200000,
             maxRedirects: 3,
@@ -202,20 +209,20 @@ Os padrões podem ser ajustados em `gateway.http.endpoints.responses`:
             pdf: {
               maxPages: 4,
               maxPixels: 4000000,
-              minTextChars: 200
-            }
+              minTextChars: 200,
+            },
           },
           images: {
             allowUrl: true,
             allowedMimes: ["image/jpeg", "image/png", "image/gif", "image/webp"],
             maxBytes: 10485760,
             maxRedirects: 3,
-            timeoutMs: 10000
-          }
-        }
-      }
-    }
-  }
+            timeoutMs: 10000,
+          },
+        },
+      },
+    },
+  },
 }
 ```
 

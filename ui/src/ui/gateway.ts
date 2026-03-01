@@ -73,7 +73,7 @@ export class GatewayBrowserClient {
   private connectTimer: number | null = null;
   private backoffMs = 800;
 
-  constructor(private opts: GatewayBrowserClientOptions) { }
+  constructor(private opts: GatewayBrowserClientOptions) {}
 
   start() {
     this.closed = false;
@@ -155,19 +155,19 @@ export class GatewayBrowserClient {
     const auth =
       authToken || this.opts.password
         ? {
-          token: authToken,
-          password: this.opts.password,
-        }
+            token: authToken,
+            password: this.opts.password,
+          }
         : undefined;
 
     let device:
       | {
-        id: string;
-        publicKey: string;
-        signature: string;
-        signedAt: number;
-        nonce: string | undefined;
-      }
+          id: string;
+          publicKey: string;
+          signature: string;
+          signedAt: number;
+          nonce: string | undefined;
+        }
       | undefined;
 
     if (isSecureContext && deviceIdentity) {
@@ -211,7 +211,10 @@ export class GatewayBrowserClient {
       userAgent: navigator.userAgent,
       locale: navigator.language,
     };
-    console.log("[gateway] sending connect params:", { ...params, auth: params.auth ? { ...params.auth, token: params.auth.token ? "***" : null } : null });
+    console.log("[gateway] sending connect params:", {
+      ...params,
+      auth: params.auth ? { ...params.auth, token: params.auth.token ? "***" : null } : null,
+    });
 
     void this.request<GatewayHelloOk>("connect", params)
       .then((hello) => {

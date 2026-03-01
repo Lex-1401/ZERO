@@ -3,7 +3,7 @@ import { icons } from "../icons";
 import { t } from "../i18n";
 
 export function renderNotFound(onNavigate: (route: string) => void) {
-    return html`
+  return html`
     <div class="animate-fade-in" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-main);">
         <div style="font-size: 120px; font-weight: 900; line-height: 1; letter-spacing: -0.05em; background: linear-gradient(to bottom, var(--text-main), transparent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; opacity: 0.2;">
             404

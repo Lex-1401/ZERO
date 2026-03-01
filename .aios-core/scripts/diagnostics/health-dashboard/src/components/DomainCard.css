@@ -61,7 +61,7 @@
 }
 
 .no-issues::before {
-  content: '\2713';
+  content: "\2713";
 }
 
 .issue-counts {

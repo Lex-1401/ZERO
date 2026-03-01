@@ -34,8 +34,8 @@ Eles rodam imediatamente, são removidos antes que o modelo veja a mensagem, e o
     config: false,
     debug: false,
     restart: false,
-    useAccessGroups: true
-  }
+    useAccessGroups: true,
+  },
 }
 ```
 

@@ -33,7 +33,8 @@ function listEnabledAccounts(cfg: ZeroConfig) {
 function isReactionsEnabled(accounts: ReturnType<typeof listEnabledAccounts>, cfg: ZeroConfig) {
   for (const account of accounts) {
     const gate = createActionGate(
-      (account.config.actions ?? (cfg.channels?.["googlechat"] as { actions?: unknown })?.actions) as Record<
+      (account.config.actions ??
+        (cfg.channels?.["googlechat"] as { actions?: unknown })?.actions) as Record<
         string,
         boolean | undefined
       >,
@@ -103,7 +104,12 @@ export const googlechatMessageActions: ChannelMessageActionAdapter = {
           text: content,
           thread: threadId ?? undefined,
           attachments: upload.attachmentUploadToken
-            ? [{ attachmentUploadToken: upload.attachmentUploadToken, contentName: loaded.filename }]
+            ? [
+                {
+                  attachmentUploadToken: upload.attachmentUploadToken,
+                  contentName: loaded.filename,
+                },
+              ]
             : undefined,
         });
         return jsonResult({ ok: true, to: space });

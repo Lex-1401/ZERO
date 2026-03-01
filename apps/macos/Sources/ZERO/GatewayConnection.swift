@@ -113,6 +113,18 @@ actor GatewayConnection {
         self.sessionBox = sessionBox
     }
 
+    public func bootstrap() async throws {
+        gatewayConnectionLogger.info("GatewayConnection bootstrap: starting")
+        // _ = await PortGuardian.shared.describe(port: GatewayEnvironment.gatewayPort())
+        gatewayConnectionLogger.info("GatewayConnection bootstrap: refreshing config")
+        try await self.refresh()
+        gatewayConnectionLogger.info("GatewayConnection bootstrap: connecting client")
+        if let client = self.client {
+            try await client.connect()
+        }
+        gatewayConnectionLogger.info("GatewayConnection bootstrap: finished")
+    }
+
     // MARK: - Low-level request
 
     func request(

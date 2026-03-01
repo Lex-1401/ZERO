@@ -71,6 +71,7 @@ const GROUP_LABELS: Record<string, string> = {
   discovery: "Descoberta",
   presence: "Presença",
   voicewake: "Ativação por Voz",
+  environments: "Ambientes (Environments)",
 };
 
 const GROUP_ORDER: Record<string, number> = {
@@ -98,6 +99,7 @@ const GROUP_ORDER: Record<string, number> = {
   discovery: 210,
   presence: 220,
   voicewake: 230,
+  environments: 240,
   logging: 900,
 };
 
@@ -250,7 +252,8 @@ const FIELD_LABELS: Record<string, string> = {
   "agents.defaults.memorySearch": "Busca em Memória",
   "agents.defaults.memorySearch.enabled": "Ativar Busca em Memória",
   "agents.defaults.memorySearch.sources": "Fontes de Busca em Memória",
-  "agents.defaults.memorySearch.experimental.sessionMemory": "Índice de Memória de Sessão (Experimental)",
+  "agents.defaults.memorySearch.experimental.sessionMemory":
+    "Índice de Memória de Sessão (Experimental)",
   "agents.defaults.memorySearch.provider": "Provedor de Busca em Memória",
   "agents.defaults.memorySearch.remote.baseUrl": "URL Base de Embedding Remoto",
   "agents.defaults.memorySearch.remote.apiKey": "Chave da API de Embedding Remoto",
@@ -275,7 +278,8 @@ const FIELD_LABELS: Record<string, string> = {
   "agents.defaults.memorySearch.query.hybrid.enabled": "Busca Híbrida de Memória",
   "agents.defaults.memorySearch.query.hybrid.vectorWeight": "Peso Vetorial (Híbrido)",
   "agents.defaults.memorySearch.query.hybrid.textWeight": "Peso de Texto (Híbrido)",
-  "agents.defaults.memorySearch.query.hybrid.candidateMultiplier": "Multiplicador de Candidatos Híbridos",
+  "agents.defaults.memorySearch.query.hybrid.candidateMultiplier":
+    "Multiplicador de Candidatos Híbridos",
   "agents.defaults.memorySearch.cache.enabled": "Cache de Embedding de Memória",
   "agents.defaults.memorySearch.cache.maxEntries": "Máximo de Entradas no Cache de Embedding",
   "auth.profiles": "Perfis de Autenticação",
@@ -367,6 +371,12 @@ const FIELD_LABELS: Record<string, string> = {
   "plugins.installs.*.installPath": "Caminho de Instalação",
   "plugins.installs.*.version": "Versão da Instalação",
   "plugins.installs.*.installedAt": "Hora da Instalação",
+  "environments.templates.*.name": "Nome do Template",
+  "environments.templates.*.description": "Descrição do Ambiente",
+  "environments.templates.*.image": "Imagem Docker",
+  "environments.templates.*.tools": "Ferramentas Autorizadas",
+  "environments.templates.*.env": "Variáveis de Ambiente",
+  "environments.templates.*.mounts": "Volumes Montados (Binds)",
 };
 
 const FIELD_HELP: Record<string, string> = {
@@ -379,26 +389,32 @@ const FIELD_HELP: Record<string, string> = {
     "Fingerprint TLS sha256 esperada para o gateway remoto (pinagem para evitar MITM).",
   "gateway.remote.sshTarget":
     "Gateway remoto via SSH (túnel da porta do gateway para localhost). Formato: user@host ou user@host:port.",
-  "gateway.remote.sshIdentity": "Caminho opcional do arquivo de identidade SSH (passado para ssh -i).",
+  "gateway.remote.sshIdentity":
+    "Caminho opcional do arquivo de identidade SSH (passado para ssh -i).",
   "agents.list[].identity.avatar":
     "Caminho da imagem do avatar (relativo ao workspace do agente) ou uma URL remota/dados.",
-  "gateway.auth.token": "Recomendado para todos os gateways; obrigatório para vínculos não-loopback.",
+  "gateway.auth.token":
+    "Recomendado para todos os gateways; obrigatório para vínculos não-loopback.",
   "gateway.auth.password": "Obrigatório para o túnel Tailscale.",
-  "gateway.controlUi.basePath": "Prefixo de URL opcional onde a Interface de Controle é servida (ex: /zero).",
+  "gateway.controlUi.basePath":
+    "Prefixo de URL opcional onde a Interface de Controle é servida (ex: /zero).",
   "gateway.controlUi.allowInsecureAuth":
     "Permitir autenticação na UI sobre HTTP inseguro (apenas token; não recomendado).",
   "gateway.http.endpoints.chatCompletions.enabled":
     "Ativar o endpoint compatível com OpenAI `POST /v1/chat/completions` (padrão: false).",
-  "gateway.reload.mode": 'Estratégia de recarregamento a quente para mudanças na config ("hybrid" recomendado).',
+  "gateway.reload.mode":
+    'Estratégia de recarregamento a quente para mudanças na config ("hybrid" recomendado).',
   "gateway.reload.debounceMs": "Janela de debounce (ms) antes de aplicar mudanças na configuração.",
   "gateway.nodes.browser.mode":
     'Roteamento de navegador do nó ("auto" = escolhe um nó conectado, "manual" = exige parâmetro, "off" = desativa).',
-  "gateway.nodes.browser.node": "Fixar o roteamento do navegador em um id ou nome de nó específico (opcional).",
+  "gateway.nodes.browser.node":
+    "Fixar o roteamento do navegador em um id ou nome de nó específico (opcional).",
   "gateway.nodes.allowCommands":
     "Comandos extras node.invoke permitidos além dos padrões do gateway (array de strings).",
   "gateway.nodes.denyCommands":
     "Comandos a serem bloqueados mesmo se presentes nas permissões do nó ou na lista padrão.",
-  "nodeHost.browserProxy.enabled": "Expor o servidor local de controle do navegador via proxy do nó.",
+  "nodeHost.browserProxy.enabled":
+    "Expor o servidor local de controle do navegador via proxy do nó.",
   "nodeHost.browserProxy.allowProfiles":
     "Lista opcional de nomes de perfis de navegador permitidos via proxy do nó.",
   "diagnostics.flags":
@@ -409,8 +425,10 @@ const FIELD_HELP: Record<string, string> = {
     "Caminho de saída JSONL para logs de rastro de cache (padrão: $ZERO_STATE_DIR/logs/cache-trace.jsonl).",
   "diagnostics.cacheTrace.includeMessages":
     "Incluir payloads de mensagens completos na saída do rastro (padrão: true).",
-  "diagnostics.cacheTrace.includePrompt": "Incluir texto do prompt na saída do rastro (padrão: true).",
-  "diagnostics.cacheTrace.includeSystem": "Incluir prompt de sistema na saída do rastro (padrão: true).",
+  "diagnostics.cacheTrace.includePrompt":
+    "Incluir texto do prompt na saída do rastro (padrão: true).",
+  "diagnostics.cacheTrace.includeSystem":
+    "Incluir prompt de sistema na saída do rastro (padrão: true).",
 
   "tools.exec.applyPatch.enabled":
     "Experimental. Enables apply_patch for OpenAI models when allowed by tool policy.",
@@ -887,9 +905,9 @@ function applyPluginSchemas(schema: ConfigSchema, plugins: PluginUiMetadata[]): 
     const pluginSchema = asSchemaObject(plugin.configSchema);
     const nextConfigSchema =
       baseConfigSchema &&
-        pluginSchema &&
-        isObjectSchema(baseConfigSchema) &&
-        isObjectSchema(pluginSchema)
+      pluginSchema &&
+      isObjectSchema(baseConfigSchema) &&
+      isObjectSchema(pluginSchema)
         ? mergeObjectSchema(baseConfigSchema, pluginSchema)
         : cloneSchema(plugin.configSchema);
 

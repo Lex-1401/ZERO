@@ -66,6 +66,13 @@ actor GatewayEndpointStore {
                 let bind = GatewayEndpointStore.resolveGatewayBindMode(
                     root: root,
                     env: ProcessInfo.processInfo.environment)
+                
+                // Optimization: avoid Tailscale await if we're just using loopback.
+                // This prevents infinite spinner stalls when Tailscale is slow/flapping.
+                if bind == "loopback" {
+                    return "127.0.0.1"
+                }
+
                 let customBindHost = GatewayEndpointStore.resolveGatewayCustomBindHost(root: root)
                 let tailscaleIP = await MainActor.run { TailscaleService.shared.tailscaleIP }
                     ?? TailscaleService.fallbackTailnetIPv4()
@@ -620,6 +627,8 @@ actor GatewayEndpointStore {
 
 extension GatewayEndpointStore {
     static func dashboardURL(for config: GatewayConnection.Config) throws -> URL {
+        Self.staticLogger.debug("building dashboard URL for config: host=\(config.url.host ?? "?", privacy: .public), hasToken=\(config.token != nil), hasPassword=\(config.password != nil)")
+        
         guard var components = URLComponents(url: config.url, resolvingAgainstBaseURL: false) else {
             throw NSError(domain: "Dashboard", code: 1, userInfo: [
                 NSLocalizedDescriptionKey: "Invalid gateway URL",
@@ -639,11 +648,16 @@ extension GatewayEndpointStore {
            !token.isEmpty
         {
             queryItems.append(URLQueryItem(name: "token", value: token))
+            Self.staticLogger.debug("added token to dashboard URL")
+        } else {
+            Self.staticLogger.warning("no token available for dashboard URL; UI may experience auth mismatch")
         }
+        
         if let password = config.password?.trimmingCharacters(in: .whitespacesAndNewlines),
            !password.isEmpty
         {
             queryItems.append(URLQueryItem(name: "password", value: password))
+            Self.staticLogger.debug("added password to dashboard URL")
         }
         components.queryItems = queryItems.isEmpty ? nil : queryItems
         guard let url = components.url else {
@@ -651,6 +665,7 @@ extension GatewayEndpointStore {
                 NSLocalizedDescriptionKey: "Failed to build dashboard URL",
             ])
         }
+        Self.staticLogger.info("dashboard URL generated: \(url.absoluteString, privacy: .private)")
         return url
     }
 }

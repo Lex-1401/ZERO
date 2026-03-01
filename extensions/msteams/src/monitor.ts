@@ -90,9 +90,9 @@ export async function monitorMSTeamsProvider(
 
   try {
     const allowEntries =
-      allowFrom?.map((entry) => cleanAllowEntry(String(entry))).filter(
-        (entry) => entry && entry !== "*",
-      ) ?? [];
+      allowFrom
+        ?.map((entry) => cleanAllowEntry(String(entry)))
+        .filter((entry) => entry && entry !== "*") ?? [];
     if (allowEntries.length > 0) {
       const { additions } = await resolveAllowlistUsers("msteams users", allowEntries);
       allowFrom = mergeAllowlist({ existing: allowFrom, additions });
@@ -134,7 +134,7 @@ export async function monitorMSTeamsProvider(
         });
         const mapping: string[] = [];
         const unresolved: string[] = [];
-        const nextTeams = { ...(teamsConfig ?? {}) };
+        const nextTeams = { ...teamsConfig };
 
         resolved.forEach((entry, idx) => {
           const source = entries[idx];
@@ -151,8 +151,8 @@ export async function monitorMSTeamsProvider(
           );
           const existing = nextTeams[entry.teamId] ?? {};
           const mergedChannels = {
-            ...(sourceTeam.channels ?? {}),
-            ...(existing.channels ?? {}),
+            ...sourceTeam.channels,
+            ...existing.channels,
           };
           const mergedTeam = { ...sourceTeam, ...existing, channels: mergedChannels };
           nextTeams[entry.teamId] = mergedTeam;
@@ -165,7 +165,7 @@ export async function monitorMSTeamsProvider(
                   ...mergedChannels,
                   [entry.channelId]: {
                     ...sourceChannel,
-                    ...(mergedChannels?.[entry.channelId] ?? {}),
+                    ...mergedChannels?.[entry.channelId],
                   },
                 },
               };

@@ -4,12 +4,13 @@ read_when:
   - Diagnosticando a rotação de perfis de autenticação, cooldowns ou comportamento de fallback de modelos
   - Atualizando as regras de failover para perfis de autenticação ou modelos
 ---
+
 # Failover de modelos
 
 O ZERO trata as falhas em dois estágios:
 
-1) **Rotação de perfil de autenticação** dentro do provedor atual.
-2) **Fallback de modelo** para o próximo modelo em `agents.defaults.model.fallbacks`.
+1. **Rotação de perfil de autenticação** dentro do provedor atual.
+2. **Fallback de modelo** para o próximo modelo em `agents.defaults.model.fallbacks`.
 
 Este documento explica as regras de tempo de execução e os dados que as sustentam.
 
@@ -41,9 +42,9 @@ Os perfis vivem em `~/.zero/agents/<agentId>/agent/auth-profiles.json` sob `prof
 
 Quando um provedor tem múltiplos perfis, o ZERO escolhe uma ordem desta forma:
 
-1) **Configuração explícita**: `auth.order[provider]` (se definido).
-2) **Perfis configurados**: `auth.profiles` filtrado pelo provedor.
-3) **Perfis armazenados**: entradas em `auth-profiles.json` para o provedor.
+1. **Configuração explícita**: `auth.order[provider]` (se definido).
+2. **Perfis configurados**: `auth.profiles` filtrado pelo provedor.
+3. **Perfis armazenados**: entradas em `auth-profiles.json` para o provedor.
 
 Se nenhuma ordem explícita for configurada, o ZERO usa uma ordem round‑robin:
 

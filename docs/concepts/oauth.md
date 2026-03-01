@@ -6,6 +6,7 @@ read_when:
   - Você deseja reutilizar tokens OAuth do Claude Code / Codex CLI
   - Você deseja múltiplas contas ou roteamento por perfil
 ---
+
 # OAuth
 
 O ZERO suporta “autenticação por assinatura” via OAuth para provedores que o oferecem (especialmente **Anthropic (Claude Pro/Max)** e **OpenAI Codex (ChatGPT OAuth)**). Esta página explica:
@@ -27,7 +28,7 @@ Os provedores de OAuth geralmente geram um **novo token de atualização (refres
 
 Sintoma prático:
 
-- você faz o login via ZERO *e* via Claude Code / Codex CLI → um deles é desconectado aleatoriamente mais tarde ("logged out")
+- você faz o login via ZERO _e_ via Claude Code / Codex CLI → um deles é desconectado aleatoriamente mais tarde ("logged out")
 
 Para reduzir isso, o ZERO trata o `auth-profiles.json` como um **dissipador de tokens (token sink)**:
 
@@ -50,7 +51,7 @@ Todos os itens acima também respeitam `$ZERO_STATE_DIR` (sobrescrita do diretó
 
 ## Reutilizando tokens OAuth do Claude Code / Codex CLI (Recomendado)
 
-Se você já fez login com as CLIs externas *no host do gateway*, o ZERO pode reutilizar esses tokens sem iniciar um fluxo OAuth separado:
+Se você já fez login com as CLIs externas _no host do gateway_, o ZERO pode reutilizar esses tokens sem iniciar um fluxo OAuth separado:
 
 - Claude Code: `anthropic:claude-cli`
   - macOS: Item das Chaves (Keychain) "Claude Code-credentials" (escolha "Sempre permitir" para evitar prompts do launchd)
@@ -81,11 +82,11 @@ Os fluxos de login interativos do ZERO são implementados em `@mariozechner/pi-a
 
 Estrutura do fluxo (PKCE):
 
-1) gera verificador/desafio PKCE
-2) abre `https://claude.ai/oauth/authorize?...`
-3) o usuário cola `code#state`
-4) troca em `https://console.anthropic.com/v1/oauth/token`
-5) armazena `{ access, refresh, expires }` sob um perfil de autenticação
+1. gera verificador/desafio PKCE
+2. abre `https://claude.ai/oauth/authorize?...`
+3. o usuário cola `code#state`
+4. troca em `https://console.anthropic.com/v1/oauth/token`
+5. armazena `{ access, refresh, expires }` sob um perfil de autenticação
 
 O caminho do assistente é `zero onboard` → escolha de autenticação `oauth` (Anthropic).
 
@@ -93,12 +94,12 @@ O caminho do assistente é `zero onboard` → escolha de autenticação `oauth` 
 
 Estrutura do fluxo (PKCE):
 
-1) gera verificador/desafio PKCE + `state` aleatório
-2) abre `https://auth.openai.com/oauth/authorize?...`
-3) tenta capturar o callback em `http://127.0.0.1:1455/auth/callback`
-4) se o callback não puder ser vinculado (ou se você estiver remoto/headless), cole a URL de redirecionamento/código
-5) troca em `https://auth.openai.com/oauth/token`
-6) extrai o `accountId` do token de acesso e armazena `{ access, refresh, expires, accountId }`
+1. gera verificador/desafio PKCE + `state` aleatório
+2. abre `https://auth.openai.com/oauth/authorize?...`
+3. tenta capturar o callback em `http://127.0.0.1:1455/auth/callback`
+4. se o callback não puder ser vinculado (ou se você estiver remoto/headless), cole a URL de redirecionamento/código
+5. troca em `https://auth.openai.com/oauth/token`
+6. extrai o `accountId` do token de acesso e armazena `{ access, refresh, expires, accountId }`
 
 O caminho do assistente é `zero onboard` → escolha de autenticação `openai-codex` (ou `codex-cli` para reutilizar um login existente da Codex CLI).
 

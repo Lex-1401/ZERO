@@ -1,8 +1,12 @@
 {
   "name": "@zero/zalo",
   "version": "2026.1.25",
-  "type": "module",
   "description": "Zero Zalo channel plugin",
+  "type": "module",
+  "dependencies": {
+    "undici": "7.21.0",
+    "zero": "workspace:*"
+  },
   "zero": {
     "extensions": [
       "./index.ts"
@@ -25,9 +29,5 @@
       "localPath": "extensions/zalo",
       "defaultChoice": "npm"
     }
-  },
-  "dependencies": {
-    "zero": "workspace:*",
-    "undici": "7.21.0"
   }
 }

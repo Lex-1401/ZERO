@@ -280,12 +280,12 @@ npx sequelize-cli db:migrate:status  # Check status
 
    ```javascript
    const frameworks = {
-     supabase: ['supabase/config.toml', 'supabase/migrations'],
-     prisma: ['prisma/schema.prisma'],
-     drizzle: ['drizzle.config.ts', 'drizzle/schema.ts'],
-     django: ['manage.py', '*/models.py'],
-     rails: ['db/schema.rb', 'Gemfile'],
-     sequelize: ['.sequelizerc', 'migrations/*.js'],
+     supabase: ["supabase/config.toml", "supabase/migrations"],
+     prisma: ["prisma/schema.prisma"],
+     drizzle: ["drizzle.config.ts", "drizzle/schema.ts"],
+     django: ["manage.py", "*/models.py"],
+     rails: ["db/schema.rb", "Gemfile"],
+     sequelize: [".sequelizerc", "migrations/*.js"],
    };
    ```
 
@@ -308,12 +308,12 @@ npx sequelize-cli db:migrate:status  # Check status
 
    ```javascript
    const schemaPatterns = {
-     supabase: ['supabase/migrations/*.sql', '*.sql'],
-     prisma: ['prisma/schema.prisma'],
-     drizzle: ['drizzle/schema.ts', 'src/db/schema.ts'],
-     django: ['*/models.py'],
-     rails: ['db/migrate/*.rb', 'app/models/*.rb'],
-     sequelize: ['models/*.js', 'migrations/*.js'],
+     supabase: ["supabase/migrations/*.sql", "*.sql"],
+     prisma: ["prisma/schema.prisma"],
+     drizzle: ["drizzle/schema.ts", "src/db/schema.ts"],
+     django: ["*/models.py"],
+     rails: ["db/migrate/*.rb", "app/models/*.rb"],
+     sequelize: ["models/*.js", "migrations/*.js"],
    };
    ```
 

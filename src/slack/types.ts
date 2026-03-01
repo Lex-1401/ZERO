@@ -21,6 +21,7 @@ export type SlackMessageEvent = {
   channel: string;
   channel_type?: "im" | "mpim" | "channel" | "group";
   files?: SlackFile[];
+  team?: string;
 };
 
 export type SlackAppMentionEvent = {
@@ -35,4 +36,5 @@ export type SlackAppMentionEvent = {
   parent_user_id?: string;
   channel: string;
   channel_type?: "im" | "mpim" | "channel" | "group";
+  team?: string;
 };

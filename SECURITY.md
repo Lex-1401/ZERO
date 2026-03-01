@@ -57,4 +57,5 @@ ZERO is designed to be compliant with global privacy standards (**GDPR, LGPD**) 
 - **Data Hygiene**: To prevent "confirmation bias" and accidental exposure of attack surfaces, integrity reports (`.json.enc`) are stored exclusively in the local `STATE_DIR` (default `~/.zero/integrity-reports`) and are explicitly excluded from version control systems. Storing verification reports in the repository is strictly prohibited.
 
 ---
-*“Vazio que contém o Infinito. Soberania que define o Futuro.”* ∅
+
+_“Vazio que contém o Infinito. Soberania que define o Futuro.”_ ∅

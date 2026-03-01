@@ -4,6 +4,7 @@ read_when:
   - Você deseja uma única chave de API para muitos LLMs
   - Você deseja executar modelos via OpenRouter no ZERO
 ---
+
 # OpenRouter
 
 O OpenRouter fornece uma **API unificada** que roteia solicitações para muitos modelos por trás de um único endpoint e chave de API. Ele é compatível com OpenAI, portanto, a maioria dos SDKs da OpenAI funciona trocando a URL base.
@@ -21,9 +22,9 @@ zero onboard --auth-choice apiKey --token-provider openrouter --token "$OPENROUT
   env: { OPENROUTER_API_KEY: "sk-or-..." },
   agents: {
     defaults: {
-      model: { primary: "openrouter/anthropic/claude-sonnet-4-5" }
-    }
-  }
+      model: { primary: "openrouter/anthropic/claude-sonnet-4-5" },
+    },
+  },
 }
 ```
 

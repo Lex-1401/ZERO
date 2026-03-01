@@ -30,12 +30,12 @@ The canvas tool lets you present web content on any connected node's canvas view
 
 The canvas host server binds based on `gateway.bind` setting:
 
-| Bind Mode | Server Binds To | Canvas URL Uses |
-|-----------|-----------------|-----------------|
-| `loopback` | 127.0.0.1 | localhost (local only) |
-| `lan` | LAN interface | LAN IP address |
-| `tailnet` | Tailscale interface | Tailscale hostname |
-| `auto` | Best available | Tailscale > LAN > loopback |
+| Bind Mode  | Server Binds To     | Canvas URL Uses            |
+| ---------- | ------------------- | -------------------------- |
+| `loopback` | 127.0.0.1           | localhost (local only)     |
+| `lan`      | LAN interface       | LAN IP address             |
+| `tailnet`  | Tailscale interface | Tailscale hostname         |
+| `auto`     | Best available      | Tailscale > LAN > loopback |
 
 **Key insight:** The `canvasHostHostForBridge` is derived from `bridgeHost`. When bound to Tailscale, nodes receive URLs like:
 
@@ -47,13 +47,13 @@ This is why localhost URLs don't work - the node receives the Tailscale hostname
 
 ## Actions
 
-| Action | Description |
-|--------|-------------|
-| `present` | Show canvas with optional target URL |
-| `hide` | Hide the canvas |
-| `navigate` | Navigate to a new URL |
-| `eval` | Execute JavaScript in the canvas |
-| `snapshot` | Capture screenshot of canvas |
+| Action     | Description                          |
+| ---------- | ------------------------------------ |
+| `present`  | Show canvas with optional target URL |
+| `hide`     | Hide the canvas                      |
+| `navigate` | Navigate to a new URL                |
+| `eval`     | Execute JavaScript in the canvas     |
+| `snapshot` | Capture screenshot of canvas         |
 
 ## Configuration
 

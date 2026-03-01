@@ -13,19 +13,19 @@
  * @see Story MIS-3 - Session Digest (PreCompact Hook)
  */
 
-'use strict';
+"use strict";
 
-const path = require('path');
+const path = require("path");
 
 // Resolve path to the unified hook runner
-const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
+const PROJECT_ROOT = path.resolve(__dirname, "..", "..");
 const runnerPath = path.join(
   PROJECT_ROOT,
-  '.aios-core',
-  'hooks',
-  'unified',
-  'runners',
-  'precompact-runner.js',
+  ".aios-core",
+  "hooks",
+  "unified",
+  "runners",
+  "precompact-runner.js",
 );
 
 // Load and execute the hook runner
@@ -37,10 +37,10 @@ try {
     return await onPreCompact(context);
   };
 } catch (error) {
-  console.error('[PreCompact Hook] Failed to load hook runner:', error.message);
+  console.error("[PreCompact Hook] Failed to load hook runner:", error.message);
 
   // Graceful degradation - export no-op function
   module.exports = async () => {
-    console.log('[PreCompact Hook] Hook runner not available, skipping');
+    console.log("[PreCompact Hook] Hook runner not available, skipping");
   };
 }

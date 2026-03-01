@@ -4,6 +4,7 @@ read_when:
   - Você deseja usar modelos Anthropic no ZERO
   - Você deseja usar setup-token ou autenticação Claude Code CLI em vez de chaves de API
 ---
+
 # Anthropic (Claude)
 
 A Anthropic constrói a família de modelos **Claude** e fornece acesso via uma API.
@@ -27,7 +28,7 @@ zero onboard
 ```json5
 {
   env: { ANTHROPIC_API_KEY: "sk-ant-..." },
-  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } },
 }
 ```
 
@@ -44,11 +45,11 @@ Para definir o TTL por modelo, use `cacheControlTtl` nos `params` do modelo:
     defaults: {
       models: {
         "anthropic/claude-opus-4-5": {
-          params: { cacheControlTtl: "5m" } // ou "1h"
-        }
-      }
-    }
-  }
+          params: { cacheControlTtl: "5m" }, // ou "1h"
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -90,7 +91,7 @@ zero onboard --auth-choice claude-cli
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } },
 }
 ```
 

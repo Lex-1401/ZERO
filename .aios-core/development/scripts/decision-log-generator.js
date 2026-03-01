@@ -9,8 +9,8 @@
  * @created 2025-01-16 (Story 6.1.2.6)
  */
 
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 /**
  * Calculates duration between start and end time
@@ -21,7 +21,7 @@ const path = require('path');
 function calculateDuration(context) {
   if (!context.endTime) {
     const elapsed = Date.now() - context.startTime;
-    return formatDuration(elapsed) + ' (in progress)';
+    return formatDuration(elapsed) + " (in progress)";
   }
 
   const duration = context.endTime - context.startTime;
@@ -58,10 +58,10 @@ function formatDuration(ms) {
  */
 function generateDecisionsList(decisions) {
   if (!decisions || decisions.length === 0) {
-    return '*No autonomous decisions recorded.*';
+    return "*No autonomous decisions recorded.*";
   }
 
-  let markdown = '';
+  let markdown = "";
   decisions.forEach((decision, index) => {
     markdown += `### Decision ${index + 1}: ${decision.description}\n\n`;
     markdown += `**Timestamp:** ${new Date(decision.timestamp).toISOString()}\n\n`;
@@ -77,14 +77,14 @@ function generateDecisionsList(decisions) {
     markdown += `**Reason:** ${decision.reason}\n\n`;
 
     if (decision.alternatives && decision.alternatives.length > 0) {
-      markdown += '**Alternatives Considered:**\n';
-      decision.alternatives.forEach(alt => {
+      markdown += "**Alternatives Considered:**\n";
+      decision.alternatives.forEach((alt) => {
         markdown += `- ${alt}\n`;
       });
-      markdown += '\n';
+      markdown += "\n";
     }
 
-    markdown += '---\n\n';
+    markdown += "---\n\n";
   });
 
   return markdown;
@@ -98,13 +98,13 @@ function generateDecisionsList(decisions) {
  */
 function generateFilesList(filesModified) {
   if (!filesModified || filesModified.length === 0) {
-    return '*No files modified.*';
+    return "*No files modified.*";
   }
 
-  let markdown = '';
-  filesModified.forEach(file => {
-    const fileName = typeof file === 'string' ? file : file.path;
-    const action = file.action || 'modified';
+  let markdown = "";
+  filesModified.forEach((file) => {
+    const fileName = typeof file === "string" ? file : file.path;
+    const action = file.action || "modified";
     markdown += `- \`${fileName}\` (${action})\n`;
   });
 
@@ -119,12 +119,12 @@ function generateFilesList(filesModified) {
  */
 function generateTestsList(testsRun) {
   if (!testsRun || testsRun.length === 0) {
-    return '*No tests recorded.*';
+    return "*No tests recorded.*";
   }
 
-  let markdown = '';
-  testsRun.forEach(test => {
-    const status = test.passed ? '✅ PASS' : '❌ FAIL';
+  let markdown = "";
+  testsRun.forEach((test) => {
+    const status = test.passed ? "✅ PASS" : "❌ FAIL";
     markdown += `- ${status}: \`${test.name}\``;
 
     if (test.duration) {
@@ -135,7 +135,7 @@ function generateTestsList(testsRun) {
       markdown += `\n  - Error: ${test.error}`;
     }
 
-    markdown += '\n';
+    markdown += "\n";
   });
 
   return markdown;
@@ -149,12 +149,12 @@ function generateTestsList(testsRun) {
  */
 function generateRollbackFilesList(filesModified) {
   if (!filesModified || filesModified.length === 0) {
-    return '*No files to rollback.*';
+    return "*No files to rollback.*";
   }
 
-  let markdown = '';
-  filesModified.forEach(file => {
-    const fileName = typeof file === 'string' ? file : file.path;
+  let markdown = "";
+  filesModified.forEach((file) => {
+    const fileName = typeof file === "string" ? file : file.path;
     markdown += `- ${fileName}\n`;
   });
 
@@ -180,7 +180,7 @@ function generateRollbackFilesList(filesModified) {
  */
 async function generateDecisionLog(storyId, context) {
   // Ensure .ai directory exists
-  const aiDir = '.ai';
+  const aiDir = ".ai";
   try {
     await fs.access(aiDir);
   } catch (_error) {
@@ -191,7 +191,7 @@ async function generateDecisionLog(storyId, context) {
 
   // Format timestamps
   const startTime = new Date(context.startTime).toISOString();
-  const endTime = context.endTime ? new Date(context.endTime).toISOString() : 'In Progress';
+  const endTime = context.endTime ? new Date(context.endTime).toISOString() : "In Progress";
 
   // ADR-compliant template structure (AC3)
   const template = `# Decision Log: Story ${storyId}
@@ -200,7 +200,7 @@ async function generateDecisionLog(storyId, context) {
 **Agent:** ${context.agentId}
 **Mode:** Yolo (Autonomous Development)
 **Story:** ${context.storyPath}
-**Rollback:** \`git reset --hard ${context.commitBefore || 'HEAD'}\`
+**Rollback:** \`git reset --hard ${context.commitBefore || "HEAD"}\`
 
 ---
 
@@ -254,10 +254,10 @@ If you need to undo these changes:
 
 \`\`\`bash
 # Full rollback to state before execution
-git reset --hard ${context.commitBefore || 'HEAD'}
+git reset --hard ${context.commitBefore || "HEAD"}
 
 # Selective file rollback
-git checkout ${context.commitBefore || 'HEAD'} -- <file-path>
+git checkout ${context.commitBefore || "HEAD"} -- <file-path>
 \`\`\`
 
 ### Affected Files
@@ -266,11 +266,15 @@ ${generateRollbackFilesList(context.filesModified)}
 
 ### Performance Impact
 
-${context.metrics ? `
-- Agent Load Time: ${context.metrics.agentLoadTime || 'N/A'}ms
-- Task Execution Time: ${context.metrics.taskExecutionTime || 'N/A'}ms
+${
+  context.metrics
+    ? `
+- Agent Load Time: ${context.metrics.agentLoadTime || "N/A"}ms
+- Task Execution Time: ${context.metrics.taskExecutionTime || "N/A"}ms
 - Logging Overhead: Minimal (async, non-blocking)
-` : '*No performance metrics recorded.*'}
+`
+    : "*No performance metrics recorded.*"
+}
 
 ---
 
@@ -278,7 +282,7 @@ ${context.metrics ? `
 *Story 6.1.2.6.2 - Decision Log Automation Infrastructure*
 `;
 
-  await fs.writeFile(logPath, template, 'utf8');
+  await fs.writeFile(logPath, template, "utf8");
 
   return logPath;
 }

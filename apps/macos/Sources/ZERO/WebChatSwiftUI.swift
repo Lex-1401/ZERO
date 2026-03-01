@@ -82,6 +82,10 @@ struct MacGatewayChatTransport: ZeroChatTransport, Sendable {
             timeoutMs: 10000)
     }
 
+    func bootstrap() async throws {
+        try await GatewayConnection.shared.bootstrap()
+    }
+
     func events() -> AsyncStream<ZeroChatTransportEvent> {
         AsyncStream { continuation in
             let task = Task {
@@ -94,7 +98,7 @@ struct MacGatewayChatTransport: ZeroChatTransport, Sendable {
                 let stream = await GatewayConnection.shared.subscribe()
                 for await push in stream {
                     if Task.isCancelled { return }
-                    if let evt = Self.mapPushToTransportEvent(push) {
+                    for evt in Self.mapPushToTransportEvents(push) {
                         continuation.yield(evt)
                     }
                 }
@@ -106,48 +110,49 @@ struct MacGatewayChatTransport: ZeroChatTransport, Sendable {
         }
     }
 
-    static func mapPushToTransportEvent(_ push: GatewayPush) -> ZeroChatTransportEvent? {
+    static func mapPushToTransportEvents(_ push: GatewayPush) -> [ZeroChatTransportEvent] {
         switch push {
         case let .snapshot(hello):
             let ok = (try? JSONDecoder().decode(
                 ZeroGatewayHealthOK.self,
                 from: JSONEncoder().encode(hello.snapshot.health)))?.ok ?? true
-            return .health(ok: ok)
+            // Emit both health and reconnected so the ViewModel clears stale errors.
+            return [.health(ok: ok), .reconnected]
 
         case let .event(evt):
             switch evt.event {
             case "health":
-                guard let payload = evt.payload else { return nil }
+                guard let payload = evt.payload else { return [] }
                 let ok = (try? JSONDecoder().decode(
                     ZeroGatewayHealthOK.self,
                     from: JSONEncoder().encode(payload)))?.ok ?? true
-                return .health(ok: ok)
+                return [.health(ok: ok)]
             case "tick":
-                return .tick
+                return [.tick]
             case "chat":
-                guard let payload = evt.payload else { return nil }
+                guard let payload = evt.payload else { return [] }
                 guard let chat = try? JSONDecoder().decode(
                     ZeroChatEventPayload.self,
                     from: JSONEncoder().encode(payload))
                 else {
-                    return nil
+                    return []
                 }
-                return .chat(chat)
+                return [.chat(chat)]
             case "agent":
-                guard let payload = evt.payload else { return nil }
+                guard let payload = evt.payload else { return [] }
                 guard let agent = try? JSONDecoder().decode(
                     ZeroAgentEventPayload.self,
                     from: JSONEncoder().encode(payload))
                 else {
-                    return nil
+                    return []
                 }
-                return .agent(agent)
+                return [.agent(agent)]
             default:
-                return nil
+                return []
             }
 
         case .seqGap:
-            return .seqGap
+            return [.seqGap]
         }
     }
 }

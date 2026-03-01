@@ -4,6 +4,7 @@ read_when:
   - Editando o texto do prompt do sistema, a lista de ferramentas ou as seções de tempo/heartbeat
   - Alterando a inicialização do espaço de trabalho ou o comportamento de injeção de habilidades
 ---
+
 # Prompt do Sistema
 
 O ZERO constrói um prompt do sistema personalizado para cada execução do agente. O prompt é **propriedade do ZERO** e não utiliza o prompt padrão do p-coding-agent.

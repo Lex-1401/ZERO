@@ -28,10 +28,10 @@ Estas **não** são automação de navegador. Para sites com muito JS ou logins,
 
 ## Escolhendo um provedor de pesquisa
 
-| Provedor | Prós | Contras | Chave de API |
-|----------|------|---------|--------------|
-| **Brave** (padrão) | Rápido, resultados estruturados, nível gratuito | Resultados de busca tradicionais | `BRAVE_API_KEY` |
-| **Perplexity** | Respostas sintetizadas por IA, citações, tempo real | Requer acesso Perplexity ou OpenRouter | `OPENROUTER_API_KEY` ou `PERPLEXITY_API_KEY` |
+| Provedor           | Prós                                                | Contras                                | Chave de API                                 |
+| ------------------ | --------------------------------------------------- | -------------------------------------- | -------------------------------------------- |
+| **Brave** (padrão) | Rápido, resultados estruturados, nível gratuito     | Resultados de busca tradicionais       | `BRAVE_API_KEY`                              |
+| **Perplexity**     | Respostas sintetizadas por IA, citações, tempo real | Requer acesso Perplexity ou OpenRouter | `OPENROUTER_API_KEY` ou `PERPLEXITY_API_KEY` |
 
 Veja [Configuração de busca Brave](/brave-search) e [Perplexity Sonar](/perplexity) para detalhes específicos do provedor.
 
@@ -42,10 +42,10 @@ Defina o provedor na configuração:
   tools: {
     web: {
       search: {
-        provider: "brave"  // ou "perplexity"
-      }
-    }
-  }
+        provider: "brave", // ou "perplexity"
+      },
+    },
+  },
 }
 ```
 
@@ -60,19 +60,19 @@ Exemplo: mude para Perplexity Sonar (API direta):
         perplexity: {
           apiKey: "pplx-...",
           baseUrl: "https://api.perplexity.ai",
-          model: "perplexity/sonar-pro"
-        }
-      }
-    }
-  }
+          model: "perplexity/sonar-pro",
+        },
+      },
+    },
+  },
 }
 ```
 
 ## Obtendo uma chave de API Brave
 
-1) Crie uma conta Brave Search API em <https://brave.com/search/api/>
-2) No painel, escolha o plano **Data for Search** (não “Data for AI”) e gere uma chave de API.
-3) Execute `zero configure --section web` para armazenar a chave na configuração (recomendado), ou defina `BRAVE_API_KEY` no seu ambiente.
+1. Crie uma conta Brave Search API em <https://brave.com/search/api/>
+2. No painel, escolha o plano **Data for Search** (não “Data for AI”) e gere uma chave de API.
+3. Execute `zero configure --section web` para armazenar a chave na configuração (recomendado), ou defina `BRAVE_API_KEY` no seu ambiente.
 
 O Brave fornece um nível gratuito mais planos pagos; verifique o portal da API Brave para os
 limites e preços atuais.
@@ -94,9 +94,9 @@ cripto/pré-pago).
 
 ### Obtendo uma chave de API OpenRouter
 
-1) Crie uma conta em <https://openrouter.ai/>
-2) Adicione créditos (suporta cripto, pré-pago ou cartão de crédito)
-3) Gere uma chave de API nas configurações da sua conta
+1. Crie uma conta em <https://openrouter.ai/>
+2. Adicione créditos (suporta cripto, pré-pago ou cartão de crédito)
+3. Gere uma chave de API nas configurações da sua conta
 
 ### Configurando busca Perplexity
 
@@ -113,11 +113,11 @@ cripto/pré-pago).
           // Base URL (padrão sensível à chave se omitido)
           baseUrl: "https://openrouter.ai/api/v1",
           // Modelo (padroniza para perplexity/sonar-pro)
-          model: "perplexity/sonar-pro"
-        }
-      }
-    }
-  }
+          model: "perplexity/sonar-pro",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -132,11 +132,11 @@ Se nenhuma URL base for definida, o ZERO escolhe um padrão baseado na fonte da 
 
 ### Modelos Perplexity disponíveis
 
-| Modelo | Descrição | Melhor para |
-|-------|-------------|-------------|
-| `perplexity/sonar` | Q&A rápido com busca web | Consultas rápidas |
-| `perplexity/sonar-pro` (padrão) | Raciocínio de múltiplos passos com busca web | Perguntas complexas |
-| `perplexity/sonar-reasoning-pro` | Análise de cadeia de pensamento (Chain-of-thought) | Pesquisa profunda |
+| Modelo                           | Descrição                                          | Melhor para         |
+| -------------------------------- | -------------------------------------------------- | ------------------- |
+| `perplexity/sonar`               | Q&A rápido com busca web                           | Consultas rápidas   |
+| `perplexity/sonar-pro` (padrão)  | Raciocínio de múltiplos passos com busca web       | Perguntas complexas |
+| `perplexity/sonar-reasoning-pro` | Análise de cadeia de pensamento (Chain-of-thought) | Pesquisa profunda   |
 
 ## web_search
 
@@ -160,10 +160,10 @@ Pesquise na web usando seu provedor configurado.
         apiKey: "BRAVE_API_KEY_HERE", // opcional se BRAVE_API_KEY estiver definida
         maxResults: 5,
         timeoutSeconds: 30,
-        cacheTtlMinutes: 15
-      }
-    }
-  }
+        cacheTtlMinutes: 15,
+      },
+    },
+  },
 }
 ```
 
@@ -184,7 +184,7 @@ await web_search({
   query: "TV online schauen",
   count: 10,
   country: "DE",
-  search_lang: "de"
+  search_lang: "de",
 });
 
 // Busca em francês com UI em francês
@@ -192,13 +192,13 @@ await web_search({
   query: "actualités",
   country: "FR",
   search_lang: "fr",
-  ui_lang: "fr"
+  ui_lang: "fr",
 });
 
 // Resultados recentes (semana passada)
 await web_search({
   query: "TMBG interview",
-  freshness: "pw"
+  freshness: "pw",
 });
 ```
 
@@ -231,11 +231,11 @@ Busque uma URL e extraia conteúdo legível.
           baseUrl: "https://api.firecrawl.dev",
           onlyMainContent: true,
           maxAgeMs: 86400000, // ms (1 dia)
-          timeoutSeconds: 60
-        }
-      }
-    }
-  }
+          timeoutSeconds: 60,
+        },
+      },
+    },
+  },
 }
 ```
 

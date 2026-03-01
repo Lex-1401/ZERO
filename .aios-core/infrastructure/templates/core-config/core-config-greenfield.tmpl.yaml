@@ -29,7 +29,7 @@ devLoadAlwaysFiles:
 # =============================================================================
 deployment:
   # Workflow type: staging-first (with staging branch) or direct-to-main
-  workflow: {{DEPLOYMENT_WORKFLOW}}
+  workflow: { { DEPLOYMENT_WORKFLOW } }
 
   # Branch routing configuration
   branches:
@@ -47,17 +47,17 @@ deployment:
       - "hotfix/*"
 
     # Branch names
-    staging_branch: {{STAGING_BRANCH}}
-    production_branch: {{PRODUCTION_BRANCH}}
+    staging_branch: { { STAGING_BRANCH } }
+    production_branch: { { PRODUCTION_BRANCH } }
 
     # Default PR target for ambiguous cases
-    default_target: {{DEFAULT_TARGET}}
+    default_target: { { DEFAULT_TARGET } }
 
   # Environment configuration
   environments:
     staging:
       name: "{{STAGING_ENV_NAME}}"
-      branch: {{STAGING_BRANCH}}
+      branch: { { STAGING_BRANCH } }
       auto_deploy: true
       platform: "{{DEPLOYMENT_PLATFORM}}"
       url: "${STAGING_URL}"
@@ -65,7 +65,7 @@ deployment:
 
     production:
       name: "{{PRODUCTION_ENV_NAME}}"
-      branch: {{PRODUCTION_BRANCH}}
+      branch: { { PRODUCTION_BRANCH } }
       auto_deploy: true
       platform: "{{DEPLOYMENT_PLATFORM}}"
       url: "${PRODUCTION_URL}"
@@ -73,11 +73,11 @@ deployment:
 
   # Quality gates for PRs
   quality_gates:
-    lint: {{QUALITY_LINT}}
-    typecheck: {{QUALITY_TYPECHECK}}
-    tests: {{QUALITY_TESTS}}
-    security_scan: {{QUALITY_SECURITY}}
-    min_coverage: {{MIN_COVERAGE}}
+    lint: { { QUALITY_LINT } }
+    typecheck: { { QUALITY_TYPECHECK } }
+    tests: { { QUALITY_TESTS } }
+    security_scan: { { QUALITY_SECURITY } }
+    min_coverage: { { MIN_COVERAGE } }
 
   # PR defaults
   pr_defaults:
@@ -103,13 +103,13 @@ github:
     # - "conventional": For semantic-release (feat: description [Story X.Y])
     # - "story-first": Simple format ([Story X.Y] Description) - DEFAULT
     # - "branch-based": Just branch name as title
-    title_format: {{PR_TITLE_FORMAT}}
+    title_format: { { PR_TITLE_FORMAT } }
 
     include_story_id: true
 
     # Only used when title_format: conventional
     conventional_commits:
-      enabled: {{CONVENTIONAL_COMMITS_ENABLED}}
+      enabled: { { CONVENTIONAL_COMMITS_ENABLED } }
       branch_type_map:
         feature/: feat
         feat/: feat
@@ -127,7 +127,7 @@ github:
 
   # Semantic Release (only for NPM packages)
   semantic_release:
-    enabled: {{SEMANTIC_RELEASE_ENABLED}}
+    enabled: { { SEMANTIC_RELEASE_ENABLED } }
 
 # =============================================================================
 # AGENT CONFIGURATION
@@ -140,7 +140,7 @@ agents:
 
   qa:
     run_on_pr: true
-    coverage_threshold: {{MIN_COVERAGE}}
+    coverage_threshold: { { MIN_COVERAGE } }
 
   devops:
     auto_detect_workflow: true

@@ -24,24 +24,24 @@ O ZERO então controla a aba anexada através da superfície normal da ferrament
 
 ## Instalar / carregar (unpacked)
 
-1) Instale a extensão em um caminho local estável:
+1. Instale a extensão em um caminho local estável:
 
 ```bash
 zero browser extension install
 ```
 
-1) Imprima o caminho do diretório da extensão instalada:
+1. Imprima o caminho do diretório da extensão instalada:
 
 ```bash
 zero browser extension path
 ```
 
-1) Chrome → `chrome://extensions`
+1. Chrome → `chrome://extensions`
 
 - Ative o “Modo do desenvolvedor”
 - “Carregar sem compactação” → selecione o diretório impresso acima
 
-1) Fixe a extensão.
+1. Fixe a extensão.
 
 ## Atualizações (sem etapa de build)
 
@@ -128,11 +128,11 @@ Opções:
     defaults: {
       sandbox: {
         browser: {
-          allowHostControl: true
-        }
-      }
-    }
-  }
+          allowHostControl: true,
+        },
+      },
+    },
+  },
 }
 ```
 

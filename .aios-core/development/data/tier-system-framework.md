@@ -47,13 +47,13 @@ The Tier System organizes agents hierarchically based on their role in the workf
 
 ```yaml
 orchestrator:
-  role: 'Workflow coordinator and router'
+  role: "Workflow coordinator and router"
   responsibilities:
-    - 'Route requests to appropriate tier'
-    - 'Manage handoffs between agents'
-    - 'Ensure quality gates are applied'
-    - 'Maintain workflow state'
-  when_to_activate: 'Always - serves as entry point'
+    - "Route requests to appropriate tier"
+    - "Manage handoffs between agents"
+    - "Ensure quality gates are applied"
+    - "Maintain workflow state"
+  when_to_activate: "Always - serves as entry point"
 ```
 
 ### Tier 0: Foundation & Diagnosis
@@ -62,18 +62,18 @@ orchestrator:
 
 ```yaml
 tier_0:
-  name: 'Foundation & Diagnosis'
-  purpose: 'Establish baseline before any execution'
+  name: "Foundation & Diagnosis"
+  purpose: "Establish baseline before any execution"
   characteristics:
-    - 'ALWAYS runs first in workflow'
-    - 'Diagnostic and analytical focus'
-    - 'Creates shared understanding'
-    - 'Identifies constraints and opportunities'
+    - "ALWAYS runs first in workflow"
+    - "Diagnostic and analytical focus"
+    - "Creates shared understanding"
+    - "Identifies constraints and opportunities"
   examples:
-    - 'Auditor: Assesses current state'
-    - 'Diagnostician: Identifies problems'
-    - 'Researcher: Gathers foundational data'
-    - 'Analyst: Segments and categorizes'
+    - "Auditor: Assesses current state"
+    - "Diagnostician: Identifies problems"
+    - "Researcher: Gathers foundational data"
+    - "Analyst: Segments and categorizes"
 ```
 
 ### Tier 1: Core Execution
@@ -82,18 +82,18 @@ tier_0:
 
 ```yaml
 tier_1:
-  name: 'Core Execution'
-  purpose: 'Primary experts for main deliverables'
+  name: "Core Execution"
+  purpose: "Primary experts for main deliverables"
   characteristics:
-    - 'Highest proven results in domain'
-    - 'Deep expertise, documented frameworks'
-    - 'Used for primary output creation'
-    - 'Strong authority and credibility'
+    - "Highest proven results in domain"
+    - "Deep expertise, documented frameworks"
+    - "Used for primary output creation"
+    - "Strong authority and credibility"
   selection_criteria:
-    - 'Documented track record'
-    - 'Verifiable results'
-    - 'Well-documented methodology'
-    - 'Industry recognition'
+    - "Documented track record"
+    - "Verifiable results"
+    - "Well-documented methodology"
+    - "Industry recognition"
 ```
 
 ### Tier 2: Systematizers
@@ -102,18 +102,18 @@ tier_1:
 
 ```yaml
 tier_2:
-  name: 'Systematizers'
-  purpose: 'Create systems and processes'
+  name: "Systematizers"
+  purpose: "Create systems and processes"
   characteristics:
-    - 'Framework and methodology creators'
-    - 'Process-oriented thinking'
-    - 'Replicable, teachable approaches'
-    - 'Bridge theory and practice'
+    - "Framework and methodology creators"
+    - "Process-oriented thinking"
+    - "Replicable, teachable approaches"
+    - "Bridge theory and practice"
   examples:
-    - 'Process architect'
-    - 'Methodology developer'
-    - 'System designer'
-    - 'Framework specialist'
+    - "Process architect"
+    - "Methodology developer"
+    - "System designer"
+    - "Framework specialist"
 ```
 
 ### Tier 3: Format Specialists
@@ -122,18 +122,18 @@ tier_2:
 
 ```yaml
 tier_3:
-  name: 'Format Specialists'
-  purpose: 'Optimize for specific channels/formats'
+  name: "Format Specialists"
+  purpose: "Optimize for specific channels/formats"
   characteristics:
-    - 'Deep expertise in specific format'
-    - 'Channel-specific optimization'
-    - 'Applied after core content exists'
-    - 'Enhancement and adaptation focus'
+    - "Deep expertise in specific format"
+    - "Channel-specific optimization"
+    - "Applied after core content exists"
+    - "Enhancement and adaptation focus"
   examples:
-    - 'Video script specialist'
-    - 'Email sequence specialist'
-    - 'Landing page specialist'
-    - 'Social media specialist'
+    - "Video script specialist"
+    - "Email sequence specialist"
+    - "Landing page specialist"
+    - "Social media specialist"
 ```
 
 ### Tools
@@ -142,19 +142,19 @@ tier_3:
 
 ```yaml
 tools:
-  name: 'Tools'
-  purpose: 'Post-creation validation and enhancement'
+  name: "Tools"
+  purpose: "Post-creation validation and enhancement"
   characteristics:
-    - 'NOT agents, just utilities'
-    - 'Applied AFTER main work is done'
-    - 'Checklist-based validation'
-    - 'Enhancement triggers'
-  usage: 'Run via *tool-name command after creation'
+    - "NOT agents, just utilities"
+    - "Applied AFTER main work is done"
+    - "Checklist-based validation"
+    - "Enhancement triggers"
+  usage: "Run via *tool-name command after creation"
   examples:
-    - 'Quality checklist'
-    - 'Trigger library'
-    - 'Validation framework'
-    - 'Enhancement patterns'
+    - "Quality checklist"
+    - "Trigger library"
+    - "Validation framework"
+    - "Enhancement patterns"
 ```
 
 ---
@@ -166,13 +166,13 @@ Standard configuration for tier-based squads:
 ```yaml
 # Squad Configuration Template
 pack:
-  name: '{squad-name}'
-  title: '{Human-Readable Title}'
-  version: 'X.Y.Z'
-  author: '{Team}'
-  description: 'Brief description (< 200 chars)'
-  icon: '{emoji}'
-  slash_prefix: '{prefix}'
+  name: "{squad-name}"
+  title: "{Human-Readable Title}"
+  version: "X.Y.Z"
+  author: "{Team}"
+  description: "Brief description (< 200 chars)"
+  icon: "{emoji}"
+  slash_prefix: "{prefix}"
 
 # Changelog (document all changes)
 # Format: vX.Y.Z (YYYY-MM-DD) - Description
@@ -181,80 +181,80 @@ pack:
 integration:
   enabled: false
   log_source: true
-  fallback_behavior: 'graceful'
+  fallback_behavior: "graceful"
 
 # Agents organized by tier
 agents:
   # Orchestrator
-  - id: '{prefix}-chief'
-    name: '{Role} Chief'
-    role: 'Orchestrator - routing and coordination'
+  - id: "{prefix}-chief"
+    name: "{Role} Chief"
+    role: "Orchestrator - routing and coordination"
     tier: orchestrator
-    version: 'X.Y.Z'
+    version: "X.Y.Z"
 
   # Tier 0 - Foundation & Diagnosis
-  - id: '{agent-1}'
-    name: '{Agent Name}'
-    role: '{Role description}'
+  - id: "{agent-1}"
+    name: "{Agent Name}"
+    role: "{Role description}"
     tier: 0
-    specialty: '{What they specialize in}'
+    specialty: "{What they specialize in}"
 
   # Tier 1 - Core Execution
-  - id: '{agent-2}'
-    name: '{Agent Name}'
-    role: '{Role description}'
+  - id: "{agent-2}"
+    name: "{Agent Name}"
+    role: "{Role description}"
     tier: 1
-    results: '{Documented results}'
-    specialty: '{Specialty}'
+    results: "{Documented results}"
+    specialty: "{Specialty}"
 
   # Tier 2 - Systematizers
-  - id: '{agent-3}'
-    name: '{Agent Name}'
-    role: '{Role description}'
+  - id: "{agent-3}"
+    name: "{Agent Name}"
+    role: "{Role description}"
     tier: 2
-    specialty: '{Framework/methodology}'
+    specialty: "{Framework/methodology}"
 
   # Tier 3 - Format Specialists
-  - id: '{agent-4}'
-    name: '{Agent Name}'
-    role: '{Role description}'
+  - id: "{agent-4}"
+    name: "{Agent Name}"
+    role: "{Role description}"
     tier: 3
-    specialty: '{Format/channel}'
+    specialty: "{Format/channel}"
 
   # Tools
-  - id: '{tool-1}'
-    name: '{Tool Name}'
-    role: '{Checklist/validation}'
+  - id: "{tool-1}"
+    name: "{Tool Name}"
+    role: "{Checklist/validation}"
     tier: tool
     type: checklist
-    usage: '*{command}'
-    note: 'Usage notes'
+    usage: "*{command}"
+    note: "Usage notes"
 
 # Archived agents (no longer active)
 archived_agents:
-  location: 'archive/agents/'
-  reason: 'Why archived'
+  location: "archive/agents/"
+  reason: "Why archived"
   agents:
-    - id: '{archived-agent}'
-      reason: 'Specific reason'
+    - id: "{archived-agent}"
+      reason: "Specific reason"
 
 # Tasks registry
 tasks:
-  - id: '{task-id}'
-    name: '{Task Name}'
-    category: '{category}'
+  - id: "{task-id}"
+    name: "{Task Name}"
+    category: "{category}"
 
 # Templates registry
 templates:
-  - id: '{template-id}'
-    name: '{Template Name}'
-    category: '{category}'
+  - id: "{template-id}"
+    name: "{Template Name}"
+    category: "{category}"
 
 # Checklists registry
 checklists:
-  - id: '{checklist-id}'
-    name: '{Checklist Name}'
-    usage: 'When to use'
+  - id: "{checklist-id}"
+    name: "{Checklist Name}"
+    usage: "When to use"
 ```
 
 ---
@@ -288,19 +288,19 @@ checklists:
 
 ```yaml
 routing_rules:
-  - pattern: 'audit|analyze|diagnose|assess'
+  - pattern: "audit|analyze|diagnose|assess"
     route_to: tier_0
 
-  - pattern: 'create|write|build|design'
+  - pattern: "create|write|build|design"
     route_to: tier_1
 
-  - pattern: 'systematize|process|framework'
+  - pattern: "systematize|process|framework"
     route_to: tier_2
 
-  - pattern: 'adapt|format|optimize for'
+  - pattern: "adapt|format|optimize for"
     route_to: tier_3
 
-  - pattern: 'validate|check|review'
+  - pattern: "validate|check|review"
     route_to: tools
 ```
 
@@ -313,12 +313,12 @@ routing_rules:
 ```yaml
 tier_0_criteria:
   required:
-    - 'Analytical methodology'
-    - 'Diagnostic framework'
-    - 'Assessment output format'
+    - "Analytical methodology"
+    - "Diagnostic framework"
+    - "Assessment output format"
   preferred:
-    - 'Quantitative metrics'
-    - 'Objective criteria'
+    - "Quantitative metrics"
+    - "Objective criteria"
 ```
 
 ### For Tier 1 (Core)
@@ -326,13 +326,13 @@ tier_0_criteria:
 ```yaml
 tier_1_criteria:
   required:
-    - 'Documented track record'
-    - 'Verifiable results'
-    - 'Clear methodology'
+    - "Documented track record"
+    - "Verifiable results"
+    - "Clear methodology"
   preferred:
-    - 'Industry recognition'
-    - 'Published frameworks'
-    - 'Case studies'
+    - "Industry recognition"
+    - "Published frameworks"
+    - "Case studies"
 ```
 
 ### For Tier 2 (Systematizers)
@@ -340,12 +340,12 @@ tier_1_criteria:
 ```yaml
 tier_2_criteria:
   required:
-    - 'Created replicable frameworks'
-    - 'Teachable methodology'
-    - 'Process documentation'
+    - "Created replicable frameworks"
+    - "Teachable methodology"
+    - "Process documentation"
   preferred:
-    - 'Training materials'
-    - 'Implementation guides'
+    - "Training materials"
+    - "Implementation guides"
 ```
 
 ### For Tier 3 (Format)
@@ -353,12 +353,12 @@ tier_2_criteria:
 ```yaml
 tier_3_criteria:
   required:
-    - 'Deep format expertise'
-    - 'Channel-specific knowledge'
-    - 'Adaptation frameworks'
+    - "Deep format expertise"
+    - "Channel-specific knowledge"
+    - "Adaptation frameworks"
   preferred:
-    - 'Format-specific results'
-    - 'Platform expertise'
+    - "Format-specific results"
+    - "Platform expertise"
 ```
 
 ---
@@ -372,12 +372,12 @@ handoff:
   from: tier_0
   to: tier_1
   handoff_artifact:
-    - 'Diagnosis report'
-    - 'Constraints list'
-    - 'Recommended approach'
+    - "Diagnosis report"
+    - "Constraints list"
+    - "Recommended approach"
   acceptance_criteria:
-    - 'Diagnosis is complete'
-    - 'Tier 1 agent is identified'
+    - "Diagnosis is complete"
+    - "Tier 1 agent is identified"
 ```
 
 ### Support Pattern
@@ -386,8 +386,8 @@ handoff:
 support:
   primary: tier_1
   supporting: tier_2
-  pattern: 'Tier 1 requests framework from Tier 2'
-  example: 'Core expert requests systematized approach'
+  pattern: "Tier 1 requests framework from Tier 2"
+  example: "Core expert requests systematized approach"
 ```
 
 ### Enhancement Pattern
@@ -396,8 +396,8 @@ support:
 enhancement:
   input_from: tier_1
   enhanced_by: tier_3
-  pattern: 'Primary output adapted for specific format'
-  example: 'Core content converted to video script'
+  pattern: "Primary output adapted for specific format"
+  example: "Core content converted to video script"
 ```
 
 ---
@@ -442,32 +442,32 @@ ELSE IF agent is a validation/checklist tool
 ```yaml
 tier_quality_gates:
   tier_0:
-    gate: 'diagnosis-complete'
+    gate: "diagnosis-complete"
     criteria:
-      - 'Baseline established'
-      - 'Constraints identified'
-      - 'Recommendation provided'
+      - "Baseline established"
+      - "Constraints identified"
+      - "Recommendation provided"
 
   tier_1:
-    gate: 'primary-output-complete'
+    gate: "primary-output-complete"
     criteria:
-      - 'Deliverable meets requirements'
-      - 'Quality dimensions score >= 7.0'
-      - 'No blocking issues'
+      - "Deliverable meets requirements"
+      - "Quality dimensions score >= 7.0"
+      - "No blocking issues"
 
   tier_2:
-    gate: 'system-validated'
+    gate: "system-validated"
     criteria:
-      - 'Framework is complete'
-      - 'Process is documented'
-      - 'Implementation guide exists'
+      - "Framework is complete"
+      - "Process is documented"
+      - "Implementation guide exists"
 
   tier_3:
-    gate: 'format-optimized'
+    gate: "format-optimized"
     criteria:
-      - 'Format requirements met'
-      - 'Channel best practices applied'
-      - 'Enhancement checklist passed'
+      - "Format requirements met"
+      - "Channel best practices applied"
+      - "Enhancement checklist passed"
 ```
 
 ---

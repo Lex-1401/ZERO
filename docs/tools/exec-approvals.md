@@ -185,10 +185,10 @@ Config:
       sessionFilter: ["discord"], // substring ou regex
       targets: [
         { channel: "slack", to: "U12345678" },
-        { channel: "telegram", to: "123456789" }
-      ]
-    }
-  }
+        { channel: "telegram", to: "123456789" },
+      ],
+    },
+  },
 }
 ```
 

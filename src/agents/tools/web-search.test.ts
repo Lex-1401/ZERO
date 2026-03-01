@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { __testing } from "./web-search.js";
-
-const { inferPerplexityBaseUrlFromApiKey, resolvePerplexityBaseUrl, normalizeFreshness } =
-  __testing;
+import {
+  inferPerplexityBaseUrlFromApiKey,
+  resolvePerplexityBaseUrl,
+  normalizeFreshness,
+} from "./web-search/helpers.js";
 
 describe("web_search perplexity baseUrl defaults", () => {
   it("detects a Perplexity key prefix", () => {

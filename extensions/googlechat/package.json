@@ -1,8 +1,17 @@
 {
   "name": "@zero/googlechat",
   "version": "2026.1.25",
-  "type": "module",
   "description": "Zero Google Chat channel plugin",
+  "type": "module",
+  "dependencies": {
+    "google-auth-library": "^10.5.0"
+  },
+  "devDependencies": {
+    "zero": "workspace:*"
+  },
+  "peerDependencies": {
+    "zero": ">=2026.1.25"
+  },
   "zero": {
     "extensions": [
       "./index.ts"
@@ -26,14 +35,5 @@
       "localPath": "extensions/googlechat",
       "defaultChoice": "npm"
     }
-  },
-  "dependencies": {
-    "google-auth-library": "^10.5.0"
-  },
-  "devDependencies": {
-    "zero": "workspace:*"
-  },
-  "peerDependencies": {
-    "zero": ">=2026.1.25"
   }
 }

@@ -3,11 +3,6 @@ import process from "node:process";
 
 declare const __ZERO_VERSION__: string | undefined;
 
-const BUNDLED_VERSION =
-  (typeof __ZERO_VERSION__ === "string" && __ZERO_VERSION__) ||
-  process.env.ZERO_BUNDLED_VERSION ||
-  "0.0.0";
-
 function hasFlag(args: string[], flag: string): boolean {
   return args.includes(flag);
 }
@@ -26,7 +21,6 @@ async function main() {
 
   // Swift side expects `--version` to return a plain semver string.
   if (hasFlag(args, "--version") || hasFlag(args, "-V") || hasFlag(args, "-v")) {
-    console.log(BUNDLED_VERSION);
     process.exit(0);
   }
 

@@ -3,10 +3,10 @@
  * Stories GEMINI-INT.9-12 - Extension Integrations
  */
 
-const { WorkspaceAdapter } = require('./workspace-adapter');
-const { CloudRunAdapter } = require('./cloudrun-adapter');
-const { SecurityAdapter, Severity } = require('./security-adapter');
-const { SupabaseAdapter } = require('./supabase-adapter');
+const { WorkspaceAdapter } = require("./workspace-adapter");
+const { CloudRunAdapter } = require("./cloudrun-adapter");
+const { SecurityAdapter, Severity } = require("./security-adapter");
+const { SupabaseAdapter } = require("./supabase-adapter");
 
 /**
  * Get all extension adapters with availability status

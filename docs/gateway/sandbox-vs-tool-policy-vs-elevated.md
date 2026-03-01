@@ -14,7 +14,7 @@ O ZERO possui três controles relacionados (mas diferentes):
 
 ## Depuração rápida
 
-Use o inspetor para ver o que o ZERO está *realmente* fazendo:
+Use o inspetor para ver o que o ZERO está _realmente_ fazendo:
 
 ```bash
 zero sandbox explain
@@ -42,7 +42,7 @@ Veja [Sandboxing](/gateway/sandboxing) para a matriz completa (escopo, montagens
 
 ### Montagens de vínculo (Bind mounts - verificação rápida de segurança)
 
-- `docker.binds` *atravessa* o sistema de arquivos da sandbox: o que você montar será visível dentro do contêiner com o modo definido (`:ro` ou `:rw`).
+- `docker.binds` _atravessa_ o sistema de arquivos da sandbox: o que você montar será visível dentro do contêiner com o modo definido (`:ro` ou `:rw`).
 - O padrão é leitura e escrita (read-write) se você omitir o modo; prefira `:ro` para código-fonte/segredos.
 - `scope: "shared"` ignora vínculos por agente (apenas vínculos globais se aplicam).
 - Vincular `/var/run/docker.sock` efetivamente entrega o controle do host para a sandbox; faça isso apenas de forma intencional.
@@ -62,7 +62,7 @@ Regras básicas:
 
 - `deny` sempre vence.
 - Se `allow` não estiver vazio, todo o resto é tratado como bloqueado.
-As chaves de ferramentas por provedor aceitam tanto `provider` (ex: `google-cloud-auth`) quanto `provider/model` (ex: `openai/gpt-5.2`).
+  As chaves de ferramentas por provedor aceitam tanto `provider` (ex: `google-cloud-auth`) quanto `provider/model` (ex: `openai/gpt-5.2`).
 
 ### Grupos de ferramentas (atalhos)
 
@@ -73,10 +73,10 @@ As políticas de ferramentas (global, agente, sandbox) suportam entradas `group:
   tools: {
     sandbox: {
       tools: {
-        allow: ["group:runtime", "group:fs", "group:sessions", "group:memory"]
-      }
-    }
-  }
+        allow: ["group:runtime", "group:fs", "group:sessions", "group:memory"],
+      },
+    },
+  },
 }
 ```
 
@@ -121,4 +121,4 @@ Chaves de correção (escolha uma):
 
 ### "Achei que esta fosse a sessão principal, por que está em sandbox?"
 
-No modo `"non-main"`, as chaves de grupo/canal *não* são consideradas principais (main). Use a chave de sessão principal (mostrada pelo comando `sandbox explain`) ou mude o modo para `"off"`.
+No modo `"non-main"`, as chaves de grupo/canal _não_ são consideradas principais (main). Use a chave de sessão principal (mostrada pelo comando `sandbox explain`) ou mude o modo para `"off"`.

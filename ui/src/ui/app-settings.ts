@@ -10,14 +10,26 @@ import { loadPresence } from "./controllers/presence";
 import { loadSessions } from "./controllers/sessions";
 import { loadSkills } from "./controllers/skills";
 import { loadGraph } from "./controllers/graph";
-import { inferBasePathFromPathname, normalizeBasePath, normalizePath, pathForTab, tabFromPath, type Tab } from "./navigation";
+import {
+  inferBasePathFromPathname,
+  normalizeBasePath,
+  normalizePath,
+  pathForTab,
+  tabFromPath,
+  type Tab,
+} from "./navigation";
 import { loadMissionControl } from "./controllers/telemetry";
 import { loadDocsList } from "./controllers/docs";
 import { saveSettings, type UiSettings } from "./storage";
 import { resolveTheme, type ResolvedTheme, type ThemeMode } from "./theme";
 import { startThemeTransition, type ThemeTransitionContext } from "./theme-transition";
 import { scheduleChatScroll, scheduleLogsScroll } from "./app-scroll";
-import { startLogsPolling, stopLogsPolling, startDebugPolling, stopDebugPolling } from "./app-polling";
+import {
+  startLogsPolling,
+  stopLogsPolling,
+  startDebugPolling,
+  stopDebugPolling,
+} from "./app-polling";
 import { refreshChat } from "./app-chat";
 import { resetChatState } from "./controllers/chat";
 import type { ZEROApp } from "./app";
@@ -38,6 +50,8 @@ type SettingsHost = {
   password: string;
   themeMedia: MediaQueryList | null;
   themeMediaHandler: ((event: MediaQueryListEvent) => void) | null;
+  logsPollInterval: number | null;
+  debugPollInterval: number | null;
 };
 
 export function applySettings(host: SettingsHost, next: UiSettings) {
@@ -131,8 +145,7 @@ export function applySettingsFromInjectedConfig(host: SettingsHost) {
 export function setTab(host: SettingsHost, next: Tab) {
   if (host.tab !== next) host.tab = next;
   if (next === "chat") host.chatHasAutoScrolled = false;
-  if (next === "logs")
-    startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
+  if (next === "logs") startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
   else stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
   if (next === "debug")
     startDebugPolling(host as unknown as Parameters<typeof startDebugPolling>[0]);
@@ -141,11 +154,7 @@ export function setTab(host: SettingsHost, next: Tab) {
   syncUrlWithTab(host, next, false);
 }
 
-export function setTheme(
-  host: SettingsHost,
-  next: ThemeMode,
-  context?: ThemeTransitionContext,
-) {
+export function setTheme(host: SettingsHost, next: ThemeMode, context?: ThemeTransitionContext) {
   host.theme = next;
   applySettings(host, { ...host.settings, theme: next });
   applyResolvedTheme(host, resolveTheme(next));
@@ -154,47 +163,44 @@ export function setTheme(
 export async function refreshActiveTab(host: SettingsHost) {
   if (host.tab === "overview") await syncNexusInternal(host);
   if (host.tab === "channels") await loadChannelsTab(host);
-  if (host.tab === "instances") await loadPresence(host as unknown as ZEROApp);
-  if (host.tab === "sessions") await loadSessions(host as unknown as ZEROApp);
+  if (host.tab === "instances") await loadPresence(host as any);
+  if (host.tab === "sessions") await loadSessions(host as any);
   if (host.tab === "cron") await syncCronInternal(host);
-  if (host.tab === "skills") await loadSkills(host as unknown as ZEROApp);
+  if (host.tab === "skills") await loadSkills(host as any);
   if (host.tab === "nodes") {
-    await loadNodes(host as unknown as ZEROApp);
-    await loadDevices(host as unknown as ZEROApp);
-    await loadConfig(host as unknown as ZEROApp);
-    await loadExecApprovals(host as unknown as ZEROApp);
+    await loadNodes(host as any);
+    await loadDevices(host as any);
+    await loadConfig(host as any);
+    await loadExecApprovals(host as any);
   }
   if (host.tab === "docs") {
-    await loadDocsList(host as unknown as ZEROApp);
+    await loadDocsList(host as any);
   }
 
   // ...
 
   if (host.tab === "chat") {
-    resetChatState(host as unknown as any);
-    await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
+    resetChatState(host as any);
+    await refreshChat(host as any);
     // Load usage data for model selector
-    await loadMissionControl(host as unknown as ZEROApp);
+    await loadMissionControl(host as any);
     scheduleChatScroll(
-      host as unknown as Parameters<typeof scheduleChatScroll>[0],
+      host as any,
       !host.chatHasAutoScrolled,
     );
   }
   if (host.tab === "config") {
-    await loadConfigSchema(host as unknown as ZEROApp);
-    await loadConfig(host as unknown as ZEROApp);
+    await loadConfigSchema(host as any);
+    await loadConfig(host as any);
   }
   if (host.tab === "debug") {
-    await loadDebug(host as unknown as ZEROApp);
-    host.eventLog = host.eventLogBuffer;
+    await loadDebug(host as any);
+    host.eventLog = host.eventLogBuffer as any;
   }
   if (host.tab === "logs") {
     host.logsAtBottom = true;
-    await loadLogs(host as unknown as ZEROApp, { reset: true });
-    scheduleLogsScroll(
-      host as unknown as Parameters<typeof scheduleLogsScroll>[0],
-      true,
-    );
+    await loadLogs(host as any, { reset: true });
+    scheduleLogsScroll(host as any, true);
   }
 }
 
@@ -280,8 +286,7 @@ export function onPopState(host: SettingsHost) {
 export function setTabFromRoute(host: SettingsHost, next: Tab) {
   if (host.tab !== next) host.tab = next;
   if (next === "chat") host.chatHasAutoScrolled = false;
-  if (next === "logs")
-    startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
+  if (next === "logs") startLogsPolling(host as unknown as Parameters<typeof startLogsPolling>[0]);
   else stopLogsPolling(host as unknown as Parameters<typeof stopLogsPolling>[0]);
   if (next === "debug")
     startDebugPolling(host as unknown as Parameters<typeof startDebugPolling>[0]);
@@ -312,11 +317,7 @@ export function syncUrlWithTab(host: SettingsHost, tab: Tab, replace: boolean) {
   }
 }
 
-export function syncUrlWithSessionKey(
-  host: SettingsHost,
-  sessionKey: string,
-  replace: boolean,
-) {
+export function syncUrlWithSessionKey(host: SettingsHost, sessionKey: string, replace: boolean) {
   if (typeof window === "undefined") return;
   const url = new URL(window.location.href);
   url.searchParams.set("session", sessionKey);
@@ -326,26 +327,26 @@ export function syncUrlWithSessionKey(
 
 export async function syncNexusInternal(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as ZEROApp, false),
-    loadPresence(host as unknown as ZEROApp),
-    loadSessions(host as unknown as ZEROApp),
-    loadCronStatus(host as unknown as ZEROApp),
-    loadDebug(host as unknown as ZEROApp),
+    loadChannels(host as any, false),
+    loadPresence(host as any),
+    loadSessions(host as any),
+    loadCronStatus(host as any),
+    loadDebug(host as any),
   ]);
 }
 
 export async function loadChannelsTab(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as ZEROApp, true),
-    loadConfigSchema(host as unknown as ZEROApp),
-    loadConfig(host as unknown as ZEROApp),
+    loadChannels(host as any, true),
+    loadConfigSchema(host as any),
+    loadConfig(host as any),
   ]);
 }
 
 export async function syncCronInternal(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as ZEROApp, false),
-    loadCronStatus(host as unknown as ZEROApp),
-    loadCronJobs(host as unknown as ZEROApp),
+    loadChannels(host as any, false),
+    loadCronStatus(host as any),
+    loadCronJobs(host as any),
   ]);
 }

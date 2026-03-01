@@ -4,6 +4,7 @@ read_when:
   - Você deseja escolher um provedor de modelo
   - Você deseja exemplos rápidos de configuração para autenticação LLM + seleção de modelo
 ---
+
 # Provedores de Modelos
 
 O ZERO pode usar muitos provedores de LLM. Escolha um, autentique-se e defina o modelo padrão como `provedor/modelo`.
@@ -19,12 +20,12 @@ Consulte [Venice AI](/providers/venice).
 
 ## Início rápido (duas etapas)
 
-1) Autentique-se com o provedor (geralmente via `zero onboard`).
-2) Defina o modelo padrão:
+1. Autentique-se com o provedor (geralmente via `zero onboard`).
+2. Defina o modelo padrão:
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } },
 }
 ```
 

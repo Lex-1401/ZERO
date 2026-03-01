@@ -1,45 +1,55 @@
 import { spawn } from "node:child_process";
 
+/**
+ * Represents a physical or virtual camera device.
+ */
 export interface CameraDevice {
   open(): Promise<void>;
   close(): Promise<void>;
   captureFrame(): Promise<Buffer>; // JPEG Frame
 }
 
+/**
+ * Represents a microphone device capable of reading raw audio blocks.
+ */
 export interface MicrophoneDevice {
   open(): Promise<void>;
   close(): Promise<void>;
   readAudio(): Promise<Buffer>; // PCM Chunk
 }
 
+/**
+ * Represents a speaker device capable of playing raw audio blocks.
+ */
 export interface SpeakerDevice {
   open(): Promise<void>;
   close(): Promise<void>;
   playAudio(chunk: Buffer): Promise<void>;
 }
 
+/**
+ * Mock implementation of a Camera Device for virtual environments.
+ */
 export class VirtualCamera implements CameraDevice {
-  async open(): Promise<void> {
-    console.log("[VirtualCamera] Opened");
-  }
-  async close(): Promise<void> {
-    console.log("[VirtualCamera] Closed");
-  }
+  async open(): Promise<void> { }
+  async close(): Promise<void> { }
   async captureFrame(): Promise<Buffer> {
     // Return blank frame or last known frame
     return Buffer.alloc(0);
   }
 }
 
+/**
+ * System level microphone proxy utilizing ffmpeg underneath.
+ * Extracts PCM audio streams for the framework.
+ */
 export class SystemMicrophone implements MicrophoneDevice {
   private ffProcess: any = null;
   private audioQueue: Buffer[] = [];
 
-  constructor(private mode: "mic-only" | "meeting" = "mic-only") {}
+  constructor(private mode: "mic-only" | "meeting" = "mic-only") { }
 
   async open(): Promise<void> {
-    console.log(`[Hardware] Opening Microphone in ${this.mode} mode...`);
-
     // Ported from Synthotic App: High-performance mixing for meetings
     // On macOS, we use 'avfoundation'. On Windows it would be 'dshow'.
     const isMac = process.platform === "darwin";
@@ -61,7 +71,16 @@ export class SystemMicrophone implements MicrophoneDevice {
       );
     }
 
+    if (this.ffProcess) {
+      this.ffProcess.kill();
+    }
+
     this.ffProcess = spawn("ffmpeg", args);
+
+    this.ffProcess.on("error", (_err: Error) => {
+      this.ffProcess = null;
+      // SILENT FAIL: Virtual peripherals should not crash the main thread
+    });
 
     this.ffProcess.stdout.on("data", (chunk: Buffer) => {
       this.audioQueue.push(chunk);
@@ -78,7 +97,6 @@ export class SystemMicrophone implements MicrophoneDevice {
       this.ffProcess.kill();
       this.ffProcess = null;
     }
-    console.log("[Hardware] Microphone closed.");
   }
 
   async readAudio(): Promise<Buffer> {
@@ -89,15 +107,17 @@ export class SystemMicrophone implements MicrophoneDevice {
   }
 }
 
-export class VirtualMicrophone extends SystemMicrophone {}
+/**
+ * Mock implementation for virtual microphones.
+ */
+export class VirtualMicrophone extends SystemMicrophone { }
 
+/**
+ * Mock implementation for virtual speakers.
+ */
 export class VirtualSpeaker implements SpeakerDevice {
-  async open(): Promise<void> {
-    console.log("[VirtualSpeaker] Opened");
-  }
-  async close(): Promise<void> {
-    console.log("[VirtualSpeaker] Closed");
-  }
+  async open(): Promise<void> { }
+  async close(): Promise<void> { }
   async playAudio(_chunk: Buffer): Promise<void> {
     // Playback logic would go here
   }

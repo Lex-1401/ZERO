@@ -1,7 +1,7 @@
-const fs = require('fs-extra');
-const path = require('path');
-const yaml = require('js-yaml');
-const glob = require('glob');
+const fs = require("fs-extra");
+const path = require("path");
+const yaml = require("js-yaml");
+const glob = require("glob");
 
 /**
  * ToolResolver - Resolves and loads AIOS tools from file system
@@ -23,8 +23,8 @@ class ToolResolver {
 
     // Base search paths (in priority order)
     this.basePaths = [
-      'aios-core/tools',
-      'common/tools',
+      "aios-core/tools",
+      "common/tools",
       // Squad paths added dynamically during resolution
     ];
   }
@@ -40,7 +40,7 @@ class ToolResolver {
    */
   async resolveTool(toolName, context = {}) {
     // 1. Check cache first (performance: <5ms cached)
-    const cacheKey = `${context.expansionPack || 'core'}:${toolName}`;
+    const cacheKey = `${context.expansionPack || "core"}:${toolName}`;
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey);
     }
@@ -63,11 +63,11 @@ class ToolResolver {
     }
 
     if (!toolPath) {
-      throw new Error(`Tool '${toolName}' not found in search paths: ${searchPaths.join(', ')}`);
+      throw new Error(`Tool '${toolName}' not found in search paths: ${searchPaths.join(", ")}`);
     }
 
     // 4. Load and parse YAML
-    const toolContent = await fs.readFile(toolPath, 'utf8');
+    const toolContent = await fs.readFile(toolPath, "utf8");
     let toolDef = yaml.load(toolContent);
 
     // Extract tool object if wrapped (handles both formats)
@@ -89,7 +89,7 @@ class ToolResolver {
       if (!healthy && toolDef.health_check.required) {
         throw new Error(`Required tool '${toolName}' health check failed`);
       }
-      toolDef._healthStatus = healthy ? 'healthy' : 'unhealthy';
+      toolDef._healthStatus = healthy ? "healthy" : "unhealthy";
     }
 
     // 8. Cache and return (target: <50ms total)
@@ -105,7 +105,7 @@ class ToolResolver {
    */
   async validateToolSchema(tool) {
     // Required fields for all tools
-    const requiredFields = ['id', 'type', 'name', 'version', 'description'];
+    const requiredFields = ["id", "type", "name", "version", "description"];
 
     for (const field of requiredFields) {
       if (!tool[field]) {
@@ -114,22 +114,25 @@ class ToolResolver {
     }
 
     // Validate type enum
-    const validTypes = ['mcp', 'cli', 'local', 'meta'];
+    const validTypes = ["mcp", "cli", "local", "meta"];
     if (!validTypes.includes(tool.type)) {
-      throw new Error(`Invalid tool type '${tool.type}'. Must be one of: ${validTypes.join(', ')}`);
+      throw new Error(`Invalid tool type '${tool.type}'. Must be one of: ${validTypes.join(", ")}`);
     }
 
     // Validate version format (basic semver check)
     const semverPattern = /^\d+\.\d+\.\d+$/;
     if (!semverPattern.test(tool.version)) {
-      throw new Error(`Invalid version format '${tool.version}'. Expected semantic versioning (e.g., 1.0.0)`);
+      throw new Error(
+        `Invalid version format '${tool.version}'. Expected semantic versioning (e.g., 1.0.0)`,
+      );
     }
 
     // Validate schema_version if present (support both string and numeric formats)
     if (tool.schema_version) {
-      const version = typeof tool.schema_version === 'number'
-        ? tool.schema_version
-        : parseFloat(tool.schema_version);
+      const version =
+        typeof tool.schema_version === "number"
+          ? tool.schema_version
+          : parseFloat(tool.schema_version);
 
       if (![1.0, 2.0].includes(version)) {
         throw new Error(`Invalid schema_version '${tool.schema_version}'. Must be '1.0' or '2.0'`);
@@ -137,7 +140,7 @@ class ToolResolver {
     }
 
     // v2.0 specific validation
-    if (tool.schema_version === '2.0' || tool.schema_version === 2.0) {
+    if (tool.schema_version === "2.0" || tool.schema_version === 2.0) {
       await this.validateV2Schema(tool);
     }
   }
@@ -156,13 +159,13 @@ class ToolResolver {
       // Validate helpers
       if (helpers) {
         if (!Array.isArray(helpers)) {
-          throw new Error('executable_knowledge.helpers must be an array');
+          throw new Error("executable_knowledge.helpers must be an array");
         }
         for (const helper of helpers) {
           if (!helper.id || !helper.language || !helper.function) {
-            throw new Error('Helper must have id, language, and function fields');
+            throw new Error("Helper must have id, language, and function fields");
           }
-          if (helper.language !== 'javascript') {
+          if (helper.language !== "javascript") {
             throw new Error(`Unsupported helper language: ${helper.language}`);
           }
         }
@@ -171,11 +174,11 @@ class ToolResolver {
       // Validate validators
       if (validators) {
         if (!Array.isArray(validators)) {
-          throw new Error('executable_knowledge.validators must be an array');
+          throw new Error("executable_knowledge.validators must be an array");
         }
         for (const validator of validators) {
           if (!validator.id || !validator.validates || !validator.function) {
-            throw new Error('Validator must have id, validates, and function fields');
+            throw new Error("Validator must have id, validates, and function fields");
           }
         }
       }
@@ -184,11 +187,11 @@ class ToolResolver {
     // Validate anti_patterns if present
     if (tool.anti_patterns) {
       if (!Array.isArray(tool.anti_patterns)) {
-        throw new Error('anti_patterns must be an array');
+        throw new Error("anti_patterns must be an array");
       }
       for (const pattern of tool.anti_patterns) {
         if (!pattern.pattern || !pattern.description || !pattern.wrong || !pattern.correct) {
-          throw new Error('Anti-pattern must have pattern, description, wrong, and correct fields');
+          throw new Error("Anti-pattern must have pattern, description, wrong, and correct fields");
         }
       }
     }
@@ -205,9 +208,10 @@ class ToolResolver {
     const hasExecutableKnowledge = !!tool.executable_knowledge;
     const hasApiComplexity = !!tool.api_complexity;
     const hasAntiPatterns = !!tool.anti_patterns;
-    const hasEnhancedExamples = tool.examples &&
-      Object.values(tool.examples).some(ex =>
-        ex.some(e => e.scenario && ['success', 'failure_invalid_param'].includes(e.scenario)),
+    const hasEnhancedExamples =
+      tool.examples &&
+      Object.values(tool.examples).some((ex) =>
+        ex.some((e) => e.scenario && ["success", "failure_invalid_param"].includes(e.scenario)),
       );
 
     if (hasExecutableKnowledge || hasApiComplexity || hasAntiPatterns || hasEnhancedExamples) {
@@ -233,19 +237,19 @@ class ToolResolver {
 
     try {
       switch (health_check.method) {
-        case 'tool_call':
+        case "tool_call":
           // Execute a specific tool command and check response
           // Note: Actual implementation would use ToolExecutor
           // For now, check if command exists in tool definition
           return !!tool.commands?.includes(health_check.command);
 
-        case 'command':
+        case "command":
           // Execute shell command and check exit code
           // Note: Actual implementation would use child_process
           // For now, return true (not implemented)
           return true;
 
-        case 'http':
+        case "http":
           // Make HTTP request and check status
           // Note: Actual implementation would use fetch/axios
           // For now, return true (not implemented)
@@ -330,10 +334,7 @@ class ToolResolver {
    * Reset search paths to default
    */
   resetSearchPaths() {
-    this.basePaths = [
-      'aios-core/tools',
-      'common/tools',
-    ];
+    this.basePaths = ["aios-core/tools", "common/tools"];
   }
 }
 

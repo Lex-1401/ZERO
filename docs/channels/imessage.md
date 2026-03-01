@@ -11,11 +11,11 @@ Status: integração CLI externa. Gateway inicia `imsg rpc` (JSON-RPC sobre stdi
 
 ## Configuração rápida (iniciante)
 
-1) Garanta que o Mensagens esteja logado neste Mac.
-2) Instale `imsg`:
+1. Garanta que o Mensagens esteja logado neste Mac.
+2. Instale `imsg`:
    - `brew install steipete/tap/imsg`
-3) Configure o ZERO com `channels.imessage.cliPath` e `channels.imessage.dbPath`.
-4) Inicie o gateway e aprove quaisquer solicitações do macOS (Automação + Acesso Total ao Disco).
+3. Configure o ZERO com `channels.imessage.cliPath` e `channels.imessage.dbPath`.
+4. Inicie o gateway e aprove quaisquer solicitações do macOS (Automação + Acesso Total ao Disco).
 
 Configuração mínima:
 
@@ -25,9 +25,9 @@ Configuração mínima:
     imessage: {
       enabled: true,
       cliPath: "/usr/local/bin/imsg",
-      dbPath: "/Users/<voce>/Library/Messages/chat.db"
-    }
-  }
+      dbPath: "/Users/<voce>/Library/Messages/chat.db",
+    },
+  },
 }
 ```
 
@@ -46,7 +46,7 @@ Desative com:
 
 ```json5
 {
-  channels: { imessage: { configWrites: false } }
+  channels: { imessage: { configWrites: false } },
 }
 ```
 
@@ -59,24 +59,24 @@ Desative com:
 
 ## Configuração (caminho rápido)
 
-1) Garanta que o Mensagens esteja logado neste Mac.
-2) Configure iMessage e inicie o gateway.
+1. Garanta que o Mensagens esteja logado neste Mac.
+2. Configure iMessage e inicie o gateway.
 
 ### Usuário macOS dedicado para bot (para identidade isolada)
 
 Se você quer que o bot envie de uma **identidade iMessage separada** (e mantenha seu Mensagens pessoal limpo), use um Apple ID dedicado + um usuário macOS dedicado.
 
-1) Crie um Apple ID dedicado (exemplo: `meu-bot-legal@icloud.com`).
+1. Crie um Apple ID dedicado (exemplo: `meu-bot-legal@icloud.com`).
    - A Apple pode exigir um número de telefone para verificação / 2FA.
-2) Crie um usuário macOS (exemplo: `zeroshome`) e faça login nele.
-3) Abra o Mensagens nesse usuário macOS e faça login no iMessage usando o Apple ID do bot.
-4) Habilite Login Remoto (Definições do Sistema → Geral → Compartilhamento → Login Remoto).
-5) Instale `imsg`:
+2. Crie um usuário macOS (exemplo: `zeroshome`) e faça login nele.
+3. Abra o Mensagens nesse usuário macOS e faça login no iMessage usando o Apple ID do bot.
+4. Habilite Login Remoto (Definições do Sistema → Geral → Compartilhamento → Login Remoto).
+5. Instale `imsg`:
    - `brew install steipete/tap/imsg`
-6) Configure SSH para que `ssh <usuario-macos-bot>@localhost true` funcione sem senha.
-7) Aponte `channels.imessage.accounts.bot.cliPath` para um wrapper SSH que roda `imsg` como o usuário bot.
+6. Configure SSH para que `ssh <usuario-macos-bot>@localhost true` funcione sem senha.
+7. Aponte `channels.imessage.accounts.bot.cliPath` para um wrapper SSH que roda `imsg` como o usuário bot.
 
-Nota de primeira execução: enviar/receber pode exigir aprovações de GUI (Automação + Acesso Total ao Disco) no *usuário macOS do bot*. Se `imsg rpc` parecer travado ou sair, faça login nesse usuário (Compartilhamento de Tela ajuda), rode um `imsg chats --limit 1` / `imsg send ...` único, aprove as solicitações, depois tente novamente.
+Nota de primeira execução: enviar/receber pode exigir aprovações de GUI (Automação + Acesso Total ao Disco) no _usuário macOS do bot_. Se `imsg rpc` parecer travado ou sair, faça login nesse usuário (Compartilhamento de Tela ajuda), rode um `imsg chats --limit 1` / `imsg send ...` único, aprove as solicitações, depois tente novamente.
 
 Exemplo de wrapper (`chmod +x`). Substitua `<usuario-macos-bot>` com seu nome de usuário macOS real:
 
@@ -102,11 +102,11 @@ Configuração de exemplo:
           name: "Bot",
           enabled: true,
           cliPath: "/caminho/para/imsg-bot",
-          dbPath: "/Users/<usuario-macos-bot>/Library/Messages/chat.db"
-        }
-      }
-    }
-  }
+          dbPath: "/Users/<usuario-macos-bot>/Library/Messages/chat.db",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -129,11 +129,11 @@ exec ssh -T gateway-host imsg "$@"
 {
   channels: {
     imessage: {
-      cliPath: "~/imsg-ssh",                     // Wrapper SSH para Mac remoto
-      remoteHost: "user@gateway-host",           // para transferência de arquivo SCP
-      includeAttachments: true
-    }
-  }
+      cliPath: "~/imsg-ssh", // Wrapper SSH para Mac remoto
+      remoteHost: "user@gateway-host", // para transferência de arquivo SCP
+      includeAttachments: true,
+    },
+  },
 }
 ```
 
@@ -167,9 +167,9 @@ Exemplo de configuração concreta (hostname Tailscale):
       cliPath: "~/.zero/scripts/imsg-ssh",
       remoteHost: "bot@mac-mini.tailnet-1234.ts.net",
       includeAttachments: true,
-      dbPath: "/Users/bot/Library/Messages/chat.db"
-    }
-  }
+      dbPath: "/Users/bot/Library/Messages/chat.db",
+    },
+  },
 }
 ```
 
@@ -229,10 +229,10 @@ Exemplo:
       groupPolicy: "allowlist",
       groupAllowFrom: ["+15555550123"],
       groups: {
-        "42": { "requireMention": false }
-      }
-    }
-  }
+        "42": { requireMention: false },
+      },
+    },
+  },
 }
 ```
 

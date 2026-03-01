@@ -1,142 +1,139 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 // import { gatewayClient } from './lib/gateway';
 
 export default function VoiceView() {
-    const [isListening, setIsListening] = useState(false);
-    const [status, setStatus] = useState('Pronto');
-    const [volume, setVolume] = useState(0);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const audioContextRef = useRef<AudioContext | null>(null);
-    const analyserRef = useRef<AnalyserNode | null>(null);
-    const dataArrayRef = useRef<Uint8Array | null>(null);
-    const animationFrameRef = useRef<number>(0);
+  const [isListening, setIsListening] = useState(false);
+  const [status, setStatus] = useState("Pronto");
+  const [volume, setVolume] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const dataArrayRef = useRef<Uint8Array | null>(null);
+  const animationFrameRef = useRef<number>(0);
 
-    useEffect(() => {
-        return () => {
-            stopListening();
-        };
-    }, []);
-
-    const startListening = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-            analyserRef.current = audioContextRef.current.createAnalyser();
-            const source = audioContextRef.current.createMediaStreamSource(stream);
-
-            analyserRef.current.fftSize = 256;
-            const bufferLength = analyserRef.current.frequencyBinCount;
-            dataArrayRef.current = new Uint8Array(bufferLength);
-
-            source.connect(analyserRef.current);
-
-            setIsListening(true);
-            setStatus('Ouvindo...');
-            drawVisualizer();
-        } catch (err) {
-            console.error('Erro ao acessar o microfone:', err);
-            setStatus('Erro: Microfone inacessível');
-        }
+  useEffect(() => {
+    return () => {
+      stopListening();
     };
+  }, []);
 
-    const stopListening = () => {
-        if (audioContextRef.current) {
-            audioContextRef.current.close();
-            audioContextRef.current = null;
-        }
-        if (animationFrameRef.current) {
-            cancelAnimationFrame(animationFrameRef.current);
-        }
-        setIsListening(false);
-        setStatus('Pronto');
-        setVolume(0);
-    };
+  const startListening = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      const source = audioContextRef.current.createMediaStreamSource(stream);
 
-    const toggleListening = () => {
-        if (isListening) {
-            stopListening();
-        } else {
-            startListening();
-        }
-    };
+      analyserRef.current.fftSize = 256;
+      const bufferLength = analyserRef.current.frequencyBinCount;
+      dataArrayRef.current = new Uint8Array(bufferLength);
 
-    const drawVisualizer = () => {
-        if (!analyserRef.current || !dataArrayRef.current || !canvasRef.current) return;
+      source.connect(analyserRef.current);
 
-        analyserRef.current.getByteFrequencyData(dataArrayRef.current as any);
+      setIsListening(true);
+      setStatus("Ouvindo...");
+      drawVisualizer();
+    } catch (err) {
+      console.error("Erro ao acessar o microfone:", err);
+      setStatus("Erro: Microfone inacessível");
+    }
+  };
 
-        // Calculate volume for simple visualization
-        let sum = 0;
-        for (let i = 0; i < dataArrayRef.current.length; i++) {
-            sum += dataArrayRef.current[i];
-        }
-        const average = sum / dataArrayRef.current.length;
-        setVolume(average);
+  const stopListening = () => {
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    setIsListening(false);
+    setStatus("Pronto");
+    setVolume(0);
+  };
 
-        const ctx = canvasRef.current.getContext('2d');
-        if (ctx) {
-            const width = canvasRef.current.width;
-            const height = canvasRef.current.height;
-            const barWidth = (width / dataArrayRef.current.length) * 2.5;
-            let barHeight;
-            let x = 0;
+  const toggleListening = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
 
-            ctx.clearRect(0, 0, width, height);
+  const drawVisualizer = () => {
+    if (!analyserRef.current || !dataArrayRef.current || !canvasRef.current) return;
 
-            for (let i = 0; i < dataArrayRef.current.length; i++) {
-                barHeight = dataArrayRef.current[i] / 2;
+    analyserRef.current.getByteFrequencyData(dataArrayRef.current as any);
 
-                const gradient = ctx.createLinearGradient(0, 0, 0, height);
-                gradient.addColorStop(0, '#a78bfa');
-                gradient.addColorStop(1, '#6366f1');
+    // Calculate volume for simple visualization
+    let sum = 0;
+    for (let i = 0; i < dataArrayRef.current.length; i++) {
+      sum += dataArrayRef.current[i];
+    }
+    const average = sum / dataArrayRef.current.length;
+    setVolume(average);
 
-                ctx.fillStyle = gradient;
-                ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+    const ctx = canvasRef.current.getContext("2d");
+    if (ctx) {
+      const width = canvasRef.current.width;
+      const height = canvasRef.current.height;
+      const barWidth = (width / dataArrayRef.current.length) * 2.5;
+      let barHeight;
+      let x = 0;
 
-                x += barWidth + 1;
-            }
-        }
+      ctx.clearRect(0, 0, width, height);
 
-        animationFrameRef.current = requestAnimationFrame(drawVisualizer);
-    };
+      for (let i = 0; i < dataArrayRef.current.length; i++) {
+        barHeight = dataArrayRef.current[i] / 2;
 
-    return (
-        <div className="voice-view">
-            <div className="voice-container glass-morphism">
-                <div className="voice-visualizer">
-                    <canvas ref={canvasRef} width="600" height="200" />
-                    {/* Fallback circle if canvas fails or for extra style */}
-                    <div
-                        className="pulsing-circle"
-                        style={{
-                            transform: `scale(${1 + volume / 50})`,
-                            opacity: 0.5 + volume / 200
-                        }}
-                    />
-                </div>
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, "#a78bfa");
+        gradient.addColorStop(1, "#6366f1");
 
-                <div className="status-text">{status}</div>
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, height - barHeight, barWidth, barHeight);
 
-                <div className="controls">
-                    <button
-                        className={`mic-button ${isListening ? 'active' : ''}`}
-                        onClick={toggleListening}
-                    >
-                        {isListening ? '🛑' : '🎙️'}
-                    </button>
-                </div>
+        x += barWidth + 1;
+      }
+    }
 
-                <div className="mode-selector">
-                    <span className="mode-label">Modo: </span>
-                    <select className="mode-select">
-                        <option>Padrão (PTT)</option>
-                        <option>VAD (Atividade de Voz)</option>
-                        <option>Sempre Ativo</option>
-                    </select>
-                </div>
-            </div>
+    animationFrameRef.current = requestAnimationFrame(drawVisualizer);
+  };
 
-            <style>{`
+  return (
+    <div className="voice-view">
+      <div className="voice-container glass-morphism">
+        <div className="voice-visualizer">
+          <canvas ref={canvasRef} width="600" height="200" />
+          {/* Fallback circle if canvas fails or for extra style */}
+          <div
+            className="pulsing-circle"
+            style={{
+              transform: `scale(${1 + volume / 50})`,
+              opacity: 0.5 + volume / 200,
+            }}
+          />
+        </div>
+
+        <div className="status-text">{status}</div>
+
+        <div className="controls">
+          <button className={`mic-button ${isListening ? "active" : ""}`} onClick={toggleListening}>
+            {isListening ? "🛑" : "🎙️"}
+          </button>
+        </div>
+
+        <div className="mode-selector">
+          <span className="mode-label">Modo: </span>
+          <select className="mode-select">
+            <option>Padrão (PTT)</option>
+            <option>VAD (Atividade de Voz)</option>
+            <option>Sempre Ativo</option>
+          </select>
+        </div>
+      </div>
+
+      <style>{`
                 .voice-view {
                     display: flex;
                     justify-content: center;
@@ -227,6 +224,6 @@ export default function VoiceView() {
                     outline: none;
                 }
             `}</style>
-        </div>
-    );
+    </div>
+  );
 }

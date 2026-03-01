@@ -5,6 +5,7 @@ read_when:
   - Usando canvas/camera de nó para contexto do agente
   - Adicionando novos comandos de nó ou auxiliares da CLI
 ---
+
 # Nós (Nodes)
 
 Um **nó** é um dispositivo complementar (macOS/iOS/Android/headless) que se conecta ao Gateway via **WebSocket** (na mesma porta que os operadores) com `role: "node"` e expõe uma superfície de comando (ex: `canvas.*`, `camera.*`, `system.*`) via `node.invoke`. Detalhes do protocolo: [Protocolo do Gateway](/gateway/protocol).

@@ -2,13 +2,13 @@
 
 /**
  * Task Migration Helper - V1.0 to V2.0
- * 
+ *
  * Semi-automated migration helper that adds missing V2.0 sections to tasks.
  * Requires manual review and content filling.
- * 
+ *
  * Usage:
  *   node migrate-task-to-v2.js <task-file>     # Migrate single task
- * 
+ *
  * Process:
  *   1. Reads existing task
  *   2. Identifies missing V2.0 sections
@@ -17,14 +17,14 @@
  *   5. Saves migrated version
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const colors = {
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  cyan: '\x1b[36m',
-  reset: '\x1b[0m',
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  cyan: "\x1b[36m",
+  reset: "\x1b[0m",
 };
 
 /**
@@ -200,7 +200,7 @@ dependencies:
 tags:
   - {TODO: tag1}
   - {TODO: tag2}
-updated_at: ${new Date().toISOString().split('T')[0]}
+updated_at: ${new Date().toISOString().split("T")[0]}
 \`\`\`
 
 ---
@@ -212,18 +212,23 @@ updated_at: ${new Date().toISOString().split('T')[0]}
  */
 function analyzeMissingSections(content) {
   const checks = {
-    executionModes: !content.includes('## Execution Modes') && !content.includes('# Execution Modes'),
-    taskDefinition: !(content.includes('responsável:') && content.includes('atomic_layer:')),
-    entrada: !content.includes('**Entrada:**'),
-    saida: !content.includes('**Saída:**'),
-    preConditions: !content.includes('pre-conditions:'),
-    postConditions: !content.includes('post-conditions:'),
-    acceptanceCriteria: !content.includes('acceptance-criteria:'),
-    tools: !(content.includes('## Tools') || content.includes('**Tools:**')),
-    scripts: !(content.includes('## Scripts') || content.includes('**Scripts:**')),
-    errorHandling: !(content.includes('## Error Handling') && content.includes('strategy:')),
-    performance: !(content.includes('duration_expected:') && content.includes('cost_estimated:')),
-    metadata: !(content.includes('## Metadata') && content.includes('story:') && content.includes('version:')),
+    executionModes:
+      !content.includes("## Execution Modes") && !content.includes("# Execution Modes"),
+    taskDefinition: !(content.includes("responsável:") && content.includes("atomic_layer:")),
+    entrada: !content.includes("**Entrada:**"),
+    saida: !content.includes("**Saída:**"),
+    preConditions: !content.includes("pre-conditions:"),
+    postConditions: !content.includes("post-conditions:"),
+    acceptanceCriteria: !content.includes("acceptance-criteria:"),
+    tools: !(content.includes("## Tools") || content.includes("**Tools:**")),
+    scripts: !(content.includes("## Scripts") || content.includes("**Scripts:**")),
+    errorHandling: !(content.includes("## Error Handling") && content.includes("strategy:")),
+    performance: !(content.includes("duration_expected:") && content.includes("cost_estimated:")),
+    metadata: !(
+      content.includes("## Metadata") &&
+      content.includes("story:") &&
+      content.includes("version:")
+    ),
   };
 
   return checks;
@@ -234,15 +239,15 @@ function analyzeMissingSections(content) {
  */
 function migrateTask(filePath) {
   const fileName = path.basename(filePath);
-  
+
   console.log(`${colors.cyan}📝 Migrating: ${fileName}${colors.reset}\n`);
 
   // Read original file
-  const content = fs.readFileSync(filePath, 'utf8');
-  
+  const content = fs.readFileSync(filePath, "utf8");
+
   // Analyze missing sections
   const missing = analyzeMissingSections(content);
-  const missingSections = Object.keys(missing).filter(k => missing[k]);
+  const missingSections = Object.keys(missing).filter((k) => missing[k]);
 
   if (missingSections.length === 0) {
     console.log(`${colors.green}✅ Task already V2.0 compliant!${colors.reset}\n`);
@@ -250,97 +255,100 @@ function migrateTask(filePath) {
   }
 
   console.log(`${colors.yellow}Missing sections (${missingSections.length}):${colors.reset}`);
-  missingSections.forEach(section => {
+  missingSections.forEach((section) => {
     console.log(`   - ${section}`);
   });
   console.log();
 
   // Create backup
-  const backupPath = filePath.replace('.md', '.v1-backup.md');
-  fs.writeFileSync(backupPath, content, 'utf8');
+  const backupPath = filePath.replace(".md", ".v1-backup.md");
+  fs.writeFileSync(backupPath, content, "utf8");
   console.log(`${colors.green}✅ Backup created: ${path.basename(backupPath)}${colors.reset}`);
 
   // Build migrated content
   let migratedContent = content;
 
   // Find insertion point (usually after Purpose or first major section)
-  const purposeIndex = content.indexOf('## Purpose');
-  const insertionPoint = purposeIndex !== -1 
-    ? content.indexOf('\n---\n', purposeIndex) + 5
-    : content.indexOf('\n##', 100); // Fallback: after first heading
+  const purposeIndex = content.indexOf("## Purpose");
+  const insertionPoint =
+    purposeIndex !== -1
+      ? content.indexOf("\n---\n", purposeIndex) + 5
+      : content.indexOf("\n##", 100); // Fallback: after first heading
 
   if (insertionPoint === -1 || insertionPoint === 4) {
-    console.log(`${colors.yellow}⚠ Could not find insertion point. Adding sections at end.${colors.reset}`);
+    console.log(
+      `${colors.yellow}⚠ Could not find insertion point. Adding sections at end.${colors.reset}`,
+    );
   }
 
   // Add missing sections
-  let sectionsToAdd = '\n';
-  
+  let sectionsToAdd = "\n";
+
   if (missing.executionModes) {
-    sectionsToAdd += sectionTemplates.executionModes + '\n';
+    sectionsToAdd += sectionTemplates.executionModes + "\n";
   }
-  
+
   if (missing.taskDefinition || missing.entrada || missing.saida) {
-    sectionsToAdd += sectionTemplates.taskDefinition + '\n';
+    sectionsToAdd += sectionTemplates.taskDefinition + "\n";
   }
-  
+
   if (missing.preConditions) {
-    sectionsToAdd += sectionTemplates.preConditions + '\n';
+    sectionsToAdd += sectionTemplates.preConditions + "\n";
   }
-  
+
   if (missing.postConditions) {
-    sectionsToAdd += sectionTemplates.postConditions + '\n';
+    sectionsToAdd += sectionTemplates.postConditions + "\n";
   }
-  
+
   if (missing.acceptanceCriteria) {
-    sectionsToAdd += sectionTemplates.acceptanceCriteria + '\n';
+    sectionsToAdd += sectionTemplates.acceptanceCriteria + "\n";
   }
-  
+
   if (missing.tools) {
-    sectionsToAdd += sectionTemplates.tools + '\n';
+    sectionsToAdd += sectionTemplates.tools + "\n";
   }
-  
+
   if (missing.scripts) {
-    sectionsToAdd += sectionTemplates.scripts + '\n';
+    sectionsToAdd += sectionTemplates.scripts + "\n";
   }
-  
+
   if (missing.errorHandling) {
-    sectionsToAdd += sectionTemplates.errorHandling + '\n';
+    sectionsToAdd += sectionTemplates.errorHandling + "\n";
   }
-  
+
   if (missing.performance) {
-    sectionsToAdd += sectionTemplates.performance + '\n';
+    sectionsToAdd += sectionTemplates.performance + "\n";
   }
-  
+
   if (missing.metadata) {
-    sectionsToAdd += sectionTemplates.metadata + '\n';
+    sectionsToAdd += sectionTemplates.metadata + "\n";
   }
 
   // Insert sections
   if (insertionPoint > 0) {
-    migratedContent = 
-      content.substring(0, insertionPoint) +
-      sectionsToAdd +
-      content.substring(insertionPoint);
+    migratedContent =
+      content.substring(0, insertionPoint) + sectionsToAdd + content.substring(insertionPoint);
   } else {
-    migratedContent = content + '\n' + sectionsToAdd;
+    migratedContent = content + "\n" + sectionsToAdd;
   }
 
   // Save migrated file
-  fs.writeFileSync(filePath, migratedContent, 'utf8');
+  fs.writeFileSync(filePath, migratedContent, "utf8");
   console.log(`${colors.green}✅ Migration complete: ${fileName}${colors.reset}`);
   console.log(`${colors.yellow}⚠ IMPORTANT: Review and fill TODO markers${colors.reset}\n`);
 
   // Run validation
   console.log(`${colors.cyan}🔍 Validating migrated task...${colors.reset}`);
-  const validatePath = path.join(__dirname, 'validate-task-v2.js');
-  const { execSync } = require('child_process');
-  
+  const validatePath = path.join(__dirname, "validate-task-v2.js");
+  const { execSync } = require("child_process");
+
   try {
-    execSync(`node "${validatePath}" "${filePath}"`, { stdio: 'inherit' });
+    execSync(`node "${validatePath}" "${filePath}"`, { stdio: "inherit" });
   } catch (_error) {
     // Validation failed - expected for TODOs
-    console.log(`${colors.yellow}⚠ Validation failed - fill TODOs and re-validate${colors.reset}\n`);
+    console.log(
+      `${colors.yellow}⚠ Validation failed - fill TODOs and re-validate${colors.reset}\n`,
+    );
   }
 }
 
@@ -351,15 +359,15 @@ function main() {
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
-    console.log('Usage: node migrate-task-to-v2.js <task-file>');
-    console.log('');
-    console.log('Example:');
-    console.log('  node migrate-task-to-v2.js .aios-core/tasks/dev-develop-story.md');
+    console.log("Usage: node migrate-task-to-v2.js <task-file>");
+    console.log("");
+    console.log("Example:");
+    console.log("  node migrate-task-to-v2.js .aios-core/tasks/dev-develop-story.md");
     process.exit(0);
   }
 
   const taskFile = args[0];
-  
+
   if (!fs.existsSync(taskFile)) {
     console.error(`${colors.yellow}✗ File not found: ${taskFile}${colors.reset}`);
     process.exit(2);
@@ -374,4 +382,3 @@ if (require.main === module) {
 }
 
 module.exports = { migrateTask, analyzeMissingSections };
-

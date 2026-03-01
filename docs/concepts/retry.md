@@ -4,6 +4,7 @@ read_when:
   - Atualizando o comportamento de re-tentativa do provedor ou os padrões
   - Depurando erros de envio do provedor ou limites de taxa (rate limits)
 ---
+
 # Política de re-tentativa
 
 ## Objetivos
@@ -46,18 +47,18 @@ Defina a política de re-tentativa por provedor em `~/.zero/zero.json`:
         attempts: 3,
         minDelayMs: 400,
         maxDelayMs: 30000,
-        jitter: 0.1
-      }
+        jitter: 0.1,
+      },
     },
     discord: {
       retry: {
         attempts: 3,
         minDelayMs: 500,
         maxDelayMs: 30000,
-        jitter: 0.1
-      }
-    }
-  }
+        jitter: 0.1,
+      },
+    },
+  },
 }
 ```
 

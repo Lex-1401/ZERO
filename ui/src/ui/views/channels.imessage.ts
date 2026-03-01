@@ -56,12 +56,16 @@ export function renderIMessageCard(params: {
                     </div>
                 </div>
 
-                ${imessage?.lastError ? html`
+                ${
+                  imessage?.lastError
+                    ? html`
                     <div class="group-list" style="border-color: var(--danger); background: rgba(255, 59, 48, 0.05); padding: 12px; margin-bottom: 24px;">
                         <div style="color: var(--danger); font-size: 12px; font-weight: 700;">Erro de Protocolo</div>
                         <div style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">${imessage.lastError}</div>
                     </div>
-                ` : nothing}
+                `
+                    : nothing
+                }
 
                 ${renderChannelConfigSection({ channelId: "imessage", props })}
             </div>
@@ -80,7 +84,9 @@ export function renderIMessageCard(params: {
                             </div>
                         </div>
                         
-                        ${imessage?.probe ? html`
+                        ${
+                          imessage?.probe
+                            ? html`
                             <div style="width: 100%; height: 1px; background: var(--border-subtle);"></div>
                             <div style="width: 100%;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
@@ -91,9 +97,13 @@ export function renderIMessageCard(params: {
                                     ${imessage.probe.error ? html`<span style="color: var(--danger);">${imessage.probe.error}</span>` : "Status nominal"}
                                 </div>
                             </div>
-                        ` : html`
-                            <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%;">Nenhum diagnóstico pendente.</div>
-                        `}
+                        `
+                            : html`
+                                <div style="text-align: center; color: var(--text-dim); font-size: 11px; width: 100%">
+                                  Nenhum diagnóstico pendente.
+                                </div>
+                              `
+                        }
                     </div>
                 </div>
             </div>

@@ -2,7 +2,24 @@
 name: himalaya
 description: "CLI para gerenciar e-mails via IMAP/SMTP. Use o `himalaya` para listar, ler, escrever, responder, encaminhar, pesquisar e organizar e-mails pelo terminal. Suporta múltiplas contas e composição de mensagens com MML (MIME Meta Language)."
 homepage: https://github.com/pimalaya/himalaya
-metadata: {"zero":{"emoji":"📧","requires":{"bins":["himalaya"]},"install":[{"id":"brew","kind":"brew","formula":"himalaya","bins":["himalaya"],"label":"Instalar Himalaya (brew)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "📧",
+        "requires": { "bins": ["himalaya"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "himalaya",
+              "bins": ["himalaya"],
+              "label": "Instalar Himalaya (brew)",
+            },
+          ],
+      },
+  }
 ---
 
 # Himalaya Email CLI

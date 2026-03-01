@@ -9,43 +9,41 @@
  * @see Story SQS-6: Download & Publish Tasks
  */
 
-const https = require('https');
-const fs = require('fs').promises;
-const path = require('path');
+const https = require("https");
+const fs = require("fs").promises;
+const path = require("path");
 
 /**
  * Default registry URL for aios-squads
  * @constant {string}
  */
-const REGISTRY_URL =
-  'https://raw.githubusercontent.com/SynkraAI/aios-squads/main/registry.json';
+const REGISTRY_URL = "https://raw.githubusercontent.com/SynkraAI/aios-squads/main/registry.json";
 
 /**
  * GitHub API base URL for aios-squads contents
  * @constant {string}
  */
-const GITHUB_API_BASE =
-  'https://api.github.com/repos/SynkraAI/aios-squads/contents/packages';
+const GITHUB_API_BASE = "https://api.github.com/repos/SynkraAI/aios-squads/contents/packages";
 
 /**
  * Default path for downloaded squads
  * @constant {string}
  */
-const DEFAULT_SQUADS_PATH = './squads';
+const DEFAULT_SQUADS_PATH = "./squads";
 
 /**
  * Error codes for SquadDownloaderError
  * @enum {string}
  */
 const DownloaderErrorCodes = {
-  REGISTRY_FETCH_ERROR: 'REGISTRY_FETCH_ERROR',
-  SQUAD_NOT_FOUND: 'SQUAD_NOT_FOUND',
-  VERSION_NOT_FOUND: 'VERSION_NOT_FOUND',
-  DOWNLOAD_ERROR: 'DOWNLOAD_ERROR',
-  NETWORK_ERROR: 'NETWORK_ERROR',
-  VALIDATION_ERROR: 'VALIDATION_ERROR',
-  SQUAD_EXISTS: 'SQUAD_EXISTS',
-  RATE_LIMIT: 'RATE_LIMIT',
+  REGISTRY_FETCH_ERROR: "REGISTRY_FETCH_ERROR",
+  SQUAD_NOT_FOUND: "SQUAD_NOT_FOUND",
+  VERSION_NOT_FOUND: "VERSION_NOT_FOUND",
+  DOWNLOAD_ERROR: "DOWNLOAD_ERROR",
+  NETWORK_ERROR: "NETWORK_ERROR",
+  VALIDATION_ERROR: "VALIDATION_ERROR",
+  SQUAD_EXISTS: "SQUAD_EXISTS",
+  RATE_LIMIT: "RATE_LIMIT",
 };
 
 /**
@@ -61,9 +59,9 @@ class SquadDownloaderError extends Error {
    */
   constructor(code, message, suggestion) {
     super(message);
-    this.name = 'SquadDownloaderError';
+    this.name = "SquadDownloaderError";
     this.code = code;
-    this.suggestion = suggestion || '';
+    this.suggestion = suggestion || "";
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SquadDownloaderError);
@@ -132,7 +130,7 @@ class SquadDownloader {
    * // [{ name: 'etl-squad', version: '1.0.0', description: '...', type: 'official' }]
    */
   async listAvailable() {
-    this._log('Listing available squads from registry');
+    this._log("Listing available squads from registry");
     const registry = await this.fetchRegistry();
 
     const squads = [];
@@ -142,10 +140,10 @@ class SquadDownloader {
       for (const squad of registry.squads.official) {
         squads.push({
           name: squad.name,
-          version: squad.version || 'latest',
-          description: squad.description || '',
-          type: 'official',
-          author: squad.author || 'SynkraAI',
+          version: squad.version || "latest",
+          description: squad.description || "",
+          type: "official",
+          author: squad.author || "SynkraAI",
         });
       }
     }
@@ -155,10 +153,10 @@ class SquadDownloader {
       for (const squad of registry.squads.community) {
         squads.push({
           name: squad.name,
-          version: squad.version || 'latest',
-          description: squad.description || '',
-          type: 'community',
-          author: squad.author || 'Community',
+          version: squad.version || "latest",
+          description: squad.description || "",
+          type: "community",
+          author: squad.author || "Community",
         });
       }
     }
@@ -190,12 +188,12 @@ class SquadDownloader {
   async download(squadName, options = {}) {
     // Parse name@version syntax
     let name = squadName;
-    let version = options.version || 'latest';
+    let version = options.version || "latest";
 
-    if (squadName.includes('@')) {
-      const parts = squadName.split('@');
+    if (squadName.includes("@")) {
+      const parts = squadName.split("@");
       name = parts[0];
-      version = parts[1] || 'latest';
+      version = parts[1] || "latest";
     }
 
     this._log(`Downloading squad: ${name}@${version}`);
@@ -206,7 +204,7 @@ class SquadDownloader {
       throw new SquadDownloaderError(
         DownloaderErrorCodes.SQUAD_EXISTS,
         `Squad "${name}" already exists at ${targetPath}`,
-        'Use --overwrite flag or delete existing squad first',
+        "Use --overwrite flag or delete existing squad first",
       );
     }
 
@@ -218,12 +216,12 @@ class SquadDownloader {
       throw new SquadDownloaderError(
         DownloaderErrorCodes.SQUAD_NOT_FOUND,
         `Squad "${name}" not found in registry`,
-        'Use *download-squad --list to see available squads',
+        "Use *download-squad --list to see available squads",
       );
     }
 
     // 3. Verify version if specified
-    if (version !== 'latest' && squadInfo.version !== version) {
+    if (version !== "latest" && squadInfo.version !== version) {
       this._log(
         `Warning: Requested version ${version}, but only ${squadInfo.version} is available`,
       );
@@ -236,7 +234,7 @@ class SquadDownloader {
     let validation = { valid: true, errors: [], warnings: [] };
     if (options.validate !== false) {
       try {
-        const { SquadValidator } = require('./squad-validator');
+        const { SquadValidator } = require("./squad-validator");
         const validator = new SquadValidator({ verbose: this.verbose });
         validation = await validator.validate(targetPath);
       } catch (error) {
@@ -247,7 +245,7 @@ class SquadDownloader {
     // 6. Load manifest
     let manifest = null;
     try {
-      const { SquadLoader } = require('./squad-loader');
+      const { SquadLoader } = require("./squad-loader");
       const loader = new SquadLoader({ squadsPath: this.squadsPath });
       manifest = await loader.loadManifest(targetPath);
     } catch (error) {
@@ -271,7 +269,7 @@ class SquadDownloader {
       this._registryCacheTime &&
       Date.now() - this._registryCacheTime < this._cacheMaxAge
     ) {
-      this._log('Using cached registry');
+      this._log("Using cached registry");
       return this._registryCache;
     }
 
@@ -279,7 +277,7 @@ class SquadDownloader {
 
     try {
       const data = await this._fetch(this.registryUrl);
-      const registry = JSON.parse(data.toString('utf-8'));
+      const registry = JSON.parse(data.toString("utf-8"));
 
       // Update cache
       this._registryCache = registry;
@@ -287,13 +285,13 @@ class SquadDownloader {
 
       return registry;
     } catch (error) {
-      if (error.code === 'RATE_LIMIT') {
+      if (error.code === "RATE_LIMIT") {
         throw error;
       }
       throw new SquadDownloaderError(
         DownloaderErrorCodes.REGISTRY_FETCH_ERROR,
         `Failed to fetch registry: ${error.message}`,
-        'Check network connection or try again later',
+        "Check network connection or try again later",
       );
     }
   }
@@ -314,7 +312,7 @@ class SquadDownloader {
     if (registry.squads.official) {
       const found = registry.squads.official.find((s) => s.name === name);
       if (found) {
-        return { ...found, type: 'official' };
+        return { ...found, type: "official" };
       }
     }
 
@@ -322,7 +320,7 @@ class SquadDownloader {
     if (registry.squads.community) {
       const found = registry.squads.community.find((s) => s.name === name);
       if (found) {
-        return { ...found, type: 'community' };
+        return { ...found, type: "community" };
       }
     }
 
@@ -347,20 +345,20 @@ class SquadDownloader {
 
     try {
       const data = await this._fetch(apiUrl, true);
-      contents = JSON.parse(data.toString('utf-8'));
+      contents = JSON.parse(data.toString("utf-8"));
     } catch (error) {
       throw new SquadDownloaderError(
         DownloaderErrorCodes.DOWNLOAD_ERROR,
         `Failed to fetch squad contents: ${error.message}`,
-        'Squad may not exist in repository yet',
+        "Squad may not exist in repository yet",
       );
     }
 
     if (!Array.isArray(contents)) {
       throw new SquadDownloaderError(
         DownloaderErrorCodes.DOWNLOAD_ERROR,
-        'Invalid response from GitHub API',
-        'Check if squad exists in aios-squads repository',
+        "Invalid response from GitHub API",
+        "Check if squad exists in aios-squads repository",
       );
     }
 
@@ -380,16 +378,16 @@ class SquadDownloader {
     for (const item of contents) {
       const itemPath = path.join(targetPath, item.name);
 
-      if (item.type === 'file') {
+      if (item.type === "file") {
         // Download file - Buffer is written directly (supports binary files)
         this._log(`Downloading: ${item.name}`);
         const fileContent = await this._fetch(item.download_url);
         await fs.writeFile(itemPath, fileContent);
-      } else if (item.type === 'dir') {
+      } else if (item.type === "dir") {
         // Create directory and download contents
         await fs.mkdir(itemPath, { recursive: true });
         const dirContents = await this._fetch(item.url, true);
-        const parsed = JSON.parse(dirContents.toString('utf-8'));
+        const parsed = JSON.parse(dirContents.toString("utf-8"));
         await this._downloadContents(parsed, itemPath);
       }
     }
@@ -406,14 +404,14 @@ class SquadDownloader {
     return new Promise((resolve, reject) => {
       const options = {
         headers: {
-          'User-Agent': 'AIOS-SquadDownloader/1.0',
+          "User-Agent": "AIOS-SquadDownloader/1.0",
         },
       };
 
       if (useApi) {
-        options.headers['Accept'] = 'application/vnd.github.v3+json';
+        options.headers["Accept"] = "application/vnd.github.v3+json";
         if (this.githubToken) {
-          options.headers['Authorization'] = `token ${this.githubToken}`;
+          options.headers["Authorization"] = `token ${this.githubToken}`;
         }
       }
 
@@ -421,15 +419,15 @@ class SquadDownloader {
         .get(url, options, (res) => {
           // Check for rate limiting
           if (res.statusCode === 403) {
-            const rateLimitRemaining = res.headers['x-ratelimit-remaining'];
-            if (rateLimitRemaining === '0') {
-              const resetTime = res.headers['x-ratelimit-reset'];
+            const rateLimitRemaining = res.headers["x-ratelimit-remaining"];
+            if (rateLimitRemaining === "0") {
+              const resetTime = res.headers["x-ratelimit-reset"];
               const resetDate = new Date(parseInt(resetTime) * 1000);
               reject(
                 new SquadDownloaderError(
                   DownloaderErrorCodes.RATE_LIMIT,
                   `GitHub API rate limit exceeded. Resets at ${resetDate.toISOString()}`,
-                  'Set GITHUB_TOKEN environment variable to increase rate limit',
+                  "Set GITHUB_TOKEN environment variable to increase rate limit",
                 ),
               );
               return;
@@ -455,20 +453,20 @@ class SquadDownloader {
 
           // Collect chunks as Buffer objects to support binary files
           const chunks = [];
-          res.on('data', (chunk) => {
+          res.on("data", (chunk) => {
             chunks.push(chunk);
           });
-          res.on('end', () => {
+          res.on("end", () => {
             // Concatenate all chunks into a single Buffer
             resolve(Buffer.concat(chunks));
           });
         })
-        .on('error', (error) => {
+        .on("error", (error) => {
           reject(
             new SquadDownloaderError(
               DownloaderErrorCodes.NETWORK_ERROR,
               `Network error: ${error.message}`,
-              'Check internet connection',
+              "Check internet connection",
             ),
           );
         });
@@ -496,7 +494,7 @@ class SquadDownloader {
   clearCache() {
     this._registryCache = null;
     this._registryCacheTime = null;
-    this._log('Registry cache cleared');
+    this._log("Registry cache cleared");
   }
 }
 

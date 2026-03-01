@@ -9,12 +9,12 @@
  * @story 6.9
  */
 
-const modeDetector = require('./mode-detector');
-const docGenerator = require('./doc-generator');
-const configGenerator = require('./config-generator');
-const deploymentConfigLoader = require('./deployment-config-loader');
-const gitignoreGenerator = require('./gitignore-generator');
-const brownfieldAnalyzer = require('./brownfield-analyzer');
+const modeDetector = require("./mode-detector");
+const docGenerator = require("./doc-generator");
+const configGenerator = require("./config-generator");
+const deploymentConfigLoader = require("./deployment-config-loader");
+const gitignoreGenerator = require("./gitignore-generator");
+const brownfieldAnalyzer = require("./brownfield-analyzer");
 
 // Re-export all modules
 module.exports = {

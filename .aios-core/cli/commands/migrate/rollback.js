@@ -8,10 +8,10 @@
  * @story 2.14 - Migration Script v2.0 → v4.0.4
  */
 
-const fs = require('fs');
-const path = require('path');
-const { findLatestBackup, verifyBackup, copyFileWithMetadata } = require('./backup');
-const { clearMigrationState } = require('./execute');
+const fs = require("fs");
+const path = require("path");
+const { findLatestBackup, verifyBackup, copyFileWithMetadata } = require("./backup");
+const { clearMigrationState } = require("./execute");
 
 /**
  * Remove v4.0.4 module directories
@@ -22,13 +22,13 @@ const { clearMigrationState } = require('./execute');
 async function removeV21Structure(aiosCoreDir, options = {}) {
   const { onProgress = () => {} } = options;
 
-  const v21Modules = ['core', 'development', 'product', 'infrastructure'];
+  const v21Modules = ["core", "development", "product", "infrastructure"];
   const result = {
     removed: [],
     errors: [],
   };
 
-  onProgress({ phase: 'remove', message: '✓ Removing v4.0.4 structure...' });
+  onProgress({ phase: "remove", message: "✓ Removing v4.0.4 structure..." });
 
   for (const moduleName of v21Modules) {
     const moduleDir = path.join(aiosCoreDir, moduleName);
@@ -37,7 +37,7 @@ async function removeV21Structure(aiosCoreDir, options = {}) {
       try {
         await fs.promises.rm(moduleDir, { recursive: true, force: true });
         result.removed.push(moduleDir);
-        onProgress({ phase: 'removed', message: `  ✓ Removed ${moduleName}/` });
+        onProgress({ phase: "removed", message: `  ✓ Removed ${moduleName}/` });
       } catch (error) {
         result.errors.push({
           path: moduleDir,
@@ -69,14 +69,14 @@ async function restoreFromBackup(backup, projectRoot, options = {}) {
 
   // Verify backup integrity first
   if (verifyFirst) {
-    onProgress({ phase: 'verify', message: 'Verifying backup integrity...' });
+    onProgress({ phase: "verify", message: "Verifying backup integrity..." });
 
     const verification = await verifyBackup(backup.path);
 
     if (!verification.valid) {
       result.errors.push({
-        type: 'verification',
-        message: 'Backup verification failed',
+        type: "verification",
+        message: "Backup verification failed",
         details: {
           missing: verification.missing,
           failed: verification.failed,
@@ -85,14 +85,14 @@ async function restoreFromBackup(backup, projectRoot, options = {}) {
       return result;
     }
 
-    onProgress({ phase: 'verified', message: `  ✓ Verified ${verification.verified} files` });
+    onProgress({ phase: "verified", message: `  ✓ Verified ${verification.verified} files` });
   }
 
-  const aiosCoreDir = path.join(projectRoot, '.aios-core');
-  const backupAiosCoreDir = path.join(backup.path, '.aios-core');
+  const aiosCoreDir = path.join(projectRoot, ".aios-core");
+  const backupAiosCoreDir = path.join(backup.path, ".aios-core");
 
   // Restore .aios-core files
-  onProgress({ phase: 'restore', message: '✓ Restoring v2.0 files...' });
+  onProgress({ phase: "restore", message: "✓ Restoring v2.0 files..." });
 
   for (const file of backup.manifest.files) {
     try {
@@ -106,7 +106,6 @@ async function restoreFromBackup(backup, projectRoot, options = {}) {
 
       await copyFileWithMetadata(sourcePath, targetPath);
       result.restored++;
-
     } catch (error) {
       result.errors.push({
         file: file.relativePath,
@@ -115,7 +114,7 @@ async function restoreFromBackup(backup, projectRoot, options = {}) {
     }
   }
 
-  onProgress({ phase: 'restored', message: `  ✓ Restored ${result.restored} files` });
+  onProgress({ phase: "restored", message: `  ✓ Restored ${result.restored} files` });
 
   result.success = result.errors.length === 0;
 
@@ -140,28 +139,27 @@ async function executeRollback(projectRoot, options = {}) {
   };
 
   // Find backup
-  onProgress({ phase: 'find', message: 'Looking for backup...' });
+  onProgress({ phase: "find", message: "Looking for backup..." });
 
   let backup;
 
   if (backupPath) {
     // Use specified backup
-    const manifestPath = path.join(backupPath, 'backup-manifest.json');
+    const manifestPath = path.join(backupPath, "backup-manifest.json");
 
     if (!fs.existsSync(manifestPath)) {
-      result.errors.push({ type: 'backup', message: `No manifest found at ${backupPath}` });
+      result.errors.push({ type: "backup", message: `No manifest found at ${backupPath}` });
       return result;
     }
 
-    const manifest = JSON.parse(await fs.promises.readFile(manifestPath, 'utf8'));
+    const manifest = JSON.parse(await fs.promises.readFile(manifestPath, "utf8"));
     backup = { path: backupPath, manifest };
-
   } else {
     // Find latest backup
     backup = await findLatestBackup(projectRoot);
 
     if (!backup) {
-      result.errors.push({ type: 'backup', message: 'No backup found. Cannot rollback.' });
+      result.errors.push({ type: "backup", message: "No backup found. Cannot rollback." });
       return result;
     }
   }
@@ -174,7 +172,7 @@ async function executeRollback(projectRoot, options = {}) {
   };
 
   onProgress({
-    phase: 'found',
+    phase: "found",
     message: `Found backup: ${path.basename(backup.path)}`,
     details: {
       created: backup.manifest?.created,
@@ -183,7 +181,7 @@ async function executeRollback(projectRoot, options = {}) {
   });
 
   // Step 1: Remove v4.0.4 structure
-  const aiosCoreDir = path.join(projectRoot, '.aios-core');
+  const aiosCoreDir = path.join(projectRoot, ".aios-core");
   result.removal = await removeV21Structure(aiosCoreDir, { onProgress });
 
   if (result.removal.errors.length > 0) {
@@ -203,10 +201,10 @@ async function executeRollback(projectRoot, options = {}) {
   await clearMigrationState(projectRoot);
 
   // Step 4: Validate restored structure
-  onProgress({ phase: 'validate', message: '✓ Validating restored structure...' });
+  onProgress({ phase: "validate", message: "✓ Validating restored structure..." });
 
   // Simple validation - check a few expected directories exist
-  const expectedDirs = ['agents', 'tasks', 'registry'];
+  const expectedDirs = ["agents", "tasks", "registry"];
   let validCount = 0;
 
   for (const dir of expectedDirs) {
@@ -216,11 +214,11 @@ async function executeRollback(projectRoot, options = {}) {
   }
 
   if (validCount >= 2) {
-    onProgress({ phase: 'complete', message: '✅ Rollback complete!' });
+    onProgress({ phase: "complete", message: "✅ Rollback complete!" });
     result.success = true;
   } else {
     result.warnings = result.warnings || [];
-    result.warnings.push('Restored structure may be incomplete');
+    result.warnings.push("Restored structure may be incomplete");
   }
 
   return result;
@@ -234,12 +232,12 @@ async function executeRollback(projectRoot, options = {}) {
 function formatRollbackSummary(result) {
   const lines = [];
 
-  lines.push('');
-  lines.push('🔙 AIOS Migration Rollback');
-  lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  lines.push("");
+  lines.push("🔙 AIOS Migration Rollback");
+  lines.push("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
   if (result.backup) {
-    lines.push('');
+    lines.push("");
     lines.push(`Backup: ${path.basename(result.backup.path)}`);
     if (result.backup.date) {
       lines.push(`  Created: ${new Date(result.backup.date).toLocaleString()}`);
@@ -250,13 +248,13 @@ function formatRollbackSummary(result) {
   }
 
   if (result.success) {
-    lines.push('');
-    lines.push('✅ Rollback complete!');
-    lines.push('');
-    lines.push('Your project is now at v2.0 state.');
+    lines.push("");
+    lines.push("✅ Rollback complete!");
+    lines.push("");
+    lines.push("Your project is now at v2.0 state.");
   } else {
-    lines.push('');
-    lines.push('⚠️  Rollback completed with issues:');
+    lines.push("");
+    lines.push("⚠️  Rollback completed with issues:");
 
     for (const error of result.errors || []) {
       if (error.message) {
@@ -268,7 +266,7 @@ function formatRollbackSummary(result) {
   }
 
   if (result.restore) {
-    lines.push('');
+    lines.push("");
     lines.push(`Restored: ${result.restore.restored} files`);
   }
 
@@ -276,7 +274,7 @@ function formatRollbackSummary(result) {
     lines.push(`Removed: ${result.removal.removed.length} v4.0.4 directories`);
   }
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 /**
@@ -290,7 +288,7 @@ async function canRollback(projectRoot) {
   if (!backup) {
     return {
       canRollback: false,
-      reason: 'No backup found',
+      reason: "No backup found",
     };
   }
 
@@ -299,7 +297,7 @@ async function canRollback(projectRoot) {
   if (!verification.valid) {
     return {
       canRollback: false,
-      reason: 'Backup verification failed',
+      reason: "Backup verification failed",
       details: verification,
     };
   }

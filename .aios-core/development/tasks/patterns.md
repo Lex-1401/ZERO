@@ -77,6 +77,7 @@ pre-conditions:
 ## Implementation Steps
 
 ### Step 1: Check Help Flag
+
 ```javascript
 if (args.help) {
   displayHelp();
@@ -85,22 +86,24 @@ if (args.help) {
 ```
 
 ### Step 2: Load Learning Module
+
 ```javascript
-const learning = require('.aios-core/workflow-intelligence/learning');
+const learning = require(".aios-core/workflow-intelligence/learning");
 const store = learning.getDefaultStore();
 ```
 
 ### Step 3: Execute Subcommand
 
 #### List Patterns
+
 ```javascript
-if (args.subcommand === 'list' || !args.subcommand) {
+if (args.subcommand === "list" || !args.subcommand) {
   const data = store.load();
   let patterns = data.patterns;
 
   // Filter by status if provided
   if (args.status) {
-    patterns = patterns.filter(p => p.status === args.status);
+    patterns = patterns.filter((p) => p.status === args.status);
   }
 
   // Sort by occurrences (descending)
@@ -114,37 +117,40 @@ if (args.subcommand === 'list' || !args.subcommand) {
 ```
 
 #### Show Stats
+
 ```javascript
-if (args.subcommand === 'stats') {
+if (args.subcommand === "stats") {
   const stats = store.getStats();
   displayStats(stats);
 }
 ```
 
 #### Prune Patterns
+
 ```javascript
-if (args.subcommand === 'prune') {
+if (args.subcommand === "prune") {
   const result = store.prune();
   console.log(`✓ Pruned ${result.pruned} patterns. ${result.remaining} remaining.`);
 }
 ```
 
 #### Review Patterns
+
 ```javascript
-if (args.subcommand === 'review') {
-  const pendingPatterns = store.getByStatus('pending');
+if (args.subcommand === "review") {
+  const pendingPatterns = store.getByStatus("pending");
 
   if (pendingPatterns.length === 0) {
-    console.log('No patterns pending review.');
+    console.log("No patterns pending review.");
     return;
   }
 
   // Interactive review (uses elicitation)
   for (const pattern of pendingPatterns) {
     const action = await promptReviewAction(pattern);
-    if (action === 'quit') break;
+    if (action === "quit") break;
 
-    store.updateStatus(pattern.id, action === 'promote' ? 'active' : action);
+    store.updateStatus(pattern.id, action === "promote" ? "active" : action);
     console.log(`✓ Pattern ${action}d.`);
   }
 }
@@ -189,6 +195,7 @@ Pattern Lifecycle:
 ## Output Formats
 
 ### List Output
+
 ```text
 Learned Patterns (15 total)
 ═══════════════════════════
@@ -210,6 +217,7 @@ Showing 3 of 15 patterns. Use --limit to see more.
 ```
 
 ### Stats Output
+
 ```text
 Pattern Learning Statistics
 ═══════════════════════════
@@ -234,6 +242,7 @@ Last updated: 2025-12-26T10:30:00Z
 ```
 
 ### Review Output
+
 ```text
 *patterns review
 
@@ -280,21 +289,22 @@ post-conditions:
 
 ## Error Handling
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| Learning module not found | Missing dependency | Show error message |
-| Storage file corrupt | Invalid YAML | Reset to empty, show warning |
-| No patterns found | Empty storage | Show "no patterns" message |
-| Review cancelled | User quit | Save any changes made |
+| Error                     | Cause              | Resolution                   |
+| ------------------------- | ------------------ | ---------------------------- |
+| Learning module not found | Missing dependency | Show error message           |
+| Storage file corrupt      | Invalid YAML       | Reset to empty, show warning |
+| No patterns found         | Empty storage      | Show "no patterns" message   |
+| Review cancelled          | User quit          | Save any changes made        |
 
 **Error Recovery Strategy:**
+
 ```javascript
 try {
   const stats = store.getStats();
   displayStats(stats);
 } catch (error) {
   console.error(`⚠️ Error reading patterns: ${error.message}`);
-  console.log('Try running: rm .aios-core/data/learned-patterns.yaml');
+  console.log("Try running: rm .aios-core/data/learned-patterns.yaml");
 }
 ```
 

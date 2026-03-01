@@ -4,6 +4,7 @@ read_when:
   - Implementando recursos do app para macOS
   - Alterando o ciclo de vida do gateway ou a ponte de nós no macOS
 ---
+
 # Complemento do ZERO para macOS (barra de menus + broker do gateway)
 
 O aplicativo para macOS é o **companheiro da barra de menus** para o ZERO. Ele detém as permissões, gerencia/conecta-se ao Gateway localmente (launchd ou manual) e expõe os recursos do macOS ao agente como um nó.
@@ -82,9 +83,7 @@ Exemplo:
     "main": {
       "security": "allowlist",
       "ask": "on-miss",
-      "allowlist": [
-        { "pattern": "/opt/homebrew/bin/rg" }
-      ]
+      "allowlist": [{ "pattern": "/opt/homebrew/bin/rg" }]
     }
   }
 }
@@ -124,10 +123,10 @@ Segurança:
 
 ## Fluxo de Integração (Típico)
 
-1) Instale e inicie o **ZERO.app**.
-2) Complete o checklist de permissões (prompts de TCC).
-3) Garanta que o modo **Local** esteja ativo e o Gateway esteja em execução.
-4) Instale a CLI se desejar acesso via terminal.
+1. Instale e inicie o **ZERO.app**.
+2. Complete o checklist de permissões (prompts de TCC).
+3. Garanta que o modo **Local** esteja ativo e o Gateway esteja em execução.
+4. Instale a CLI se desejar acesso via terminal.
 
 ## Fluxo de Build & Dev (Nativo)
 

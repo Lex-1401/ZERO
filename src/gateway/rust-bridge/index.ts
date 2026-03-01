@@ -10,10 +10,7 @@ let rustModule: any = null;
 try {
   // Attempt to load the release build of the rust addon
   // rustModule = require("../../../release/zero_core.node");
-  console.log("[RustBridge] Native module not found, using JS fallback.");
-} catch {
-  console.log("[RustBridge] Using JS fallback.");
-}
+} catch {}
 
 export const VectorOps = {
   cosineSimilarity: (a: number[], b: number[]) => {

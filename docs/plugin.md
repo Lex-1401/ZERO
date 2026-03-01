@@ -15,19 +15,19 @@ Na maioria das vezes, você usará plugins quando quiser um recurso que ainda n�
 
 Caminho rápido:
 
-1) Veja o que já está carregado:
+1. Veja o que já está carregado:
 
 ```bash
 zero plugins list
 ```
 
-1) Instale um plugin oficial (exemplo: Voice Call):
+1. Instale um plugin oficial (exemplo: Voice Call):
 
 ```bash
 zero plugins install @zero/voice-call
 ```
 
-1) Reinicie o Gateway e configure em `plugins.entries.<id>.config`.
+1. Reinicie o Gateway e configure em `plugins.entries.<id>.config`.
 
 Consulte [Voice Call](/plugins/voice-call) para um exemplo concreto de plugin.
 
@@ -83,21 +83,21 @@ Notas:
 
 O ZERO escaneia, nesta ordem:
 
-1) Caminhos de configuração
+1. Caminhos de configuração
 
 - `plugins.load.paths` (arquivo ou diretório)
 
-1) Extensões do Workspace
+1. Extensões do Workspace
 
 - `<workspace>/.zero/extensions/*.ts`
 - `<workspace>/.zero/extensions/*/index.ts`
 
-1) Extensões Globais
+1. Extensões Globais
 
 - `~/.zero/extensions/*.ts`
 - `~/.zero/extensions/*/index.ts`
 
-1) Extensões Integradas (enviadas com o ZERO, **desativadas por padrão**)
+1. Extensões Integradas (enviadas com o ZERO, **desativadas por padrão**)
 
 - `<zero>/extensions/*`
 
@@ -181,9 +181,9 @@ Se um plugin exporta um `id`, o ZERO o utiliza, mas emite um aviso se ele não c
     deny: ["plugin-nao-confiavel"],
     load: { paths: ["~/Projetos/oss/extensao-voice-call"] },
     entries: {
-      "voice-call": { enabled: true, config: { provider: "twilio" } }
-    }
-  }
+      "voice-call": { enabled: true, config: { provider: "twilio" } },
+    },
+  },
 }
 ```
 
@@ -212,9 +212,9 @@ Algumas categorias de plugin são **exclusivas** (apenas uma ativa por vez). Use
 {
   plugins: {
     slots: {
-      memory: "memory-core" // ou "none" para desativar plugins de memória
-    }
-  }
+      memory: "memory-core", // ou "none" para desativar plugins de memória
+    },
+  },
 }
 ```
 
@@ -368,7 +368,7 @@ const meuCanal = {
   config: {
     listAccountIds: (cfg) => Object.keys(cfg.channels?.acmechat?.accounts ?? {}),
     resolveAccount: (cfg, accountId) =>
-      (cfg.channels?.acmechat?.accounts?.[accountId ?? "default"] ?? { accountId }),
+      cfg.channels?.acmechat?.accounts?.[accountId ?? "default"] ?? { accountId },
   },
   outbound: {
     deliveryMode: "direct",
@@ -393,31 +393,31 @@ Notas:
 
 Use isto quando quiser uma **nova superfície de chat** (um “canal de mensagens”), não um provedor de modelos. Documentação de provedores de modelos fica sob `/providers/*`.
 
-1) Escolha um ID + formato de configuração
+1. Escolha um ID + formato de configuração
 
 - Toda a configuração do canal fica sob `channels.<id>`.
 - Prefira `channels.<id>.accounts.<accountId>` para configurações multi-conta.
 
-1) Defina os metadados do canal
+1. Defina os metadados do canal
 
 - `meta.label`, `meta.selectionLabel`, `meta.docsPath`, `meta.blurb` controlam as listas da CLI/UI.
 - `meta.docsPath` deve apontar para uma página de documentação como `/channels/<id>`.
 - `meta.preferOver` permite que um plugin substitua outro canal (a ativação automática o preferirá).
 - `meta.detailLabel` e `meta.systemImage` são usados pelas UIs para texto/ícones detalhados.
 
-1) Implemente os adaptadores obrigatórios
+1. Implemente os adaptadores obrigatórios
 
 - `config.listAccountIds` + `config.resolveAccount`.
 - `capabilities` (tipos de chat, mídia, tópicos, etc.).
 - `outbound.deliveryMode` + `outbound.sendText` (para envio básico).
 
-1) Adicione adaptadores opcionais conforme necessário
+1. Adicione adaptadores opcionais conforme necessário
 
 - `setup` (assistente), `security` (política de DM), `status` (saúde/diagnósticos).
 - `gateway` (iniciar/parar/login), `mentions`, `threading`, `streaming`.
 - `actions` (ações de mensagem), `commands` (comportamento de comando nativo).
 
-1) Registre o canal no seu plugin
+1. Registre o canal no seu plugin
 
 - `api.registerChannel({ plugin })`.
 
@@ -428,10 +428,10 @@ Exemplo de configuração mínima:
   channels: {
     acmechat: {
       accounts: {
-        default: { token: "TOKEN_ACME", enabled: true }
-      }
-    }
-  }
+        default: { token: "TOKEN_ACME", enabled: true },
+      },
+    },
+  },
 }
 ```
 
@@ -452,7 +452,7 @@ const plugin = {
   config: {
     listAccountIds: (cfg) => Object.keys(cfg.channels?.acmechat?.accounts ?? {}),
     resolveAccount: (cfg, accountId) =>
-      (cfg.channels?.acmechat?.accounts?.[accountId ?? "default"] ?? { accountId }),
+      cfg.channels?.acmechat?.accounts?.[accountId ?? "default"] ?? { accountId },
   },
   outbound: {
     deliveryMode: "direct",
@@ -488,11 +488,14 @@ export default function (api) {
 
 ```ts
 export default function (api) {
-  api.registerCli(({ program }) => {
-    program.command("meucmd").action(() => {
-      console.log("Olá");
-    });
-  }, { commands: ["meucmd"] });
+  api.registerCli(
+    ({ program }) => {
+      program.command("meucmd").action(() => {
+        console.log("Olá");
+      });
+    },
+    { commands: ["meucmd"] },
+  );
 }
 ```
 

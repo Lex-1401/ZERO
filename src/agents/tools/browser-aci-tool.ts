@@ -21,9 +21,18 @@ const AciRememberSchema = Type.Object({
     Type.Object({
       action: Type.String(),
       targetElementId: Type.Optional(Type.Number()),
+      targetDescriptor: Type.Optional(
+        Type.Object({
+          role: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+          name: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+          text: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+          tagName: Type.Optional(Type.String()),
+          cssSelector: Type.Optional(Type.String()),
+        }),
+      ),
       parameters: Type.Optional(Type.Any()),
     }),
-    { description: "List of steps (action, targetId) that led to success" },
+    { description: "List of steps (action, targetId, descriptor) that led to success" },
   ),
   tags: Type.Optional(Type.Array(Type.String())),
 });

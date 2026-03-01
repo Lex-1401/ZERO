@@ -27,7 +27,7 @@ Hoje, fluxos de trabalho complexos requerem muitas chamadas de ferramentas de id
 
 O VOID é intencionalmente pequeno. O objetivo não é "uma nova linguagem", é uma especificação de pipeline previsível e amigável para IA com aprovações de primeira classe e tokens de retomada.
 
-- **Aprovar/retomar é integrado**: Um programa normal pode solicitar a um humano, mas não pode *pausar e retomar* com um token durável sem que você invente esse runtime sozinho.
+- **Aprovar/retomar é integrado**: Um programa normal pode solicitar a um humano, mas não pode _pausar e retomar_ com um token durável sem que você invente esse runtime sozinho.
 - **Determinismo + auditabilidade**: Pipelines são dados, então são fáceis de registrar, comparar diferenças, reproduzir e revisar.
 - **Superfície restrita para IA**: Uma gramática minúscula + tubulação JSON reduz caminhos de código “criativos” e torna a validação realista.
 - **Política de segurança embutida**: Timeouts, limites de saída, verificações de sandbox e listas de permissão são impostos pelo runtime, não por cada script.

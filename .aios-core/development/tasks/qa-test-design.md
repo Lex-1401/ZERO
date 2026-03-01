@@ -203,12 +203,15 @@ updated_at: 2025-11-17
  Powered by AIOS™ Core -->
 
 ---
+
 tools:
-  - browser           # E2E testing and UI scenario validation
-  - context7          # Research testing frameworks and patterns
-  - github-cli        # Test report generation and tracking
-checklists:
-  - qa-master-checklist.md
+
+- browser # E2E testing and UI scenario validation
+- context7 # Research testing frameworks and patterns
+- github-cli # Test report generation and tracking
+  checklists:
+- qa-master-checklist.md
+
 ---
 
 # test-design
@@ -219,10 +222,10 @@ Create comprehensive test scenarios with appropriate test level recommendations 
 
 ```yaml
 required:
-  - story_id: '{epic}.{story}' # e.g., "1.3"
-  - story_path: '{devStoryLocation}/{epic}.{story}.*.md' # Path from core-config.yaml
-  - story_title: '{title}' # If missing, derive from story file H1
-  - story_slug: '{slug}' # If missing, derive from title (lowercase, hyphenated)
+  - story_id: "{epic}.{story}" # e.g., "1.3"
+  - story_path: "{devStoryLocation}/{epic}.{story}.*.md" # Path from core-config.yaml
+  - story_title: "{title}" # If missing, derive from story file H1
+  - story_slug: "{slug}" # If missing, derive from title (lowercase, hyphenated)
 ```
 
 ## Purpose
@@ -275,13 +278,13 @@ For each identified test need, create:
 
 ```yaml
 test_scenario:
-  id: '{epic}.{story}-{LEVEL}-{SEQ}'
-  requirement: 'AC reference'
+  id: "{epic}.{story}-{LEVEL}-{SEQ}"
+  requirement: "AC reference"
   priority: P0|P1|P2|P3
   level: unit|integration|e2e
-  description: 'What is being tested'
-  justification: 'Why this level was chosen'
-  mitigates_risks: ['RISK-001'] # If risk profile exists
+  description: "What is being tested"
+  justification: "Why this level was chosen"
+  mitigates_risks: ["RISK-001"] # If risk profile exists
 ```
 
 ### 5. Validate Coverage
@@ -385,4 +388,3 @@ Before finalizing, verify:
 - **Efficient coverage**: Test once at the right level
 - **Maintainability**: Consider long-term test maintenance
 - **Fast feedback**: Quick tests run first
- 

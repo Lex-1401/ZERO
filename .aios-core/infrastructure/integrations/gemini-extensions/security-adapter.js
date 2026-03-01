@@ -5,17 +5,17 @@
  * Integrates Gemini CLI's /security:analyze for vulnerability scanning.
  */
 
-const { execSync } = require('child_process');
+const { execSync } = require("child_process");
 
 /**
  * Severity levels for vulnerabilities
  */
 const Severity = {
-  CRITICAL: 'critical',
-  HIGH: 'high',
-  MEDIUM: 'medium',
-  LOW: 'low',
-  INFO: 'info',
+  CRITICAL: "critical",
+  HIGH: "high",
+  MEDIUM: "medium",
+  LOW: "low",
+  INFO: "info",
 };
 
 class SecurityAdapter {
@@ -30,12 +30,12 @@ class SecurityAdapter {
    */
   async checkAvailability() {
     try {
-      const output = execSync('gemini extensions list --output-format json 2>/dev/null', {
-        encoding: 'utf8',
+      const output = execSync("gemini extensions list --output-format json 2>/dev/null", {
+        encoding: "utf8",
         timeout: 10000,
       });
       const extensions = JSON.parse(output);
-      this.enabled = extensions.some((e) => e.name === 'security');
+      this.enabled = extensions.some((e) => e.name === "security");
       return this.enabled;
     } catch {
       this.enabled = false;
@@ -62,29 +62,29 @@ class SecurityAdapter {
    * Basic security analysis (fallback)
    */
   async _basicAnalysis(options = {}) {
-    const fs = require('fs');
-    const path = require('path');
+    const fs = require("fs");
+    const path = require("path");
     const projectDir = options.projectDir || process.cwd();
 
     const vulnerabilities = [];
 
     // Check for common issues
     const _checks = [
-      { file: '.env', pattern: /password|secret|api_key/i, severity: Severity.HIGH },
-      { file: 'package.json', check: this._checkDependencies },
-      { file: '**/*.js', pattern: /eval\s*\(/, severity: Severity.CRITICAL },
+      { file: ".env", pattern: /password|secret|api_key/i, severity: Severity.HIGH },
+      { file: "package.json", check: this._checkDependencies },
+      { file: "**/*.js", pattern: /eval\s*\(/, severity: Severity.CRITICAL },
     ];
 
     // Check .env files
-    const envPath = path.join(projectDir, '.env');
+    const envPath = path.join(projectDir, ".env");
     if (fs.existsSync(envPath)) {
-      const content = fs.readFileSync(envPath, 'utf8');
+      const content = fs.readFileSync(envPath, "utf8");
       if (/AKIA[0-9A-Z]{16}/.test(content)) {
         vulnerabilities.push({
           severity: Severity.CRITICAL,
-          type: 'secret-exposure',
-          message: 'AWS access key found in .env file',
-          file: '.env',
+          type: "secret-exposure",
+          message: "AWS access key found in .env file",
+          file: ".env",
         });
       }
     }
@@ -98,7 +98,7 @@ class SecurityAdapter {
   async _geminiAnalysis(options = {}) {
     // Would integrate with Gemini's /security:analyze
     const result = await this._basicAnalysis(options);
-    result.provider = 'gemini';
+    result.provider = "gemini";
     return result;
   }
 
@@ -108,7 +108,9 @@ class SecurityAdapter {
    * @returns {Object} Block decision
    */
   shouldBlockPR(report) {
-    const criticalCount = report.vulnerabilities.filter((v) => v.severity === Severity.CRITICAL).length;
+    const criticalCount = report.vulnerabilities.filter(
+      (v) => v.severity === Severity.CRITICAL,
+    ).length;
     const highCount = report.vulnerabilities.filter((v) => v.severity === Severity.HIGH).length;
 
     const shouldBlock =
@@ -146,7 +148,7 @@ class SecurityAdapter {
       vulnerabilities,
       summary: bySeverity,
       total: vulnerabilities.length,
-      provider: 'basic',
+      provider: "basic",
     };
   }
 

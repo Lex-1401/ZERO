@@ -1,9 +1,9 @@
 ---
 tools:
-  - github-cli        # Code review and PR management
-  - browser           # End-to-end testing and UI validation
-  - context7          # Research testing frameworks and best practices
-  - supabase          # Database testing and data validation
+  - github-cli # Code review and PR management
+  - browser # End-to-end testing and UI validation
+  - context7 # Research testing frameworks and best practices
+  - supabase # Database testing and data validation
 checklists:
   - qa-master-checklist.md
 ---
@@ -17,16 +17,19 @@ Perform a comprehensive test architecture review with quality gate decision. Thi
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -194,6 +197,7 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -213,15 +217,14 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Inputs
 
 ```yaml
 required:
-  - story_id: '{epic}.{story}' # e.g., "1.3"
-  - story_path: '{devStoryLocation}/{epic}.{story}.*.md' # Path from core-config.yaml
-  - story_title: '{title}' # If missing, derive from story file H1
-  - story_slug: '{slug}' # If missing, derive from title (lowercase, hyphenated)
+  - story_id: "{epic}.{story}" # e.g., "1.3"
+  - story_path: "{devStoryLocation}/{epic}.{story}.*.md" # Path from core-config.yaml
+  - story_title: "{title}" # If missing, derive from story file H1
+  - story_slug: "{slug}" # If missing, derive from title (lowercase, hyphenated)
 ```
 
 ## Prerequisites
@@ -252,7 +255,7 @@ Execute CodeRabbit self-healing **FIRST** before manual review:
 │  WHILE iteration < max_iterations:                                │
 │    ┌─────────────────────────────────────────────────────────┐   │
 │    │ 1. Run CodeRabbit CLI                                   │   │
-│    │    wsl bash -c 'cd /mnt/c/.../@synkra/aios-core &&         │   │
+│    │    wsl bash -c 'cd /mnt/c/.../aios-core &&         │   │
 │    │    ~/.local/bin/coderabbit --prompt-only                │   │
 │    │    -t committed --base main'                            │   │
 │    │                                                          │   │
@@ -296,12 +299,12 @@ Execute CodeRabbit self-healing **FIRST** before manual review:
 
 #### Severity Handling
 
-| Severity | Behavior | Notes |
-|----------|----------|-------|
+| Severity     | Behavior                  | Notes                                   |
+| ------------ | ------------------------- | --------------------------------------- |
 | **CRITICAL** | Auto-fix (max 3 attempts) | Security vulnerabilities, breaking bugs |
-| **HIGH** | Auto-fix (max 3 attempts) | Significant quality problems |
-| **MEDIUM** | Create tech debt issue | Document for future sprint |
-| **LOW** | Note in review | Nits, no action required |
+| **HIGH**     | Auto-fix (max 3 attempts) | Significant quality problems            |
+| **MEDIUM**   | Create tech debt issue    | Document for future sprint              |
+| **LOW**      | Note in review            | Nits, no action required                |
 
 #### Implementation Code
 
@@ -310,7 +313,7 @@ async function runQACodeRabbitSelfHealing(storyPath) {
   const maxIterations = 3;
   let iteration = 0;
 
-  console.log('🐰 Starting CodeRabbit Full Self-Healing Loop...');
+  console.log("🐰 Starting CodeRabbit Full Self-Healing Loop...");
   console.log(`   Mode: Full (CRITICAL + HIGH)`);
   console.log(`   Max Iterations: ${maxIterations}\n`);
 
@@ -318,14 +321,16 @@ async function runQACodeRabbitSelfHealing(storyPath) {
     console.log(`📋 Iteration ${iteration + 1}/${maxIterations}`);
 
     // Run CodeRabbit CLI against main branch
-    const output = await runCodeRabbitCLI('committed --base main');
+    const output = await runCodeRabbitCLI("committed --base main");
     const issues = parseCodeRabbitOutput(output);
 
-    const criticalIssues = issues.filter(i => i.severity === 'CRITICAL');
-    const highIssues = issues.filter(i => i.severity === 'HIGH');
-    const mediumIssues = issues.filter(i => i.severity === 'MEDIUM');
+    const criticalIssues = issues.filter((i) => i.severity === "CRITICAL");
+    const highIssues = issues.filter((i) => i.severity === "HIGH");
+    const mediumIssues = issues.filter((i) => i.severity === "MEDIUM");
 
-    console.log(`   Found: ${criticalIssues.length} CRITICAL, ${highIssues.length} HIGH, ${mediumIssues.length} MEDIUM`);
+    console.log(
+      `   Found: ${criticalIssues.length} CRITICAL, ${highIssues.length} HIGH, ${mediumIssues.length} MEDIUM`,
+    );
 
     // No CRITICAL or HIGH issues = success
     if (criticalIssues.length === 0 && highIssues.length === 0) {
@@ -333,7 +338,7 @@ async function runQACodeRabbitSelfHealing(storyPath) {
         console.log(`\n📝 Creating tech debt issues for ${mediumIssues.length} MEDIUM issues...`);
         await createTechDebtIssues(storyPath, mediumIssues);
       }
-      console.log('\n✅ CodeRabbit Self-Healing: PASSED');
+      console.log("\n✅ CodeRabbit Self-Healing: PASSED");
       return { success: true, iterations: iteration + 1, proceedToManual: true };
     }
 
@@ -348,11 +353,11 @@ async function runQACodeRabbitSelfHealing(storyPath) {
   }
 
   // Max iterations reached with issues
-  console.log('\n❌ CodeRabbit Self-Healing: FAILED');
+  console.log("\n❌ CodeRabbit Self-Healing: FAILED");
   console.log(`   CRITICAL/HIGH issues remain after ${maxIterations} iterations.`);
-  console.log('   Setting gate: FAIL - Manual intervention required.');
+  console.log("   Setting gate: FAIL - Manual intervention required.");
 
-  return { success: false, iterations: maxIterations, gateStatus: 'FAIL' };
+  return { success: false, iterations: maxIterations, gateStatus: "FAIL" };
 }
 ```
 
@@ -364,9 +369,33 @@ async function runQACodeRabbitSelfHealing(storyPath) {
 #### Integration with Gate Decision
 
 If self-healing fails:
+
 - Gate automatically set to FAIL
 - `top_issues` populated from remaining CodeRabbit issues
 - `status_reason` includes "CodeRabbit self-healing exhausted"
+
+---
+
+### 0b. Code Intelligence: Reference Impact (Optional)
+
+> This step is **conditional** — only executes when a code intelligence provider is available.
+> If `isCodeIntelAvailable()` returns false, skip silently and proceed to Risk Assessment.
+
+After CodeRabbit self-healing (Step 0), if code intelligence is available:
+
+1. Collect modified files from the story's File List
+2. Call `getReferenceImpact(files)` from `.aios-core/core/code-intel/helpers/qa-helper.js`
+3. If result is not null, include reference impact in the review:
+   ```
+   ### Reference Impact (Code Intelligence)
+   | Modified File | Consumers Affected |
+   |--------------|-------------------|
+   | {file} | {consumers.length} consumers ({list of consumer files}) |
+   ```
+4. Files with many consumers (>10) should trigger deeper review of those changes
+5. This data supplements Risk Assessment (Step 1) — high consumer count may auto-escalate to deep review
+
+> **Fallback guarantee:** If code intelligence is unavailable or `getReferenceImpact` returns null, the review continues exactly as before — no reference impact section is added.
 
 ---
 
@@ -541,19 +570,19 @@ Gate file structure:
 
 ```yaml
 schema: 1
-story: '{epic}.{story}'
-story_title: '{story title}'
+story: "{epic}.{story}"
+story_title: "{story title}"
 gate: PASS|CONCERNS|FAIL|WAIVED
-status_reason: '1-2 sentence explanation of gate decision'
-reviewer: 'Quinn (Test Architect)'
-updated: '{ISO-8601 timestamp}'
+status_reason: "1-2 sentence explanation of gate decision"
+reviewer: "Quinn (Test Architect)"
+updated: "{ISO-8601 timestamp}"
 
 top_issues: [] # Empty if no issues
 waiver: { active: false } # Set active: true only if WAIVED
 
 # Extended fields (optional but recommended):
 quality_score: 0-100 # 100 - (20*FAILs) - (10*CONCERNS) or use technical-preferences.md weights
-expires: '{ISO-8601 timestamp}' # Typically 2 weeks from review
+expires: "{ISO-8601 timestamp}" # Typically 2 weeks from review
 
 evidence:
   tests_reviewed: { count }
@@ -565,24 +594,24 @@ evidence:
 nfr_validation:
   security:
     status: PASS|CONCERNS|FAIL
-    notes: 'Specific findings'
+    notes: "Specific findings"
   performance:
     status: PASS|CONCERNS|FAIL
-    notes: 'Specific findings'
+    notes: "Specific findings"
   reliability:
     status: PASS|CONCERNS|FAIL
-    notes: 'Specific findings'
+    notes: "Specific findings"
   maintainability:
     status: PASS|CONCERNS|FAIL
-    notes: 'Specific findings'
+    notes: "Specific findings"
 
 recommendations:
   immediate: # Must fix before production
-    - action: 'Add rate limiting'
-      refs: ['api/auth/login.ts']
+    - action: "Add rate limiting"
+      refs: ["api/auth/login.ts"]
   future: # Can be addressed later
-    - action: 'Consider caching'
-      refs: ['services/data.ts']
+    - action: "Consider caching"
+      refs: ["services/data.ts"]
 ```
 
 ### Gate Decision Criteria
@@ -680,4 +709,14 @@ After review:
 
 - **No Action Required**: The sync happens transparently when using story-manager utilities. If sync fails, story file is still saved locally with a warning message.
 
-- **Manual Sync**: If needed, use: `npm run sync-story -- --story {epic}.{story}` 
+## Handoff
+
+next_agent: @dev
+next_command: \*apply-qa-fixes
+condition: QA verdict is REJECT
+alternatives:
+
+- agent: @devops, command: \*push, condition: QA verdict is APPROVE
+- agent: @dev, command: \*fix-qa-issues, condition: Structured fix from QA_FIX_REQUEST.md
+
+- **Manual Sync**: If needed, use: `npm run sync-story -- --story {epic}.{story}`

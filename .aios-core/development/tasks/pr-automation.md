@@ -5,8 +5,8 @@ agent: github-devops
 category: devops
 complexity: medium
 tools:
-  - github-cli       # Create PRs, manage repository
-  - coderabbit-free  # Pre-submission code review
+  - github-cli # Create PRs, manage repository
+  - coderabbit-free # Pre-submission code review
 checklists:
   - github-devops-checklist.md
   - pr-quality-checklist.md
@@ -16,11 +16,12 @@ checklists:
 
 ## Purpose
 
-To help users contribute to the AIOS open-source project (`@synkra/aios-core`) by automating the PR creation process, ensuring contributions follow project standards, pass quality checks, and have proper formatting before submission.
+To help users contribute to the AIOS open-source project (`aios-core`) by automating the PR creation process, ensuring contributions follow project standards, pass quality checks, and have proper formatting before submission.
 
-**Target Repository**: `@synkra/aios-core` (open-source framework)
+**Target Repository**: `aios-core` (open-source framework)
 
 **Contribution Types Supported**:
+
 - Squads (new agents, tasks, workflows)
 - Agent improvements (enhanced prompts, new commands)
 - Task refinements (better checklists, templates)
@@ -102,7 +103,7 @@ To help users contribute to the AIOS open-source project (`@synkra/aios-core`) b
    - Ensure naming conventions followed
 
 2. **Validate Repository State**
-   - Check if `@synkra/aios-core` repository is set as upstream
+   - Check if `aios-core` repository is set as upstream
    - Verify fork exists (or create one)
    - Ensure main branch is up-to-date
 
@@ -170,24 +171,27 @@ To help users contribute to the AIOS open-source project (`@synkra/aios-core`) b
 
 12. **Create Commit**
     - Follow Conventional Commits:
+
       ```
       {type}({scope}): {description}
-      
+
       {body}
-      
+
       {footer}
       ```
+
     - **type**: `feat` (new feature), `fix` (bug fix), `docs` (documentation), `refactor`, etc.
     - **scope**: `Squad`, `agent`, `task`, `tool`, etc.
     - **Example**:
+
       ```
       feat(Squad): add content-creator pack with Instagram agent
-      
+
       Implements a complete content creation squad with:
       - Instagram content specialist agent
       - 5 new tasks (create-post, schedule-content, analyze-performance, etc.)
       - Template library for posts, stories, reels
-      
+
       Closes #42
       ```
 
@@ -203,49 +207,49 @@ To help users contribute to the AIOS open-source project (`@synkra/aios-core`) b
 
       ```markdown
       ## Contribution Type
-      
+
       - [x] {contribution_type}
-      
+
       ## Description
-      
+
       {brief_description}
-      
+
       ## What's Changed
-      
+
       {detailed_changes}
-      
+
       ## Related Issue
-      
+
       Closes #{issue_number} (if applicable)
-      
+
       ## Checklist
-      
+
       - [x] Follows contribution guidelines
       - [x] Tests passing locally
       - [x] Documentation included
       - [x] CodeRabbit pre-check passed
       - [x] Quality score: {score}/100
-      
+
       ## Pre-Submission Review
-      
+
       **CodeRabbit Score**: {coderabbit_score}
       **Issues Found**: {issues_found}
       **Security Warnings**: {security_warnings}
-      
+
       {coderabbit_summary}
-      
+
       ## Testing
-      
+
       - [ ] Unit tests: {test_count} tests passing
       - [ ] Integration tests: {integration_status}
       - [ ] Manual testing: {manual_test_description}
-      
+
       ## Screenshots (if UI changes)
-      
+
       {screenshots if applicable}
-      
+
       ---
-      
+
       **First-time contributor?** Welcome! 🎉 This PR was created using AIOS PR Automation.
       ```
 
@@ -275,23 +279,24 @@ To help users contribute to the AIOS open-source project (`@synkra/aios-core`) b
 
 18. **Provide Next Steps**
     - Display to user:
+
       ```
       ✅ Pull Request Created!
-      
+
       PR #{pr_number}: {title}
       URL: {pr_url}
-      
+
       Next Steps:
       1. ⏳ CodeRabbit will review your PR within 2 minutes
       2. 👤 Maintainers will review within 24-48 hours
       3. 💬 Respond to any feedback or questions
       4. ✅ Once approved, your contribution will be merged!
-      
+
       Timeline:
       - CodeRabbit review: ~2 minutes
       - Maintainer review: 24-48 hours
       - Merge (if approved): Immediate
-      
+
       Thank you for contributing to AIOS! 🚀
       ```
 
@@ -303,8 +308,8 @@ To help users contribute to the AIOS open-source project (`@synkra/aios-core`) b
   - **Validation**: Files at `contribution_path` exist
   - **Error**: "Files not found at {contribution_path}"
 
-- [ ] Fork of @synkra/aios-core exists
-  - **Validation**: `gh repo view {user}/@synkra/aios-core` succeeds
+- [ ] Fork of aios-core exists
+  - **Validation**: `gh repo view {user}/aios-core` succeeds
   - **Action**: If not found, create fork automatically
 
 - [ ] Main branch is up-to-date
@@ -351,7 +356,7 @@ To help users contribute to the AIOS open-source project (`@synkra/aios-core`) b
 
 ### PR Template (Auto-Generated)
 
-*See Phase 4, Step 14 for full template*
+_See Phase 4, Step 14 for full template_
 
 ### Contribution Guidelines Reference
 
@@ -447,16 +452,19 @@ Thank you for your interest in contributing! 🎉
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -610,6 +618,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -628,7 +637,6 @@ updated_at: 2025-11-17
 ```
 
 ---
-
 
 ## Usage Examples
 
@@ -673,19 +681,23 @@ aios pr create \
 **Total: 100 points**
 
 ### Documentation (30 points)
+
 - [ ] README included (+10)
 - [ ] Inline comments present (+10)
 - [ ] Usage examples provided (+10)
 
 ### Tests (25 points)
+
 - [ ] Unit tests included (+15)
 - [ ] Integration tests included (+10)
 
 ### Code Quality (25 points)
+
 - [ ] Linting passes (+10)
 - [ ] CodeRabbit score >= 80 (+15)
 
 ### Standards Adherence (20 points)
+
 - [ ] Follows task/agent/tool template (+10)
 - [ ] Naming conventions correct (+5)
 - [ ] Directory structure correct (+5)
@@ -695,7 +707,7 @@ aios pr create \
 ---
 
 **Related Tasks:**
+
 - `ci-cd-configuration` - CI pipeline setup for quality gates
 - `release-management` - Automated releases after merge
 - `facilitate-brainstorming-session` - Ideate contributions with AI agents
-

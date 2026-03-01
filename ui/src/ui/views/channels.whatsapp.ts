@@ -6,13 +6,13 @@ import type { ChannelsProps } from "./channels.types";
 import { renderChannelConfigSection } from "./channels.config";
 
 export function renderWhatsAppCard(params: {
-    props: ChannelsProps;
-    whatsapp?: WhatsAppStatus;
-    accountCountLabel: unknown;
+  props: ChannelsProps;
+  whatsapp?: WhatsAppStatus;
+  accountCountLabel: unknown;
 }) {
-    const { props, whatsapp } = params;
+  const { props, whatsapp } = params;
 
-    return html`
+  return html`
     <div class="animate-fade-in">
         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
             <div>
@@ -56,7 +56,9 @@ export function renderWhatsAppCard(params: {
                     </div>
                 </div>
 
-                ${props.whatsappMessage ? html`
+                ${
+                  props.whatsappMessage
+                    ? html`
                     <div class="group-list" style="padding: 12px; border-color: var(--accent-blue); background: rgba(0, 122, 255, 0.05); margin-bottom: 24px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <div style="color: var(--accent-blue);">${icons.info}</div>
@@ -64,7 +66,9 @@ export function renderWhatsAppCard(params: {
                         </div>
                         <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; padding-left: 24px;">${props.whatsappMessage}</div>
                     </div>
-                ` : nothing}
+                `
+                    : nothing
+                }
 
                 ${renderChannelConfigSection({ channelId: "whatsapp", props })}
             </div>
@@ -72,12 +76,16 @@ export function renderWhatsAppCard(params: {
             <div>
                 <div class="section-title">Autenticação Visual</div>
                 <div class="group-list" style="padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; min-height: 320px; justify-content: center; position: relative;">
-                    ${props.whatsappBusy && !props.whatsappQrDataUrl ? html`
+                    ${
+                      props.whatsappBusy && !props.whatsappQrDataUrl
+                        ? html`
                         <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
                             <div class="animate-spin" style="color: var(--accent-blue);">${icons.loader}</div>
                             <div style="font-size: 11px; color: var(--text-dim);">Requisitando novo par neural...</div>
                         </div>
-                    ` : props.whatsappQrDataUrl ? html`
+                    `
+                        : props.whatsappQrDataUrl
+                          ? html`
                         <div style="background: white; padding: 12px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
                             <img src="${props.whatsappQrDataUrl}" style="width: 200px; height: 200px; display: block;" />
                         </div>
@@ -88,7 +96,8 @@ export function renderWhatsAppCard(params: {
                         <button class="btn primary" style="width: 100%;" ?disabled=${props.whatsappBusy} @click=${() => props.onWhatsAppWait()}>
                             ${props.whatsappBusy ? html`<span class="animate-spin">${icons.loader}</span> Aguardando...` : "Já Escaneei"}
                         </button>
-                    ` : html`
+                    `
+                          : html`
                         <div style="height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim); background: rgba(255,255,255,0.02); width: 100%; border-radius: 12px; border: 1px dashed var(--border-subtle); gap: 12px;">
                             <div style="width: 32px; height: 32px; opacity: 0.5;">${icons.camera}</div>
                             <div style="font-size: 11px; color: var(--text-dim);">Aguardando ação para gerar par neural</div>
@@ -102,16 +111,21 @@ export function renderWhatsAppCard(params: {
                              </button>
                              <button class="btn" style="height: 36px; font-size: 12px;" title="Forçar re-vinculação" ?disabled=${props.whatsappBusy} @click=${() => props.onWhatsAppStart(true)}>Forçar</button>
                         </div>
-                    `}
+                    `
+                    }
 
-                    ${props.whatsappConnected === true ? html`
+                    ${
+                      props.whatsappConnected === true
+                        ? html`
                         <div class="animate-fade-in" style="position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; border: 1px solid var(--success);">
                             <div style="color: var(--success); font-size: 32px; margin-bottom: 12px;">${icons.check}</div>
                             <div style="font-weight: 700; color: white;">CONECTADO</div>
                             <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Sessão estabelecida.</div>
                             <button class="btn" style="margin-top: 16px;" @click=${() => props.onRefresh(false)}>Fechar</button>
                         </div>
-                    ` : nothing}
+                    `
+                        : nothing
+                    }
                 </div>
             </div>
         </div>

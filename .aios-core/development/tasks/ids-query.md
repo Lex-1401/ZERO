@@ -84,15 +84,17 @@ node bin/aios-ids.js ids:query "agent persona" --category agents
 ### Programmatic Usage (Agent Context)
 
 ```javascript
-const path = require('path');
-const { RegistryLoader } = require(path.resolve('.aios-core/core/ids/registry-loader'));
-const { IncrementalDecisionEngine } = require(path.resolve('.aios-core/core/ids/incremental-decision-engine'));
+const path = require("path");
+const { RegistryLoader } = require(path.resolve(".aios-core/core/ids/registry-loader"));
+const { IncrementalDecisionEngine } = require(
+  path.resolve(".aios-core/core/ids/incremental-decision-engine"),
+);
 
 const loader = new RegistryLoader();
 loader.load();
 
 const engine = new IncrementalDecisionEngine(loader);
-const result = engine.analyze('validate story drafts before implementation');
+const result = engine.analyze("validate story drafts before implementation");
 
 // result.summary.decision → 'REUSE' | 'ADAPT' | 'CREATE'
 // result.recommendations → ranked list with rationale
@@ -103,11 +105,11 @@ const result = engine.analyze('validate story drafts before implementation');
 
 ## Decision Interpretation
 
-| Decision | Meaning | Action |
-|----------|---------|--------|
-| **REUSE** | >=90% relevance match | Use the existing artifact directly |
-| **ADAPT** | 60-89% match + adaptable | Modify existing artifact (changes <30%) |
-| **CREATE** | No suitable match | Create new artifact with justification |
+| Decision   | Meaning                  | Action                                  |
+| ---------- | ------------------------ | --------------------------------------- |
+| **REUSE**  | >=90% relevance match    | Use the existing artifact directly      |
+| **ADAPT**  | 60-89% match + adaptable | Modify existing artifact (changes <30%) |
+| **CREATE** | No suitable match        | Create new artifact with justification  |
 
 ---
 

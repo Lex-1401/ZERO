@@ -27,8 +27,6 @@ export class WhisperEngine extends EventEmitter {
     const pythonPath = process.env.PYTHON_PATH || "python3";
     const scriptPath = path.join(__dirname, "whisper-worker.py");
 
-    console.log(`[WhisperEngine] Starting offline worker: ${scriptPath}`);
-
     this.process = spawn(pythonPath, [scriptPath], {
       stdio: ["pipe", "pipe", "inherit"],
     });
@@ -42,7 +40,6 @@ export class WhisperEngine extends EventEmitter {
           if (msg.status === "ready") {
             this.isReady = true;
             this.emit("ready");
-            console.log("[WhisperEngine] Hybrid Neural Model loaded and ready (Offline Mode).");
           } else if (msg.type === "transcription") {
             this.emit("transcription", msg as WhisperResult);
           } else if (msg.type === "end_of_audio") {
@@ -56,8 +53,7 @@ export class WhisperEngine extends EventEmitter {
       }
     });
 
-    this.process.on("exit", (code) => {
-      console.log(`[WhisperEngine] Worker exited with code ${code}`);
+    this.process.on("exit", (_code) => {
       this.isReady = false;
       this.process = null;
     });

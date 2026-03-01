@@ -133,7 +133,7 @@ vi.mock("grammy", () => ({
       botCtorSpy(token, options);
     }
   },
-  InputFile: class {},
+  InputFile: class { },
   webhookCallback: vi.fn(),
 }));
 
@@ -187,6 +187,11 @@ describe("createTelegramBot", () => {
       },
     });
     loadWebMedia.mockReset();
+    loadWebMedia.mockResolvedValue({
+      buffer: new Uint8Array(),
+      contentType: "audio/mpeg",
+      fileName: "voice.mp3",
+    });
     sendAnimationSpy.mockReset();
     sendPhotoSpy.mockReset();
     setMessageReactionSpy.mockReset();

@@ -1,6 +1,7 @@
 ---
 summary: "Janela de contexto + compactação: como o ZERO mantém as sessões dentro dos limites do modelo"
 ---
+
 # Janela de Contexto e Compactação
 
 Cada modelo possui uma **janela de contexto** (máximo de tokens que ele pode ver). Conversas de longa duração acumulam mensagens e resultados de ferramentas; quando a janela fica apertada, o ZERO **compacta** o histórico mais antigo para permanecer dentro dos limites.

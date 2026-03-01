@@ -40,12 +40,12 @@ Unlike systems that forget after the session closes, ZERO uses a local vector in
 
 ## 🆚 ZERO vs. OpenClaw
 
-| Capability | OpenClaw | ∅ ZERO |
-| :--- | :--- | :--- |
-| **Learning** | Based only on chat history. | Contextual, Proactive, and Systemic. |
-| **Error Correction** | Requires manual dev intervention. | Automatic **Self-Healing** via Sentinel. |
-| **Code Evolution** | Static between versions. | **Dynamic**: The system rewrites itself locally. |
-| **Security** | Audited by third parties (MITM). | **Sovereign**: Sentinel audits secrets in Rust. |
+| Capability           | OpenClaw                          | ∅ ZERO                                           |
+| :------------------- | :-------------------------------- | :----------------------------------------------- |
+| **Learning**         | Based only on chat history.       | Contextual, Proactive, and Systemic.             |
+| **Error Correction** | Requires manual dev intervention. | Automatic **Self-Healing** via Sentinel.         |
+| **Code Evolution**   | Static between versions.          | **Dynamic**: The system rewrites itself locally. |
+| **Security**         | Audited by third parties (MITM).  | **Sovereign**: Sentinel audits secrets in Rust.  |
 
 ---
 
@@ -56,4 +56,5 @@ Unlike systems that forget after the session closes, ZERO uses a local vector in
 ZERO's self-evolution is governed by **Multi-level Security Protocols (Levels 1-5)**. The system never expands its capabilities beyond what was authorized by the user, ensuring that autonomy never compromises human sovereignty.
 
 ---
-*ZERO: Evolving silently so you don't have to worry about the infrastructure.*
+
+_ZERO: Evolving silently so you don't have to worry about the infrastructure._

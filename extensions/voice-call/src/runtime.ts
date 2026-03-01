@@ -38,24 +38,20 @@ function resolveProvider(config: VoiceCallConfig): VoiceCallProvider {
     case "telnyx":
       return new TelnyxProvider({
         apiKey: config.telnyx?.apiKey ?? process.env.TELNYX_API_KEY,
-        connectionId:
-          config.telnyx?.connectionId ?? process.env.TELNYX_CONNECTION_ID,
+        connectionId: config.telnyx?.connectionId ?? process.env.TELNYX_CONNECTION_ID,
         publicKey: config.telnyx?.publicKey ?? process.env.TELNYX_PUBLIC_KEY,
       });
     case "twilio":
       return new TwilioProvider(
         {
-          accountSid:
-            config.twilio?.accountSid ?? process.env.TWILIO_ACCOUNT_SID,
+          accountSid: config.twilio?.accountSid ?? process.env.TWILIO_ACCOUNT_SID,
           authToken: config.twilio?.authToken ?? process.env.TWILIO_AUTH_TOKEN,
         },
         {
           allowNgrokFreeTier: config.tunnel?.allowNgrokFreeTier ?? true,
           publicUrl: config.publicUrl,
           skipVerification: config.skipSignatureVerification,
-          streamPath: config.streaming?.enabled
-            ? config.streaming.streamPath
-            : undefined,
+          streamPath: config.streaming?.enabled ? config.streaming.streamPath : undefined,
         },
       );
     case "plivo":
@@ -73,9 +69,7 @@ function resolveProvider(config: VoiceCallConfig): VoiceCallProvider {
     case "mock":
       return new MockProvider();
     default:
-      throw new Error(
-        `Unsupported voice-call provider: ${String(config.provider)}`,
-      );
+      throw new Error(`Unsupported voice-call provider: ${String(config.provider)}`);
   }
 }
 
@@ -94,9 +88,7 @@ export async function createVoiceCallRuntime(params: {
   };
 
   if (!config.enabled) {
-    throw new Error(
-      "Voice call disabled. Enable the plugin entry in config.",
-    );
+    throw new Error("Voice call disabled. Enable the plugin entry in config.");
   }
 
   const validation = validateProviderConfig(config);
@@ -106,12 +98,7 @@ export async function createVoiceCallRuntime(params: {
 
   const provider = resolveProvider(config);
   const manager = new CallManager(config);
-  const webhookServer = new VoiceCallWebhookServer(
-    config,
-    manager,
-    provider,
-    coreConfig,
-  );
+  const webhookServer = new VoiceCallWebhookServer(config, manager, provider, coreConfig);
 
   const localUrl = await webhookServer.start();
 
@@ -125,16 +112,13 @@ export async function createVoiceCallRuntime(params: {
         provider: config.tunnel.provider,
         port: config.serve.port,
         path: config.serve.path,
-        ngrokAuthToken:
-          config.tunnel.ngrokAuthToken ?? process.env.NGROK_AUTHTOKEN,
+        ngrokAuthToken: config.tunnel.ngrokAuthToken ?? process.env.NGROK_AUTHTOKEN,
         ngrokDomain: config.tunnel.ngrokDomain ?? process.env.NGROK_DOMAIN,
       });
       publicUrl = tunnelResult?.publicUrl ?? null;
     } catch (err) {
       log.error(
-        `[voice-call] Tunnel setup failed: ${
-          err instanceof Error ? err.message : String(err)
-        }`,
+        `[voice-call] Tunnel setup failed: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
   }

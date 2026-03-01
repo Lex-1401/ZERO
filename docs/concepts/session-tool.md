@@ -184,9 +184,9 @@ Configuração:
     defaults: {
       sandbox: {
         // padrão: "spawned"
-        sessionToolsVisibility: "spawned" // ou "all"
-      }
-    }
-  }
+        sessionToolsVisibility: "spawned", // ou "all"
+      },
+    },
+  },
 }
 ```

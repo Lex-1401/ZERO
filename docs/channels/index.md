@@ -4,6 +4,7 @@ read_when:
   - Você quer escolher um canal de chat para o ZERO
   - Você precisa de uma visão geral rápida das plataformas de mensagens suportadas
 ---
+
 # Canais de Chat
 
 O ZERO pode falar com você em qualquer aplicativo de chat que você já usa. Cada canal se conecta via Gateway. O texto é suportado em todos os lugares; mídias e reações variam por canal.

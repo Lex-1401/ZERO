@@ -9,26 +9,26 @@
  * @story 2.7 - Discovery CLI Search
  */
 
-const { Command } = require('commander');
-const path = require('path');
-const fs = require('fs');
+const { Command } = require("commander");
+const path = require("path");
+const fs = require("fs");
 
 // Import command modules
-const { createWorkersCommand } = require('./commands/workers');
-const { createManifestCommand } = require('./commands/manifest');
-const { createQaCommand } = require('./commands/qa');
-const { createMcpCommand } = require('./commands/mcp');
-const { createMigrateCommand } = require('./commands/migrate');
-const { createGenerateCommand } = require('./commands/generate');
-const { createMetricsCommand } = require('./commands/metrics');
-const { createConfigCommand } = require('./commands/config');
-const { createProCommand } = require('./commands/pro');
+const { createWorkersCommand } = require("./commands/workers");
+const { createManifestCommand } = require("./commands/manifest");
+const { createQaCommand } = require("./commands/qa");
+const { createMcpCommand } = require("./commands/mcp");
+const { createMigrateCommand } = require("./commands/migrate");
+const { createGenerateCommand } = require("./commands/generate");
+const { createMetricsCommand } = require("./commands/metrics");
+const { createConfigCommand } = require("./commands/config");
+const { createProCommand } = require("./commands/pro");
 
 // Read package.json for version
-const packageJsonPath = path.join(__dirname, '..', '..', 'package.json');
-let packageVersion = '0.0.0';
+const packageJsonPath = path.join(__dirname, "..", "..", "package.json");
+let packageVersion = "0.0.0";
 try {
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
   packageVersion = packageJson.version;
 } catch (error) {
   // Fallback version if package.json not found
@@ -42,10 +42,12 @@ function createProgram() {
   const program = new Command();
 
   program
-    .name('aios')
+    .name("aios")
     .version(packageVersion)
-    .description('AIOS-FullStack: AI-Orchestrated System for Full Stack Development')
-    .addHelpText('after', `
+    .description("AIOS-FullStack: AI-Orchestrated System for Full Stack Development")
+    .addHelpText(
+      "after",
+      `
 Commands:
   workers           Manage and discover workers
   manifest          Manage manifest files (validate, regenerate)
@@ -95,7 +97,8 @@ Examples:
   $ aios pro validate
   $ aios install
   $ aios doctor
-`);
+`,
+    );
 
   // Add workers command
   program.addCommand(createWorkersCommand());

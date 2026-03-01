@@ -34,9 +34,9 @@ Status: plugin integrado que conversa com o servidor BlueBubbles macOS via HTTP.
          enabled: true,
          serverUrl: "http://192.168.1.100:1234",
          password: "senha-exemplo",
-         webhookPath: "/bluebubbles-webhook"
-       }
-     }
+         webhookPath: "/bluebubbles-webhook",
+       },
+     },
    }
    ```
 
@@ -98,11 +98,11 @@ Configuração por grupo:
       groupPolicy: "allowlist",
       groupAllowFrom: ["+15555550123"],
       groups: {
-        "*": { requireMention: true },  // padrão para todos os grupos
-        "iMessage;-;chat123": { requireMention: false }  // sobrescreve para grupo específico
-      }
-    }
-  }
+        "*": { requireMention: true }, // padrão para todos os grupos
+        "iMessage;-;chat123": { requireMention: false }, // sobrescreve para grupo específico
+      },
+    },
+  },
 }
 ```
 
@@ -122,9 +122,9 @@ Configuração por grupo:
 {
   channels: {
     bluebubbles: {
-      sendReadReceipts: false  // desativar recibos de leitura
-    }
-  }
+      sendReadReceipts: false, // desativar recibos de leitura
+    },
+  },
 }
 ```
 
@@ -137,20 +137,20 @@ BlueBubbles suporta ações avançadas de mensagem quando habilitado na configur
   channels: {
     bluebubbles: {
       actions: {
-        reactions: true,       // tapbacks (padrão: true)
-        edit: true,            // editar mensagens enviadas (macOS 13+, quebrado no macOS 26 Tahoe)
-        unsend: true,          // desfazer envio de mensagens (macOS 13+)
-        reply: true,           // encadeamento de resposta por GUID de mensagem
-        sendWithEffect: true,  // efeitos de mensagem (slam, loud, etc.)
-        renameGroup: true,     // renomear chats de grupo
-        setGroupIcon: true,    // definir ícone/foto de chat de grupo (instável no macOS 26 Tahoe)
-        addParticipant: true,  // adicionar participantes a grupos
+        reactions: true, // tapbacks (padrão: true)
+        edit: true, // editar mensagens enviadas (macOS 13+, quebrado no macOS 26 Tahoe)
+        unsend: true, // desfazer envio de mensagens (macOS 13+)
+        reply: true, // encadeamento de resposta por GUID de mensagem
+        sendWithEffect: true, // efeitos de mensagem (slam, loud, etc.)
+        renameGroup: true, // renomear chats de grupo
+        setGroupIcon: true, // definir ícone/foto de chat de grupo (instável no macOS 26 Tahoe)
+        addParticipant: true, // adicionar participantes a grupos
         removeParticipant: true, // remover participantes de grupos
-        leaveGroup: true,      // sair de chats de grupo
-        sendAttachment: true   // enviar anexos/mídia
-      }
-    }
-  }
+        leaveGroup: true, // sair de chats de grupo
+        sendAttachment: true, // enviar anexos/mídia
+      },
+    },
+  },
 }
 ```
 
@@ -171,7 +171,7 @@ Ações disponíveis:
 
 ### IDs de Mensagem (curto vs completo)
 
-O ZERO pode exibir IDs de mensagem *curtos* (ex., `1`, `2`) para economizar tokens.
+O ZERO pode exibir IDs de mensagem _curtos_ (ex., `1`, `2`) para economizar tokens.
 
 - `MessageSid` / `ReplyToId` podem ser IDs curtos.
 - `MessageSidFull` / `ReplyToIdFull` contêm os IDs completos do provedor.
@@ -193,9 +193,9 @@ Controle se as respostas são enviadas como uma única mensagem ou transmitidas 
 {
   channels: {
     bluebubbles: {
-      blockStreaming: true  // habilitar streaming de bloco (comportamento padrão)
-    }
-  }
+      blockStreaming: true, // habilitar streaming de bloco (comportamento padrão)
+    },
+  },
 }
 ```
 

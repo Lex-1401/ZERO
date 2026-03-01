@@ -1,6 +1,6 @@
 ---
 task: Sync Command to IDE Configurations
-responsavel: '@squad-creator'
+responsavel: "@squad-creator"
 responsavel_type: agent
 atomic_layer: task
 status: active
@@ -19,11 +19,11 @@ Saida: |
   - files_updated: Lista de arquivos atualizados
   - files_skipped: Lista de arquivos pulados
 Checklist:
-  - '[x] Carregar .aios-sync.yaml'
-  - '[x] Localizar arquivo fonte em squads/'
-  - '[x] Verificar arquivos existentes nos destinos'
-  - '[x] Sincronizar para cada IDE ativa'
-  - '[x] Validar arquivos criados'
+  - "[x] Carregar .aios-sync.yaml"
+  - "[x] Localizar arquivo fonte em squads/"
+  - "[x] Verificar arquivos existentes nos destinos"
+  - "[x] Sincronizar para cada IDE ativa"
+  - "[x] Validar arquivos criados"
 ---
 
 # \*command
@@ -130,15 +130,15 @@ squad_aliases:
 # Mapeamentos de sincronização
 sync_mappings:
   squad_agents:
-    source: 'squads/*/agents/'
+    source: "squads/*/agents/"
     destinations:
       claude:
-        - path: '.claude/commands/{squad_alias}/agents/'
-          format: 'md'
+        - path: ".claude/commands/{squad_alias}/agents/"
+          format: "md"
       cursor:
-        - path: '.cursor/rules/'
-          format: 'mdc'
-          wrapper: 'cursor-rule'
+        - path: ".cursor/rules/"
+          format: "mdc"
+          wrapper: "cursor-rule"
 ```
 
 ### Squad Aliases
@@ -271,13 +271,13 @@ Sincroniza TODOS os componentes de um squad:
 
 ## Error Handling
 
-| Error                  | Causa                           | Solução                     |
-| ---------------------- | ------------------------------- | --------------------------- |
-| `Source not found`     | Arquivo não existe em squads/   | Verifique o nome e tipo     |
+| Error                   | Causa                           | Solução                     |
+| ----------------------- | ------------------------------- | --------------------------- |
+| `Source not found`      | Arquivo não existe em squads/   | Verifique o nome e tipo     |
 | `Squad alias not found` | Squad não está em squad_aliases | Adicione ao .aios-sync.yaml |
-| `File exists`          | Destino já existe               | Use --force ou escolha ação |
-| `IDE not active`       | IDE não está em active_ides     | Ative no .aios-sync.yaml    |
-| `Invalid YAML`         | Arquivo fonte com YAML inválido | Corrija o arquivo fonte     |
+| `File exists`           | Destino já existe               | Use --force ou escolha ação |
+| `IDE not active`        | IDE não está em active_ides     | Ative no .aios-sync.yaml    |
+| `Invalid YAML`          | Arquivo fonte com YAML inválido | Corrija o arquivo fonte     |
 
 ## Implementation Guide
 
@@ -289,20 +289,20 @@ const [type, name] = args;
 const flags = parseFlags(args);
 
 // 2. Validar tipo
-const validTypes = ['agent', 'task', 'workflow', 'squad'];
+const validTypes = ["agent", "task", "workflow", "squad"];
 if (!validTypes.includes(type)) {
-  error(`Invalid type: ${type}. Use: ${validTypes.join(', ')}`);
+  error(`Invalid type: ${type}. Use: ${validTypes.join(", ")}`);
   return;
 }
 
 // 3. Carregar configuração
-const syncConfig = loadYaml('.aios-sync.yaml');
-const activeIdes = syncConfig.active_ides || ['claude'];
+const syncConfig = loadYaml(".aios-sync.yaml");
+const activeIdes = syncConfig.active_ides || ["claude"];
 const squadAliases = syncConfig.squad_aliases || syncConfig.pack_aliases || {};
 
 // 4. Localizar source
 let sourceFiles = [];
-if (type === 'squad') {
+if (type === "squad") {
   // Listar todos os componentes do squad
   sourceFiles = findAllSquadFiles(`squads/${name}/`);
 } else {
@@ -325,14 +325,14 @@ for (const file of sourceFiles) {
     const destPath = getDestPath(ide, squadAlias, file);
     if (fs.existsSync(destPath) && !flags.force) {
       const action = await askUser(`${destPath} exists. Overwrite?`);
-      if (action === 'skip') continue;
+      if (action === "skip") continue;
     }
   }
 }
 
 // 7. Dry run check
 if (flags.dryRun) {
-  output('DRY RUN - Would sync:');
+  output("DRY RUN - Would sync:");
   for (const file of sourceFiles) {
     for (const ide of activeIdes) {
       output(`  ${file} → ${getDestPath(ide, squadAlias, file)}`);
@@ -347,7 +347,7 @@ const results = { created: 0, updated: 0, skipped: 0 };
 for (const file of sourceFiles) {
   for (const ide of activeIdes) {
     const destPath = getDestPath(ide, packAlias, file);
-    const content = fs.readFileSync(file, 'utf8');
+    const content = fs.readFileSync(file, "utf8");
     const converted = convertForIde(ide, content);
 
     fs.mkdirSync(path.dirname(destPath), { recursive: true });
@@ -365,7 +365,7 @@ if (!flags.noValidate) {
 
 // 10. Log
 if (syncConfig.behavior?.log_sync_operations) {
-  appendLog('.aios-sync.log', {
+  appendLog(".aios-sync.log", {
     timestamp: new Date().toISOString(),
     type,
     name,

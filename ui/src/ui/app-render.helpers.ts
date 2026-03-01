@@ -16,32 +16,34 @@ export function renderTab(state: AppViewState, tab: Tab) {
   return html`
     <a
       href=${href}
-      class="nav-item ${state.tab === tab ? "active" : ""}"
+      class="nav-item ${state.uiStore.tab === tab ? "active" : ""}"
       @click=${(event: MouseEvent) => {
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey
-      ) {
-        return;
-      }
-      event.preventDefault();
-      try { if (navigator.vibrate) navigator.vibrate(50); } catch (e) { }
-      state.setTab(tab);
-    }}
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return;
+        }
+        event.preventDefault();
+        try {
+          if (navigator.vibrate) navigator.vibrate(50);
+        } catch (e) {}
+        state.setTab(tab);
+      }}
       @mouseenter=${() => {
-      if (state.tab !== tab) {
-        if (tab === "nodes") void state.handleLoadNodes();
-        if (tab === "sessions") void state.handleSessionsLoad();
-        if (tab === "skills") void state.handleLoadSkills();
-        if (tab === "config") void state.handleConfigLoad();
-        if (tab === "mission-control") void state.handleLoadMissionControl();
-        if (tab === "cron") void state.loadCron();
-      }
-    }}
+        if (state.uiStore.tab !== tab) {
+          if (tab === "nodes") void state.handleLoadNodes();
+          if (tab === "sessions") void state.handleSessionsLoad();
+          if (tab === "skills") void state.handleLoadSkills();
+          if (tab === "config") void state.handleConfigLoad();
+          if (tab === "mission-control") void state.handleLoadMissionControl();
+          if (tab === "cron") void state.loadCron();
+        }
+      }}
       title=${titleForTab(tab)}
     >
       <span class="nav-item__icon" aria-hidden="true">${icons[iconForTab(tab)]}</span>
@@ -51,57 +53,93 @@ export function renderTab(state: AppViewState, tab: Tab) {
 }
 
 export function renderChatControls(state: AppViewState) {
-  const sessionOptions = resolveSessionOptions(state.sessionKey, state.sessionsResult);
-  const disableThinkingToggle = state.onboarding;
-  const disableFocusToggle = state.onboarding;
-  const showThinking = state.onboarding ? false : state.settings.chatShowThinking;
-  const focusActive = state.onboarding ? true : state.settings.chatFocusMode;
+  const sessionOptions = resolveSessionOptions(
+    state.chatStore.sessionKey,
+    state.sessionStore.result,
+  );
+  const disableThinkingToggle = state.uiStore.onboarding;
+  const disableFocusToggle = state.uiStore.onboarding;
+  const showThinking = state.uiStore.onboarding ? false : state.uiStore.settings.chatShowThinking;
+  const focusActive = state.uiStore.onboarding ? true : state.uiStore.settings.chatFocusMode;
   // Refresh icon
-  const refreshIcon = html`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>`;
-  const focusIcon = html`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h3"></path><path d="M20 7V4h-3"></path><path d="M4 17v3h3"></path><path d="M20 17v3h-3"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+  const refreshIcon = html`
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+      <path d="M21 3v5h-5"></path>
+    </svg>
+  `;
+  const focusIcon = html`
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M4 7V4h3"></path>
+      <path d="M20 7V4h-3"></path>
+      <path d="M4 17v3h3"></path>
+      <path d="M20 17v3h-3"></path>
+      <circle cx="12" cy="12" r="3"></circle>
+    </svg>
+  `;
   return html`
     <div class="chat-controls">
       <label class="field chat-controls__session">
         <select
-          .value=${state.sessionKey}
-          ?disabled=${!state.connected}
+          .value=${state.chatStore.sessionKey}
+          ?disabled=${!state.uiStore.connected}
           @change=${(e: Event) => {
-      const next = (e.target as HTMLSelectElement).value;
-      state.sessionKey = next;
-      state.chatMessage = "";
-      state.chatStream = null;
-      state.chatStreamStartedAt = null;
-      state.chatRunId = null;
-      state.resetToolStream();
-      state.resetChatScroll();
-      state.applySettings({
-        ...state.settings,
-        sessionKey: next,
-        lastActiveSessionKey: next,
-      });
-      void state.loadAssistantIdentity();
-      syncUrlWithSessionKey(state as any, next, true);
-      void loadChatHistory(state);
-    }}
+            const next = (e.target as HTMLSelectElement).value;
+            state.chatStore.sessionKey = next;
+            state.chatStore.message = "";
+            state.chatStore.stream = null;
+            state.chatStore.streamStartedAt = null;
+            state.chatStore.runId = null;
+            state.resetToolStream();
+            state.resetChatScroll();
+            state.applySettings({
+              ...state.uiStore.settings,
+              sessionKey: next,
+              lastActiveSessionKey: next,
+            });
+            void state.loadAssistantIdentity();
+            syncUrlWithSessionKey(state as any, next, true);
+            void loadChatHistory(state);
+          }}
         >
           ${repeat(
-      sessionOptions,
-      (entry) => entry.key,
-      (entry) =>
-        html`<option value=${entry.key}>
+            sessionOptions,
+            (entry) => entry.key,
+            (entry) =>
+              html`<option value=${entry.key}>
                 ${entry.displayName ?? entry.key}
               </option>`,
-    )}
+          )}
         </select>
       </label>
       <button
         class="btn btn--sm btn--icon"
-        ?disabled=${state.chatLoading || !state.connected}
+        ?disabled=${state.chatStore.loading || !state.uiStore.connected}
         @click=${() => {
-      try { if (navigator.vibrate) navigator.vibrate(50); } catch (e) { }
-      state.resetToolStream();
-      void loadChatHistory(state);
-    }}
+          try {
+            if (navigator.vibrate) navigator.vibrate(50);
+          } catch (e) {}
+          state.resetToolStream();
+          void loadChatHistory(state);
+        }}
         title="${t("chat.controls.refresh" as any)}"
       >
         ${refreshIcon}
@@ -111,17 +149,21 @@ export function renderChatControls(state: AppViewState) {
         class="btn btn--sm btn--icon ${showThinking ? "active" : ""}"
         ?disabled=${disableThinkingToggle}
         @click=${() => {
-      try { if (navigator.vibrate) navigator.vibrate(50); } catch (e) { }
-      if (disableThinkingToggle) return;
-      state.applySettings({
-        ...state.settings,
-        chatShowThinking: !state.settings.chatShowThinking,
-      });
-    }}
+          try {
+            if (navigator.vibrate) navigator.vibrate(50);
+          } catch (e) {}
+          if (disableThinkingToggle) return;
+          state.applySettings({
+            ...state.uiStore.settings,
+            chatShowThinking: !state.uiStore.settings.chatShowThinking,
+          });
+        }}
         aria-pressed=${showThinking}
-        title=${disableThinkingToggle
-      ? t("chat.controls.onboarding" as any)
-      : t("chat.controls.thinking" as any)}
+        title=${
+          disableThinkingToggle
+            ? t("chat.controls.onboarding" as any)
+            : t("chat.controls.thinking" as any)
+        }
       >
         ${icons.brain}
       </button>
@@ -129,17 +171,21 @@ export function renderChatControls(state: AppViewState) {
         class="btn btn--sm btn--icon ${focusActive ? "active" : ""}"
         ?disabled=${disableFocusToggle}
         @click=${() => {
-      try { if (navigator.vibrate) navigator.vibrate(50); } catch (e) { }
-      if (disableFocusToggle) return;
-      state.applySettings({
-        ...state.settings,
-        chatFocusMode: !state.settings.chatFocusMode,
-      });
-    }}
+          try {
+            if (navigator.vibrate) navigator.vibrate(50);
+          } catch (e) {}
+          if (disableFocusToggle) return;
+          state.applySettings({
+            ...state.uiStore.settings,
+            chatFocusMode: !state.uiStore.settings.chatFocusMode,
+          });
+        }}
         aria-pressed=${focusActive}
-        title=${disableFocusToggle
-      ? t("chat.controls.onboarding" as any)
-      : t("chat.controls.focus" as any)}
+        title=${
+          disableFocusToggle
+            ? t("chat.controls.onboarding" as any)
+            : t("chat.controls.focus" as any)
+        }
       >
         ${focusIcon}
       </button>
@@ -173,10 +219,10 @@ function resolveSessionOptions(sessionKey: string, sessions: SessionsListResult 
 const THEME_ORDER: ThemeMode[] = ["system", "light", "dark"];
 
 export function renderAutopilotToggle(state: AppViewState) {
-  const active = state.settings.autopilot;
+  const active = state.uiStore.settings.autopilot;
   const toggle = () => {
     state.applySettings({
-      ...state.settings,
+      ...state.uiStore.settings,
       autopilot: !active,
     });
   };
@@ -196,7 +242,7 @@ export function renderAutopilotToggle(state: AppViewState) {
 }
 
 export function renderThemeToggle(state: AppViewState) {
-  const index = Math.max(0, THEME_ORDER.indexOf(state.theme));
+  const index = Math.max(0, THEME_ORDER.indexOf(state.uiStore.theme));
   const applyTheme = (next: ThemeMode) => (event: MouseEvent) => {
     const element = event.currentTarget as HTMLElement;
     const context: ThemeTransitionContext = { element };
@@ -212,27 +258,27 @@ export function renderThemeToggle(state: AppViewState) {
       <div class="theme-toggle__track" role="group" aria-label="Tema">
         <span class="theme-toggle__indicator"></span>
         <button
-          class="theme-toggle__button ${state.theme === "system" ? "active" : ""}"
+          class="theme-toggle__button ${state.uiStore.theme === "system" ? "active" : ""}"
           @click=${applyTheme("system")}
-          aria-pressed=${state.theme === "system"}
+          aria-pressed=${state.uiStore.theme === "system"}
           aria-label="${t("theme.system" as any)}"
           title="${t("theme.label.system" as any)}"
         >
           ${renderMonitorIcon()}
         </button>
         <button
-          class="theme-toggle__button ${state.theme === "light" ? "active" : ""}"
+          class="theme-toggle__button ${state.uiStore.theme === "light" ? "active" : ""}"
           @click=${applyTheme("light")}
-          aria-pressed=${state.theme === "light"}
+          aria-pressed=${state.uiStore.theme === "light"}
           aria-label="${t("theme.light" as any)}"
           title="${t("theme.label.light" as any)}"
         >
           ${renderSunIcon()}
         </button>
         <button
-          class="theme-toggle__button ${state.theme === "dark" ? "active" : ""}"
+          class="theme-toggle__button ${state.uiStore.theme === "dark" ? "active" : ""}"
           @click=${applyTheme("dark")}
-          aria-pressed=${state.theme === "dark"}
+          aria-pressed=${state.uiStore.theme === "dark"}
           aria-label="${t("theme.dark" as any)}"
           title="${t("theme.label.dark" as any)}"
         >

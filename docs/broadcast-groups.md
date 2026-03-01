@@ -162,7 +162,7 @@ Os agentes processam em ordem (um aguarda o anterior terminar):
 4. **Se não estiver na lista de transmissão**:
    - Aplica-se o roteamento normal (primeiro vínculo correspondente).
 
-Nota: os grupos de transmissão não ignoram as listas de permissão do canal ou as regras de ativação de grupo (menções/comandos/etc). Eles apenas alteram *quais agentes são executados* quando uma mensagem é elegível para processamento.
+Nota: os grupos de transmissão não ignoram as listas de permissão do canal ou as regras de ativação de grupo (menções/comandos/etc). Eles apenas alteram _quais agentes são executados_ quando uma mensagem é elegível para processamento.
 
 ### Isolamento de Sessão
 
@@ -198,7 +198,7 @@ Ferramentas: read, write, exec
 **Contexto da Bärbel:**
 
 ```text
-Sessão: agent:baerbel:whatsapp:group:120363403215116621@g.us  
+Sessão: agent:baerbel:whatsapp:group:120363403215116621@g.us
 Histórico: [mensagem do usuário, respostas anteriores da baerbel]
 Workspace: /Users/pascal/zero-baerbel/
 Ferramentas: apenas leitura
@@ -243,10 +243,10 @@ Dê aos agentes apenas as ferramentas de que precisam:
 {
   "agents": {
     "reviewer": {
-      "tools": { "allow": ["read", "exec"] }  // Apenas leitura
+      "tools": { "allow": ["read", "exec"] } // Apenas leitura
     },
     "fixer": {
-      "tools": { "allow": ["read", "write", "edit", "exec"] }  // Leitura e escrita
+      "tools": { "allow": ["read", "write", "edit", "exec"] } // Leitura e escrita
     }
   }
 }
@@ -287,7 +287,10 @@ Os grupos de transmissão funcionam junto com o roteamento existente:
 ```json
 {
   "bindings": [
-    { "match": { "channel": "whatsapp", "peer": { "kind": "group", "id": "GROUP_A" } }, "agentId": "alfred" }
+    {
+      "match": { "channel": "whatsapp", "peer": { "kind": "group", "id": "GROUP_A" } },
+      "agentId": "alfred"
+    }
   ],
   "broadcast": {
     "GROUP_B": ["agent1", "agent2"]
@@ -347,9 +350,21 @@ tail -f ~/.zero/logs/gateway.log | grep broadcast
   },
   "agents": {
     "list": [
-      { "id": "code-formatter", "workspace": "~/agents/formatter", "tools": { "allow": ["read", "write"] } },
-      { "id": "security-scanner", "workspace": "~/agents/security", "tools": { "allow": ["read", "exec"] } },
-      { "id": "test-coverage", "workspace": "~/agents/testing", "tools": { "allow": ["read", "exec"] } },
+      {
+        "id": "code-formatter",
+        "workspace": "~/agents/formatter",
+        "tools": { "allow": ["read", "write"] }
+      },
+      {
+        "id": "security-scanner",
+        "workspace": "~/agents/security",
+        "tools": { "allow": ["read", "exec"] }
+      },
+      {
+        "id": "test-coverage",
+        "workspace": "~/agents/testing",
+        "tools": { "allow": ["read", "exec"] }
+      },
       { "id": "docs-checker", "workspace": "~/agents/docs", "tools": { "allow": ["read"] } }
     ]
   }
@@ -400,7 +415,6 @@ interface ZEROConfig {
 - `strategy` (opcional): Como processar os agentes.
   - `"parallel"` (padrão): Todos os agentes processam simultaneamente.
   - `"sequential"`: Os agentes processam na ordem da lista.
-  
 - `[peerId]`: JID do grupo do WhatsApp, número E.164 ou outro ID de par.
   - Valor: Lista de IDs de agentes que devem processar as mensagens.
 

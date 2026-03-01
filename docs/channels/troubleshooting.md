@@ -4,6 +4,7 @@ read_when:
   - Um canal conecta, mas as mensagens não fluem
   - Investigando má configuração de canal (intents, permissões, modo de privacidade)
 ---
+
 # Resolução de Problemas de Canais
 
 Comece com:

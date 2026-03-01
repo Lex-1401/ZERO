@@ -49,26 +49,26 @@
 # .aios-core/agents/{agent-id}.md
 
 agent:
-  name: {PersonalizedName}        # NEW: Human name (Dex, Quinn, Pax...)
-  id: {agent-id}                  # UNCHANGED: System identifier
-  title: {Role}                   # UNCHANGED: Professional role
-  icon: {emoji}                   # UNCHANGED: Visual identifier
-  whenToUse: "{description}"      # UNCHANGED
+  name: { PersonalizedName } # NEW: Human name (Dex, Quinn, Pax...)
+  id: { agent-id } # UNCHANGED: System identifier
+  title: { Role } # UNCHANGED: Professional role
+  icon: { emoji } # UNCHANGED: Visual identifier
+  whenToUse: "{description}" # UNCHANGED
 
-persona_profile:                  # NEW SECTION
-  archetype: {Archetype}          # Builder, Guardian, Balancer, etc.
-  zodiac: {Sign}                  # ♒ Aquarius, ♍ Virgo, ♎ Libra, etc.
+persona_profile: # NEW SECTION
+  archetype: { Archetype } # Builder, Guardian, Balancer, etc.
+  zodiac: { Sign } # ♒ Aquarius, ♍ Virgo, ♎ Libra, etc.
 
   communication:
-    tone: {tone}                  # pragmatic | empathetic | analytical | collaborative
-    emoji_frequency: {level}      # high | medium | low | minimal
+    tone: { tone } # pragmatic | empathetic | analytical | collaborative
+    emoji_frequency: { level } # high | medium | low | minimal
 
-    vocabulary:                   # Agent-specific words (5-10)
-      - {word1}
-      - {word2}
-      - {word3}
+    vocabulary: # Agent-specific words (5-10)
+      - { word1 }
+      - { word2 }
+      - { word3 }
 
-    greeting_levels:              # 3 personification levels
+    greeting_levels: # 3 personification levels
       minimal: "{icon} {id} Agent ready"
       named: "{icon} {name} ({archetype}) ready. {tagline}!"
       archetypal: "{icon} {name} the {archetype} ({zodiac}) ready to {verb}!"
@@ -172,14 +172,14 @@ class PersonalizedOutputFormatter {
    * TONE: Personalized per agent (personalização)
    */
   format() {
-    return this.renderTemplate('task-execution-report', {
+    return this.renderTemplate("task-execution-report", {
       // FIXED POSITIONS (never change)
       header: this.buildFixedHeader(),
       metrics: this.buildFixedMetrics(),
 
       // PERSONALITY SLOTS (varies per agent)
       statusMessage: this.buildPersonalizedStatus(),
-      signature: this.personality.communication.signature_closing
+      signature: this.personality.communication.signature_closing,
     });
   }
 
@@ -202,12 +202,12 @@ class PersonalizedOutputFormatter {
     const verb = this.selectVerbFromVocabulary(vocabulary);
 
     // Generate status message matching agent personality
-    switch(this.results.status) {
-      case 'success':
+    switch (this.results.status) {
+      case "success":
         return this.generateSuccessMessage(tone, verb);
-      case 'warning':
+      case "warning":
         return this.generateWarningMessage(tone);
-      case 'error':
+      case "error":
         return this.generateErrorMessage(tone);
     }
   }
@@ -217,7 +217,7 @@ class PersonalizedOutputFormatter {
       pragmatic: `✅ Tá pronto! ${verb.charAt(0).toUpperCase() + verb.slice(1)} com sucesso.`,
       empathetic: `✅ Concluído com cuidado. ${verb.charAt(0).toUpperCase() + verb.slice(1)} pensando em todos os casos.`,
       analytical: `✅ Validado. ${verb.charAt(0).toUpperCase() + verb.slice(1)} conforme especificações.`,
-      collaborative: `✅ Feito! ${verb.charAt(0).toUpperCase() + verb.slice(1)} em conjunto com as dependências.`
+      collaborative: `✅ Feito! ${verb.charAt(0).toUpperCase() + verb.slice(1)} em conjunto com as dependências.`,
     };
 
     return templates[tone] || templates.pragmatic;
@@ -246,12 +246,12 @@ class PersonalizedOutputFormatter {
  */
 function validateTaskOutput(output) {
   const requiredPatterns = [
-    { pattern: /## 📊 Task Execution Report/, name: 'Header' },
-    { pattern: /\*\*Agent:\*\*/, name: 'Agent line (line 3)' },
-    { pattern: /\*\*Duration:\*\*/, name: 'Duration line (line 6)' },
-    { pattern: /\*\*Tokens Used:\*\*/, name: 'Tokens line (line 7)' },
-    { pattern: /### Status/, name: 'Status section' },
-    { pattern: /### Metrics/, name: 'Metrics section (always last)' },
+    { pattern: /## 📊 Task Execution Report/, name: "Header" },
+    { pattern: /\*\*Agent:\*\*/, name: "Agent line (line 3)" },
+    { pattern: /\*\*Duration:\*\*/, name: "Duration line (line 6)" },
+    { pattern: /\*\*Tokens Used:\*\*/, name: "Tokens line (line 7)" },
+    { pattern: /### Status/, name: "Status section" },
+    { pattern: /### Metrics/, name: "Metrics section (always last)" },
   ];
 
   const errors = [];
@@ -263,15 +263,15 @@ function validateTaskOutput(output) {
   });
 
   // Validate Metrics section is last
-  const sections = output.split('###');
+  const sections = output.split("###");
   const lastSection = sections[sections.length - 1];
-  if (!lastSection.includes('Metrics')) {
-    errors.push('Metrics section must be last (familiarity requirement)');
+  if (!lastSection.includes("Metrics")) {
+    errors.push("Metrics section must be last (familiarity requirement)");
   }
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 }
 ```
@@ -297,17 +297,21 @@ function validateTaskOutput(output) {
 ---
 
 ### Status
+
 {status_icon} {personalized_status_message}
 
 ### Output
+
 {task_specific_content}
 
 ### Metrics
+
 - Tests: {tests.passed}/{tests.total}
 - Coverage: {coverage}%
 - Linting: {lint.status}
 
 ---
+
 {agent.persona_profile.signature_closing}
 ```
 
@@ -354,21 +358,21 @@ function validateTaskOutput(output) {
 # .aios-core/workflows/{workflow-name}.yaml
 
 workflow:
-  name: {Workflow Name}
-  description: {Description}
+  name: { Workflow Name }
+  description: { Description }
 
   agents:
-    - id: {agent-id}
-      role: {role in workflow}
-      personality_mode: named  # minimal | named | archetypal
+    - id: { agent-id }
+      role: { role in workflow }
+      personality_mode: named # minimal | named | archetypal
 
   steps:
     - step: 1
-      agent: {agent-id}
-      task: {task-name}
-      output_format: standard  # Uses task-execution-report template
+      agent: { agent-id }
+      task: { task-name }
+      output_format: standard # Uses task-execution-report template
 
-      personality_injection:   # Optional: customize for this step
+      personality_injection: # Optional: customize for this step
         status_prefix: "Step 1"
         emphasis_metrics: [duration, tokens]
 
@@ -410,9 +414,11 @@ workflow:
 ## 📊 Implementation Phases
 
 ### Phase 1: Agent File Updates (Day 1-2)
+
 **Goal:** Add `persona_profile` to 11 agents
 
 **Tasks:**
+
 1. Update dev.md → Dex (Builder)
 2. Update qa.md → Quinn (Guardian)
 3. Update po.md → Pax (Balancer)
@@ -428,9 +434,11 @@ workflow:
 **Deliverable:** 11 updated agent files with persona_profile section
 
 ### Phase 2: Output Formatter (Day 2-3)
+
 **Goal:** Create template engine with personality injection
 
 **Tasks:**
+
 1. Create `output-formatter.js`
 2. Create `validate-output-pattern.js`
 3. Create `task-execution-report.md` template
@@ -440,9 +448,11 @@ workflow:
 **Deliverable:** Working formatter + validation
 
 ### Phase 3: Task Template Updates (Day 3-4)
+
 **Goal:** Update develop-story.md to use formatter
 
 **Tasks:**
+
 1. Add duration tracking
 2. Add token tracking
 3. Integrate output formatter
@@ -452,9 +462,11 @@ workflow:
 **Deliverable:** 1 updated task (proof of concept)
 
 ### Phase 4: Baseline Metrics (Day 4-5)
+
 **Goal:** Measure impact
 
 **Metrics to track:**
+
 - Time to comprehend task output (before/after)
 - User satisfaction survey (1-5 scale)
 - Token overhead (% increase)
@@ -467,6 +479,7 @@ workflow:
 ## ✅ Success Criteria
 
 ### Must Have (MVP)
+
 - [ ] All 11 agents have `persona_profile` section
 - [ ] Output formatter generates valid templates
 - [ ] At least 1 task uses new format
@@ -474,11 +487,13 @@ workflow:
 - [ ] Validation script catches malformed outputs
 
 ### Should Have
+
 - [ ] User comprehension speed +8% or better
 - [ ] Token overhead <15%
 - [ ] All tasks migrated to new format
 
 ### Nice to Have
+
 - [ ] User satisfaction +12% or better
 - [ ] Agent personality recognized in blind test
 - [ ] Community feedback positive
@@ -488,27 +503,39 @@ workflow:
 ## 🚫 Anti-Patterns to Avoid
 
 ### ❌ Breaking Familiaridade
+
 **DON'T:**
+
 ```markdown
-**Dex says:** Duration was 2.3s  ← Metrics in wrong position
+**Dex says:** Duration was 2.3s ← Metrics in wrong position
 **Tokens:** 1,234
-### Output                     ← Sections out of order
+
+### Output ← Sections out of order
+
 ...
-### Status                     ← Status should be before Output
+
+### Status ← Status should be before Output
 ```
 
 **DO:**
+
 ```markdown
-**Duration:** 2.3s              ← Fixed position
-**Tokens:** 1,234 total         ← Fixed position
+**Duration:** 2.3s ← Fixed position
+**Tokens:** 1,234 total ← Fixed position
+
 ---
-### Status                      ← Always before Output
+
+### Status ← Always before Output
+
 ### Output
-### Metrics                     ← Always last
+
+### Metrics ← Always last
 ```
 
 ### ❌ Over-Personalizing Structure
+
 **DON'T:**
+
 ```yaml
 # Different agents with different formats
 dex_output: "Status: {status} | Duration: {dur}"
@@ -516,15 +543,18 @@ quinn_output: "Result → {status} (took {dur})"
 ```
 
 **DO:**
+
 ```yaml
 # Same structure, different tone
-all_agents_header: "**Duration:** {dur}"  # Fixed
-dex_status: "✅ Tá pronto!"               # Personality
-quinn_status: "✅ Validado."              # Personality
+all_agents_header: "**Duration:** {dur}" # Fixed
+dex_status: "✅ Tá pronto!" # Personality
+quinn_status: "✅ Validado." # Personality
 ```
 
 ### ❌ Vocabulary Drift
+
 **DON'T:**
+
 ```javascript
 // Random verb selection across agents
 dex: "completed successfully"    ← Generic
@@ -532,6 +562,7 @@ quinn: "got it done"             ← Informal
 ```
 
 **DO:**
+
 ```javascript
 // Vocabulary from archetype definition
 dex: loadVocabulary('Builder')   → "construir"
@@ -555,12 +586,14 @@ quinn: loadVocabulary('Guardian') → "validar"
 ## 🔄 Maintenance
 
 ### Monthly Review
+
 - Audit all outputs for structure compliance
 - Validate personality consistency
 - Measure comprehension metrics
 - Update archetype vocabulary if needed
 
 ### Quarterly Updates
+
 - User satisfaction survey
 - A/B test new personality variations
 - Refine formatter based on feedback

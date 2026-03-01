@@ -3,13 +3,7 @@
     "name": "aios-validator.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "validate",
-      "validateStoryFile",
-      "runESLint",
-      "runTypeScript",
-      "validateYAML"
-    ],
+    "exports": ["validate", "validateStoryFile", "runESLint", "runTypeScript", "validateYAML"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -25,10 +19,7 @@
     "name": "atomic-layer-classifier.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "classifyTask",
-      "processTaskFile"
-    ],
+    "exports": ["classifyTask", "processTaskFile"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -126,10 +117,7 @@
     "name": "config-cache.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "ConfigCache",
-      "globalConfigCache"
-    ],
+    "exports": ["ConfigCache", "globalConfigCache"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -281,10 +269,7 @@
     "name": "performance-and-error-resolver.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "processTaskFile",
-      "determineErrorStrategy"
-    ],
+    "exports": ["processTaskFile", "determineErrorStrategy"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -320,12 +305,7 @@
     "name": "pm-adapter-factory.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "getPMAdapter",
-      "clearAdapterCache",
-      "getPMToolType",
-      "isPMToolConfigured"
-    ],
+    "exports": ["getPMAdapter", "clearAdapterCache", "getPMToolType", "isPMToolConfigured"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -333,9 +313,7 @@
     "name": "pm-adapter.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "PMAdapter"
-    ],
+    "exports": ["PMAdapter"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -343,12 +321,7 @@
     "name": "project-status-loader.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "loadProjectStatus",
-      "clearCache",
-      "formatStatusDisplay",
-      "ProjectStatusLoader"
-    ],
+    "exports": ["loadProjectStatus", "clearCache", "formatStatusDisplay", "ProjectStatusLoader"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -364,9 +337,7 @@
     "name": "repository-detector.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "detectRepositoryContext"
-    ],
+    "exports": ["detectRepositoryContext"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -392,9 +363,7 @@
     "name": "spot-check-validator.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "validateTask"
-    ],
+    "exports": ["validateTask"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },
@@ -450,11 +419,7 @@
     "name": "tool-resolver.js",
     "status": "WORKING",
     "loadable": true,
-    "exports": [
-      "cache",
-      "basePaths",
-      "resolveTool"
-    ],
+    "exports": ["cache", "basePaths", "resolveTool"],
     "errors": [],
     "recommendation": "Functional - verify integration"
   },

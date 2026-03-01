@@ -43,42 +43,50 @@ infrastructure/ ← core/ ← development/ ← product/
 ## Key Components
 
 ### Git Integration
+
 - `GitWrapper` - Git CLI wrapper for all git operations
 - `GitConfigDetector` - Detects git configuration status
 - `BranchManager` - Branch management utilities
 - `CommitMessageGenerator` - Generates commit messages
 
 ### PM Integration
+
 - `getPMAdapter()` - Factory for PM tool adapters
 - `PMAdapter` - Base adapter class
 - Adapters: ClickUp, GitHub Projects, Jira, Local (standalone)
 
 ### Template & Generation
+
 - `TemplateEngine` - Template rendering
 - `ComponentGenerator` - AIOS component generation
 - `BatchCreator` - Batch operations
 
 ### Validation
+
 - `AiosValidator` - AIOS component validation
 - `TemplateValidator` - Template validation
 - `SpotCheckValidator` - Spot check validation
 
 ### Analysis
+
 - `DependencyAnalyzer` - Dependency analysis
 - `SecurityChecker` - Security validation
 - `CapabilityAnalyzer` - Capability analysis
 
 ### Testing
+
 - `TestGenerator` - Test file generation
 - `CoverageAnalyzer` - Coverage analysis
 - `SandboxTester` - Sandbox testing
 
 ### Performance
+
 - `PerformanceAnalyzer` - Performance analysis
 - `PerformanceTracker` - Performance tracking
 - `PerformanceOptimizer` - Performance optimization
 
 ### Quality
+
 - `CodeQualityImprover` - Code quality improvements
 - `RefactoringSuggester` - Refactoring suggestions
 - `ImprovementEngine` - General improvements
@@ -91,27 +99,27 @@ const {
   GitWrapper,
   getPMAdapter,
   TemplateEngine,
-  resolveTool
-} = require('.aios-core/infrastructure');
+  resolveTool,
+} = require(".aios-core/infrastructure");
 
 // Or import directly from scripts
-const GitWrapper = require('.aios-core/infrastructure/scripts/git-wrapper');
+const GitWrapper = require(".aios-core/infrastructure/scripts/git-wrapper");
 ```
 
 ## Tool Resolution
 
 ```javascript
-const { resolveTool } = require('.aios-core/infrastructure');
+const { resolveTool } = require(".aios-core/infrastructure");
 
 // Get tool configuration
-const clickupTool = await resolveTool('clickup');
-const githubCli = await resolveTool('github-cli');
+const clickupTool = await resolveTool("clickup");
+const githubCli = await resolveTool("github-cli");
 ```
 
 ## PM Adapters
 
 ```javascript
-const { getPMAdapter, isPMToolConfigured } = require('.aios-core/infrastructure');
+const { getPMAdapter, isPMToolConfigured } = require(".aios-core/infrastructure");
 
 // Check if PM tool is configured
 if (isPMToolConfigured()) {

@@ -10,8 +10,8 @@ read_when:
 
 O ZERO tem dois problemas distintos que parecem semelhantes na superfície:
 
-1) **Controle remoto do operador**: o aplicativo da barra de menus do macOS controlando um gateway executado em outro lugar.
-2) **Emparelhamento de nós**: iOS/Android (e futuros nós) encontrando um gateway e emparelhando-se com segurança.
+1. **Controle remoto do operador**: o aplicativo da barra de menus do macOS controlando um gateway executado em outro lugar.
+2. **Emparelhamento de nós**: iOS/Android (e futuros nós) encontrando um gateway e emparelhando-se com segurança.
 
 O objetivo do projeto é manter toda a descoberta/anúncio de rede no **Portal de Nós (Node Gateway)** (`zero` / `zero gateway`) e manter os clientes (aplicativo mac, iOS) como consumidores.
 
@@ -93,10 +93,10 @@ Veja [Acesso remoto](/gateway/remote).
 
 Comportamento recomendado do cliente:
 
-1) Se um endpoint direto emparelhado estiver configurado e acessível, use-o.
-2) Caso contrário, se o Bonjour encontrar um gateway na LAN, ofereça uma escolha "Usar este gateway" com um toque e salve-o como o endpoint direto.
-3) Caso contrário, se um DNS/IP da tailnet estiver configurado, tente o direto.
-4) Caso contrário, faça o fallback para o SSH.
+1. Se um endpoint direto emparelhado estiver configurado e acessível, use-o.
+2. Caso contrário, se o Bonjour encontrar um gateway na LAN, ofereça uma escolha "Usar este gateway" com um toque e salve-o como o endpoint direto.
+3. Caso contrário, se um DNS/IP da tailnet estiver configurado, tente o direto.
+4. Caso contrário, faça o fallback para o SSH.
 
 ## Emparelhamento + autenticação (transporte direto)
 
@@ -116,4 +116,4 @@ O gateway é a fonte da verdade para a admissão de nós/clientes.
 
 ---
 
-*Próximo: [Protocolo do Gateway](/gateway/protocol)* ∅
+_Próximo: [Protocolo do Gateway](/gateway/protocol)_ ∅

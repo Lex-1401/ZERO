@@ -29,5 +29,5 @@ read_when:
 
 ## Notas operacionais
 
-- Se a porta estiver ocupada por *outro* processo, o erro é o mesmo; libere a porta ou escolha outra com `zero gateway --port <porta>`.
+- Se a porta estiver ocupada por _outro_ processo, o erro é o mesmo; libere a porta ou escolha outra com `zero gateway --port <porta>`.
 - O aplicativo macOS ainda mantém sua própria proteção leve de PID antes de iniciar o gateway; o bloqueio em tempo de execução é imposto pelo vínculo do WebSocket.

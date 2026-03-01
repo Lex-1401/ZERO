@@ -6,6 +6,9 @@ public enum ZeroChatTransportEvent: Sendable {
     case chat(ZeroChatEventPayload)
     case agent(ZeroAgentEventPayload)
     case seqGap
+    /// Emitted when the WebSocket reconnects after a previous failure.
+    /// The ChatViewModel should auto-retry bootstrap to clear stale error overlays.
+    case reconnected
 }
 
 public protocol ZeroChatTransport: Sendable {
@@ -25,10 +28,12 @@ public protocol ZeroChatTransport: Sendable {
 
     func patchSession(sessionKey: String, model: String?, thinkingLevel: String?) async throws
     func setActiveSessionKey(_ sessionKey: String) async throws
+    func bootstrap() async throws
 }
 
 extension ZeroChatTransport {
     public func setActiveSessionKey(_: String) async throws {}
+    public func bootstrap() async throws {}
 
     public func abortRun(sessionKey _: String, runId _: String) async throws {
         throw NSError(

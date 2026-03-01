@@ -3,6 +3,7 @@ summary: "Comportamento de chat de grupo em várias plataformas (WhatsApp/Telegr
 read_when:
   - Alterando o comportamento do chat de grupo ou o controle de menções
 ---
+
 # Grupos
 
 O ZERO trata os chats de grupo de forma consistente em todas as plataformas: WhatsApp, Telegram, Discord, Slack, Signal, iMessage e Microsoft Teams.
@@ -35,12 +36,12 @@ caso contrário -> responder
 
 Se você quer...
 
-| Objetivo | O que configurar |
-|----------|-------------|
-| Permitir todos os grupos, mas responder apenas a @menções | `groups: { "*": { requireMention: true } }` |
-| Desativar todas as respostas de grupo | `groupPolicy: "disabled"` |
-| Apenas grupos específicos | `groups: { "<id-do-grupo>": { ... } }` (sem a chave `"*"` ) |
-| Apenas você pode acionar nos grupos | `groupPolicy: "allowlist"`, `groupAllowFrom: ["+1555..."]` |
+| Objetivo                                                  | O que configurar                                            |
+| --------------------------------------------------------- | ----------------------------------------------------------- |
+| Permitir todos os grupos, mas responder apenas a @menções | `groups: { "*": { requireMention: true } }`                 |
+| Desativar todas as respostas de grupo                     | `groupPolicy: "disabled"`                                   |
+| Apenas grupos específicos                                 | `groups: { "<id-do-grupo>": { ... } }` (sem a chave `"*"` ) |
+| Apenas você pode acionar nos grupos                       | `groupPolicy: "allowlist"`, `groupAllowFrom: ["+1555..."]`  |
 
 ## Chaves de sessão
 
@@ -71,19 +72,19 @@ Exemplo (DMs no host, grupos em sandbox + apenas ferramentas de mensagens):
       sandbox: {
         mode: "non-main", // grupos/canais são não-principais -> sandboxed
         scope: "session", // maior isolamento (um contêiner por grupo/canal)
-        workspaceAccess: "none"
-      }
-    }
+        workspaceAccess: "none",
+      },
+    },
   },
   tools: {
     sandbox: {
       tools: {
         // Se allow não estiver vazio, tudo o resto é bloqueado (deny sempre vence).
         allow: ["group:messaging", "group:sessions"],
-        deny: ["group:runtime", "group:fs", "group:ui", "nodes", "cron", "gateway"]
-      }
-    }
-  }
+        deny: ["group:runtime", "group:fs", "group:ui", "nodes", "cron", "gateway"],
+      },
+    },
+  },
 }
 ```
 
@@ -100,12 +101,12 @@ Quer que “os grupos vejam apenas a pasta X” em vez de “sem acesso ao host�
         docker: {
           binds: [
             // caminhoNoHost:caminhoNoContainer:modo
-            "~/FriendsShared:/data:ro"
-          ]
-        }
-      }
-    }
-  }
+            "~/FriendsShared:/data:ro",
+          ],
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -129,50 +130,50 @@ Controla como as mensagens de grupo/sala são tratadas por canal:
   channels: {
     whatsapp: {
       groupPolicy: "disabled", // "open" | "disabled" | "allowlist"
-      groupAllowFrom: ["+15551234567"]
+      groupAllowFrom: ["+15551234567"],
     },
     telegram: {
       groupPolicy: "disabled",
-      groupAllowFrom: ["123456789", "@usuario"]
+      groupAllowFrom: ["123456789", "@usuario"],
     },
     signal: {
       groupPolicy: "disabled",
-      groupAllowFrom: ["+15551234567"]
+      groupAllowFrom: ["+15551234567"],
     },
     imessage: {
       groupPolicy: "disabled",
-      groupAllowFrom: ["chat_id:123"]
+      groupAllowFrom: ["chat_id:123"],
     },
     msteams: {
       groupPolicy: "disabled",
-      groupAllowFrom: ["usuario@org.com"]
+      groupAllowFrom: ["usuario@org.com"],
     },
     discord: {
       groupPolicy: "allowlist",
       guilds: {
-        "GUILD_ID": { channels: { ajuda: { allow: true } } }
-      }
+        GUILD_ID: { channels: { ajuda: { allow: true } } },
+      },
     },
     slack: {
       groupPolicy: "allowlist",
-      channels: { "#geral": { allow: true } }
+      channels: { "#geral": { allow: true } },
     },
     matrix: {
       groupPolicy: "allowlist",
       groupAllowFrom: ["@dono:example.org"],
       groups: {
         "!roomId:example.org": { allow: true },
-        "#alias:example.org": { allow: true }
-      }
-    }
-  }
+        "#alias:example.org": { allow: true },
+      },
+    },
+  },
 }
 ```
 
-| Política | Comportamento |
-|----------|----------|
-| `"open"` | Grupos ignoram as listas de permissões; o controle de menções ainda se aplica. |
-| `"disabled"` | Bloqueia todas as mensagens de grupo inteiramente. |
+| Política      | Comportamento                                                                   |
+| ------------- | ------------------------------------------------------------------------------- |
+| `"open"`      | Grupos ignoram as listas de permissões; o controle de menções ainda se aplica.  |
+| `"disabled"`  | Bloqueia todas as mensagens de grupo inteiramente.                              |
 | `"allowlist"` | Permite apenas grupos/salas que correspondam à lista de permissões configurada. |
 
 Notas:
@@ -188,9 +189,9 @@ Notas:
 
 Modelo mental rápido (ordem de avaliação para mensagens de grupo):
 
-1) `groupPolicy` (open/disabled/allowlist)
-2) listas de permissões de grupo (`*.groups`, `*.groupAllowFrom`, lista de permissões específica do canal)
-3) controle de menções (`requireMention`, `/activation`)
+1. `groupPolicy` (open/disabled/allowlist)
+2. listas de permissões de grupo (`*.groups`, `*.groupAllowFrom`, lista de permissões específica do canal)
+3. controle de menções (`requireMention`, `/activation`)
 
 ## Controle de menções (gating, padrão)
 
@@ -204,21 +205,21 @@ Responder a uma mensagem de bot conta como uma menção implícita (quando o can
     whatsapp: {
       groups: {
         "*": { requireMention: true },
-        "123@g.us": { requireMention: false }
-      }
+        "123@g.us": { requireMention: false },
+      },
     },
     telegram: {
       groups: {
         "*": { requireMention: true },
-        "123456789": { requireMention: false }
-      }
+        "123456789": { requireMention: false },
+      },
     },
     imessage: {
       groups: {
         "*": { requireMention: true },
-        "123": { requireMention: false }
-      }
-    }
+        "123": { requireMention: false },
+      },
+    },
   },
   agents: {
     list: [
@@ -226,11 +227,11 @@ Responder a uma mensagem de bot conta como uma menção implícita (quando o can
         id: "main",
         groupChat: {
           mentionPatterns: ["@zero", "zero", "\\+15555550123"],
-          historyLimit: 50
-        }
-      }
-    ]
-  }
+          historyLimit: 50,
+        },
+      },
+    ],
+  },
 }
 ```
 
@@ -249,15 +250,15 @@ Quando `channels.whatsapp.groups`, `channels.telegram.groups` ou `channels.imess
 
 Intenções comuns (copiar/colar):
 
-1) Desativar todas as respostas de grupo
+1. Desativar todas as respostas de grupo
 
 ```json5
 {
-  channels: { whatsapp: { groupPolicy: "disabled" } }
+  channels: { whatsapp: { groupPolicy: "disabled" } },
 }
 ```
 
-1) Permitir apenas grupos específicos (WhatsApp)
+1. Permitir apenas grupos específicos (WhatsApp)
 
 ```json5
 {
@@ -265,26 +266,26 @@ Intenções comuns (copiar/colar):
     whatsapp: {
       groups: {
         "123@g.us": { requireMention: true },
-        "456@g.us": { requireMention: false }
-      }
-    }
-  }
+        "456@g.us": { requireMention: false },
+      },
+    },
+  },
 }
 ```
 
-1) Permitir todos os grupos, mas exigir menção (explícito)
+1. Permitir todos os grupos, mas exigir menção (explícito)
 
 ```json5
 {
   channels: {
     whatsapp: {
-      groups: { "*": { requireMention: true } }
-    }
-  }
+      groups: { "*": { requireMention: true } },
+    },
+  },
 }
 ```
 
-1) Apenas o proprietário pode acionar nos grupos (WhatsApp)
+1. Apenas o proprietário pode acionar nos grupos (WhatsApp)
 
 ```json5
 {
@@ -292,9 +293,9 @@ Intenções comuns (copiar/colar):
     whatsapp: {
       groupPolicy: "allowlist",
       groupAllowFrom: ["+15551234567"],
-      groups: { "*": { requireMention: true } }
-    }
-  }
+      groups: { "*": { requireMention: true } },
+    },
+  },
 }
 ```
 

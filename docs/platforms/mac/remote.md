@@ -3,9 +3,10 @@ summary: "Fluxo do app macOS para controlar um gateway ZERO remoto via SSH"
 read_when:
   - Configurando ou depurando o controle remoto via mac
 ---
+
 # ZERO Remoto (macOS ⇄ host remoto)
 
-Este fluxo permite que o app macOS atue como um controle remoto completo para um gateway ZERO em execução em outro host (desktop/servidor). É o recurso **Remote over SSH** (execução remota) do app. Todos os recursos — verificações de saúde, encaminhamento de Voice Wake e Web Chat — reutilizam a mesma configuração SSH remota de *Settings → General*.
+Este fluxo permite que o app macOS atue como um controle remoto completo para um gateway ZERO em execução em outro host (desktop/servidor). É o recurso **Remote over SSH** (execução remota) do app. Todos os recursos — verificações de saúde, encaminhamento de Voice Wake e Web Chat — reutilizam a mesma configuração SSH remota de _Settings → General_.
 
 ## Modos
 
@@ -22,14 +23,14 @@ O modo remoto suporta dois transportes:
 
 ## Pré-requisitos no host remoto
 
-1) Instale Node + pnpm e compile/instale a CLI do ZERO (`pnpm install && pnpm build && pnpm link --global`).
-2) Garanta que o `zero` esteja no PATH para shells não-interativos (crie um link simbólico para `/usr/local/bin` ou `/opt/homebrew/bin` se necessário).
-3) Open SSH com autenticação por chave. Recomendamos IPs do **Tailscale** para acessibilidade estável fora da rede local (LAN).
+1. Instale Node + pnpm e compile/instale a CLI do ZERO (`pnpm install && pnpm build && pnpm link --global`).
+2. Garanta que o `zero` esteja no PATH para shells não-interativos (crie um link simbólico para `/usr/local/bin` ou `/opt/homebrew/bin` se necessário).
+3. Open SSH com autenticação por chave. Recomendamos IPs do **Tailscale** para acessibilidade estável fora da rede local (LAN).
 
 ## Configuração do app macOS
 
-1) Abra *Settings → General*.
-2) Em **ZERO runs**, escolha **Remote over SSH** e defina:
+1. Abra _Settings → General_.
+2. Em **ZERO runs**, escolha **Remote over SSH** e defina:
    - **Transport**: **SSH tunnel** ou **Direct (ws/wss)**.
    - **SSH target**: `usuario@host` (opcional `:porta`).
      - Se o gateway estiver na mesma rede local e anunciar via Bonjour, escolha-o na lista de descobertos para preencher este campo automaticamente.
@@ -37,8 +38,8 @@ O modo remoto suporta dois transportes:
    - **Identity file** (avançado): caminho para sua chave.
    - **Project root** (avançado): caminho do checkout remoto usado para comandos.
    - **CLI path** (avançado): caminho opcional para um ponto de entrada/binário executável do `zero` (preenchido automaticamente quando anunciado).
-3) Clique em **Test remote**. O sucesso indica que o `zero status --json` remoto funciona corretamente. Falhas geralmente significam problemas de PATH/CLI; erro 127 significa que a CLI não foi encontrada remotamente.
-4) Verificações de saúde e Web Chat agora passarão automaticamente por este túnel SSH.
+3. Clique em **Test remote**. O sucesso indica que o `zero status --json` remoto funciona corretamente. Falhas geralmente significam problemas de PATH/CLI; erro 127 significa que a CLI não foi encontrada remotamente.
+4. Verificações de saúde e Web Chat agora passarão automaticamente por este túnel SSH.
 
 ## Web Chat
 

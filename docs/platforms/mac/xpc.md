@@ -3,6 +3,7 @@ summary: "Arquitetura de IPC (Comunicação Entre Processos) do macOS para o app
 read_when:
   - Editando contratos de IPC ou IPC do app da barra de menus
 ---
+
 # Arquitetura de IPC do ZERO no macOS
 
 **Modelo atual:** um socket Unix local conecta o **serviço host do nó** ao **app macOS** para aprovações de execução (exec approvals) + `system.run`. Existe uma CLI de depuração `zero-mac` para verificações de descoberta/conexão; as ações do agente ainda fluem através do WebSocket do Gateway e `node.invoke`. A automação de interface (UI) usa o PeekabooBridge.

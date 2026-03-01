@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SYN-14: Boot time captured before ANY require — measures hook cold start
 const _BOOT_TIME = process.hrtime.bigint();
-'use strict';
+("use strict");
 
 /**
  * SYNAPSE Hook Entry Point — UserPromptSubmit
@@ -17,9 +17,9 @@ const _BOOT_TIME = process.hrtime.bigint();
  * @module synapse-engine-hook
  */
 
-const path = require('path');
+const path = require("path");
 const { resolveHookRuntime, buildHookOutput } = require(
-  path.join(__dirname, '..', '..', '.aios-core', 'core', 'synapse', 'runtime', 'hook-runtime.js'),
+  path.join(__dirname, "..", "..", ".aios-core", "core", "synapse", "runtime", "hook-runtime.js"),
 );
 
 /** Safety timeout (ms) — defense-in-depth; Claude Code also manages hook timeout. */
@@ -31,13 +31,18 @@ const HOOK_TIMEOUT_MS = 5000;
  */
 function readStdin() {
   return new Promise((resolve, reject) => {
-    let data = '';
-    process.stdin.setEncoding('utf8');
-    process.stdin.on('error', (e) => reject(e));
-    process.stdin.on('data', (chunk) => { data += chunk; });
-    process.stdin.on('end', () => {
-      try { resolve(JSON.parse(data)); }
-      catch (e) { reject(e); }
+    let data = "";
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("error", (e) => reject(e));
+    process.stdin.on("data", (chunk) => {
+      data += chunk;
+    });
+    process.stdin.on("end", () => {
+      try {
+        resolve(JSON.parse(data));
+      } catch (e) {
+        reject(e);
+      }
     });
   });
 }

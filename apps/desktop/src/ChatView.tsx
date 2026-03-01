@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { gatewayClient } from './lib/gateway';
+import React, { useState, useEffect, useRef } from "react";
+import { gatewayClient } from "./lib/gateway";
 
 interface Message {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: number;
 }
@@ -14,13 +14,13 @@ interface ChatViewProps {
 
 export default function ChatView({ preselectAgentId }: ChatViewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [sessionKey, setSessionKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [currentModel, setCurrentModel] = useState<string>('');
-  const [thinking, setThinking] = useState<string>('low');
+  const [currentModel, setCurrentModel] = useState<string>("");
+  const [thinking, setThinking] = useState<string>("low");
   const [planMode, setPlanMode] = useState(false);
 
   useEffect(() => {
@@ -33,40 +33,42 @@ export default function ChatView({ preselectAgentId }: ChatViewProps) {
       syncSessionState(sessionKey);
 
       const unsub = gatewayClient.subscribe((evt) => {
-        if (evt.event === 'chat') {
+        if (evt.event === "chat") {
           const payload = evt.payload as any;
           if (payload.sessionKey === sessionKey && payload.message) {
-            if (payload.state === 'final') {
+            if (payload.state === "final") {
               addMessage({
                 id: payload.runId || Math.random().toString(36),
                 role: payload.message.role,
                 content: extractText(payload.message.content),
-                timestamp: payload.message.timestamp
+                timestamp: payload.message.timestamp,
               });
             }
           }
         }
       });
-      return () => { unsub(); };
+      return () => {
+        unsub();
+      };
     }
   }, [sessionKey]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const syncSessionState = async (key: string) => {
     try {
-      const res: any = await gatewayClient.call('chat.history', { sessionKey: key, limit: 1 });
+      const res: any = await gatewayClient.call("chat.history", { sessionKey: key, limit: 1 });
       if (res.thinkingLevel) setThinking(res.thinkingLevel);
     } catch (err) {
-      console.error('Falha ao sincronizar estado da sessão', err);
+      console.error("Falha ao sincronizar estado da sessão", err);
     }
   };
 
   const loadSessions = async () => {
     try {
-      const res: any = await gatewayClient.call('sessions.list', {});
+      const res: any = await gatewayClient.call("sessions.list", {});
       const sessions = res.items || [];
       let targetSession = null;
 
@@ -86,34 +88,34 @@ export default function ChatView({ preselectAgentId }: ChatViewProps) {
         setSessionKey(sessions[0].key);
       }
     } catch (err) {
-      console.error('Falha ao listar sessões', err);
+      console.error("Falha ao listar sessões", err);
     }
   };
 
   const loadHistory = async (key: string) => {
     setLoading(true);
     try {
-      const res: any = await gatewayClient.call('chat.history', { sessionKey: key, limit: 50 });
+      const res: any = await gatewayClient.call("chat.history", { sessionKey: key, limit: 50 });
       const msgs = (res.messages || []).map((m: any) => ({
         id: m.id || Math.random().toString(),
         role: m.role,
         content: extractText(m.content),
-        timestamp: m.timestamp
+        timestamp: m.timestamp,
       }));
       setMessages(msgs);
     } catch (err) {
-      console.error('Falha ao carregar histórico', err);
+      console.error("Falha ao carregar histórico", err);
     } finally {
       setLoading(false);
     }
   };
 
   const extractText = (content: any): string => {
-    if (typeof content === 'string') return content;
+    if (typeof content === "string") return content;
     if (Array.isArray(content)) {
-      return content.map((c: any) => c.text || '').join('');
+      return content.map((c: any) => c.text || "").join("");
     }
-    return '';
+    return "";
   };
 
   const addMessage = (msg: Message) => {
@@ -129,58 +131,61 @@ export default function ChatView({ preselectAgentId }: ChatViewProps) {
 
     let userText = input;
     if (planMode) {
-      userText = "[System: Explicitly PLAN your response in <plan> tags before answering.]\n\n" + userText;
+      userText =
+        "[System: Explicitly PLAN your response in <plan> tags before answering.]\n\n" + userText;
     }
-    setInput('');
+    setInput("");
 
     const tempId = Math.random().toString(36).substring(2, 11);
     addMessage({
       id: tempId,
-      role: 'user',
+      role: "user",
       content: userText,
       timestamp: Date.now(),
     });
 
     try {
-      await gatewayClient.call('chat.send', {
+      await gatewayClient.call("chat.send", {
         sessionKey,
         message: userText,
-        idempotencyKey: tempId
+        idempotencyKey: tempId,
       });
     } catch (err) {
-      console.error('Falha ao enviar', err);
+      console.error("Falha ao enviar", err);
     }
   };
 
   const changeModelPreset = async (modelRef: string, level: string) => {
     if (!sessionKey) return;
     try {
-      await gatewayClient.call('sessions.patch', {
+      await gatewayClient.call("sessions.patch", {
         key: sessionKey,
         model: modelRef,
-        thinkingLevel: level
+        thinkingLevel: level,
       });
       setCurrentModel(modelRef);
       setThinking(level);
     } catch (err) {
-      console.error('Falha ao mudar modelo', err);
+      console.error("Falha ao mudar modelo", err);
     }
   };
 
   const presets = [
-    { label: 'Gemini 3 Pro (Alto)', model: 'google/gemini-3-pro', level: 'high' },
-    { label: 'Gemini 3 Pro (Baixo)', model: 'google/gemini-3-pro', level: 'low' },
-    { label: 'Claude Opus 4.5', model: 'anthropic/claude-opus-4-5', level: 'low' },
-    { label: 'GPT-5.2 Codex', model: 'openai/gpt-5.2', level: 'low' },
-    { label: 'Llama 3.3 70B (Local)', model: 'ollama/llama3.3', level: 'off' },
+    { label: "Gemini 3 Pro (Alto)", model: "google/gemini-3-pro", level: "high" },
+    { label: "Gemini 3 Pro (Baixo)", model: "google/gemini-3-pro", level: "low" },
+    { label: "Claude Opus 4.5", model: "anthropic/claude-opus-4-5", level: "low" },
+    { label: "GPT-5.2 Codex", model: "openai/gpt-5.2", level: "low" },
+    { label: "Llama 3.3 70B (Local)", model: "ollama/llama3.3", level: "off" },
   ];
 
   const renderContent = (content: string) => {
     const parts = content.split(/(<(?:think|plan)>[\s\S]*?<\/(?:think|plan)>)/g);
     return parts.map((part, i) => {
-      if (part.startsWith('<think>') || part.startsWith('<plan>')) {
-        const info = part.startsWith('<plan>') ? { label: 'Planejamento', class: 'planning' } : { label: 'Processo de Raciocínio', class: 'thinking' };
-        const inner = part.replace(/<\/?(?:think|plan)>/g, '').trim();
+      if (part.startsWith("<think>") || part.startsWith("<plan>")) {
+        const info = part.startsWith("<plan>")
+          ? { label: "Planejamento", class: "planning" }
+          : { label: "Processo de Raciocínio", class: "thinking" };
+        const inner = part.replace(/<\/?(?:think|plan)>/g, "").trim();
         return (
           <details key={i} className={`reasoning-block ${info.class}`} open>
             <summary>{info.label}</summary>
@@ -200,7 +205,7 @@ export default function ChatView({ preselectAgentId }: ChatViewProps) {
         {messages.map((m) => (
           <div key={m.id} className={`message-row ${m.role}`}>
             <div className={`message-bubble ${m.role}`}>
-              {m.role === 'assistant' ? renderContent(m.content) : m.content}
+              {m.role === "assistant" ? renderContent(m.content) : m.content}
             </div>
           </div>
         ))}
@@ -213,24 +218,24 @@ export default function ChatView({ preselectAgentId }: ChatViewProps) {
             className="model-picker"
             value={`${currentModel}|${thinking}`}
             onChange={(e) => {
-              const [m, l] = e.target.value.split('|');
+              const [m, l] = e.target.value.split("|");
               changeModelPreset(m, l);
             }}
           >
             <option value="|">Selecionar Modelo...</option>
-            {presets.map(p => (
+            {presets.map((p) => (
               <option key={`${p.model}|${p.level}`} value={`${p.model}|${p.level}`}>
                 {p.label}
               </option>
             ))}
           </select>
 
-          <label className={`toggle-btn ${planMode ? 'active' : ''}`}>
+          <label className={`toggle-btn ${planMode ? "active" : ""}`}>
             <input
               type="checkbox"
               checked={planMode}
               onChange={(e) => setPlanMode(e.target.checked)}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
             />
             🧠 Planejamento
           </label>
@@ -242,7 +247,9 @@ export default function ChatView({ preselectAgentId }: ChatViewProps) {
           onChange={(e) => setInput(e.target.value)}
           disabled={!sessionKey}
         />
-        <button type="submit" disabled={!sessionKey}>Enviar</button>
+        <button type="submit" disabled={!sessionKey}>
+          Enviar
+        </button>
       </form>
 
       <style>{`

@@ -9,9 +9,9 @@ read_when: "Configurando Slack ou depurando modo socket/HTTP Slack"
 
 ### Configuração rápida (iniciante)
 
-1) Crie um Slack app e ative **Socket Mode**.
-2) Crie um **App Token** (`xapp-...`) e **Bot Token** (`xoxb-...`).
-3) Defina tokens para o ZERO e inicie o gateway.
+1. Crie um Slack app e ative **Socket Mode**.
+2. Crie um **App Token** (`xapp-...`) e **Bot Token** (`xoxb-...`).
+3. Defina tokens para o ZERO e inicie o gateway.
 
 Configuração mínima:
 
@@ -21,28 +21,28 @@ Configuração mínima:
     slack: {
       enabled: true,
       appToken: "xapp-...",
-      botToken: "xoxb-..."
-    }
-  }
+      botToken: "xoxb-...",
+    },
+  },
 }
 ```
 
 ### Configuração
 
-1) Crie um Slack app (From scratch) em <https://api.slack.com/apps>.
-2) **Socket Mode** → ative. Depois vá para **Basic Information** → **App-Level Tokens** → **Generate Token and Scopes** com escopo `connections:write`. Copie o **App Token** (`xapp-...`).
-3) **OAuth & Permissions** → adicione escopos de token de bot (use o manifesto abaixo). Clique em **Install to Workspace**. Copie o **Bot User OAuth Token** (`xoxb-...`).
-4) Opcional: **OAuth & Permissions** → adicione **User Token Scopes** (veja a lista somente leitura abaixo). Reinstale o app e copie o **User OAuth Token** (`xoxp-...`).
-5) **Event Subscriptions** → ative eventos e inscreva-se em:
+1. Crie um Slack app (From scratch) em <https://api.slack.com/apps>.
+2. **Socket Mode** → ative. Depois vá para **Basic Information** → **App-Level Tokens** → **Generate Token and Scopes** com escopo `connections:write`. Copie o **App Token** (`xapp-...`).
+3. **OAuth & Permissions** → adicione escopos de token de bot (use o manifesto abaixo). Clique em **Install to Workspace**. Copie o **Bot User OAuth Token** (`xoxb-...`).
+4. Opcional: **OAuth & Permissions** → adicione **User Token Scopes** (veja a lista somente leitura abaixo). Reinstale o app e copie o **User OAuth Token** (`xoxp-...`).
+5. **Event Subscriptions** → ative eventos e inscreva-se em:
    - `message.*` (inclui edições/deletes/transmissões em thread)
    - `app_mention`
    - `reaction_added`, `reaction_removed`
    - `member_joined_channel`, `member_left_channel`
    - `channel_rename`
    - `pin_added`, `pin_removed`
-6) Convide o bot para canais que você quer que ele leia.
-7) Slash Commands → crie `/zero` se você usa `channels.slack.slashCommand`. Se você ativar comandos nativos, adicione um slash command por comando integrado (mesmos nomes que `/help`). Nativos padronizam para desligado no Slack a menos que você defina `channels.slack.commands.native: true` (global `commands.native` é `"auto"` o que deixa Slack desligado).
-8) App Home → ative **Messages Tab** para que usuários possam enviar DM para o bot.
+6. Convide o bot para canais que você quer que ele leia.
+7. Slash Commands → crie `/zero` se você usa `channels.slack.slashCommand`. Se você ativar comandos nativos, adicione um slash command por comando integrado (mesmos nomes que `/help`). Nativos padronizam para desligado no Slack a menos que você defina `channels.slack.commands.native: true` (global `commands.native` é `"auto"` o que deixa Slack desligado).
+8. App Home → ative **Messages Tab** para que usuários possam enviar DM para o bot.
 
 Use o manifesto abaixo para que escopos e eventos fiquem sincronizados.
 
@@ -63,9 +63,9 @@ Ou via configuração:
     slack: {
       enabled: true,
       appToken: "xapp-...",
-      botToken: "xoxb-..."
-    }
-  }
+      botToken: "xoxb-...",
+    },
+  },
 }
 ```
 
@@ -84,9 +84,9 @@ Exemplo com tokens bot + app + user:
       enabled: true,
       appToken: "xapp-...",
       botToken: "xoxb-...",
-      userToken: "xoxp-..."
-    }
-  }
+      userToken: "xoxp-...",
+    },
+  },
 }
 ```
 
@@ -100,9 +100,9 @@ Exemplo com userTokenReadOnly explicitamente definido (permite escritas com toke
       appToken: "xapp-...",
       botToken: "xoxb-...",
       userToken: "xoxp-...",
-      userTokenReadOnly: false
-    }
-  }
+      userTokenReadOnly: false,
+    },
+  },
 }
 ```
 
@@ -123,12 +123,12 @@ Modo HTTP usa Events API + Interactivity + Slash Commands com uma request URL co
 
 ### Configuração
 
-1) Crie um Slack app e **desative Socket Mode** (opcional se você só usa HTTP).
-2) **Basic Information** → copie o **Signing Secret**.
-3) **OAuth & Permissions** → instale o app e copie o **Bot User OAuth Token** (`xoxb-...`).
-4) **Event Subscriptions** → ative eventos e defina a **Request URL** para o caminho de webhook do seu gateway (padrão `/slack/events`).
-5) **Interactivity & Shortcuts** → ative e defina a mesma **Request URL**.
-6) **Slash Commands** → defina a mesma **Request URL** para seu(s) comando(s).
+1. Crie um Slack app e **desative Socket Mode** (opcional se você só usa HTTP).
+2. **Basic Information** → copie o **Signing Secret**.
+3. **OAuth & Permissions** → instale o app e copie o **Bot User OAuth Token** (`xoxb-...`).
+4. **Event Subscriptions** → ative eventos e defina a **Request URL** para o caminho de webhook do seu gateway (padrão `/slack/events`).
+5. **Interactivity & Shortcuts** → ative e defina a mesma **Request URL**.
+6. **Slash Commands** → defina a mesma **Request URL** para seu(s) comando(s).
 
 Exemplo request URL:
 `https://gateway-host/slack/events`
@@ -143,9 +143,9 @@ Exemplo request URL:
       mode: "http",
       botToken: "xoxb-...",
       signingSecret: "seu-signing-secret",
-      webhookPath: "/slack/events"
-    }
-  }
+      webhookPath: "/slack/events",
+    },
+  },
 }
 ```
 
@@ -364,11 +364,11 @@ reação de ack depois que o bot responde.
 
 Por padrão, o ZERO responde no canal principal. Use `channels.slack.replyToMode` para controlar encadeamento automático:
 
-| Modo | Comportamento |
-| :--- | :--- |
-| `off` | **Padrão.** Responde no canal principal. Apenas encadeia se a mensagem de gatilho já estava em uma thread. |
+| Modo    | Comportamento                                                                                                                                                                      |
+| :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `off`   | **Padrão.** Responde no canal principal. Apenas encadeia se a mensagem de gatilho já estava em uma thread.                                                                         |
 | `first` | Primeira resposta vai para a thread (sob a mensagem de gatilho), respostas subsequentes vão para o canal principal. Útil para manter contexto visível evitando poluição da thread. |
-| `all` | Todas as respostas vão para a thread. Mantém conversas contidas mas pode reduzir visibilidade. |
+| `all`   | Todas as respostas vão para a thread. Mantém conversas contidas mas pode reduzir visibilidade.                                                                                     |
 
 O modo se aplica a auto-respostas e chamadas de ferramenta de agente (`slack sendMessage`).
 
@@ -380,13 +380,13 @@ Você pode configurar comportamento de encadeamento diferente por tipo de chat d
 {
   channels: {
     slack: {
-      replyToMode: "off",        // padrão para canais
+      replyToMode: "off", // padrão para canais
       replyToModeByChatType: {
-        direct: "all",           // DMs sempre thread
-        group: "first"           // DMs de grupo/MPIM thread primeira resposta
+        direct: "all", // DMs sempre thread
+        group: "first", // DMs de grupo/MPIM thread primeira resposta
       },
-    }
-  }
+    },
+  },
 }
 ```
 
@@ -398,9 +398,9 @@ Tipos de chat suportados:
 
 Precedência:
 
-1) `replyToModeByChatType.<chatType>`
-2) `replyToMode`
-3) Padrão do provedor (`off`)
+1. `replyToModeByChatType.<chatType>`
+2. `replyToMode`
+3. Padrão do provedor (`off`)
 
 Legado `channels.slack.dm.replyToMode` ainda é aceito como fallback para `direct` quando nenhuma sobrescrita por tipo de chat está definida.
 
@@ -413,9 +413,9 @@ Thread apenas DMs:
   channels: {
     slack: {
       replyToMode: "off",
-      replyToModeByChatType: { direct: "all" }
-    }
-  }
+      replyToModeByChatType: { direct: "all" },
+    },
+  },
 }
 ```
 
@@ -426,9 +426,9 @@ Thread DMs de grupo mas mantenha canais na raiz:
   channels: {
     slack: {
       replyToMode: "off",
-      replyToModeByChatType: { group: "first" }
-    }
-  }
+      replyToModeByChatType: { group: "first" },
+    },
+  },
 }
 ```
 
@@ -439,9 +439,9 @@ Faça canais thread, mantenha DMs na raiz:
   channels: {
     slack: {
       replyToMode: "first",
-      replyToModeByChatType: { direct: "off", group: "off" }
-    }
-  }
+      replyToModeByChatType: { direct: "off", group: "off" },
+    },
+  },
 }
 ```
 
@@ -473,12 +473,12 @@ Para controle refinado, use estas tags em respostas do agente:
 - `channels.slack.groupPolicy` controla tratamento de canal (`open|disabled|allowlist`).
 - `allowlist` requer que canais sejam listados em `channels.slack.channels`.
 - Se você definir apenas `SLACK_BOT_TOKEN`/`SLACK_APP_TOKEN` e nunca criar uma seção `channels.slack`,
-   o runtime padroniza `groupPolicy` para `open`. Adicione `channels.slack.groupPolicy`,
-   `channels.defaults.groupPolicy`, ou uma allowlist de canal para trancar.
+  o runtime padroniza `groupPolicy` para `open`. Adicione `channels.slack.groupPolicy`,
+  `channels.defaults.groupPolicy`, ou uma allowlist de canal para trancar.
 - O assistente de configuração aceita nomes `#channel` e os resolve para IDs quando possível
-   (público + privado); se múltiplas correspondências existirem, prefere o canal ativo.
+  (público + privado); se múltiplas correspondências existirem, prefere o canal ativo.
 - Na inicialização, o ZERO resolve nomes de canal/usuário em allowlists para IDs (quando tokens permitem)
-   e loga o mapeamento; entradas não resolvidas são mantidas como digitadas.
+  e loga o mapeamento; entradas não resolvidas são mantidas como digitadas.
 - Para permitir **nenhum canal**, defina `channels.slack.groupPolicy: "disabled"` (ou mantenha uma allowlist vazia).
 
 Opções de canal (`channels.slack.channels.<id>` ou `channels.slack.channels.<name>`):
@@ -502,13 +502,13 @@ Use estes com cron/CLI sends:
 
 Ações de ferramenta Slack podem ser bloqueadas com `channels.slack.actions.*`:
 
-| Grupo de ação | Padrão | Notas |
-| :--- | :--- | :--- |
-| reactions | enabled | Reagir + listar reações |
-| messages | enabled | Ler/enviar/editar/deletar |
-| pins | enabled | Pin/unpin/listar |
-| memberInfo | enabled | Info de membro |
-| emojiList | enabled | Lista de emoji personalizado |
+| Grupo de ação | Padrão  | Notas                        |
+| :------------ | :------ | :--------------------------- |
+| reactions     | enabled | Reagir + listar reações      |
+| messages      | enabled | Ler/enviar/editar/deletar    |
+| pins          | enabled | Pin/unpin/listar             |
+| memberInfo    | enabled | Info de membro               |
+| emojiList     | enabled | Lista de emoji personalizado |
 
 ## Notas de segurança
 

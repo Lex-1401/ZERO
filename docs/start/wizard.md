@@ -68,7 +68,7 @@ Dica: `--json` **não** implica modo não interativo. Use `--non-interactive` (e
 
 ## Detalhes do fluxo (local)
 
-1) **Detecção de configuração existente**
+1. **Detecção de configuração existente**
    - Se `~/.zero/zero.json` existir, escolha **Manter / Modificar / Redefinir**.
    - Executar o assistente novamente **não** apaga nada, a menos que você escolha explicitamente **Redefinir**
      (ou passe `--reset`).
@@ -79,7 +79,7 @@ Dica: `--json` **não** implica modo não interativo. Use `--non-interactive` (e
      - Configuração + credenciais + sessões
      - Redefinição total (também remove o espaço de trabalho)
 
-2) **Modelo/Autenticação**
+2. **Modelo/Autenticação**
    - **Chave de API Anthropic (recomendado)**: usa `ANTHROPIC_API_KEY`, se presente, ou solicita uma chave, salvando-a para uso do daemon.
    - **OAuth Anthropic (Claude Code CLI)**: no macOS, o assistente verifica o item do Keychain "Claude Code-credentials" (escolha "Sempre Permitir" para que as inicializações do launchd não sejam bloqueadas); no Linux/Windows, ele reutiliza `~/.claude/.credentials.json`, se presente.
    - **Token Anthropic (colar setup-token)**: execute `claude setup-token` em qualquer máquina e cole o token (você pode dar um nome a ele; em branco = padrão).
@@ -104,18 +104,18 @@ Dica: `--json` **não** implica modo não interativo. Use `--non-interactive` (e
    - Credenciais OAuth residem em `~/.zero/credentials/oauth.json`; perfis de autenticação residem em `~/.zero/agents/<agentId>/agent/auth-profiles.json` (Chaves de API + OAuth).
    - Mais detalhes: [/concepts/oauth](/concepts/oauth)
 
-3) **Espaço de Trabalho**
+3. **Espaço de Trabalho**
    - Padrão `~/zero` (configurável).
    - Semeia os arquivos de espaço de trabalho necessários para o ritual de bootstrap do agente.
    - Layout completo do espaço de trabalho + guia de backup: [Espaço de trabalho do agente](/concepts/agent-workspace)
 
-4) **Gateway**
+4. **Gateway**
    - Porta, vínculo (bind), modo de autenticação, exposição via Tailscale.
    - Recomendação de autenticação: mantenha **Token** mesmo para loopback para que clientes WS locais devam se autenticar.
    - Desative a autenticação apenas se você confiar totalmente em cada processo local.
    - Vínculos que não sejam de loopback ainda exigem autenticação.
 
-5) **Canais**
+5. **Canais**
    - WhatsApp: login opcional via QR.
    - Telegram: token do bot.
    - Discord: token do bot.
@@ -125,7 +125,7 @@ Dica: `--json` **não** implica modo não interativo. Use `--non-interactive` (e
    - iMessage: caminho local da CLI `imsg` + acesso ao banco de dados.
    - Segurança de DM: o padrão é pareamento (pairing). A primeira DM envia um código; aprove via `zero pairing approve <canal> <code>` ou use listas de permissões.
 
-6) **Instalação do Daemon**
+6. **Instalação do Daemon**
    - macOS: LaunchAgent
      - Requer uma sessão de usuário logado; para headless, use um LaunchDaemon personalizado (não fornecido).
    - Linux (e Windows via WSL2): unidade de usuário systemd
@@ -133,16 +133,16 @@ Dica: `--json` **não** implica modo não interativo. Use `--non-interactive` (e
      - Pode solicitar sudo (grava em `/var/lib/systemd/linger`); tenta sem sudo primeiro.
    - **Seleção de Runtime**: Node (recomendado; necessário para WhatsApp/Telegram). Bun **não é recomendado**.
 
-7) **Verificação de Saúde**
+7. **Verificação de Saúde**
    - Inicia o Gateway (se necessário) e executa `zero health`.
    - Dica: `zero status --deep` adiciona verificações de saúde do gateway à saída do status (requer um gateway acessível).
 
-8) **Habilidades (recomendado)**
+8. **Habilidades (recomendado)**
    - Lê as habilidades disponíveis e verifica os requisitos.
    - Permite escolher um gerenciador de nós: **npm / pnpm** (bun não recomendado).
    - Instala dependências opcionais (algumas usam Homebrew no macOS).
 
-9) **Finalização**
+9. **Finalização**
    - Resumo + próximos passos, incluindo aplicativos para iOS/Android/macOS para recursos extras.
    - Se nenhum GUI for detectado, o assistente imprime instruções de encaminhamento de porta SSH para a UI de Controle em vez de abrir um navegador.
    - Se os ativos da UI de Controle estiverem ausentes, o assistente tenta construí-los; o fallback é `pnpm ui:build` (instala as dependências da UI automaticamente).

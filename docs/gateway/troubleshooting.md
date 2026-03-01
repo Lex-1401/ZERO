@@ -16,15 +16,15 @@ Atalhos específicos do provedor: [/channels/troubleshooting](/channels/troubles
 
 Comandos de triagem rápida (em ordem):
 
-| Comando | O que ele diz | Quando usá-lo |
-| :--- | :--- | :--- |
-| `zero status` | Resumo local: SO + atualização, alcance/modo do gateway, serviço, agentes/sessões, estado de config do provedor | Primeira verificação, visão geral rápida |
-| `zero status --all` | Diagnóstico local completo (somente leitura, colável, +/- seguro) incl. tail de log | Quando você precisa compartilhar um relatório de debug |
-| `zero status --deep` | Executa verificações de saúde do gateway (incl. sondas de provedor; requer gateway alcançável) | Quando "configurado" não significa "funcionando" |
-| `zero gateway probe` | Descoberta do gateway + alcance (alvos locais + remotos) | Quando você suspeita que está sondando o gateway errado |
-| `zero channels status --probe` | Pede ao gateway em execução o status do canal (e opcionalmente sonda) | Quando o gateway é alcançável mas canais se comportam mal |
-| `zero gateway status` | Estado do supervisor (launchd/systemd/schtasks), PID/saída do runtime, último erro do gateway | Quando o serviço "parece carregado" mas nada roda |
-| `zero logs --follow` | Logs ao vivo (melhor sinal para problemas de runtime) | Quando você precisa da razão real da falha |
+| Comando                        | O que ele diz                                                                                                   | Quando usá-lo                                             |
+| :----------------------------- | :-------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------- |
+| `zero status`                  | Resumo local: SO + atualização, alcance/modo do gateway, serviço, agentes/sessões, estado de config do provedor | Primeira verificação, visão geral rápida                  |
+| `zero status --all`            | Diagnóstico local completo (somente leitura, colável, +/- seguro) incl. tail de log                             | Quando você precisa compartilhar um relatório de debug    |
+| `zero status --deep`           | Executa verificações de saúde do gateway (incl. sondas de provedor; requer gateway alcançável)                  | Quando "configurado" não significa "funcionando"          |
+| `zero gateway probe`           | Descoberta do gateway + alcance (alvos locais + remotos)                                                        | Quando você suspeita que está sondando o gateway errado   |
+| `zero channels status --probe` | Pede ao gateway em execução o status do canal (e opcionalmente sonda)                                           | Quando o gateway é alcançável mas canais se comportam mal |
+| `zero gateway status`          | Estado do supervisor (launchd/systemd/schtasks), PID/saída do runtime, último erro do gateway                   | Quando o serviço "parece carregado" mas nada roda         |
+| `zero logs --follow`           | Logs ao vivo (melhor sinal para problemas de runtime)                                                           | Quando você precisa da razão real da falha                |
 
 **Compartilhando a saída:** prefira `zero status --all` (ele redige tokens). Se você colar `zero status`, considere definir `ZERO_SHOW_SECRETS=0` primeiro (pré-visualizações de token).
 
@@ -362,7 +362,7 @@ ls -la ~/.zero/agents/<agentId>/sessions/
     "reset": {
       "mode": "daily",
       "atHour": 4,
-      "idleMinutes": 10080  // 7 dias
+      "idleMinutes": 10080 // 7 dias
     }
   }
 }
@@ -377,7 +377,7 @@ O tempo limite padrão é 30 minutos. Para tarefas longas:
 ```json
 {
   "reply": {
-    "timeoutSeconds": 3600  // 1 hora
+    "timeoutSeconds": 3600 // 1 hora
   }
 }
 ```
@@ -439,7 +439,7 @@ O ZERO mantém o histórico de conversação na memória.
 ```json
 {
   "session": {
-    "historyLimit": 100  // Máx mensagens para manter
+    "historyLimit": 100 // Máx mensagens para manter
   }
 }
 ```
@@ -481,9 +481,9 @@ Habilite o modo self-chat e coloque seu próprio número na lista de permissão:
     whatsapp: {
       selfChatMode: true,
       dmPolicy: "allowlist",
-      allowFrom: ["+15555550123"]
-    }
-  }
+      allowFrom: ["+15555550123"],
+    },
+  },
 }
 ```
 
@@ -499,10 +499,10 @@ zero channels login
 
 ### Erros de build na `main` — qual o caminho de correção padrão?
 
-1) `git pull origin main && pnpm install`
-2) `zero doctor`
-3) Verifique issues no GitHub ou Discord
-4) Solução alternativa temporária: faça checkout de um commit mais antigo
+1. `git pull origin main && pnpm install`
+2. `zero doctor`
+3. Verifique issues no GitHub ou Discord
+4. Solução alternativa temporária: faça checkout de um commit mais antigo
 
 ### npm install falha (allow-build-scripts / missing tar or yargs). E agora?
 
@@ -559,9 +559,9 @@ Streaming de blocos envia apenas **blocos de texto completos**. Razões comuns p
 
 Checklist de correção:
 
-1) Coloque configurações de streaming de bloco sob `agents.defaults`, não na raiz.
-2) Defina `channels.telegram.streamMode: "off"` se quiser respostas reais de múltiplos blocos de mensagem.
-3) Use limites menores de chunk/coalesce enquanto depura.
+1. Coloque configurações de streaming de bloco sob `agents.defaults`, não na raiz.
+2. Defina `channels.telegram.streamMode: "off"` se quiser respostas reais de múltiplos blocos de mensagem.
+3. Use limites menores de chunk/coalesce enquanto depura.
 
 Veja [Streaming](/concepts/streaming).
 
@@ -573,12 +573,12 @@ Se você definir `channels.discord.guilds.<guildId>.channels`, apenas os canais 
 
 Checklist de correção:
 
-1) Defina `channels.discord.groupPolicy: "open"` **ou** adicione uma entrada de lista de permissão de guilda (e opcionalmente uma lista de permissão de canal).
-2) Use **IDs de canal numéricos** em `channels.discord.guilds.<guildId>.channels`.
-3) Coloque `requireMention: false` **sob** `channels.discord.guilds` (global ou por canal).
+1. Defina `channels.discord.groupPolicy: "open"` **ou** adicione uma entrada de lista de permissão de guilda (e opcionalmente uma lista de permissão de canal).
+2. Use **IDs de canal numéricos** em `channels.discord.guilds.<guildId>.channels`.
+3. Coloque `requireMention: false` **sob** `channels.discord.guilds` (global ou por canal).
    Top-level `channels.discord.requireMention` não é uma chave suportada.
-4) Garanta que o bot tenha **Message Content Intent** e permissões de canal.
-5) Execute `zero channels status --probe` para dicas de auditoria.
+4. Garanta que o bot tenha **Message Content Intent** e permissões de canal.
+5. Execute `zero channels status --probe` para dicas de auditoria.
 
 Docs: [Discord](/channels/discord), [Solução de problemas de canais](/channels/troubleshooting).
 
@@ -588,11 +588,11 @@ Isso é quase sempre um problema de **compatibilidade de esquema de ferramenta**
 
 Checklist de correção:
 
-1) **Atualize o ZERO**:
+1. **Atualize o ZERO**:
    - Se puder rodar da fonte, puxe a `main` e reinicie o gateway.
    - Caso contrário, aguarde o próximo release que inclui o limpador de esquema.
-2) Evite palavras-chave não suportadas como `anyOf/oneOf/allOf`, `patternProperties`, `additionalProperties`, `minLength`, `maxLength`, `format`, etc.
-3) Se você define ferramentas personalizadas, mantenha o esquema de nível superior como `type: "object"` com `properties` e enums simples.
+2. Evite palavras-chave não suportadas como `anyOf/oneOf/allOf`, `patternProperties`, `additionalProperties`, `minLength`, `maxLength`, `format`, etc.
+3. Se você define ferramentas personalizadas, mantenha o esquema de nível superior como `type: "object"` com `properties` e enums simples.
 
 Veja [Ferramentas](/tools) e [Esquemas TypeBox](/concepts/typebox).
 
@@ -664,13 +664,13 @@ zero channels login --verbose
 
 ## Locais de Log
 
-| Log | Localização |
-| :--- | :--- |
-| Logs de arquivo do Gateway (estruturados) | `/tmp/zero/zero-YYYY-MM-DD.log` (ou `logging.file`) |
-| Logs de serviço do Gateway (supervisor) | macOS: `$ZERO_STATE_DIR/logs/gateway.log` + `gateway.err.log` (padrão: `~/.zero/logs/...`; perfis usam `~/.zero-<profile>/logs/...`)<br>Linux: `journalctl --user -u zero-gateway[-<profile>].service -n 200 --no-pager`<br>Windows: `schtasks /Query /TN "ZERO Gateway (<profile>)" /V /FO LIST` |
-| Arquivos de sessão | `$ZERO_STATE_DIR/agents/<agentId>/sessions/` |
-| Cache de mídia | `$ZERO_STATE_DIR/media/` |
-| Credenciais | `$ZERO_STATE_DIR/credentials/` |
+| Log                                       | Localização                                                                                                                                                                                                                                                                                       |
+| :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Logs de arquivo do Gateway (estruturados) | `/tmp/zero/zero-YYYY-MM-DD.log` (ou `logging.file`)                                                                                                                                                                                                                                               |
+| Logs de serviço do Gateway (supervisor)   | macOS: `$ZERO_STATE_DIR/logs/gateway.log` + `gateway.err.log` (padrão: `~/.zero/logs/...`; perfis usam `~/.zero-<profile>/logs/...`)<br>Linux: `journalctl --user -u zero-gateway[-<profile>].service -n 200 --no-pager`<br>Windows: `schtasks /Query /TN "ZERO Gateway (<profile>)" /V /FO LIST` |
+| Arquivos de sessão                        | `$ZERO_STATE_DIR/agents/<agentId>/sessions/`                                                                                                                                                                                                                                                      |
+| Cache de mídia                            | `$ZERO_STATE_DIR/media/`                                                                                                                                                                                                                                                                          |
+| Credenciais                               | `$ZERO_STATE_DIR/credentials/`                                                                                                                                                                                                                                                                    |
 
 ## Verificação de Saúde (Health Check)
 
@@ -722,7 +722,7 @@ zero gateway restart           # ou: zero gateway
 
 ---
 
-*"Você tentou desligar e ligar de novo?"* — Toda pessoa de TI, sempre
+_"Você tentou desligar e ligar de novo?"_ — Toda pessoa de TI, sempre
 
 ∅🔧
 

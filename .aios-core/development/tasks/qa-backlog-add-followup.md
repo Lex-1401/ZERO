@@ -12,16 +12,19 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -189,6 +192,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -208,10 +212,10 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Task Flow
 
 ### 1. Elicit Follow-up Details
+
 ```yaml
 elicit: true
 questions:
@@ -252,10 +256,11 @@ questions:
 ```
 
 ### 2. Validate Related Story
+
 ```javascript
 // QA review items MUST have a related story
 if (!relatedStory) {
-  throw new Error('QA follow-ups must be linked to a story. Use related story ID.');
+  throw new Error("QA follow-ups must be linked to a story. Use related story ID.");
 }
 
 // Validate story exists
@@ -267,36 +272,38 @@ if (matches.length === 0) {
 }
 
 if (matches.length > 1) {
-  console.log('⚠️ Multiple stories matched, using first:');
-  matches.forEach(m => console.log(`  - ${m}`));
+  console.log("⚠️ Multiple stories matched, using first:");
+  matches.forEach((m) => console.log(`  - ${m}`));
 }
 
 const storyFile = matches[0];
 ```
 
 ### 3. Add to Backlog
-```javascript
-const { BacklogManager } = require('.aios-core/scripts/backlog-manager');
 
-const manager = new BacklogManager('docs/stories/backlog.md');
+```javascript
+const { BacklogManager } = require(".aios-core/scripts/backlog-manager");
+
+const manager = new BacklogManager("docs/stories/backlog.md");
 await manager.load();
 
 // QA always creates Follow-up type (F)
 const item = await manager.addItem({
-  type: 'F',  // Follow-up
+  type: "F", // Follow-up
   title: title,
   description: description,
   priority: priority,
   relatedStory: relatedStory,
-  createdBy: '@qa',
+  createdBy: "@qa",
   tags: tags,
-  estimatedEffort: estimatedEffort
+  estimatedEffort: estimatedEffort,
 });
 
 console.log(`✅ Follow-up added to backlog: ${item.id}`);
 ```
 
 ### 4. Update Story QA Results (Optional)
+
 ```yaml
 elicit: true
 question: "Add reference to QA Results section in story?"
@@ -308,7 +315,7 @@ default: yes
 
 ```javascript
 if (updateStory) {
-  const storyContent = await fs.readFile(storyFile, 'utf8');
+  const storyContent = await fs.readFile(storyFile, "utf8");
 
   // Find QA Results section
   const qaResultsMatch = storyContent.match(/## QA Results/);
@@ -316,25 +323,27 @@ if (updateStory) {
   if (qaResultsMatch) {
     const updatedContent = storyContent.replace(
       /## QA Results/,
-      `## QA Results\n\n**Follow-up Created:** [Backlog Item ${item.id}](../backlog.md) - ${title}\n`
+      `## QA Results\n\n**Follow-up Created:** [Backlog Item ${item.id}](../backlog.md) - ${title}\n`,
     );
 
-    await fs.writeFile(storyFile, updatedContent, 'utf8');
+    await fs.writeFile(storyFile, updatedContent, "utf8");
     console.log(`✅ Story updated with backlog reference`);
   } else {
-    console.log('⚠️ QA Results section not found in story, skipping update');
+    console.log("⚠️ QA Results section not found in story, skipping update");
   }
 }
 ```
 
 ### 5. Regenerate Backlog
+
 ```javascript
 await manager.generateBacklogFile();
 
-console.log('✅ Backlog updated: docs/stories/backlog.md');
+console.log("✅ Backlog updated: docs/stories/backlog.md");
 ```
 
 ### 6. Summary Output
+
 ```markdown
 ## 📌 Follow-up Added to Backlog
 
@@ -347,13 +356,14 @@ console.log('✅ Backlog updated: docs/stories/backlog.md');
 **Tags:** ${tags.join(', ') || 'None'}
 
 **Next Steps:**
+
 - Review in backlog: docs/stories/backlog.md
 - @po will prioritize with `*backlog-prioritize ${item.id}`
 - @dev will address before story completion (if Critical/High)
 
 ${priority === 'Critical' || priority === 'High'
-  ? '⚠️ **HIGH PRIORITY** - Should be addressed before story completion'
-  : ''
+? '⚠️ **HIGH PRIORITY** - Should be addressed before story completion'
+: ''
 }
 ```
 
@@ -420,6 +430,7 @@ Update story? yes
 ---
 
 **Related Tasks:**
+
 - `qa-review.md` - Comprehensive story review
 - `qa-gate.md` - Quality gate decision
 - `po-backlog-review.md` - PO reviews all follow-ups

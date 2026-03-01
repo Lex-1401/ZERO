@@ -77,9 +77,12 @@ Para segmentar um Gateway ou agente específico:
       "command": "zero",
       "args": [
         "acp",
-        "--url", "wss://gateway-host:18789",
-        "--token", "<token>",
-        "--session", "agent:design:main"
+        "--url",
+        "wss://gateway-host:18789",
+        "--token",
+        "<token>",
+        "--session",
+        "agent:design:main"
       ],
       "env": {}
     }
@@ -105,7 +108,7 @@ Por padrão, cada sessão ACP é mapeada para uma chave de sessão do Gateway de
 
 Você pode substituir ou reutilizar sessões de duas maneiras:
 
-1) Padrões da CLI
+1. Padrões da CLI
 
 ```bash
 zero acp --session agent:main:main
@@ -113,7 +116,7 @@ zero acp --session-label "caixa de entrada de suporte"
 zero acp --reset-session
 ```
 
-1) Metadados ACP por sessão
+1. Metadados ACP por sessão
 
 ```json
 {

@@ -6,10 +6,6 @@ read_when:
 
 # ZERO ∅ (Brazilian Distro)
 
-<p align="center">
-  <img src="whatsapp-zero.jpg" alt="ZERO" width="420" />
-</p>
-
 **ZERO** is the first Agentic Personal Operating System focused on local sovereignty and high-performance multi-channel interactivity. Imagine a transparent intelligence layer that resides in your local hardware, orchestrating workflows across devices and messaging platforms with ultra-low latency.
 
 **ZERO** is a Brazilian distribution created by **Leandro Azevedo**, based on the excellent work of **Peter Steinberger & community** (via the [Moltbot](https://molt.bot) project).
@@ -71,7 +67,7 @@ Most operations flow through the **Gateway** (`zero gateway`), a single long-run
 - 👥 **Group Chat Support** — Mention-based by default; owner can toggle `/activation always|mention`
 - 📎 **Media Support** — Send and receive images, audio, documents
 - 🗣️ **Voice 2.0 (Zero Voice)** — Real-time Fast Path via **Edge-TTS** + Native VAD (Rust) for imperceptible latency.
-- 🎭 **Voice Cloning** — Integrated *zero-shot* voice cloning (XTTS-v2) for an ultra-personalized agentic experience.
+- 🎭 **Voice Cloning** — Integrated _zero-shot_ voice cloning (XTTS-v2) for an ultra-personalized agentic experience.
 - 🎨 **Altair Interface** — New Premium UI (native style) with Glassmorphism.
 - 🚀 **Mission Control** — Central telemetry dashboard and Emergency Protocol.
 - 🌍 **Globalization & l10n** — Polyglot support (Portuguese/English) with automatic **IA Skill Translator**.
@@ -83,27 +79,14 @@ Most operations flow through the **Gateway** (`zero gateway`), a single long-run
 
 ### Interface Gallery (Live UI) 📸
 
-| Chat & Assistant (Altair Interface) | Control Hub (Telemetry) |
-| :--- | :--- |
-| ![Chat UI](assets/screenshots/chat-ui-v3.png) | ![Hub UI](assets/screenshots/hub-ui-v3.png) |
-| *Focus Mode with proactive commands and smart suggestions.* | *Consolidated view of system health and connections.* |
-
-| System Core (Appearance) | Software Update (Updates) |
-| :--- | :--- |
-| ![Appearance Settings](assets/screenshots/settings-ui-v3.png) | ![Update UI](assets/screenshots/update-ui-v3.png) |
-| *Premium refinement of theme and language selectors.* | *System integrity and version manager.* |
-
-| Skill Catalog |
-| :--- |
-| ![Skills Catalog](assets/screenshots/skills-ui-v3.png) |
-| *Extensions to expand your AI's powers.* |
+_Altair Interface screenshots are being renewed for the v0.4.0 (Turing Wolf) standard._
 
 ---
 
-- 🏗️ **Zero Creator** — *Autonomous Architect*. Creates Full-Stack projects (Next.js, Supabase, Vercel).
-- 🛡️ **Zero Sentinel** — *Native Resilience & Security Engine*. Terminal error auto-correction (**Self-Healing**), **Speculative Pre-warming** of files, and proactive prompt injection mitigation. [Learn more](/concepts/sentinel)
+- 🏗️ **Zero Creator** — _Autonomous Architect_. Creates Full-Stack projects (Next.js, Supabase, Vercel).
+- 🛡️ **Zero Sentinel** — _Native Resilience & Security Engine_. Terminal error auto-correction (**Self-Healing**), **Speculative Pre-warming** of files, and proactive prompt injection mitigation. [Learn more](/concepts/sentinel)
 - 🚀 **DevOps Suite** — Native integrations with Vercel, Netlify, Supabase, Firebase, Railway.
-- 💡 **Nudge Engine** — *Proactive AI*. Suggests smart actions based on context (e.g., "Friday afternoon?").
+- 💡 **Nudge Engine** — _Proactive AI_. Suggests smart actions based on context (e.g., "Friday afternoon?").
 - 🧠 **Brain V3** — **S-Rank Stability** Platform. Persistent memory, **ClearCode Architecture**, and proactive context orchestration.
 - 🦞 **Zero Mascot** — The new face of your personal AI.
 - 🕸 **Knowledge Graph** — Persistent and navigable vector mesh in SQLite.
@@ -176,10 +159,10 @@ Example:
   channels: {
     whatsapp: {
       allowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } }
-    }
+      groups: { "*": { requireMention: true } },
+    },
   },
-  messages: { groupChat: { mentionPatterns: ["@zero"] } }
+  messages: { groupChat: { mentionPatterns: ["@zero"] } },
 }
 ```
 
@@ -187,7 +170,7 @@ Example:
 
 - Start here:
   - [Documentation Hubs (all pages)](/start/hubs)
-  - [Help](/help) ← *common fixes + troubleshooting*
+  - [Help](/help) ← _common fixes + troubleshooting_
   - [Configuration](/gateway/configuration)
   - [Configuration Examples](/gateway/configuration-examples)
   - [Slash Commands](/tools/slash-commands)
@@ -236,7 +219,17 @@ Example:
 
 ---
 
-*"We're all just playing with our own prompts."* — an AI, probably token-high
+### 🦊 Visual Identity: The Turing Wolf
+
+The **ZERO** logo — a fusion of the letter **"Z"** with a **Cybernetic Wolf/Fox** — represents the essence of agentic intelligence:
+
+- **Instinct and Agility**: Like a wolf, the system has sharp instincts to navigate your file system and act with surgical precision.
+- **Sovereign Solitude**: The wolf is a symbol of independence. ZERO operates locally, without depending on "packs" of third-party servers to process its mind.
+- **Man-Machine Fusion**: The metallic structure with pulsing cyan circuits symbolizes the harmony between human design and raw computational power. It is technology serving life, not the other way around.
+
+---
+
+_"We're all just playing with our own prompts."_ — an AI, probably token-high
 
 ## Credits
 
@@ -248,4 +241,4 @@ MIT — Free for expansion in the digital vacuum ∅
 
 ---
 
-*"The void is not the absence of something, but the presence of everything that has not yet been manifested."* ∅
+_"The void is not the absence of something, but the presence of everything that has not yet been manifested."_ ∅

@@ -1,7 +1,15 @@
 ---
 name: voice-call
 description: Inicie chamadas de voz via o plugin de voz do Zero.
-metadata: {"zero":{"emoji":"📞","skillKey":"voice-call","requires":{"config":["plugins.entries.voice-call.enabled"]}}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "📞",
+        "skillKey": "voice-call",
+        "requires": { "config": ["plugins.entries.voice-call.enabled"] },
+      },
+  }
 ---
 
 # Voice Call

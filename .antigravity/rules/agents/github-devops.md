@@ -3,4 +3,5 @@
 > **DEPRECATED:** This agent has been renamed/merged. Use `@devops` instead.
 
 ---
-*AIOS Redirect - Synced automatically*
+
+_AIOS Redirect - Synced automatically_

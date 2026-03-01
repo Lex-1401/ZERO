@@ -1,7 +1,6 @@
 import {
   CombinedAutocompleteProvider,
   Container,
-  Loader,
   ProcessTerminal,
   Text,
   TUI,
@@ -10,7 +9,6 @@ import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { loadConfig } from "../config/config.js";
 import {
   buildAgentMainSessionKey,
-  normalizeAgentId,
   normalizeMainKey,
   parseAgentSessionKey,
 } from "../routing/session-key.js";
@@ -23,54 +21,40 @@ import { createCommandHandlers } from "./tui-command-handlers.js";
 import { createEventHandlers } from "./tui-event-handlers.js";
 import { formatTokens } from "./tui-formatters.js";
 import { createLocalShellRunner } from "./tui-local-shell.js";
-import { buildWaitingStatusMessage, defaultWaitingPhrases } from "./tui-waiting.js";
 import { createOverlayHandlers } from "./tui-overlays.js";
 import { createSessionActions } from "./tui-session-actions.js";
 import type {
-  AgentSummary,
-  SessionInfo,
   SessionScope,
   TuiOptions,
   TuiStateAccess,
 } from "./tui-types.js";
+import { TuiStatusManager } from "./core/status-manager.js";
+import { TuiEditorController } from "./core/editor-controller.js";
 
 export { resolveFinalAssistantText } from "./tui-formatters.js";
 export type { TuiOptions } from "./tui-types.js";
 
 export function createEditorSubmitHandler(params: {
-  editor: {
-    setText: (value: string) => void;
-    addToHistory: (value: string) => void;
-  };
-  handleCommand: (value: string) => Promise<void> | void;
-  sendMessage: (value: string) => Promise<void> | void;
-  handleBangLine: (value: string) => Promise<void> | void;
+  editor: { setText: (v: string) => void; addToHistory: (v: string) => void };
+  handleCommand: (v: string) => Promise<void> | void;
+  sendMessage: (v: string) => Promise<void> | void;
+  handleBangLine: (v: string) => Promise<void> | void;
 }) {
   return (text: string) => {
     const raw = text;
     const value = raw.trim();
     params.editor.setText("");
-
-    // Keep previous behavior: ignore empty/whitespace-only submissions.
     if (!value) return;
-
-    // Bash mode: only if the very first character is '!' and it's not just '!'.
-    // IMPORTANT: use the raw (untrimmed) text so leading spaces do NOT trigger.
-    // Per requirement: a lone '!' should be treated as a normal message.
     if (raw.startsWith("!") && raw !== "!") {
       params.editor.addToHistory(raw);
       void params.handleBangLine(raw);
       return;
     }
-
-    // Enable built-in editor prompt history navigation (up/down).
     params.editor.addToHistory(value);
-
     if (value.startsWith("/")) {
       void params.handleCommand(value);
       return;
     }
-
     void params.sendMessage(value);
   };
 }
@@ -78,185 +62,60 @@ export function createEditorSubmitHandler(params: {
 export async function runTui(opts: TuiOptions) {
   const config = loadConfig();
   const initialSessionInput = (opts.session ?? "").trim();
-  let sessionScope: SessionScope = (config.session?.scope ?? "per-sender") as SessionScope;
-  let sessionMainKey = normalizeMainKey(config.session?.mainKey);
-  let agentDefaultId = resolveDefaultAgentId(config);
-  let currentAgentId = agentDefaultId;
-  let agents: AgentSummary[] = [];
-  const agentNames = new Map<string, string>();
-  let currentSessionKey = "";
-  let initialSessionApplied = false;
-  let currentSessionId: string | null = null;
-  let activeChatRunId: string | null = null;
-  let historyLoaded = false;
-  let isConnected = false;
-  let wasDisconnected = false;
-  let toolsExpanded = false;
-  let showThinking = false;
-
-  const deliverDefault = opts.deliver ?? false;
-  const autoMessage = opts.message?.trim();
-  let autoMessageSent = false;
-  let sessionInfo: SessionInfo = {};
-  let lastCtrlCAt = 0;
-  let activityStatus = "ocioso";
-  let connectionStatus = "conectando";
-  let statusTimeout: NodeJS.Timeout | null = null;
-  let statusTimer: NodeJS.Timeout | null = null;
-  let statusStartedAt: number | null = null;
-  let lastActivityStatus = activityStatus;
-
   const state: TuiStateAccess = {
-    get agentDefaultId() {
-      return agentDefaultId;
-    },
-    set agentDefaultId(value) {
-      agentDefaultId = value;
-    },
-    get sessionMainKey() {
-      return sessionMainKey;
-    },
-    set sessionMainKey(value) {
-      sessionMainKey = value;
-    },
-    get sessionScope() {
-      return sessionScope;
-    },
-    set sessionScope(value) {
-      sessionScope = value;
-    },
-    get agents() {
-      return agents;
-    },
-    set agents(value) {
-      agents = value;
-    },
-    get currentAgentId() {
-      return currentAgentId;
-    },
-    set currentAgentId(value) {
-      currentAgentId = value;
-    },
-    get currentSessionKey() {
-      return currentSessionKey;
-    },
-    set currentSessionKey(value) {
-      currentSessionKey = value;
-    },
-    get currentSessionId() {
-      return currentSessionId;
-    },
-    set currentSessionId(value) {
-      currentSessionId = value;
-    },
-    get activeChatRunId() {
-      return activeChatRunId;
-    },
-    set activeChatRunId(value) {
-      activeChatRunId = value;
-    },
-    get historyLoaded() {
-      return historyLoaded;
-    },
-    set historyLoaded(value) {
-      historyLoaded = value;
-    },
-    get sessionInfo() {
-      return sessionInfo;
-    },
-    set sessionInfo(value) {
-      sessionInfo = value;
-    },
-    get initialSessionApplied() {
-      return initialSessionApplied;
-    },
-    set initialSessionApplied(value) {
-      initialSessionApplied = value;
-    },
-    get isConnected() {
-      return isConnected;
-    },
-    set isConnected(value) {
-      isConnected = value;
-    },
-    get autoMessageSent() {
-      return autoMessageSent;
-    },
-    set autoMessageSent(value) {
-      autoMessageSent = value;
-    },
-    get toolsExpanded() {
-      return toolsExpanded;
-    },
-    set toolsExpanded(value) {
-      toolsExpanded = value;
-    },
-    get showThinking() {
-      return showThinking;
-    },
-    set showThinking(value) {
-      showThinking = value;
-    },
-    get connectionStatus() {
-      return connectionStatus;
-    },
-    set connectionStatus(value) {
-      connectionStatus = value;
-    },
-    get activityStatus() {
-      return activityStatus;
-    },
-    set activityStatus(value) {
-      activityStatus = value;
-    },
-    get statusTimeout() {
-      return statusTimeout;
-    },
-    set statusTimeout(value) {
-      statusTimeout = value;
-    },
-    get lastCtrlCAt() {
-      return lastCtrlCAt;
-    },
-    set lastCtrlCAt(value) {
-      lastCtrlCAt = value;
-    },
+    sessionScope: (config.session?.scope ?? "per-sender") as SessionScope,
+    sessionMainKey: normalizeMainKey(config.session?.mainKey),
+    agentDefaultId: resolveDefaultAgentId(config),
+    currentAgentId: resolveDefaultAgentId(config),
+    agents: [],
+    currentSessionKey: "",
+    currentSessionId: null,
+    activeChatRunId: null,
+    historyLoaded: false,
+    sessionInfo: {},
+    initialSessionApplied: false,
+    isConnected: false,
+    autoMessageSent: false,
+    toolsExpanded: false,
+    showThinking: false,
+    connectionStatus: "conectando",
+    activityStatus: "ocioso",
+    statusTimeout: null,
+    lastCtrlCAt: 0,
   };
 
+  const agentNames = new Map<string, string>();
   const client = new GatewayChatClient({
     url: opts.url,
     token: opts.token,
     password: opts.password,
   });
-
-  const tui = new TUI(new ProcessTerminal());
+  const tuiService = new TUI(new ProcessTerminal());
   const header = new Text("", 1, 0);
   const statusContainer = new Container();
   const footer = new Text("", 1, 0);
   const chatLog = new ChatLog();
-  const editor = new CustomEditor(tui, editorTheme);
+  const editor = new CustomEditor(tuiService, editorTheme);
   const root = new Container();
-  root.addChild(header);
-  root.addChild(chatLog);
-  root.addChild(statusContainer);
-  root.addChild(footer);
-  root.addChild(editor);
+  [header, chatLog, statusContainer, footer, editor].forEach((c) => root.addChild(c));
+
+  const statusManager = new TuiStatusManager(tuiService, statusContainer, state);
 
   const updateAutocompleteProvider = () => {
     editor.setAutocompleteProvider(
       new CombinedAutocompleteProvider(
         getSlashCommands({
           cfg: config,
-          provider: sessionInfo.modelProvider,
-          model: sessionInfo.model,
+          provider: state.sessionInfo.modelProvider,
+          model: state.sessionInfo.model,
         }),
         process.cwd(),
       ),
     );
   };
 
-  tui.addChild(root);
-  tui.setFocus(editor);
+  tuiService.addChild(root);
+  tuiService.setFocus(editor);
 
   const formatSessionKey = (key: string) => {
     if (key === "global" || key === "unknown") return key;
@@ -271,213 +130,73 @@ export async function runTui(opts: TuiOptions) {
 
   const resolveSessionKey = (raw?: string) => {
     const trimmed = (raw ?? "").trim();
-    if (sessionScope === "global") return "global";
-    if (!trimmed) {
+    if (state.sessionScope === "global") return "global";
+    if (!trimmed)
       return buildAgentMainSessionKey({
-        agentId: currentAgentId,
-        mainKey: sessionMainKey,
+        agentId: state.currentAgentId,
+        mainKey: state.sessionMainKey,
       });
-    }
     if (trimmed === "global" || trimmed === "unknown") return trimmed;
     if (trimmed.startsWith("agent:")) return trimmed;
-    return `agent:${currentAgentId}:${trimmed}`;
+    return `agent:${state.currentAgentId}:${trimmed}`;
   };
 
-  currentSessionKey = resolveSessionKey(initialSessionInput);
+  state.currentSessionKey = resolveSessionKey(initialSessionInput);
 
   const updateHeader = () => {
-    const sessionLabel = formatSessionKey(currentSessionKey);
-    const agentLabel = formatAgentLabel(currentAgentId);
     header.setText(
       theme.header(
-        `zero tui - ${client.connection.url} - agent ${agentLabel} - session ${sessionLabel}`,
+        `zero tui - ${client.connection.url} - agent ${formatAgentLabel(state.currentAgentId)} - session ${formatSessionKey(state.currentSessionKey)}`,
       ),
     );
   };
 
-  const busyStates = new Set(["enviando", "aguardando", "transmitindo", "em execução"]);
-  let statusText: Text | null = null;
-  let statusLoader: Loader | null = null;
-
-  const formatElapsed = (startMs: number) => {
-    const totalSeconds = Math.max(0, Math.floor((Date.now() - startMs) / 1000));
-    if (totalSeconds < 60) return `${totalSeconds}s`;
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}m ${seconds}s`;
-  };
-
-  const ensureStatusText = () => {
-    if (statusText) return;
-    statusContainer.clear();
-    statusLoader?.stop();
-    statusLoader = null;
-    statusText = new Text("", 1, 0);
-    statusContainer.addChild(statusText);
-  };
-
-  const ensureStatusLoader = () => {
-    if (statusLoader) return;
-    statusContainer.clear();
-    statusText = null;
-    statusLoader = new Loader(
-      tui,
-      (spinner) => theme.accent(spinner),
-      (text) => theme.bold(theme.accentSoft(text)),
-      "",
-    );
-    statusContainer.addChild(statusLoader);
-  };
-
-  let waitingTick = 0;
-  let waitingTimer: NodeJS.Timeout | null = null;
-  let waitingPhrase: string | null = null;
-
-  const updateBusyStatusMessage = () => {
-    if (!statusLoader || !statusStartedAt) return;
-    const elapsed = formatElapsed(statusStartedAt);
-
-    if (activityStatus === "waiting") {
-      waitingTick++;
-      statusLoader.setMessage(
-        buildWaitingStatusMessage({
-          theme,
-          tick: waitingTick,
-          elapsed,
-          connectionStatus,
-          phrases: waitingPhrase ? [waitingPhrase] : undefined,
-        }),
-      );
-      return;
-    }
-
-    statusLoader.setMessage(`${activityStatus} • ${elapsed} | ${connectionStatus}`);
-  };
-
-  const startStatusTimer = () => {
-    if (statusTimer) return;
-    statusTimer = setInterval(() => {
-      if (!busyStates.has(activityStatus)) return;
-      updateBusyStatusMessage();
-    }, 1000);
-  };
-
-  const stopStatusTimer = () => {
-    if (!statusTimer) return;
-    clearInterval(statusTimer);
-    statusTimer = null;
-  };
-
-  const startWaitingTimer = () => {
-    if (waitingTimer) return;
-
-    // Pick a phrase once per waiting session.
-    if (!waitingPhrase) {
-      const idx = Math.floor(Math.random() * defaultWaitingPhrases.length);
-      waitingPhrase = defaultWaitingPhrases[idx] ?? defaultWaitingPhrases[0] ?? "aguardando";
-    }
-
-    waitingTick = 0;
-
-    waitingTimer = setInterval(() => {
-      if (activityStatus !== "waiting") return;
-      updateBusyStatusMessage();
-    }, 120);
-  };
-
-  const stopWaitingTimer = () => {
-    if (!waitingTimer) return;
-    clearInterval(waitingTimer);
-    waitingTimer = null;
-    waitingPhrase = null;
-  };
-
-  const renderStatus = () => {
-    const isBusy = busyStates.has(activityStatus);
-    if (isBusy) {
-      if (!statusStartedAt || lastActivityStatus !== activityStatus) {
-        statusStartedAt = Date.now();
-      }
-      ensureStatusLoader();
-      if (activityStatus === "waiting") {
-        stopStatusTimer();
-        startWaitingTimer();
-      } else {
-        stopWaitingTimer();
-        startStatusTimer();
-      }
-      updateBusyStatusMessage();
-    } else {
-      statusStartedAt = null;
-      stopStatusTimer();
-      stopWaitingTimer();
-      statusLoader?.stop();
-      statusLoader = null;
-      ensureStatusText();
-      const text = activityStatus ? `${connectionStatus} | ${activityStatus}` : connectionStatus;
-      statusText?.setText(theme.dim(text));
-    }
-    lastActivityStatus = activityStatus;
-  };
-
   const setConnectionStatus = (text: string, ttlMs?: number) => {
-    connectionStatus = text;
-    renderStatus();
-    if (statusTimeout) clearTimeout(statusTimeout);
+    state.connectionStatus = text;
+    statusManager.renderStatus();
+    if (state.statusTimeout) clearTimeout(state.statusTimeout);
     if (ttlMs && ttlMs > 0) {
-      statusTimeout = setTimeout(() => {
-        connectionStatus = isConnected ? "conectado" : "desconectado";
-        renderStatus();
+      state.statusTimeout = setTimeout(() => {
+        state.connectionStatus = state.isConnected ? "conectado" : "desconectado";
+        statusManager.renderStatus();
       }, ttlMs);
     }
   };
 
   const setActivityStatus = (text: string) => {
-    activityStatus = text;
-    renderStatus();
+    state.activityStatus = text;
+    if (text === "ferramentas expandidas") chatLog.setToolsExpanded(true);
+    if (text === "ferramentas recolhidas") chatLog.setToolsExpanded(false);
+    statusManager.renderStatus();
   };
 
   const updateFooter = () => {
-    const sessionKeyLabel = formatSessionKey(currentSessionKey);
-    const sessionLabel = sessionInfo.displayName
-      ? `${sessionKeyLabel} (${sessionInfo.displayName})`
-      : sessionKeyLabel;
-    const agentLabel = formatAgentLabel(currentAgentId);
-    const modelLabel = sessionInfo.model
-      ? sessionInfo.modelProvider
-        ? `${sessionInfo.modelProvider}/${sessionInfo.model}`
-        : sessionInfo.model
-      : "desconhecido";
-    const tokens = formatTokens(sessionInfo.totalTokens ?? null, sessionInfo.contextTokens ?? null);
-    const think = sessionInfo.thinkingLevel ?? "off";
-    const verbose = sessionInfo.verboseLevel ?? "off";
-    const reasoning = sessionInfo.reasoningLevel ?? "off";
-    const reasoningLabel =
-      reasoning === "on" ? "raciocínio" : reasoning === "stream" ? "raciocínio:stream" : null;
+    const s = state.sessionInfo;
     const footerParts = [
-      `agent ${agentLabel}`,
-      `session ${sessionLabel}`,
-      modelLabel,
-      think !== "off" ? `pensamento ${think}` : null,
-      verbose !== "off" ? `verboso ${verbose}` : null,
-      reasoningLabel,
-      tokens,
+      `agent ${formatAgentLabel(state.currentAgentId)}`,
+      `session ${s.displayName ? `${formatSessionKey(state.currentSessionKey)} (${s.displayName})` : formatSessionKey(state.currentSessionKey)}`,
+      s.model ? (s.modelProvider ? `${s.modelProvider}/${s.model}` : s.model) : "desconhecido",
+      s.thinkingLevel && s.thinkingLevel !== "off" ? `pensamento ${s.thinkingLevel}` : null,
+      s.verboseLevel && s.verboseLevel !== "off" ? `verboso ${s.verboseLevel}` : null,
+      s.reasoningLevel === "on"
+        ? "raciocínio"
+        : s.reasoningLevel === "stream"
+          ? "raciocínio:stream"
+          : null,
+      formatTokens(s.totalTokens ?? null, s.contextTokens ?? null),
     ].filter(Boolean);
     footer.setText(theme.dim(footerParts.join(" | ")));
   };
 
-  const { openOverlay, closeOverlay } = createOverlayHandlers(tui, editor);
+  const { openOverlay, closeOverlay } = createOverlayHandlers(tuiService, editor);
+  const initialSessionAgentId = initialSessionInput
+    ? (parseAgentSessionKey(initialSessionInput)?.agentId ?? null)
+    : null;
 
-  const initialSessionAgentId = (() => {
-    if (!initialSessionInput) return null;
-    const parsed = parseAgentSessionKey(initialSessionInput);
-    return parsed ? normalizeAgentId(parsed.agentId) : null;
-  })();
-
-  const sessionActions = createSessionActions({
+  const actions = createSessionActions({
     client,
     chatLog,
-    tui,
+    tui: tuiService,
     opts,
     state,
     agentNames,
@@ -489,142 +208,93 @@ export async function runTui(opts: TuiOptions) {
     updateAutocompleteProvider,
     setActivityStatus,
   });
-  const { refreshAgents, refreshSessionInfo, loadHistory, setSession, abortActive } =
-    sessionActions;
 
-  const { handleChatEvent, handleAgentEvent } = createEventHandlers({
+  const commands = createCommandHandlers({
+    client,
     chatLog,
-    tui,
+    tui: tuiService,
+    opts,
     state,
+    deliverDefault: opts.deliver ?? false,
+    openOverlay,
+    closeOverlay,
+    refreshSessionInfo: actions.refreshSessionInfo,
+    loadHistory: actions.loadHistory,
+    setSession: actions.setSession,
+    refreshAgents: actions.refreshAgents,
+    abortActive: actions.abortActive,
     setActivityStatus,
-    refreshSessionInfo,
+    formatSessionKey,
   });
-
-  const { handleCommand, sendMessage, openModelSelector, openAgentSelector, openSessionSelector } =
-    createCommandHandlers({
-      client,
-      chatLog,
-      tui,
-      opts,
-      state,
-      deliverDefault,
-      openOverlay,
-      closeOverlay,
-      refreshSessionInfo,
-      loadHistory,
-      setSession,
-      refreshAgents,
-      abortActive,
-      setActivityStatus,
-      formatSessionKey,
-    });
 
   const { runLocalShellLine } = createLocalShellRunner({
     chatLog,
-    tui,
+    tui: tuiService,
     openOverlay,
     closeOverlay,
   });
-  updateAutocompleteProvider();
+
+  const editorCtrl = new TuiEditorController(editor, tuiService, state, client, {
+    abortActive: actions.abortActive,
+    openModelSelector: commands.openModelSelector,
+    openAgentSelector: commands.openAgentSelector,
+    openSessionSelector: commands.openSessionSelector,
+    loadHistory: actions.loadHistory,
+    sendMessage: commands.sendMessage,
+    setActivityStatus,
+  });
+  editorCtrl.setup();
   editor.onSubmit = createEditorSubmitHandler({
     editor,
-    handleCommand,
-    sendMessage,
+    handleCommand: commands.handleCommand,
+    sendMessage: commands.sendMessage,
     handleBangLine: runLocalShellLine,
   });
 
-  editor.onEscape = () => {
-    void abortActive();
-  };
-  editor.onCtrlC = () => {
-    const now = Date.now();
-    if (editor.getText().trim().length > 0) {
-      editor.setText("");
-      setActivityStatus("entrada limpa");
-      tui.requestRender();
-      return;
-    }
-    if (now - lastCtrlCAt < 1000) {
-      client.stop();
-      tui.stop();
-      process.exit(0);
-    }
-    lastCtrlCAt = now;
-    setActivityStatus("pressione ctrl+c novamente para sair");
-    tui.requestRender();
-  };
-  editor.onCtrlD = () => {
-    client.stop();
-    tui.stop();
-    process.exit(0);
-  };
-  editor.onCtrlO = () => {
-    toolsExpanded = !toolsExpanded;
-    chatLog.setToolsExpanded(toolsExpanded);
-    setActivityStatus(toolsExpanded ? "ferramentas expandidas" : "ferramentas recolhidas");
-    tui.requestRender();
-  };
-  editor.onCtrlL = () => {
-    void openModelSelector();
-  };
-  editor.onCtrlG = () => {
-    void openAgentSelector();
-  };
-  editor.onCtrlP = () => {
-    void openSessionSelector();
-  };
-  editor.onCtrlT = () => {
-    showThinking = !showThinking;
-    void loadHistory();
-  };
-
   client.onEvent = (evt) => {
-    if (evt.event === "chat") handleChatEvent(evt.payload);
-    if (evt.event === "agent") handleAgentEvent(evt.payload);
+    const handlers = createEventHandlers({
+      chatLog,
+      tui: tuiService,
+      state,
+      setActivityStatus,
+      refreshSessionInfo: actions.refreshSessionInfo,
+    });
+    if (evt.event === "chat") handlers.handleChatEvent(evt.payload);
+    if (evt.event === "agent") handlers.handleAgentEvent(evt.payload);
   };
 
   client.onConnected = () => {
-    isConnected = true;
-    const reconnected = wasDisconnected;
-    wasDisconnected = false;
+    state.isConnected = true;
     setConnectionStatus("conectado");
     void (async () => {
-      await refreshAgents();
+      await actions.refreshAgents();
       updateHeader();
-      await loadHistory();
-      setConnectionStatus(reconnected ? "gateway reconectado" : "gateway conectado", 4000);
-      tui.requestRender();
-      if (!autoMessageSent && autoMessage) {
-        autoMessageSent = true;
-        await sendMessage(autoMessage);
+      await actions.loadHistory();
+      setConnectionStatus("gateway conectado", 4000);
+      if (!state.autoMessageSent && opts.message) {
+        state.autoMessageSent = true;
+        await commands.sendMessage(opts.message.trim());
       }
       updateFooter();
-      tui.requestRender();
     })();
   };
 
   client.onDisconnected = (reason) => {
-    isConnected = false;
-    wasDisconnected = true;
-    historyLoaded = false;
-    const reasonLabel = reason?.trim() ? reason.trim() : "fechado";
-    setConnectionStatus(`gateway desconectado: ${reasonLabel}`, 5000);
+    state.isConnected = false;
+    state.historyLoaded = false;
+    setConnectionStatus(`gateway desconectado: ${reason?.trim() || "fechado"}`, 5000);
     setActivityStatus("ocioso");
     updateFooter();
-    tui.requestRender();
   };
 
-  client.onGap = (info) => {
+  client.onGap = (info) =>
     setConnectionStatus(
       `lacuna de eventos: esperado ${info.expected}, recebido ${info.received}`,
       5000,
     );
-    tui.requestRender();
-  };
 
   updateHeader();
-  setConnectionStatus("conectando");
   updateFooter();
-  tui.start();
+  tuiService.start();
   client.start();
 }

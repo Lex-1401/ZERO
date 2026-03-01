@@ -8,12 +8,12 @@
  * @see Epic GEMINI-INT - Story 2: AI Provider Factory Pattern
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
-const { ClaudeProvider } = require('./claude-provider');
-const { GeminiProvider } = require('./gemini-provider');
+const { ClaudeProvider } = require("./claude-provider");
+const { GeminiProvider } = require("./gemini-provider");
 
 /**
  * Cached provider instances (singleton pattern)
@@ -32,20 +32,20 @@ let cachedConfig = null;
  */
 const DEFAULT_CONFIG = {
   ai_providers: {
-    primary: 'claude',
-    fallback: 'gemini',
+    primary: "claude",
+    fallback: "gemini",
     routing: {
-      simple_tasks: 'gemini',
-      complex_tasks: 'claude',
+      simple_tasks: "gemini",
+      complex_tasks: "claude",
     },
   },
   claude: {
-    model: 'claude-3-5-sonnet',
+    model: "claude-3-5-sonnet",
     timeout: 300000,
     dangerouslySkipPermissions: false,
   },
   gemini: {
-    model: 'gemini-2.0-flash',
+    model: "gemini-2.0-flash",
     timeout: 300000,
     previewFeatures: true,
     jsonOutput: false,
@@ -62,16 +62,16 @@ function loadConfig(projectRoot = process.cwd()) {
     return cachedConfig;
   }
 
-  const configPath = path.join(projectRoot, '.aios-ai-config.yaml');
+  const configPath = path.join(projectRoot, ".aios-ai-config.yaml");
 
   if (!fs.existsSync(configPath)) {
-    console.log('ℹ️  No AI provider config found - using defaults');
+    console.log("ℹ️  No AI provider config found - using defaults");
     cachedConfig = DEFAULT_CONFIG;
     return cachedConfig;
   }
 
   try {
-    const configContent = fs.readFileSync(configPath, 'utf8');
+    const configContent = fs.readFileSync(configPath, "utf8");
     const userConfig = yaml.load(configContent);
 
     // Merge with defaults
@@ -83,7 +83,7 @@ function loadConfig(projectRoot = process.cwd()) {
 
     return cachedConfig;
   } catch (error) {
-    console.warn('⚠️  Error loading AI config:', error.message);
+    console.warn("⚠️  Error loading AI config:", error.message);
     cachedConfig = DEFAULT_CONFIG;
     return cachedConfig;
   }
@@ -108,11 +108,11 @@ function getProvider(providerName, config = null) {
   let provider;
 
   switch (providerName.toLowerCase()) {
-    case 'claude':
+    case "claude":
       provider = new ClaudeProvider(providerConfig);
       break;
 
-    case 'gemini':
+    case "gemini":
       provider = new GeminiProvider(providerConfig);
       break;
 
@@ -130,7 +130,7 @@ function getProvider(providerName, config = null) {
  */
 function getPrimaryProvider() {
   const config = loadConfig();
-  const primaryName = config.ai_providers?.primary || 'claude';
+  const primaryName = config.ai_providers?.primary || "claude";
 
   console.log(`🤖 Using primary AI provider: ${primaryName}`);
   return getProvider(primaryName);
@@ -160,7 +160,7 @@ function getProviderForTask(taskType) {
   const config = loadConfig();
   const routing = config.ai_providers?.routing || {};
 
-  const providerName = routing[taskType] || config.ai_providers?.primary || 'claude';
+  const providerName = routing[taskType] || config.ai_providers?.primary || "claude";
   return getProvider(providerName);
 }
 
@@ -205,7 +205,7 @@ async function executeWithFallback(prompt, options = {}) {
     }
   }
 
-  throw new Error('No AI providers available');
+  throw new Error("No AI providers available");
 }
 
 /**
@@ -213,7 +213,7 @@ async function executeWithFallback(prompt, options = {}) {
  * @returns {Promise<AIProvider[]>} Array of available providers
  */
 async function getAvailableProviders() {
-  const providers = [getProvider('claude'), getProvider('gemini')];
+  const providers = [getProvider("claude"), getProvider("gemini")];
 
   const available = [];
   for (const provider of providers) {
@@ -232,7 +232,7 @@ async function getAvailableProviders() {
 async function getProvidersStatus() {
   const status = {};
 
-  for (const name of ['claude', 'gemini']) {
+  for (const name of ["claude", "gemini"]) {
     const provider = getProvider(name);
     const isAvailable = await provider.checkAvailability();
 

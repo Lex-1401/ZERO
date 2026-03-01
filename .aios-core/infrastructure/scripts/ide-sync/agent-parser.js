@@ -3,9 +3,9 @@
  * @story 6.19 - IDE Command Auto-Sync System
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs-extra");
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Extract YAML block from markdown content
@@ -39,7 +39,7 @@ function parseYaml(yamlContent) {
         (match, indent, name, param, desc) => {
           const fullName = param ? `${name} ${param}` : name;
           return `${indent}- name: "${fullName}"\n${indent}  description: "${desc.replace(/"/g, '\\"')}"`;
-        }
+        },
       );
 
       // Fix pipe patterns with invalid YAML
@@ -64,12 +64,12 @@ function parseYaml(yamlContent) {
  */
 function extractSection(content, heading) {
   // Escape special regex characters in heading
-  const escapedHeading = heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const escapedHeading = heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   // Match ## heading or ### heading
   const regex = new RegExp(
     `^#{2,3}\\s*${escapedHeading}\\s*$\\n([\\s\\S]*?)(?=^#{2,3}\\s|$)`,
-    'mi'
+    "mi",
   );
 
   const match = content.match(regex);
@@ -122,7 +122,7 @@ function parseAgentFile(filePath) {
   const result = {
     path: filePath,
     filename: path.basename(filePath),
-    id: path.basename(filePath, '.md'),
+    id: path.basename(filePath, ".md"),
     raw: null,
     yaml: null,
     agent: null,
@@ -139,13 +139,13 @@ function parseAgentFile(filePath) {
 
   try {
     // Read file content
-    const content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, "utf8");
     result.raw = content;
 
     // Extract YAML block
     const yamlContent = extractYamlBlock(content);
     if (!yamlContent) {
-      result.error = 'No YAML block found';
+      result.error = "No YAML block found";
       return result;
     }
 
@@ -156,10 +156,10 @@ function parseAgentFile(filePath) {
       const fallbackAgent = extractAgentInfoFallback(content);
       if (fallbackAgent) {
         result.agent = fallbackAgent;
-        result.error = 'YAML parse failed, using fallback extraction';
+        result.error = "YAML parse failed, using fallback extraction";
         // Don't return - allow processing with partial data
       } else {
-        result.error = 'Failed to parse YAML';
+        result.error = "Failed to parse YAML";
         return result;
       }
     } else {
@@ -173,11 +173,11 @@ function parseAgentFile(filePath) {
     }
 
     // Extract markdown sections (always try)
-    result.sections.quickCommands = extractSection(content, 'Quick Commands');
-    result.sections.collaboration = extractSection(content, 'Agent Collaboration');
-    result.sections.guide = extractSection(content, 'Developer Guide') ||
-                           extractSection(content, '.*Guide \\(\\*guide command\\)');
-
+    result.sections.quickCommands = extractSection(content, "Quick Commands");
+    result.sections.collaboration = extractSection(content, "Agent Collaboration");
+    result.sections.guide =
+      extractSection(content, "Developer Guide") ||
+      extractSection(content, ".*Guide \\(\\*guide command\\)");
   } catch (error) {
     result.error = error.message;
   }
@@ -198,7 +198,7 @@ function parseAllAgents(agentsDir) {
     return agents;
   }
 
-  const files = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md'));
+  const files = fs.readdirSync(agentsDir).filter((f) => f.endsWith(".md"));
 
   for (const file of files) {
     const filePath = path.join(agentsDir, file);
@@ -218,13 +218,13 @@ function parseAllAgents(agentsDir) {
 function normalizeCommands(commands) {
   if (!Array.isArray(commands)) return [];
 
-  return commands.map(cmd => {
+  return commands.map((cmd) => {
     // Already in proper format with name property
-    if (cmd.name && typeof cmd.name === 'string') {
+    if (cmd.name && typeof cmd.name === "string") {
       return {
         name: cmd.name,
-        description: cmd.description || 'No description',
-        visibility: cmd.visibility || ['full', 'quick'],
+        description: cmd.description || "No description",
+        visibility: cmd.visibility || ["full", "quick"],
       };
     }
 
@@ -235,16 +235,16 @@ function normalizeCommands(commands) {
       const description = cmd[name];
       return {
         name: name,
-        description: typeof description === 'string' ? description : 'No description',
-        visibility: ['full', 'quick'],
+        description: typeof description === "string" ? description : "No description",
+        visibility: ["full", "quick"],
       };
     }
 
     // Unknown format - try to extract what we can
     return {
-      name: cmd.name || 'unknown',
-      description: cmd.description || 'No description',
-      visibility: cmd.visibility || ['full', 'quick'],
+      name: cmd.name || "unknown",
+      description: cmd.description || "No description",
+      visibility: cmd.visibility || ["full", "quick"],
     };
   });
 }
@@ -261,7 +261,7 @@ function getVisibleCommands(commands, visibility) {
   // First normalize the commands to ensure consistent format
   const normalized = normalizeCommands(commands);
 
-  return normalized.filter(cmd => {
+  return normalized.filter((cmd) => {
     if (!cmd.visibility) return true; // Include if no visibility defined
     return cmd.visibility.includes(visibility);
   });
@@ -273,14 +273,14 @@ function getVisibleCommands(commands, visibility) {
  * @param {string} prefix - Prefix for command name (default: '*')
  * @returns {string} - Formatted bullet list
  */
-function formatCommandsList(commands, prefix = '*') {
+function formatCommandsList(commands, prefix = "*") {
   if (!Array.isArray(commands) || commands.length === 0) {
-    return '- No commands available';
+    return "- No commands available";
   }
 
   return commands
-    .map(cmd => `- \`${prefix}${cmd.name}\` - ${cmd.description || 'No description'}`)
-    .join('\n');
+    .map((cmd) => `- \`${prefix}${cmd.name}\` - ${cmd.description || "No description"}`)
+    .join("\n");
 }
 
 module.exports = {

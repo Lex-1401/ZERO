@@ -35,12 +35,12 @@ zero onboard --install-daemon
 
 ### Hardware Specifications
 
-| Profile | CPU | RAM | Recommended for... |
-| :--- | :--- | :--- | :--- |
-| **Local Desktop** | Any | 8GB - 16GB | Daily development and standard use. |
-| **VPS (Minimum)** | 1 vCPU | 1GB | Light personal use (chat only, requires Swap). |
-| **VPS (Ideal)** | 2 vCPUs | 2GB | Daily routine and simple automations. |
-| **VPS (Elite)** | 4 vCPUs | 4GB+ | Heavy browser tools and multi-agent loops. |
+| Profile           | CPU     | RAM        | Recommended for...                             |
+| :---------------- | :------ | :--------- | :--------------------------------------------- |
+| **Local Desktop** | Any     | 8GB - 16GB | Daily development and standard use.            |
+| **VPS (Minimum)** | 1 vCPU  | 1GB        | Light personal use (chat only, requires Swap). |
+| **VPS (Ideal)**   | 2 vCPUs | 2GB        | Daily routine and simple automations.          |
+| **VPS (Elite)**   | 4 vCPUs | 4GB+       | Heavy browser tools and multi-agent loops.     |
 
 ## Choose your install path
 

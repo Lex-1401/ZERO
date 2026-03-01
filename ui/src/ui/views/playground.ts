@@ -5,24 +5,24 @@ import { toSanitizedMarkdownHtml } from "../markdown";
 import { handleCodeCopyClick } from "../chat/code-copy";
 
 export type PlaygroundProps = {
-    systemPrompt: string;
-    userPrompt: string;
-    output: string;
-    model: string | null;
-    temperature: number | undefined;
-    maxTokens: number | undefined;
-    loading: boolean;
-    onSystemPromptChange: (val: string) => void;
-    onUserPromptChange: (val: string) => void;
-    onModelChange: (val: string) => void;
-    onTemperatureChange: (val: number) => void;
-    onMaxTokensChange: (val: number) => void;
-    onRun: () => void;
-    onClear: () => void;
+  systemPrompt: string;
+  userPrompt: string;
+  output: string;
+  model: string | null;
+  temperature: number | undefined;
+  maxTokens: number | undefined;
+  loading: boolean;
+  onSystemPromptChange: (val: string) => void;
+  onUserPromptChange: (val: string) => void;
+  onModelChange: (val: string) => void;
+  onTemperatureChange: (val: number) => void;
+  onMaxTokensChange: (val: number) => void;
+  onRun: () => void;
+  onClear: () => void;
 };
 
 export function renderPlayground(props: PlaygroundProps) {
-    return html`
+  return html`
     <div class="playground-layout animate-fade-in">
       
       <!-- Params Sidebar -->
@@ -115,13 +115,33 @@ export function renderPlayground(props: PlaygroundProps) {
             </div>
             
             <div class="chat-text" @click=${handleCodeCopyClick} style="flex: 1; overflow-y: auto; padding: 24px; font-size: 13px; line-height: 1.6; color: var(--text-main);">
-                ${props.output ? html`<div>${unsafeHTML(toSanitizedMarkdownHtml(props.output))}</div>` : html`
+                ${
+                  props.output
+                    ? html`<div>${unsafeHTML(toSanitizedMarkdownHtml(props.output))}</div>`
+                    : html`
                     <div style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim); opacity: 0.5; gap: 16px;">
                         <div style="transform: scale(2); opacity: 0.5;">${icons.brain}</div>
                         <div>Aguardando execução...</div>
                     </div>
-                `}
-                ${props.loading ? html`<span class="cursor" style="display: inline-block; width: 8px; height: 14px; background: var(--accent-main); margin-left: 4px; animation: blink 1s step-end infinite;"></span>` : nothing}
+                `
+                }
+                ${
+                  props.loading
+                    ? html`
+                        <span
+                          class="cursor"
+                          style="
+                            display: inline-block;
+                            width: 8px;
+                            height: 14px;
+                            background: var(--accent-main);
+                            margin-left: 4px;
+                            animation: blink 1s step-end infinite;
+                          "
+                        ></span>
+                      `
+                    : nothing
+                }
             </div>
         </div>
 

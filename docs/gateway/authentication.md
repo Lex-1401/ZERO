@@ -4,6 +4,7 @@ read_when:
   - Depurando a autenticação de modelos ou expiração de OAuth
   - Documentando o armazenamento de autenticação ou credenciais
 ---
+
 # Autenticação
 
 O ZERO suporta OAuth e chaves de API para os provedores de modelos. Para contas da Anthropic, recomendamos o uso de uma **chave de API**. O ZERO também pode reutilizar credenciais do Claude Code, incluindo o token de longa duração criado pelo comando `claude setup-token`.
@@ -14,15 +15,15 @@ Veja [/concepts/oauth](/concepts/oauth) para o fluxo OAuth completo e o layout d
 
 Se você estiver usando a Anthropic diretamente, utilize uma chave de API.
 
-1) Crie uma chave de API no Console da Anthropic.
-2) Coloque-a no **host do gateway** (a máquina que executa o `zero gateway`).
+1. Crie uma chave de API no Console da Anthropic.
+2. Coloque-a no **host do gateway** (a máquina que executa o `zero gateway`).
 
 ```bash
 export ANTHROPIC_API_KEY="..."
 zero models status
 ```
 
-1) Se o Gateway rodar sob o systemd/launchd, prefira colocar a chave no arquivo `~/.zero/.env` para que o daemon possa lê-la:
+1. Se o Gateway rodar sob o systemd/launchd, prefira colocar a chave no arquivo `~/.zero/.env` para que o daemon possa lê-la:
 
 ```bash
 cat >> ~/.zero/.env <<'EOF'

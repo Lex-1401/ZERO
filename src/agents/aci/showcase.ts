@@ -5,20 +5,18 @@ async function delay(ms: number) {
   await setTimeout(ms);
 }
 
-function log(msg: string, color: string = "\x1b[37m") {
-  console.log(`${color}${msg}\x1b[0m`);
+function log(_msg: string, _color: string = "\x1b[37m") { }
+
+function agentThought(_text: string) {
+  log(`\n🧠 AGENT THINKING:\n<think>${_text}</think>`, "\x1b[36m"); // Cyan
 }
 
-function agentThought(text: string) {
-  log(`\n🧠 AGENT THINKING:\n<think>${text}</think>`, "\x1b[36m"); // Cyan
+function toolCall(_name: string, _args: any) {
+  log(`\n🛠️ TOOL CALL: ${_name}(${JSON.stringify(_args)})`, "\x1b[33m"); // Yellow
 }
 
-function toolCall(name: string, args: any) {
-  log(`\n🛠️ TOOL CALL: ${name}(${JSON.stringify(args)})`, "\x1b[33m"); // Yellow
-}
-
-function toolResult(result: any) {
-  log(`✅ RESULT: ${JSON.stringify(result, null, 2)}`, "\x1b[32m"); // Green
+function toolResult(_result: any) {
+  log(`✅ RESULT: ${JSON.stringify(_result, null, 2)}`, "\x1b[32m"); // Green
 }
 
 async function runShowcase() {
@@ -35,7 +33,7 @@ async function runShowcase() {
   await delay(1500);
   agentThought(
     "User wants me to login to GitHub. " +
-      "Since I am trained on ACI protocols, I must first check if I have a procedural memory for this task using `aci_recall`.",
+    "Since I am trained on ACI protocols, I must first check if I have a procedural memory for this task using `aci_recall`.",
   );
 
   await delay(1000);
@@ -47,7 +45,7 @@ async function runShowcase() {
   await delay(1000);
   agentThought(
     "I don't have a memory for this yet. I'll have to do it manually. " +
-      "First, I'll navigate to the login page.",
+    "First, I'll navigate to the login page.",
   );
 
   toolCall("browser", { action: "navigate", targetUrl: "https://github.com/login" });
@@ -57,7 +55,7 @@ async function runShowcase() {
   await delay(1000);
   agentThought(
     "Now I'm at the page. Instead of a raw screenshot, " +
-      "I'll use `aci_scan` to get a structured view of the interactive elements.",
+    "I'll use `aci_scan` to get a structured view of the interactive elements.",
   );
 
   toolCall("browser", { action: "aci_scan" });
@@ -79,7 +77,7 @@ async function runShowcase() {
   await delay(1500);
   agentThought(
     "I see the form clearly. ID 10 is username, ID 11 is password, ID 13 is submit. " +
-      "I will fill them and click submit.",
+    "I will fill them and click submit.",
   );
 
   toolCall("browser", {
@@ -101,7 +99,7 @@ async function runShowcase() {
   await delay(1000);
   agentThought(
     "Login successful. I am now on the dashboard. " +
-      "This was a complex task. I should SAVE this trajectory so I don't have to figure out the IDs again.",
+    "This was a complex task. I should SAVE this trajectory so I don't have to figure out the IDs again.",
   );
 
   toolCall("aci_remember", {
@@ -153,7 +151,7 @@ async function runShowcase() {
   await delay(1000);
   agentThought(
     "I found a memory! I don't need to scan and analyze. " +
-      "I can just execute the known trajectory efficiently.",
+    "I can just execute the known trajectory efficiently.",
   );
 
   toolCall("browser", { action: "act", request: { kind: "run_trajectory", id: "github-login" } });

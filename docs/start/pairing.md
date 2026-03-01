@@ -11,8 +11,8 @@ read_when:
 O "Pareamento" (Pairing) é a etapa de **aprovação explícita do proprietário** no ZERO.
 Ele é usado em dois lugares:
 
-1) **Pareamento de DM** (quem tem permissão para falar com o bot)
-2) **Pareamento de Nó** (quais dispositivos/nós têm permissão para entrar na rede do gateway)
+1. **Pareamento de DM** (quem tem permissão para falar com o bot)
+2. **Pareamento de Nó** (quais dispositivos/nós têm permissão para entrar na rede do gateway)
 
 Contexto de segurança: [Segurança](/gateway/security)
 

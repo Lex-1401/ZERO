@@ -97,7 +97,7 @@ agents:
     - data-engineer
   overrides:
     dev:
-      persona: 'Senior developer specializing in TypeScript'
+      persona: "Senior developer specializing in TypeScript"
 
 # Task Configuration
 tasks:

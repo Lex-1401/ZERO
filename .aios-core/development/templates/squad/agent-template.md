@@ -2,9 +2,9 @@
 
 > Agent definition for {{SQUADNAME}} squad
 > Created: {{CREATEDAT}}
-{{#IF STORYID}}
+> {{#IF STORYID}}
 > Story: {{STORYID}}
-{{/IF}}
+> {{/IF}}
 
 ## Description
 
@@ -14,8 +14,8 @@
 
 ```yaml
 agent:
-  name: {{COMPONENTNAME}}
-  id: {{COMPONENTNAME}}
+  name: { { COMPONENTNAME } }
+  id: { { COMPONENTNAME } }
   title: "{{COMPONENTNAME}} Agent"
   icon: "{{ICON}}"
   whenToUse: "Use this agent when {{USECASE}}"
@@ -51,19 +51,33 @@ dependencies:
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
+| Command | Description             |
+| ------- | ----------------------- |
 | `*help` | Show available commands |
-| `*exit` | Exit agent mode |
+| `*exit` | Exit agent mode         |
 
 ## Collaboration
 
 **Works with:**
+
 - List other agents this agent collaborates with
 
 **Handoff points:**
+
 - When to hand off to other agents
+
+{{#IF CODE_INTEL_AVAILABLE}}
+
+## Code Intelligence Context
+
+> Auto-populated when code intelligence provider is available.
+> This section can be safely removed if not needed.
+
+- **Project Structure:** {{PROJECT_STRUCTURE}}
+- **Conventions:** {{CONVENTIONS}}
+- **Related Entities:** {{RELATED_ENTITIES}}
+  {{/IF}}
 
 ---
 
-*Agent created by squad-creator*
+_Agent created by squad-creator_

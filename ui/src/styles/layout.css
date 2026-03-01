@@ -64,7 +64,9 @@
   padding: 52px 16px 24px 16px;
   /* 8pt aligned */
   z-index: 50;
-  transition: transform 0.4s var(--ease-premium), opacity 0.3s ease;
+  transition:
+    transform 0.4s var(--ease-premium),
+    opacity 0.3s ease;
   transform-origin: left;
 }
 
@@ -142,7 +144,9 @@
   cursor: pointer;
   position: relative;
   transition: all 0.4s var(--ease-premium);
-  animation: mascot-appear 0.8s var(--ease-premium), mascot-float 8s infinite ease-in-out;
+  animation:
+    mascot-appear 0.8s var(--ease-premium),
+    mascot-float 8s infinite ease-in-out;
 }
 
 .mascot-img-red {
@@ -157,14 +161,14 @@
 }
 
 .mascot-brand {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: var(--font-weight-black);
   font-size: 22px;
   letter-spacing: 0.5em;
-  color: #fff;
+  color: var(--text-main);
   text-indent: 0.5em;
   /* Center compensation */
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 30px rgba(var(--accent-blue-rgb), 0.3);
+  text-shadow: 0 0 15px rgba(var(--accent-blue-rgb), 0.2);
   opacity: 0.9;
   transition: all 0.5s var(--ease-premium);
   z-index: 3;
@@ -178,7 +182,9 @@
 .mascot-container-red:hover .mascot-brand {
   letter-spacing: 0.6em;
   text-indent: 0.6em;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(var(--accent-blue-rgb), 0.6);
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(var(--accent-blue-rgb), 0.6);
   opacity: 1;
 }
 
@@ -237,13 +243,17 @@
 
 .status-orb.success {
   background: var(--success);
-  box-shadow: 0 0 12px var(--success), 0 0 24px rgba(var(--accent-green-rgb), 0.4);
+  box-shadow:
+    0 0 12px var(--success),
+    0 0 24px rgba(var(--accent-green-rgb), 0.4);
   animation: orb-breath 2s infinite ease-in-out;
 }
 
 .status-orb.danger {
   background: var(--danger);
-  box-shadow: 0 0 12px var(--danger), 0 0 24px rgba(var(--accent-red-rgb), 0.4);
+  box-shadow:
+    0 0 12px var(--danger),
+    0 0 24px rgba(var(--accent-red-rgb), 0.4);
 }
 
 @keyframes orb-breath {
@@ -256,7 +266,9 @@
   50% {
     transform: scale(1.2);
     opacity: 1;
-    box-shadow: 0 0 16px var(--success), 0 0 30px rgba(var(--accent-green-rgb), 0.6);
+    box-shadow:
+      0 0 16px var(--success),
+      0 0 30px rgba(var(--accent-green-rgb), 0.6);
   }
 
   100% {
@@ -583,7 +595,7 @@ body.focus-mode::before {
   z-index: 999;
 }
 
-body.focus-mode:hover::before+.shell .nav,
+body.focus-mode:hover::before + .shell .nav,
 body.focus-mode .nav:hover {
   transform: translateX(0);
   opacity: 1;

@@ -43,7 +43,7 @@ struct GlowingZeroIcon: View {
             ZStack {
                 // Content: App Icon or Mascot
                 // Use the transparency-enabled version if available
-                let officialIconPath = "/Users/lex/Downloads/Arquivos/ZERO/macOS Icon.png"
+                let officialIconPath = "/Users/lex/Downloads/Arquivos/ZERO/ui/public/zerologo_without_background.png"
                 if let nsImage = NSImage(contentsOfFile: officialIconPath) ?? NSImage(named: "AppIcon_Official") {
                     Image(nsImage: nsImage)
                         .resizable()

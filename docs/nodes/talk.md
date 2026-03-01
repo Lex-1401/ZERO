@@ -4,14 +4,15 @@ read_when:
   - Implementando o modo Talk no macOS/iOS/Android
   - Alterando o comportamento de voz/TTS/interrupção
 ---
+
 # Modo Talk
 
 O modo Talk é um loop de conversação contínua por voz:
 
-1) Ouve a fala
-2) Envia a transcrição para o modelo (sessão principal, chat.send)
-3) Aguarda a resposta
-4) Fala a resposta via ElevenLabs (reprodução em streaming)
+1. Ouve a fala
+2. Envia a transcrição para o modelo (sessão principal, chat.send)
+3. Aguarda a resposta
+4. Fala a resposta via ElevenLabs (reprodução em streaming)
 
 ## Comportamento (macOS)
 
@@ -26,7 +27,7 @@ O modo Talk é um loop de conversação contínua por voz:
 O assistente pode prefixar sua resposta com uma **única linha JSON** para controlar a voz:
 
 ```json
-{"voice":"<voice-id>","once":true}
+{ "voice": "<voice-id>", "once": true }
 ```
 
 Regras:
@@ -49,13 +50,13 @@ Chaves suportadas:
 
 ```json5
 {
-  "talk": {
-    "voiceId": "elevenlabs_voice_id",
-    "modelId": "eleven_v3",
-    "outputFormat": "mp3_44100_128",
-    "apiKey": "elevenlabs_api_key",
-    "interruptOnSpeech": true
-  }
+  talk: {
+    voiceId: "elevenlabs_voice_id",
+    modelId: "eleven_v3",
+    outputFormat: "mp3_44100_128",
+    apiKey: "elevenlabs_api_key",
+    interruptOnSpeech: true,
+  },
 }
 ```
 

@@ -447,14 +447,14 @@ requires: a11y
 # pipeline-report.yaml
 pipeline:
   id: design-system-build-quality
-  executed_at: '2025-01-30T14:00:00Z'
+  executed_at: "2025-01-30T14:00:00Z"
   mode: interactive
-  duration: '8m 32s'
+  duration: "8m 32s"
 
 steps:
   build:
     status: success
-    duration: '2m 15s'
+    duration: "2m 15s"
     components_built: 24
     tokens_compiled: 156
     errors: 0
@@ -462,35 +462,35 @@ steps:
 
   document:
     status: success
-    duration: '3m 45s'
+    duration: "3m 45s"
     pages_generated: 28
     examples_created: 72
     storybook: enabled
 
   a11y:
     status: success
-    duration: '1m 22s'
+    duration: "1m 22s"
     components_audited: 24
     violations_critical: 0
     violations_serious: 3
     violations_minor: 8
-    wcag_level: 'AA (with warnings)'
+    wcag_level: "AA (with warnings)"
 
   roi:
     status: success
-    duration: '1m 10s'
-    monthly_savings: '$12,400'
-    reuse_rate: '78%'
-    roi_ratio: '8.2x'
+    duration: "1m 10s"
+    monthly_savings: "$12,400"
+    reuse_rate: "78%"
+    roi_ratio: "8.2x"
 
 summary:
-  total_duration: '8m 32s'
+  total_duration: "8m 32s"
   overall_status: success
   quality_score: 94/100
   next_steps:
-    - 'Fix 3 serious a11y violations'
-    - 'Review ROI with stakeholders'
-    - 'Schedule production release'
+    - "Fix 3 serious a11y violations"
+    - "Review ROI with stakeholders"
+    - "Schedule production release"
 ```
 
 ---
@@ -605,8 +605,8 @@ name: Design System Quality
 on:
   push:
     paths:
-      - 'src/components/**'
-      - 'design-system/**'
+      - "src/components/**"
+      - "design-system/**"
 
 jobs:
   quality-pipeline:

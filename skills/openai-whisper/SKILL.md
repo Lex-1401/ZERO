@@ -2,7 +2,24 @@
 name: openai-whisper
 description: Conversão local de voz para texto com o Whisper CLI (sem necessidade de chave de API).
 homepage: https://openai.com/research/whisper
-metadata: {"zero":{"emoji":"🎙️","requires":{"bins":["whisper"]},"install":[{"id":"brew","kind":"brew","formula":"openai-whisper","bins":["whisper"],"label":"Instalar OpenAI Whisper (brew)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "🎙️",
+        "requires": { "bins": ["whisper"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "openai-whisper",
+              "bins": ["whisper"],
+              "label": "Instalar OpenAI Whisper (brew)",
+            },
+          ],
+      },
+  }
 ---
 
 # Whisper (CLI)

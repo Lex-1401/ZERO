@@ -235,8 +235,8 @@ SELECT
     'qual', qual,
     'with_check', with_check
   ))
-   FROM pg_policies p 
-   WHERE p.tablename=t.tablename 
+   FROM pg_policies p
+   WHERE p.tablename=t.tablename
    AND p.schemaname='public') AS policies
 FROM t
 ORDER BY rowsecurity DESC, tablename;
@@ -244,26 +244,26 @@ ORDER BY rowsecurity DESC, tablename;
 \echo ''
 \echo '=== Summary ==='
 
-SELECT 
+SELECT
   COUNT(*) AS total_tables,
   COUNT(*) FILTER (WHERE rowsecurity) AS rls_enabled,
   COUNT(*) FILTER (WHERE NOT rowsecurity) AS rls_disabled
-FROM pg_tables 
+FROM pg_tables
 WHERE schemaname='public';
 
 \echo ''
 \echo '=== Tables Without RLS (Security Risk) ==='
 
-SELECT tablename 
-FROM pg_tables 
-WHERE schemaname='public' 
+SELECT tablename
+FROM pg_tables
+WHERE schemaname='public'
 AND rowsecurity = false
 ORDER BY tablename;
 
 \echo ''
 \echo '=== Policy Coverage ==='
 
-SELECT 
+SELECT
   t.tablename,
   COUNT(p.policyname) AS policy_count,
   ARRAY_AGG(p.cmd) AS commands_covered

@@ -24,7 +24,7 @@ Checklist:
   - "[ ] Exibir próximos passos"
 ---
 
-# *download-squad
+# \*download-squad
 
 Downloads public squads from the aios-squads GitHub repository to use in your project.
 
@@ -84,12 +84,12 @@ Squad installed! Next steps:
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--list` | List all available squads from registry |
-| `--version` | Download specific version (e.g., @2.0.0) |
+| Option        | Description                               |
+| ------------- | ----------------------------------------- |
+| `--list`      | List all available squads from registry   |
+| `--version`   | Download specific version (e.g., @2.0.0)  |
 | `--overwrite` | Overwrite if squad already exists locally |
-| `--verbose` | Show detailed download progress |
+| `--verbose`   | Show detailed download progress           |
 
 ## How It Works
 
@@ -144,16 +144,17 @@ The registry.json in aios-squads contains:
 
 ## Error Handling
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `SQUAD_NOT_FOUND` | Squad not in registry | Check available squads with --list |
-| `SQUAD_EXISTS` | Already downloaded | Use --overwrite flag |
-| `REGISTRY_FETCH_ERROR` | Network issue | Check connection |
-| `RATE_LIMIT` | GitHub API limit | Set GITHUB_TOKEN env var |
+| Error                  | Cause                 | Solution                           |
+| ---------------------- | --------------------- | ---------------------------------- |
+| `SQUAD_NOT_FOUND`      | Squad not in registry | Check available squads with --list |
+| `SQUAD_EXISTS`         | Already downloaded    | Use --overwrite flag               |
+| `REGISTRY_FETCH_ERROR` | Network issue         | Check connection                   |
+| `RATE_LIMIT`           | GitHub API limit      | Set GITHUB_TOKEN env var           |
 
 ## Implementation
 
 Uses `SquadDownloader` class from:
+
 - `.aios-core/development/scripts/squad/squad-downloader.js`
 
 ## Related Tasks

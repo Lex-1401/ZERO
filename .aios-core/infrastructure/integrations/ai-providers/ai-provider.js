@@ -25,7 +25,7 @@ class AIProvider {
    */
   constructor(config) {
     if (new.target === AIProvider) {
-      throw new Error('AIProvider is an abstract class and cannot be instantiated directly');
+      throw new Error("AIProvider is an abstract class and cannot be instantiated directly");
     }
 
     this.name = config.name;
@@ -46,7 +46,7 @@ class AIProvider {
    * @abstract
    */
   async checkAvailability() {
-    throw new Error('checkAvailability() must be implemented by subclass');
+    throw new Error("checkAvailability() must be implemented by subclass");
   }
 
   /**
@@ -61,7 +61,7 @@ class AIProvider {
    * @abstract
    */
   async execute(prompt, _options = {}) {
-    throw new Error('execute() must be implemented by subclass');
+    throw new Error("execute() must be implemented by subclass");
   }
 
   /**
@@ -91,7 +91,9 @@ class AIProvider {
       }
     }
 
-    throw new Error(`[${this.name}] All ${maxRetries} attempts failed. Last error: ${lastError.message}`);
+    throw new Error(
+      `[${this.name}] All ${maxRetries} attempts failed. Last error: ${lastError.message}`,
+    );
   }
 
   /**

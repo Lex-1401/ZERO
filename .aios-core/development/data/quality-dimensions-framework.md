@@ -23,7 +23,7 @@ A comprehensive quality assessment uses 10 standardized dimensions. Each dimensi
 
 ```yaml
 quality_dimensions:
-  pattern_reference: 'squad-creator/data/quality-dimensions-framework.md'
+  pattern_reference: "squad-creator/data/quality-dimensions-framework.md"
   total_dimensions: 10
 
   scoring:
@@ -33,74 +33,74 @@ quality_dimensions:
 
   dimensions:
     1_accuracy:
-      name: 'Accuracy'
+      name: "Accuracy"
       weight: 1.0
       threshold: 7.0
       veto_power: true
-      description: 'Correctness verified by data/evidence'
+      description: "Correctness verified by data/evidence"
 
     2_coherence:
-      name: 'Coherence'
+      name: "Coherence"
       weight: 0.9
       threshold: 6.0
       veto_power: false
-      description: 'Internal consistency and alignment'
+      description: "Internal consistency and alignment"
 
     3_strategic_alignment:
-      name: 'Strategic Alignment'
+      name: "Strategic Alignment"
       weight: 0.9
       threshold: 6.0
       veto_power: false
-      description: 'Connection to goals and vision'
+      description: "Connection to goals and vision"
 
     4_operational_excellence:
-      name: 'Operational Excellence'
+      name: "Operational Excellence"
       weight: 0.8
       threshold: 6.0
       veto_power: false
-      description: 'Process quality and efficiency'
+      description: "Process quality and efficiency"
 
     5_innovation_capacity:
-      name: 'Innovation Capacity'
+      name: "Innovation Capacity"
       weight: 0.7
       threshold: 5.0
       veto_power: false
-      description: 'Ability to create novel solutions'
+      description: "Ability to create novel solutions"
 
     6_risk_management:
-      name: 'Risk Management'
+      name: "Risk Management"
       weight: 0.8
       threshold: 6.0
       veto_power: false
-      description: 'Identification and mitigation of risks'
+      description: "Identification and mitigation of risks"
 
     7_resource_optimization:
-      name: 'Resource Optimization'
+      name: "Resource Optimization"
       weight: 0.8
       threshold: 6.0
       veto_power: false
-      description: 'Efficient use of time, money, people'
+      description: "Efficient use of time, money, people"
 
     8_stakeholder_value:
-      name: 'Stakeholder Value'
+      name: "Stakeholder Value"
       weight: 0.7
       threshold: 6.0
       veto_power: false
-      description: 'Value delivered to all parties'
+      description: "Value delivered to all parties"
 
     9_sustainability:
-      name: 'Sustainability'
+      name: "Sustainability"
       weight: 0.7
       threshold: 6.0
       veto_power: false
-      description: 'Long-term viability'
+      description: "Long-term viability"
 
     10_adaptability:
-      name: 'Adaptability'
+      name: "Adaptability"
       weight: 0.6
       threshold: 5.0
       veto_power: false
-      description: 'Ability to respond to change'
+      description: "Ability to respond to change"
 ```
 
 ---
@@ -293,32 +293,32 @@ quality_dimensions:
 
 ```yaml
 quality_assessment:
-  subject: 'What is being assessed'
-  assessment_date: 'YYYY-MM-DD'
-  assessor: 'Who/what performed assessment'
+  subject: "What is being assessed"
+  assessment_date: "YYYY-MM-DD"
+  assessor: "Who/what performed assessment"
 
   dimensions:
-    - name: 'Accuracy'
+    - name: "Accuracy"
       score: 0-10
-      evidence: 'Supporting observations'
-      recommendations: ['Improvements']
+      evidence: "Supporting observations"
+      recommendations: ["Improvements"]
 
-    - name: 'Coherence'
+    - name: "Coherence"
       score: 0-10
-      evidence: 'Observations'
+      evidence: "Observations"
       recommendations: []
 
     # ... repeat for all 10 dimensions
 
   overall_score: number # Weighted average
   pass_threshold: 7.0
-  status: 'PASS | FAIL | REVIEW'
+  status: "PASS | FAIL | REVIEW"
 
   summary:
     strengths: ["What's working well"]
-    weaknesses: ['What needs improvement']
-    critical_issues: ['Blocking issues']
-    recommendations: ['Prioritized actions']
+    weaknesses: ["What needs improvement"]
+    critical_issues: ["Blocking issues"]
+    recommendations: ["Prioritized actions"]
 ```
 
 ---
@@ -384,22 +384,22 @@ Add quality assessment as a checkpoint:
 
 ```yaml
 checkpoint:
-  id: 'quality-gate'
-  type: 'quality_dimensions'
-  phase: 'final'
+  id: "quality-gate"
+  type: "quality_dimensions"
+  phase: "final"
 
-  dimensions_to_evaluate: 'all' # or specific list
+  dimensions_to_evaluate: "all" # or specific list
 
   thresholds:
     overall: 7.0
     per_dimension: 6.0
 
   veto_dimensions:
-    - 'accuracy'
+    - "accuracy"
 
-  pass_action: 'Approve and publish'
-  fail_action: 'Return for revision'
-  review_action: 'Escalate to human'
+  pass_action: "Approve and publish"
+  fail_action: "Return for revision"
+  review_action: "Escalate to human"
 ```
 
 ---
@@ -410,15 +410,15 @@ Track scores over time:
 
 ```yaml
 tracking:
-  aggregate_by: ['month', 'quarter']
+  aggregate_by: ["month", "quarter"]
   metrics:
     - average_overall_score
     - dimension_averages
     - fail_rate
     - veto_rate
   alerts:
-    - condition: 'average_score < 7.0'
-      action: 'Review process quality'
+    - condition: "average_score < 7.0"
+      action: "Review process quality"
 ```
 
 ---

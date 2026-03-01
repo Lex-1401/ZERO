@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { buildNodeInvokeResultParams } from "./runner.js";
+import { buildNodeInvokeResultParams } from "./runner/invoke.js";
 
 describe("buildNodeInvokeResultParams", () => {
   test("omits optional fields when null/undefined", () => {

@@ -3,6 +3,7 @@ summary: "Ciclo de vida do Gateway no macOS (launchd)"
 read_when:
   - Integrando o app mac com o ciclo de vida do gateway
 ---
+
 # Ciclo de vida do Gateway no macOS
 
 O app macOS **gerencia o Gateway via launchd** por padrão e não inicia o Gateway como um processo filho. Primeiro, ele tenta se anexar a um Gateway já em execução na porta configurada; se nenhum for alcançável, ele habilita o serviço launchd via a CLI `zero` externa (sem tempo de execução embutido). Isso oferece início automático confiável no login e reinicialização em caso de falhas.

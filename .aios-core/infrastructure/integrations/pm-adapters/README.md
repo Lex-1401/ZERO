@@ -4,17 +4,17 @@ Project Management tool adapters for AIOS. Enables story synchronization with va
 
 ## Available Adapters
 
-| Adapter | File | Description |
-|---------|------|-------------|
-| ClickUp | `clickup-adapter.js` | Full integration with ClickUp |
-| GitHub Projects | `github-adapter.js` | GitHub Projects v2 integration |
-| Jira | `jira-adapter.js` | Basic Jira integration |
-| Local | `local-adapter.js` | Standalone mode (no external PM) |
+| Adapter         | File                 | Description                      |
+| --------------- | -------------------- | -------------------------------- |
+| ClickUp         | `clickup-adapter.js` | Full integration with ClickUp    |
+| GitHub Projects | `github-adapter.js`  | GitHub Projects v2 integration   |
+| Jira            | `jira-adapter.js`    | Basic Jira integration           |
+| Local           | `local-adapter.js`   | Standalone mode (no external PM) |
 
 ## Usage
 
 ```javascript
-const { getPMAdapter, isPMToolConfigured } = require('../scripts/pm-adapter-factory');
+const { getPMAdapter, isPMToolConfigured } = require("../scripts/pm-adapter-factory");
 
 // Check if PM tool is configured
 if (isPMToolConfigured()) {
@@ -33,7 +33,7 @@ if (isPMToolConfigured()) {
 PM tool is configured via `.aios-pm-config.yaml` in the project root:
 
 ```yaml
-pmTool: clickup  # Options: clickup, github, jira, local
+pmTool: clickup # Options: clickup, github, jira, local
 credentials:
   # Tool-specific credentials
 ```

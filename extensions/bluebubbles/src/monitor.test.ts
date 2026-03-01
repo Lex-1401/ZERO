@@ -78,82 +78,123 @@ function createMockRuntime(): PluginRuntime {
       writeConfigFile: vi.fn() as unknown as PluginRuntime["config"]["writeConfigFile"],
     },
     system: {
-      enqueueSystemEvent: mockEnqueueSystemEvent as unknown as PluginRuntime["system"]["enqueueSystemEvent"],
+      enqueueSystemEvent:
+        mockEnqueueSystemEvent as unknown as PluginRuntime["system"]["enqueueSystemEvent"],
       runCommandWithTimeout: vi.fn() as unknown as PluginRuntime["system"]["runCommandWithTimeout"],
     },
     media: {
       loadWebMedia: vi.fn() as unknown as PluginRuntime["media"]["loadWebMedia"],
       detectMime: vi.fn() as unknown as PluginRuntime["media"]["detectMime"],
       mediaKindFromMime: vi.fn() as unknown as PluginRuntime["media"]["mediaKindFromMime"],
-      isVoiceCompatibleAudio: vi.fn() as unknown as PluginRuntime["media"]["isVoiceCompatibleAudio"],
+      isVoiceCompatibleAudio:
+        vi.fn() as unknown as PluginRuntime["media"]["isVoiceCompatibleAudio"],
       getImageMetadata: vi.fn() as unknown as PluginRuntime["media"]["getImageMetadata"],
       resizeToJpeg: vi.fn() as unknown as PluginRuntime["media"]["resizeToJpeg"],
     },
     tools: {
       createMemoryGetTool: vi.fn() as unknown as PluginRuntime["tools"]["createMemoryGetTool"],
-      createMemorySearchTool: vi.fn() as unknown as PluginRuntime["tools"]["createMemorySearchTool"],
+      createMemorySearchTool:
+        vi.fn() as unknown as PluginRuntime["tools"]["createMemorySearchTool"],
       registerMemoryCli: vi.fn() as unknown as PluginRuntime["tools"]["registerMemoryCli"],
     },
     channel: {
       text: {
-        chunkMarkdownText: mockChunkMarkdownText as unknown as PluginRuntime["channel"]["text"]["chunkMarkdownText"],
+        chunkMarkdownText:
+          mockChunkMarkdownText as unknown as PluginRuntime["channel"]["text"]["chunkMarkdownText"],
         chunkText: vi.fn() as unknown as PluginRuntime["channel"]["text"]["chunkText"],
-        resolveTextChunkLimit: vi.fn(() => 4000) as unknown as PluginRuntime["channel"]["text"]["resolveTextChunkLimit"],
-        hasControlCommand: mockHasControlCommand as unknown as PluginRuntime["channel"]["text"]["hasControlCommand"],
-        resolveMarkdownTableMode: vi.fn(() => "code") as unknown as PluginRuntime["channel"]["text"]["resolveMarkdownTableMode"],
-        convertMarkdownTables: vi.fn((text: string) => text) as unknown as PluginRuntime["channel"]["text"]["convertMarkdownTables"],
+        resolveTextChunkLimit: vi.fn(
+          () => 4000,
+        ) as unknown as PluginRuntime["channel"]["text"]["resolveTextChunkLimit"],
+        hasControlCommand:
+          mockHasControlCommand as unknown as PluginRuntime["channel"]["text"]["hasControlCommand"],
+        resolveMarkdownTableMode: vi.fn(
+          () => "code",
+        ) as unknown as PluginRuntime["channel"]["text"]["resolveMarkdownTableMode"],
+        convertMarkdownTables: vi.fn(
+          (text: string) => text,
+        ) as unknown as PluginRuntime["channel"]["text"]["convertMarkdownTables"],
       },
       reply: {
-        dispatchReplyWithBufferedBlockDispatcher: mockDispatchReplyWithBufferedBlockDispatcher as unknown as PluginRuntime["channel"]["reply"]["dispatchReplyWithBufferedBlockDispatcher"],
-        createReplyDispatcherWithTyping: vi.fn() as unknown as PluginRuntime["channel"]["reply"]["createReplyDispatcherWithTyping"],
-        resolveEffectiveMessagesConfig: vi.fn() as unknown as PluginRuntime["channel"]["reply"]["resolveEffectiveMessagesConfig"],
-        resolveHumanDelayConfig: vi.fn() as unknown as PluginRuntime["channel"]["reply"]["resolveHumanDelayConfig"],
-        dispatchReplyFromConfig: vi.fn() as unknown as PluginRuntime["channel"]["reply"]["dispatchReplyFromConfig"],
-        finalizeInboundContext: vi.fn() as unknown as PluginRuntime["channel"]["reply"]["finalizeInboundContext"],
-        formatAgentEnvelope: mockFormatAgentEnvelope as unknown as PluginRuntime["channel"]["reply"]["formatAgentEnvelope"],
-        formatInboundEnvelope: vi.fn() as unknown as PluginRuntime["channel"]["reply"]["formatInboundEnvelope"],
-        resolveEnvelopeFormatOptions: mockResolveEnvelopeFormatOptions as unknown as PluginRuntime["channel"]["reply"]["resolveEnvelopeFormatOptions"],
+        dispatchReplyWithBufferedBlockDispatcher:
+          mockDispatchReplyWithBufferedBlockDispatcher as unknown as PluginRuntime["channel"]["reply"]["dispatchReplyWithBufferedBlockDispatcher"],
+        createReplyDispatcherWithTyping:
+          vi.fn() as unknown as PluginRuntime["channel"]["reply"]["createReplyDispatcherWithTyping"],
+        resolveEffectiveMessagesConfig:
+          vi.fn() as unknown as PluginRuntime["channel"]["reply"]["resolveEffectiveMessagesConfig"],
+        resolveHumanDelayConfig:
+          vi.fn() as unknown as PluginRuntime["channel"]["reply"]["resolveHumanDelayConfig"],
+        dispatchReplyFromConfig:
+          vi.fn() as unknown as PluginRuntime["channel"]["reply"]["dispatchReplyFromConfig"],
+        finalizeInboundContext:
+          vi.fn() as unknown as PluginRuntime["channel"]["reply"]["finalizeInboundContext"],
+        formatAgentEnvelope:
+          mockFormatAgentEnvelope as unknown as PluginRuntime["channel"]["reply"]["formatAgentEnvelope"],
+        formatInboundEnvelope:
+          vi.fn() as unknown as PluginRuntime["channel"]["reply"]["formatInboundEnvelope"],
+        resolveEnvelopeFormatOptions:
+          mockResolveEnvelopeFormatOptions as unknown as PluginRuntime["channel"]["reply"]["resolveEnvelopeFormatOptions"],
       },
       routing: {
-        resolveAgentRoute: mockResolveAgentRoute as unknown as PluginRuntime["channel"]["routing"]["resolveAgentRoute"],
+        resolveAgentRoute:
+          mockResolveAgentRoute as unknown as PluginRuntime["channel"]["routing"]["resolveAgentRoute"],
       },
       pairing: {
-        buildPairingReply: mockBuildPairingReply as unknown as PluginRuntime["channel"]["pairing"]["buildPairingReply"],
-        readAllowFromStore: mockReadAllowFromStore as unknown as PluginRuntime["channel"]["pairing"]["readAllowFromStore"],
-        upsertPairingRequest: mockUpsertPairingRequest as unknown as PluginRuntime["channel"]["pairing"]["upsertPairingRequest"],
+        buildPairingReply:
+          mockBuildPairingReply as unknown as PluginRuntime["channel"]["pairing"]["buildPairingReply"],
+        readAllowFromStore:
+          mockReadAllowFromStore as unknown as PluginRuntime["channel"]["pairing"]["readAllowFromStore"],
+        upsertPairingRequest:
+          mockUpsertPairingRequest as unknown as PluginRuntime["channel"]["pairing"]["upsertPairingRequest"],
       },
       media: {
-        fetchRemoteMedia: vi.fn() as unknown as PluginRuntime["channel"]["media"]["fetchRemoteMedia"],
-        saveMediaBuffer: mockSaveMediaBuffer as unknown as PluginRuntime["channel"]["media"]["saveMediaBuffer"],
+        fetchRemoteMedia:
+          vi.fn() as unknown as PluginRuntime["channel"]["media"]["fetchRemoteMedia"],
+        saveMediaBuffer:
+          mockSaveMediaBuffer as unknown as PluginRuntime["channel"]["media"]["saveMediaBuffer"],
       },
       session: {
-        resolveStorePath: mockResolveStorePath as unknown as PluginRuntime["channel"]["session"]["resolveStorePath"],
-        readSessionUpdatedAt: mockReadSessionUpdatedAt as unknown as PluginRuntime["channel"]["session"]["readSessionUpdatedAt"],
-        recordInboundSession: vi.fn() as unknown as PluginRuntime["channel"]["session"]["recordInboundSession"],
-        recordSessionMetaFromInbound: vi.fn() as unknown as PluginRuntime["channel"]["session"]["recordSessionMetaFromInbound"],
-        updateLastRoute: vi.fn() as unknown as PluginRuntime["channel"]["session"]["updateLastRoute"],
+        resolveStorePath:
+          mockResolveStorePath as unknown as PluginRuntime["channel"]["session"]["resolveStorePath"],
+        readSessionUpdatedAt:
+          mockReadSessionUpdatedAt as unknown as PluginRuntime["channel"]["session"]["readSessionUpdatedAt"],
+        recordInboundSession:
+          vi.fn() as unknown as PluginRuntime["channel"]["session"]["recordInboundSession"],
+        recordSessionMetaFromInbound:
+          vi.fn() as unknown as PluginRuntime["channel"]["session"]["recordSessionMetaFromInbound"],
+        updateLastRoute:
+          vi.fn() as unknown as PluginRuntime["channel"]["session"]["updateLastRoute"],
       },
       mentions: {
-        buildMentionRegexes: mockBuildMentionRegexes as unknown as PluginRuntime["channel"]["mentions"]["buildMentionRegexes"],
-        matchesMentionPatterns: mockMatchesMentionPatterns as unknown as PluginRuntime["channel"]["mentions"]["matchesMentionPatterns"],
+        buildMentionRegexes:
+          mockBuildMentionRegexes as unknown as PluginRuntime["channel"]["mentions"]["buildMentionRegexes"],
+        matchesMentionPatterns:
+          mockMatchesMentionPatterns as unknown as PluginRuntime["channel"]["mentions"]["matchesMentionPatterns"],
       },
       reactions: {
         shouldAckReaction,
         removeAckReactionAfterReply,
       },
       groups: {
-        resolveGroupPolicy: mockResolveGroupPolicy as unknown as PluginRuntime["channel"]["groups"]["resolveGroupPolicy"],
-        resolveRequireMention: mockResolveRequireMention as unknown as PluginRuntime["channel"]["groups"]["resolveRequireMention"],
+        resolveGroupPolicy:
+          mockResolveGroupPolicy as unknown as PluginRuntime["channel"]["groups"]["resolveGroupPolicy"],
+        resolveRequireMention:
+          mockResolveRequireMention as unknown as PluginRuntime["channel"]["groups"]["resolveRequireMention"],
       },
       debounce: {
-        createInboundDebouncer: vi.fn() as unknown as PluginRuntime["channel"]["debounce"]["createInboundDebouncer"],
-        resolveInboundDebounceMs: vi.fn() as unknown as PluginRuntime["channel"]["debounce"]["resolveInboundDebounceMs"],
+        createInboundDebouncer:
+          vi.fn() as unknown as PluginRuntime["channel"]["debounce"]["createInboundDebouncer"],
+        resolveInboundDebounceMs:
+          vi.fn() as unknown as PluginRuntime["channel"]["debounce"]["resolveInboundDebounceMs"],
       },
       commands: {
-        resolveCommandAuthorizedFromAuthorizers: mockResolveCommandAuthorizedFromAuthorizers as unknown as PluginRuntime["channel"]["commands"]["resolveCommandAuthorizedFromAuthorizers"],
-        isControlCommandMessage: vi.fn() as unknown as PluginRuntime["channel"]["commands"]["isControlCommandMessage"],
-        shouldComputeCommandAuthorized: vi.fn() as unknown as PluginRuntime["channel"]["commands"]["shouldComputeCommandAuthorized"],
-        shouldHandleTextCommands: vi.fn() as unknown as PluginRuntime["channel"]["commands"]["shouldHandleTextCommands"],
+        resolveCommandAuthorizedFromAuthorizers:
+          mockResolveCommandAuthorizedFromAuthorizers as unknown as PluginRuntime["channel"]["commands"]["resolveCommandAuthorizedFromAuthorizers"],
+        isControlCommandMessage:
+          vi.fn() as unknown as PluginRuntime["channel"]["commands"]["isControlCommandMessage"],
+        shouldComputeCommandAuthorized:
+          vi.fn() as unknown as PluginRuntime["channel"]["commands"]["shouldComputeCommandAuthorized"],
+        shouldHandleTextCommands:
+          vi.fn() as unknown as PluginRuntime["channel"]["commands"]["shouldHandleTextCommands"],
       },
       discord: {} as PluginRuntime["channel"]["discord"],
       slack: {} as PluginRuntime["channel"]["slack"],
@@ -163,7 +204,9 @@ function createMockRuntime(): PluginRuntime {
       whatsapp: {} as PluginRuntime["channel"]["whatsapp"],
     },
     logging: {
-      shouldLogVerbose: vi.fn(() => false) as unknown as PluginRuntime["logging"]["shouldLogVerbose"],
+      shouldLogVerbose: vi.fn(
+        () => false,
+      ) as unknown as PluginRuntime["logging"]["shouldLogVerbose"],
       getChildLogger: vi.fn(() => ({
         info: vi.fn(),
         warn: vi.fn(),
@@ -172,12 +215,16 @@ function createMockRuntime(): PluginRuntime {
       })) as unknown as PluginRuntime["logging"]["getChildLogger"],
     },
     state: {
-      resolveStateDir: vi.fn(() => "/tmp/zero") as unknown as PluginRuntime["state"]["resolveStateDir"],
+      resolveStateDir: vi.fn(
+        () => "/tmp/zero",
+      ) as unknown as PluginRuntime["state"]["resolveStateDir"],
     },
   };
 }
 
-function createMockAccount(overrides: Partial<ResolvedBlueBubblesAccount["config"]> = {}): ResolvedBlueBubblesAccount {
+function createMockAccount(
+  overrides: Partial<ResolvedBlueBubblesAccount["config"]> = {},
+): ResolvedBlueBubblesAccount {
   return {
     accountId: "default",
     enabled: true,
@@ -355,7 +402,9 @@ describe("BlueBubbles webhook monitor", () => {
           guid: "msg-1",
         },
       });
-      (req as unknown as { socket: { remoteAddress: string } }).socket = { remoteAddress: "192.168.1.100" };
+      (req as unknown as { socket: { remoteAddress: string } }).socket = {
+        remoteAddress: "192.168.1.100",
+      };
 
       unregister = registerBlueBubblesWebhookTarget({
         account,
@@ -393,7 +442,9 @@ describe("BlueBubbles webhook monitor", () => {
         },
         { "x-password": "secret-token" },
       );
-      (req as unknown as { socket: { remoteAddress: string } }).socket = { remoteAddress: "192.168.1.100" };
+      (req as unknown as { socket: { remoteAddress: string } }).socket = {
+        remoteAddress: "192.168.1.100",
+      };
 
       unregister = registerBlueBubblesWebhookTarget({
         account,
@@ -426,7 +477,9 @@ describe("BlueBubbles webhook monitor", () => {
           guid: "msg-1",
         },
       });
-      (req as unknown as { socket: { remoteAddress: string } }).socket = { remoteAddress: "192.168.1.100" };
+      (req as unknown as { socket: { remoteAddress: string } }).socket = {
+        remoteAddress: "192.168.1.100",
+      };
 
       unregister = registerBlueBubblesWebhookTarget({
         account,
@@ -460,7 +513,9 @@ describe("BlueBubbles webhook monitor", () => {
         },
       });
       // Localhost address
-      (req as unknown as { socket: { remoteAddress: string } }).socket = { remoteAddress: "127.0.0.1" };
+      (req as unknown as { socket: { remoteAddress: string } }).socket = {
+        remoteAddress: "127.0.0.1",
+      };
 
       unregister = registerBlueBubblesWebhookTarget({
         account,
@@ -2095,9 +2150,9 @@ describe("BlueBubbles webhook monitor", () => {
     });
 
     it("throws when numeric short ID is missing and requireKnownShortId is set", () => {
-      expect(() =>
-        resolveBlueBubblesMessageId("999", { requireKnownShortId: true }),
-      ).toThrow(/short message id/i);
+      expect(() => resolveBlueBubblesMessageId("999", { requireKnownShortId: true })).toThrow(
+        /short message id/i,
+      );
     });
   });
 

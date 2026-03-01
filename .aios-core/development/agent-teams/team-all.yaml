@@ -5,7 +5,7 @@ bundle:
 agents:
   - aios-orchestrator
   - aios-developer
-  - '*'
+  - "*"
 workflows:
   - brownfield-fullstack.yaml
   - brownfield-service.yaml

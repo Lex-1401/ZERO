@@ -72,21 +72,21 @@ Notas:
 Executar uma tarefa longa e consultar depois:
 
 ```json
-{"tool": "exec", "command": "sleep 5 && echo done", "yieldMs": 1000}
+{ "tool": "exec", "command": "sleep 5 && echo done", "yieldMs": 1000 }
 ```
 
 ```json
-{"tool": "process", "action": "poll", "sessionId": "<id>"}
+{ "tool": "process", "action": "poll", "sessionId": "<id>" }
 ```
 
 Iniciar imediatamente em segundo plano:
 
 ```json
-{"tool": "exec", "command": "npm run build", "background": true}
+{ "tool": "exec", "command": "npm run build", "background": true }
 ```
 
 Enviar entrada padrão (stdin):
 
 ```json
-{"tool": "process", "action": "write", "sessionId": "<id>", "data": "y\n"}
+{ "tool": "process", "action": "write", "sessionId": "<id>", "data": "y\n" }
 ```

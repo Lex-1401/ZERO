@@ -18,15 +18,15 @@ Zalo é distribuído como um plugin e não é empacotado com a instalação prin
 
 ## Configuração rápida (iniciante)
 
-1) Instale o plugin Zalo:
+1. Instale o plugin Zalo:
    - De um checkout fonte: `zero plugins install ./extensions/zalo`
    - Do npm (se publicado): `zero plugins install @zero/zalo`
    - Ou escolha **Zalo** no onboarding e confirme o prompt de instalação
-2) Defina o token:
+2. Defina o token:
    - Env: `ZALO_BOT_TOKEN=...`
    - Ou config: `channels.zalo.botToken: "..."`.
-3) Reinicie o gateway (ou termine o onboarding).
-4) Acesso DM é pairing por padrão; aprove o código de emparelhamento no primeiro contato.
+3. Reinicie o gateway (ou termine o onboarding).
+4. Acesso DM é pairing por padrão; aprove o código de emparelhamento no primeiro contato.
 
 Configuração mínima:
 
@@ -36,9 +36,9 @@ Configuração mínima:
     zalo: {
       enabled: true,
       botToken: "12345689:abc-xyz",
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
@@ -56,9 +56,9 @@ Zalo é um aplicativo de mensagens focado no Vietnã; sua API de Bot permite que
 
 ### 1) Criar um token de bot (Zalo Bot Platform)
 
-1) Vá para **<https://bot.zaloplatforms.com>** e faça login.
-2) Crie um novo bot e configure suas definições.
-3) Copie o token do bot (formato: `12345689:abc-xyz`).
+1. Vá para **<https://bot.zaloplatforms.com>** e faça login.
+2. Crie um novo bot e configure suas definições.
+3. Copie o token do bot (formato: `12345689:abc-xyz`).
 
 ### 2) Configurar o token (env ou config)
 
@@ -70,9 +70,9 @@ Exemplo:
     zalo: {
       enabled: true,
       botToken: "12345689:abc-xyz",
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
@@ -80,8 +80,8 @@ Opção Env: `ZALO_BOT_TOKEN=...` (funciona apenas para a conta padrão).
 
 Suporte multi-conta: use `channels.zalo.accounts` com tokens por conta e `name` opcional.
 
-1) Reinicie o gateway. Zalo inicia quando um token é resolvido (env ou config).
-2) Acesso DM padroniza para pairing. Aprove o código quando o bot for contatado pela primeira vez.
+1. Reinicie o gateway. Zalo inicia quando um token é resolvido (env ou config).
+2. Acesso DM padroniza para pairing. Aprove o código quando o bot for contatado pela primeira vez.
 
 ## Como funciona (comportamento)
 
@@ -126,16 +126,16 @@ Suporte multi-conta: use `channels.zalo.accounts` com tokens por conta e `name` 
 
 ## Capacidades
 
-| Recurso | Status |
-| :--- | :--- |
-| Mensagens diretas | ✅ Suportado |
-| Grupos | ❌ Em breve (segundo docs Zalo) |
-| Mídia (imagens) | ✅ Suportado |
-| Reações | ❌ Não suportado |
-| Threads | ❌ Não suportado |
-| Enquetes | ❌ Não suportado |
-| Comandos nativos | ❌ Não suportado |
-| Streaming | ⚠️ Bloqueado (limite 2000 char) |
+| Recurso           | Status                          |
+| :---------------- | :------------------------------ |
+| Mensagens diretas | ✅ Suportado                    |
+| Grupos            | ❌ Em breve (segundo docs Zalo) |
+| Mídia (imagens)   | ✅ Suportado                    |
+| Reações           | ❌ Não suportado                |
+| Threads           | ❌ Não suportado                |
+| Enquetes          | ❌ Não suportado                |
+| Comandos nativos  | ❌ Não suportado                |
+| Streaming         | ⚠️ Bloqueado (limite 2000 char) |
 
 ## Alvos de entrega (CLI/cron)
 

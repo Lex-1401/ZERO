@@ -153,34 +153,66 @@ public final class ZeroChatViewModel {
     private func bootstrap() async {
         self.isLoading = true
         self.errorText = nil
-        self.healthOK = false
         self.clearPendingRuns(reason: nil)
         self.pendingToolCallsById = [:]
         self.streamingAssistantText = nil
         self.sessionId = nil
+        
         defer { self.isLoading = false }
-        do {
-            do {
-                try await self.transport.setActiveSessionKey(self.sessionKey)
-            } catch {
-                // Best-effort only; history/send/health still work without push events.
-            }
 
-            let payload = try await self.transport.requestHistory(sessionKey: self.sessionKey)
-            self.messages = Self.decodeMessages(payload.messages ?? [])
-            self.sessionId = payload.sessionId
-            if let level = payload.thinkingLevel, !level.isEmpty {
-                self.thinkingLevel = level
-            }
-            if let model = payload.model, !model.isEmpty {
-                self.currentModel = model
-            }
-            await self.pollHealthIfNeeded(force: true)
-            await self.fetchSessions(limit: 50)
-            self.errorText = nil
+        do {
+            chatUILogger.info("ChatViewModel bootstrap: connecting to gateway")
+            try await self.transport.bootstrap()
+            chatUILogger.info("ChatViewModel bootstrap: gateway connected")
         } catch {
+            chatUILogger.error("ChatViewModel bootstrap: gateway connect failed: \(error.localizedDescription)")
             self.errorText = error.localizedDescription
-            chatUILogger.error("bootstrap failed \(error.localizedDescription, privacy: .public)")
+            return
+        }
+        
+        let sessionKey = self.sessionKey
+        
+        // Execute bootstrap steps concurrently to avoid one slow call (like Tailscale/Session) 
+        // from blocking the whole UI.
+        await withTaskGroup(of: Void.self) { group in
+            // Step 1: Set Active Session (Background-ish)
+            group.addTask {
+                do {
+                    try await self.transport.setActiveSessionKey(sessionKey)
+                } catch {
+                    chatUILogger.warning("setActiveSessionKey failed: \(error.localizedDescription)")
+                }
+            }
+            
+            // Step 2: Fetch History (Critical Path)
+            group.addTask {
+                do {
+                    chatUILogger.info("ChatViewModel bootstrap: requesting history for \(sessionKey)")
+                    let payload = try await self.transport.requestHistory(sessionKey: sessionKey)
+                    chatUILogger.info("ChatViewModel bootstrap: history received (\(payload.messages?.count ?? 0) messages)")
+                    await MainActor.run {
+                        self.messages = Self.decodeMessages(payload.messages ?? [])
+                        self.sessionId = payload.sessionId
+                        if let level = payload.thinkingLevel, !level.isEmpty {
+                            self.thinkingLevel = level
+                        }
+                        if let model = payload.model, !model.isEmpty {
+                            self.currentModel = model
+                        }
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.errorText = error.localizedDescription
+                        chatUILogger.error("history fetch failed: \(error.localizedDescription)")
+                    }
+                }
+            }
+            
+            // Step 3: Health & Sessions (Background)
+            group.addTask {
+                await self.pollHealthIfNeeded(force: true)
+                await self.fetchSessions(limit: 50)
+            }
         }
     }
 
@@ -361,7 +393,13 @@ public final class ZeroChatViewModel {
     private func handleTransportEvent(_ evt: ZeroChatTransportEvent) {
         switch evt {
         case let .health(ok):
+            let wasDown = !self.healthOK
             self.healthOK = ok
+            // Auto-clear stale error overlays when gateway becomes healthy again.
+            // Or if we are already healthy but stuck with an error, trigger a one-time recovery.
+            if ok && !self.isLoading && (wasDown || self.errorText != nil) {
+                Task { await self.bootstrap() }
+            }
         case .tick:
             Task { await self.pollHealthIfNeeded(force: false) }
         case let .chat(chat):
@@ -371,6 +409,8 @@ public final class ZeroChatViewModel {
         case .seqGap:
             self.errorText = "Event stream interrupted; try refreshing."
             self.clearPendingRuns(reason: nil)
+        case .reconnected:
+            break // Handled via .health transition above.
         }
     }
 

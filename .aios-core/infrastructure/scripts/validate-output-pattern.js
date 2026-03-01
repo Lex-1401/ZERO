@@ -1,19 +1,19 @@
 /**
  * Output Pattern Validator
- * 
+ *
  * Validates that formatted output follows the fixed structure:
  * - Header section exists
  * - Duration appears on line 7
  * - Tokens appears on line 8
  * - Status section before Output section
  * - Metrics section is last
- * 
+ *
  * Story: 6.1.6 - Output Formatter Implementation
  */
 
 /**
  * Output Pattern Validator
- * 
+ *
  * Validates task execution report structure compliance
  */
 class OutputPatternValidator {
@@ -24,14 +24,14 @@ class OutputPatternValidator {
    */
   validate(output) {
     const errors = [];
-    const lines = output.split('\n');
+    const lines = output.split("\n");
 
     // Check required sections
     this._validateSections(output, errors);
-    
+
     // Check fixed line positions
     this._validateLinePositions(lines, errors);
-    
+
     // Check section order
     this._validateSectionOrder(output, errors);
 
@@ -48,19 +48,19 @@ class OutputPatternValidator {
    * @param {Array} errors - Errors array to populate
    */
   _validateSections(output, errors) {
-    const requiredSections = ['Header', 'Status', 'Output', 'Metrics'];
+    const requiredSections = ["Header", "Status", "Output", "Metrics"];
     const sectionPatterns = {
-      'Header': /^## 📊 Task Execution Report/m,
-      'Status': /^### Status/m,
-      'Output': /^### Output/m,
-      'Metrics': /^### Metrics/m,
+      Header: /^## 📊 Task Execution Report/m,
+      Status: /^### Status/m,
+      Output: /^### Output/m,
+      Metrics: /^### Metrics/m,
     };
 
     for (const section of requiredSections) {
       const pattern = sectionPatterns[section];
       if (!pattern.test(output)) {
         errors.push({
-          type: 'missing_section',
+          type: "missing_section",
           section: section,
           message: `❌ Validation Error: Missing required section '${section}'. Required sections: Header, Status, Output, Metrics`,
         });
@@ -91,11 +91,11 @@ class OutputPatternValidator {
     // Check Duration on line 7 (0-indexed: line 6, relative to header start)
     const expectedDurationLine = headerStart + 6; // Header is line 0, Duration should be line 6 (7th line)
     const expectedTokensLine = headerStart + 7; // Tokens should be line 7 (8th line)
-    
+
     // Find actual positions
     let actualDurationLine = -1;
     let actualTokensLine = -1;
-    
+
     for (let i = headerStart; i < Math.min(headerStart + 15, lines.length); i++) {
       if (lines[i].match(/^\*\*Duration:\*\*/)) {
         actualDurationLine = i;
@@ -104,18 +104,19 @@ class OutputPatternValidator {
         actualTokensLine = i;
       }
     }
-    
+
     // Validate Duration position
     if (actualDurationLine === -1) {
       errors.push({
-        type: 'missing_field',
-        field: 'Duration',
-        message: '❌ Validation Error: Duration field not found. Expected on line 7. Expected format: **Duration:** {value}',
+        type: "missing_field",
+        field: "Duration",
+        message:
+          "❌ Validation Error: Duration field not found. Expected on line 7. Expected format: **Duration:** {value}",
       });
     } else if (actualDurationLine !== expectedDurationLine) {
       errors.push({
-        type: 'wrong_position',
-        field: 'Duration',
+        type: "wrong_position",
+        field: "Duration",
         expectedLine: expectedDurationLine + 1,
         actualLine: actualDurationLine + 1,
         message: `❌ Validation Error: Duration must appear on line ${expectedDurationLine + 1}, but found on line ${actualDurationLine + 1}. Expected format: **Duration:** {value}`,
@@ -125,14 +126,15 @@ class OutputPatternValidator {
     // Validate Tokens position
     if (actualTokensLine === -1) {
       errors.push({
-        type: 'missing_field',
-        field: 'Tokens',
-        message: '❌ Validation Error: Tokens Used field not found. Expected on line 8. Expected format: **Tokens Used:** {value} total',
+        type: "missing_field",
+        field: "Tokens",
+        message:
+          "❌ Validation Error: Tokens Used field not found. Expected on line 8. Expected format: **Tokens Used:** {value} total",
       });
     } else if (actualTokensLine !== expectedTokensLine) {
       errors.push({
-        type: 'wrong_position',
-        field: 'Tokens',
+        type: "wrong_position",
+        field: "Tokens",
         expectedLine: expectedTokensLine + 1,
         actualLine: actualTokensLine + 1,
         message: `❌ Validation Error: Tokens must appear on line ${expectedTokensLine + 1}, but found on line ${actualTokensLine + 1}. Expected format: **Tokens Used:** {value} total`,
@@ -147,12 +149,12 @@ class OutputPatternValidator {
    * @param {Array} errors - Errors array to populate
    */
   _validateSectionOrder(output, errors) {
-    const sectionOrder = ['Header', 'Status', 'Output', 'Metrics'];
+    const sectionOrder = ["Header", "Status", "Output", "Metrics"];
     const sectionMarkers = {
-      'Header': /^## 📊 Task Execution Report/m,
-      'Status': /^### Status/m,
-      'Output': /^### Output/m,
-      'Metrics': /^### Metrics/m,
+      Header: /^## 📊 Task Execution Report/m,
+      Status: /^### Status/m,
+      Output: /^### Output/m,
+      Metrics: /^### Metrics/m,
     };
 
     const positions = {};
@@ -164,26 +166,27 @@ class OutputPatternValidator {
     }
 
     // Check Status before Output
-    if (positions['Status'] !== undefined && positions['Output'] !== undefined) {
-      if (positions['Status'] > positions['Output']) {
+    if (positions["Status"] !== undefined && positions["Output"] !== undefined) {
+      if (positions["Status"] > positions["Output"]) {
         errors.push({
-          type: 'wrong_order',
-          message: '❌ Validation Error: Status section must appear before Output section. Expected order: Header → Status → Output → Metrics',
+          type: "wrong_order",
+          message:
+            "❌ Validation Error: Status section must appear before Output section. Expected order: Header → Status → Output → Metrics",
         });
       }
     }
 
     // Check Metrics is last
-    if (positions['Metrics'] !== undefined) {
-      const metricsIndex = positions['Metrics'];
+    if (positions["Metrics"] !== undefined) {
+      const metricsIndex = positions["Metrics"];
       const afterMetrics = output.substring(metricsIndex + 10); // Skip "### Metrics" marker
-      
+
       // Check if there are any other sections after Metrics
-      const otherSections = ['Header', 'Status', 'Output'];
+      const otherSections = ["Header", "Status", "Output"];
       for (const section of otherSections) {
         if (afterMetrics.match(sectionMarkers[section])) {
           errors.push({
-            type: 'wrong_order',
+            type: "wrong_order",
             section: section,
             message: `❌ Validation Error: Metrics section must be last, but found '${section}' after it. Expected order: Header → Status → Output → Metrics`,
           });
@@ -200,14 +203,11 @@ class OutputPatternValidator {
    */
   formatErrors(validationResult) {
     if (validationResult.valid) {
-      return '✅ Output structure is valid';
+      return "✅ Output structure is valid";
     }
 
-    return validationResult.errors
-      .map(err => err.message)
-      .join('\n');
+    return validationResult.errors.map((err) => err.message).join("\n");
   }
 }
 
 module.exports = OutputPatternValidator;
-

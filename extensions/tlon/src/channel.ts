@@ -79,9 +79,9 @@ function applyTlonSetupConfig(params: {
         accounts: {
           ...(base as { accounts?: Record<string, unknown> }).accounts,
           [accountId]: {
-            ...((base as { accounts?: Record<string, Record<string, unknown>> }).accounts?.[
+            ...(base as { accounts?: Record<string, Record<string, unknown>> }).accounts?.[
               accountId
-            ] ?? {}),
+            ],
             enabled: true,
             ...payload,
           },
@@ -189,7 +189,8 @@ export const tlonPlugin: ChannelPlugin = {
   configSchema: tlonChannelConfigSchema,
   config: {
     listAccountIds: (cfg) => listTlonAccountIds(cfg as ZeroConfig),
-    resolveAccount: (cfg, accountId) => resolveTlonAccount(cfg as ZeroConfig, accountId ?? undefined),
+    resolveAccount: (cfg, accountId) =>
+      resolveTlonAccount(cfg as ZeroConfig, accountId ?? undefined),
     defaultAccountId: () => "default",
     setAccountEnabled: ({ cfg, accountId, enabled }) => {
       const useDefault = !accountId || accountId === "default";
@@ -199,7 +200,7 @@ export const tlonPlugin: ChannelPlugin = {
           channels: {
             ...cfg.channels,
             tlon: {
-              ...(cfg.channels?.tlon ?? {}),
+              ...cfg.channels?.tlon,
               enabled,
             },
           },
@@ -210,11 +211,11 @@ export const tlonPlugin: ChannelPlugin = {
         channels: {
           ...cfg.channels,
           tlon: {
-            ...(cfg.channels?.tlon ?? {}),
+            ...cfg.channels?.tlon,
             accounts: {
-              ...(cfg.channels?.tlon?.accounts ?? {}),
+              ...cfg.channels?.tlon?.accounts,
               [accountId]: {
-                ...(cfg.channels?.tlon?.accounts?.[accountId] ?? {}),
+                ...cfg.channels?.tlon?.accounts?.[accountId],
                 enabled,
               },
             },
@@ -240,7 +241,7 @@ export const tlonPlugin: ChannelPlugin = {
         channels: {
           ...cfg.channels,
           tlon: {
-            ...(cfg.channels?.tlon ?? {}),
+            ...cfg.channels?.tlon,
             accounts: remainingAccounts,
           },
         },

@@ -1,6 +1,6 @@
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
 /**
  * Detects the current repository context and installation mode
@@ -19,43 +19,42 @@ function detectRepositoryContext() {
   // Detect git remote URL
   let remoteUrl = null;
   try {
-    remoteUrl = execSync('git config --get remote.origin.url', { cwd })
-      .toString()
-      .trim();
+    remoteUrl = execSync("git config --get remote.origin.url", { cwd }).toString().trim();
   } catch (error) {
-    console.warn('⚠️  No git repository detected');
+    console.warn("⚠️  No git repository detected");
     return null;
   }
 
   // Read package.json
-  const packageJsonPath = path.join(cwd, 'package.json');
+  const packageJsonPath = path.join(cwd, "package.json");
   if (!fs.existsSync(packageJsonPath)) {
-    console.warn('⚠️  No package.json found');
+    console.warn("⚠️  No package.json found");
     return null;
   }
 
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
-  // Detect if we're in @synkra/aios-core repo itself
+  // Detect if we're in aios-core repo itself
   const isFrameworkRepo =
-    packageJson.name === '@aios/fullstack' ||
-    packageJson.name === '@synkra/aios-core' ||
-    remoteUrl.includes('@synkra/aios-core');
+    packageJson.name === "@aios/fullstack" ||
+    packageJson.name === "aios-core" ||
+    remoteUrl.includes("aios-core");
 
   // Load installation config if exists
   let installConfig = null;
-  const configPath = path.join(cwd, '.aios-installation-config.yaml');
+  const configPath = path.join(cwd, ".aios-installation-config.yaml");
   if (fs.existsSync(configPath)) {
-    const yaml = require('js-yaml');
-    installConfig = yaml.load(fs.readFileSync(configPath, 'utf8'));
+    const yaml = require("js-yaml");
+    installConfig = yaml.load(fs.readFileSync(configPath, "utf8"));
   }
 
   return {
     repositoryUrl: remoteUrl,
-    mode: installConfig?.installation?.mode ||
-          (isFrameworkRepo ? 'framework-development' : 'project-development'),
+    mode:
+      installConfig?.installation?.mode ||
+      (isFrameworkRepo ? "framework-development" : "project-development"),
     projectRoot: cwd,
-    frameworkLocation: isFrameworkRepo ? cwd : path.join(cwd, 'node_modules/@aios/fullstack'),
+    frameworkLocation: isFrameworkRepo ? cwd : path.join(cwd, "node_modules/@aios/fullstack"),
     packageName: packageJson.name,
     packageVersion: packageJson.version,
   };

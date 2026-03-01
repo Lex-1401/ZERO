@@ -63,7 +63,9 @@ export class ZeroMemoryMesh extends LitElement {
 
   initGraph() {
     // Generate dummy data if empty (for demo/development)
-    const initialData = this.nodes.length ? { nodes: this.nodes, links: this.links } : this.generateDummyData();
+    const initialData = this.nodes.length
+      ? { nodes: this.nodes, links: this.links }
+      : this.generateDummyData();
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -84,7 +86,7 @@ export class ZeroMemoryMesh extends LitElement {
       const material = new THREE.MeshLambertMaterial({
         color: node.color || "#007aff",
         transparent: true,
-        opacity: 0.8
+        opacity: 0.8,
       });
       return new THREE.Mesh(geometry, material);
     });
@@ -96,7 +98,7 @@ export class ZeroMemoryMesh extends LitElement {
       // @ts-ignore
       this.graph.graphData({
         nodes: this.nodes,
-        links: this.links
+        links: this.links,
       });
     }
   }
@@ -105,14 +107,14 @@ export class ZeroMemoryMesh extends LitElement {
   generateDummyData() {
     const N = 80;
     const gData = {
-      nodes: [...Array(N).keys()].map(i => ({ id: i, group: Math.ceil(Math.random() * 5) })),
+      nodes: [...Array(N).keys()].map((i) => ({ id: i, group: Math.ceil(Math.random() * 5) })),
       links: [...Array(N).keys()]
-        .filter(id => id)
-        .map(id => ({
+        .filter((id) => id)
+        .map((id) => ({
           source: id,
           target: Math.round(Math.random() * (id - 1)),
-          value: Math.random() * 5 // link thickness/particle speed
-        }))
+          value: Math.random() * 5, // link thickness/particle speed
+        })),
     };
     return gData;
   }

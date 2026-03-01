@@ -17,12 +17,12 @@
  *   await statusWriter.updateSession({ commandsExecuted: 5 });
  */
 
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 // Status file location (relative to project root)
-const STATUS_DIR = '.aios/dashboard';
-const STATUS_FILE = 'status.json';
+const STATUS_DIR = ".aios/dashboard";
+const STATUS_FILE = "status.json";
 
 /**
  * Ensures the status directory exists
@@ -32,7 +32,7 @@ async function ensureStatusDir(projectRoot) {
   try {
     await fs.mkdir(dirPath, { recursive: true });
   } catch (error) {
-    if (error.code !== 'EEXIST') {
+    if (error.code !== "EEXIST") {
       throw error;
     }
   }
@@ -55,10 +55,10 @@ async function readStatus(projectRoot) {
   const filePath = path.join(projectRoot, STATUS_DIR, STATUS_FILE);
 
   try {
-    const content = await fs.readFile(filePath, 'utf-8');
+    const content = await fs.readFile(filePath, "utf-8");
     return JSON.parse(content);
   } catch (error) {
-    if (error.code === 'ENOENT') {
+    if (error.code === "ENOENT") {
       // Return default status
       return createDefaultStatus(projectRoot);
     }
@@ -73,7 +73,7 @@ function createDefaultStatus(projectRoot) {
   const projectName = path.basename(projectRoot);
 
   return {
-    version: '1.0',
+    version: "1.0",
     updatedAt: new Date().toISOString(),
     project: {
       name: projectName,
@@ -98,7 +98,7 @@ async function writeStatus(projectRoot, status) {
 
   status.updatedAt = new Date().toISOString();
 
-  await fs.writeFile(filePath, JSON.stringify(status, null, 2), 'utf-8');
+  await fs.writeFile(filePath, JSON.stringify(status, null, 2), "utf-8");
   return status;
 }
 
@@ -115,19 +115,19 @@ async function activateAgent(agentId, storyId, projectRoot) {
   projectRoot = projectRoot || getProjectRoot();
   const status = await readStatus(projectRoot);
 
-  const validAgents = ['dev', 'qa', 'architect', 'pm', 'po', 'analyst', 'devops'];
+  const validAgents = ["dev", "qa", "architect", "pm", "po", "analyst", "devops"];
   if (!validAgents.includes(agentId)) {
-    throw new Error(`Invalid agent ID: ${agentId}. Must be one of: ${validAgents.join(', ')}`);
+    throw new Error(`Invalid agent ID: ${agentId}. Must be one of: ${validAgents.join(", ")}`);
   }
 
   const agentNames = {
-    dev: 'Dev',
-    qa: 'QA',
-    architect: 'Architect',
-    pm: 'PM',
-    po: 'PO',
-    analyst: 'Analyst',
-    devops: 'DevOps',
+    dev: "Dev",
+    qa: "QA",
+    architect: "Architect",
+    pm: "PM",
+    po: "PO",
+    analyst: "Analyst",
+    devops: "DevOps",
   };
 
   status.activeAgent = {
@@ -186,7 +186,7 @@ async function updateSession(sessionData, projectRoot) {
     };
   }
 
-  if (typeof sessionData.commandsExecuted === 'number') {
+  if (typeof sessionData.commandsExecuted === "number") {
     status.session.commandsExecuted = sessionData.commandsExecuted;
   }
 

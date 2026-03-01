@@ -3,6 +3,7 @@ summary: "Arquitetura do gateway WebSocket, componentes e fluxos de clientes"
 read_when:
   - Trabalhando no protocolo do gateway, clientes ou transportes
 ---
+
 # Arquitetura do Gateway
 
 Última atualização: 22-01-2026

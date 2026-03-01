@@ -203,11 +203,15 @@ updated_at: 2025-11-17
  Powered by AIOS™ Core -->
 
 ---
+
 tools:
-  - github-cli        # PR review and quality gate management
-  - context7          # Research testing best practices and standards
-checklists:
-  - qa-master-checklist.md
+
+- github-cli # PR review and quality gate management
+- context7 # Research testing best practices and standards
+  checklists:
+- qa-master-checklist.md
+  execution_mode: programmatic # TOK-3: PTC-eligible — batch lint+typecheck+test in single Bash block
+
 ---
 
 # qa-gate
@@ -239,11 +243,11 @@ Slug rules:
 
 ```yaml
 schema: 1
-story: '{epic}.{story}'
+story: "{epic}.{story}"
 gate: PASS|CONCERNS|FAIL|WAIVED
-status_reason: '1-2 sentence explanation of gate decision'
-reviewer: 'Quinn'
-updated: '{ISO-8601 timestamp}'
+status_reason: "1-2 sentence explanation of gate decision"
+reviewer: "Quinn"
+updated: "{ISO-8601 timestamp}"
 top_issues: [] # Empty array if no issues
 waiver: { active: false } # Only set active: true if WAIVED
 ```
@@ -252,20 +256,20 @@ waiver: { active: false } # Only set active: true if WAIVED
 
 ```yaml
 schema: 1
-story: '1.3'
+story: "1.3"
 gate: CONCERNS
-status_reason: 'Missing rate limiting on auth endpoints poses security risk.'
-reviewer: 'Quinn'
-updated: '2025-01-12T10:15:00Z'
+status_reason: "Missing rate limiting on auth endpoints poses security risk."
+reviewer: "Quinn"
+updated: "2025-01-12T10:15:00Z"
 top_issues:
-  - id: 'SEC-001'
+  - id: "SEC-001"
     severity: high # ONLY: low|medium|high
-    finding: 'No rate limiting on login endpoint'
-    suggested_action: 'Add rate limiting middleware before production'
-  - id: 'TEST-001'
+    finding: "No rate limiting on login endpoint"
+    suggested_action: "Add rate limiting middleware before production"
+  - id: "TEST-001"
     severity: medium
-    finding: 'No integration tests for auth flow'
-    suggested_action: 'Add integration test coverage'
+    finding: "No integration tests for auth flow"
+    suggested_action: "Add integration test coverage"
 waiver: { active: false }
 ```
 
@@ -273,21 +277,68 @@ waiver: { active: false }
 
 ```yaml
 schema: 1
-story: '1.3'
+story: "1.3"
 gate: WAIVED
-status_reason: 'Known issues accepted for MVP release.'
-reviewer: 'Quinn'
-updated: '2025-01-12T10:15:00Z'
+status_reason: "Known issues accepted for MVP release."
+reviewer: "Quinn"
+updated: "2025-01-12T10:15:00Z"
 top_issues:
-  - id: 'PERF-001'
+  - id: "PERF-001"
     severity: low
-    finding: 'Dashboard loads slowly with 1000+ items'
-    suggested_action: 'Implement pagination in next sprint'
+    finding: "Dashboard loads slowly with 1000+ items"
+    suggested_action: "Implement pagination in next sprint"
 waiver:
   active: true
-  reason: 'MVP release - performance optimization deferred'
-  approved_by: 'Product Owner'
+  reason: "MVP release - performance optimization deferred"
+  approved_by: "Product Owner"
 ```
+
+## Code Intelligence Enhancement (Optional)
+
+> These steps are **conditional** — they only execute when a code intelligence provider is available.
+> If `isCodeIntelAvailable()` returns false, skip silently and proceed with standard gate criteria.
+
+### Code Intelligence: Blast Radius
+
+After completing manual review, if code intelligence is available:
+
+1. Collect the list of modified files from the story's File List
+2. Call `getBlastRadius(files)` from `.aios-core/core/code-intel/helpers/qa-helper.js`
+3. If result is not null, add a "Blast Radius" section to the gate report:
+   ```
+   ### Blast Radius
+   - Files analyzed: {count}
+   - Total references affected: {blastRadius}
+   - Risk Level: {riskLevel} (LOW/MEDIUM/HIGH)
+   ```
+4. If risk level is HIGH, call `suggestGateInfluence('HIGH')` and include the advisory in the gate decision notes
+
+### Code Intelligence: Test Coverage
+
+After blast radius analysis, if code intelligence is available:
+
+1. Extract symbol names (function/class names) from modified files
+2. Call `getTestCoverage(symbols)` from `qa-helper.js`
+3. If result is not null, add a "Test Coverage" section to the gate report:
+   ```
+   ### Test Coverage (Code Intelligence)
+   | Symbol | Status | Test Count |
+   |--------|--------|------------|
+   | {symbol} | {NO_TESTS/INDIRECT/MINIMAL/GOOD} | {testCount} |
+   ```
+4. Symbols with NO_TESTS status should be flagged as potential CONCERNS
+
+### Code Intelligence: Gate Influence
+
+If blast radius returned HIGH risk:
+
+1. The `suggestGateInfluence('HIGH')` advisory is **informational only**
+2. It suggests CONCERNS but does NOT automatically change the gate verdict
+3. @qa makes the final decision — the advisory is logged in the gate file under `code_intel_advisory`
+
+> **Fallback guarantee:** If code intelligence is unavailable or any call returns null, the gate process continues exactly as before — no sections are added, no errors are raised.
+
+---
 
 ## Gate Decision Criteria
 
@@ -371,4 +422,13 @@ Gate: CONCERNS → qa.qaLocation/gates/{epic}.{story}-{slug}.yml
 - Always write to standard path
 - Always update story with gate reference
 - Clear, actionable findings
- 
+
+## Handoff
+
+next_agent: @devops
+next_command: \*push
+condition: QA gate verdict is PASS
+alternatives:
+
+- agent: @dev, command: \*apply-qa-fixes, condition: QA gate verdict is FAIL or CONCERNS
+- agent: @po, command: \*close-story {story-id}, condition: QA gate verdict is WAIVED

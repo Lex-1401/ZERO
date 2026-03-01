@@ -10,10 +10,10 @@ Status: WhatsApp Web via Baileys apenas. Gateway possui a(s) sessão(ões).
 
 ## Configuração rápida (iniciante)
 
-1) Use um **número de telefone separado** se possível (recomendado).
-2) Configure o WhatsApp em `~/.zero/zero.json`.
-3) Execute `zero channels login` para escanear o código QR (Aparelhos Conectados).
-4) Inicie o gateway.
+1. Use um **número de telefone separado** se possível (recomendado).
+2. Configure o WhatsApp em `~/.zero/zero.json`.
+3. Execute `zero channels login` para escanear o código QR (Aparelhos Conectados).
+4. Inicie o gateway.
 
 Configuração mínima:
 
@@ -22,9 +22,9 @@ Configuração mínima:
   channels: {
     whatsapp: {
       dmPolicy: "allowlist",
-      allowFrom: ["+15551234567"]
-    }
-  }
+      allowFrom: ["+15551234567"],
+    },
+  },
 }
 ```
 
@@ -42,7 +42,7 @@ Desative com:
 
 ```json5
 {
-  channels: { whatsapp: { configWrites: false } }
+  channels: { whatsapp: { configWrites: false } },
 }
 ```
 
@@ -69,9 +69,9 @@ Use um **número de telefone separado** para o ZERO. Melhor UX, roteamento limpo
   channels: {
     whatsapp: {
       dmPolicy: "allowlist",
-      allowFrom: ["+15551234567"]
-    }
-  }
+      allowFrom: ["+15551234567"],
+    },
+  },
 }
 ```
 
@@ -160,7 +160,7 @@ Desative globalmente:
 
 ```json5
 {
-  channels: { whatsapp: { sendReadReceipts: false } }
+  channels: { whatsapp: { sendReadReceipts: false } },
 }
 ```
 
@@ -171,10 +171,10 @@ Desative por conta:
   channels: {
     whatsapp: {
       accounts: {
-        pessoal: { sendReadReceipts: false }
-      }
-    }
-  }
+        pessoal: { sendReadReceipts: false },
+      },
+    },
+  },
 }
 ```
 
@@ -228,7 +228,7 @@ O assistente o usa para definir seu **allowlist/dono** para que suas próprias D
 - `/activation mention|always` é apenas para dono e deve ser enviado como uma mensagem autônoma.
 - Dono = `channels.whatsapp.allowFrom` (ou self E.164 se não definido).
 - **Injeção de histórico** (somente pendente):
-  - Mensagens recentes *não processadas* (padrão 50) inseridas sob:
+  - Mensagens recentes _não processadas_ (padrão 50) inseridas sob:
     `[Chat messages since your last reply - for context]` (mensagens já na sessão não são re-injetadas)
   - Mensagem atual sob:
     `[Current message - respond to this]`

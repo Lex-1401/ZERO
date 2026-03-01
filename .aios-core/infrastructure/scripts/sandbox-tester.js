@@ -1,20 +1,20 @@
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 let execa;
 try {
-  execa = require('execa').execa;
+  execa = require("execa").execa;
 } catch {
   execa = null;
 }
 let chalk;
 try {
-  chalk = require('chalk');
+  chalk = require("chalk");
 } catch {
-  chalk = { blue: s => s, green: s => s, red: s => s, yellow: s => s };
+  chalk = { blue: (s) => s, green: (s) => s, red: (s) => s, yellow: (s) => s };
 }
 let tmp;
 try {
-  tmp = require('tmp-promise');
+  tmp = require("tmp-promise");
 } catch {
   tmp = null;
 }
@@ -37,7 +37,7 @@ class SandboxTester {
   async createSandbox() {
     try {
       if (!tmp) {
-        throw new Error('tmp-promise module not available - install with: npm install tmp-promise');
+        throw new Error("tmp-promise module not available - install with: npm install tmp-promise");
       }
       const tmpDir = await tmp.dir({ unsafeCleanup: !this.keepSandbox });
       this.sandboxPath = tmpDir.path;
@@ -56,7 +56,7 @@ class SandboxTester {
    * Copy project files to sandbox
    */
   async copyProject(sourcePath, options = {}) {
-    const { exclude = ['node_modules', '.git', 'dist', 'build'] } = options;
+    const { exclude = ["node_modules", ".git", "dist", "build"] } = options;
 
     try {
       if (!this.sandboxPath) {
@@ -99,8 +99,8 @@ class SandboxTester {
         const relativePath = path.relative(rootPath, fullPath);
 
         // Check if excluded
-        const isExcluded = exclude.some(pattern =>
-          relativePath.includes(pattern) || entry.name === pattern,
+        const isExcluded = exclude.some(
+          (pattern) => relativePath.includes(pattern) || entry.name === pattern,
         );
 
         if (isExcluded) continue;
@@ -123,7 +123,7 @@ class SandboxTester {
   async applyImprovement(improvement) {
     try {
       if (!this.sandboxPath) {
-        throw new Error('Sandbox not initialized');
+        throw new Error("Sandbox not initialized");
       }
 
       const { files, changes } = improvement;
@@ -132,12 +132,12 @@ class SandboxTester {
       for (const change of changes) {
         const filePath = path.join(this.sandboxPath, change.file);
 
-        if (change.type === 'create') {
+        if (change.type === "create") {
           await fs.mkdir(path.dirname(filePath), { recursive: true });
           await fs.writeFile(filePath, change.content);
-        } else if (change.type === 'modify') {
+        } else if (change.type === "modify") {
           await fs.writeFile(filePath, change.content);
-        } else if (change.type === 'delete') {
+        } else if (change.type === "delete") {
           await fs.unlink(filePath);
         }
       }
@@ -156,18 +156,15 @@ class SandboxTester {
    * Run tests in sandbox
    */
   async runTests(options = {}) {
-    const {
-      testCommand = 'npm test',
-      timeout = 60000,
-    } = options;
+    const { testCommand = "npm test", timeout = 60000 } = options;
 
     try {
       if (!this.sandboxPath) {
-        throw new Error('Sandbox not initialized');
+        throw new Error("Sandbox not initialized");
       }
 
       if (this.verbose) {
-        console.log(chalk.blue('Running tests in sandbox...'));
+        console.log(chalk.blue("Running tests in sandbox..."));
       }
 
       const output = await this.runCommand(this.sandboxPath, testCommand, { timeout });
@@ -180,8 +177,8 @@ class SandboxTester {
       return {
         success: false,
         error: error.message,
-        stdout: error.stdout || '',
-        stderr: error.stderr || '',
+        stdout: error.stdout || "",
+        stderr: error.stderr || "",
       };
     }
   }
@@ -190,18 +187,15 @@ class SandboxTester {
    * Run lint checks in sandbox
    */
   async runLint(options = {}) {
-    const {
-      lintCommand = 'npm run lint',
-      timeout = 30000,
-    } = options;
+    const { lintCommand = "npm run lint", timeout = 30000 } = options;
 
     try {
       if (!this.sandboxPath) {
-        throw new Error('Sandbox not initialized');
+        throw new Error("Sandbox not initialized");
       }
 
       if (this.verbose) {
-        console.log(chalk.blue('Running lint in sandbox...'));
+        console.log(chalk.blue("Running lint in sandbox..."));
       }
 
       const output = await this.runCommand(this.sandboxPath, lintCommand, { timeout });
@@ -214,8 +208,8 @@ class SandboxTester {
       return {
         success: false,
         error: error.message,
-        stdout: error.stdout || '',
-        stderr: error.stderr || '',
+        stdout: error.stdout || "",
+        stderr: error.stderr || "",
       };
     }
   }
@@ -241,7 +235,7 @@ class SandboxTester {
       // Check required fields
       if (!changes || !Array.isArray(changes)) {
         validation.success = false;
-        validation.errors.push('Missing or invalid changes array');
+        validation.errors.push("Missing or invalid changes array");
         return validation;
       }
 
@@ -252,8 +246,8 @@ class SandboxTester {
       for (const file of plan.affectedFiles) {
         const filePath = path.join(this.sandboxPath, file);
         try {
-          await execa('node', ['--check', filePath], {
-            encoding: 'utf8',
+          await execa("node", ["--check", filePath], {
+            encoding: "utf8",
           });
           validation.checks.syntax.passed = true;
         } catch (error) {
@@ -266,7 +260,7 @@ class SandboxTester {
       }
 
       // Structure validation
-      const requiredDirs = ['src', 'tests'];
+      const requiredDirs = ["src", "tests"];
       for (const dir of requiredDirs) {
         const dirPath = path.join(this.sandboxPath, dir);
         try {
@@ -278,17 +272,17 @@ class SandboxTester {
       }
 
       // Dependencies validation
-      const packageJsonPath = path.join(this.sandboxPath, 'package.json');
+      const packageJsonPath = path.join(this.sandboxPath, "package.json");
       try {
         await fs.access(packageJsonPath);
-        const content = await fs.readFile(packageJsonPath, 'utf-8');
+        const content = await fs.readFile(packageJsonPath, "utf-8");
         const pkg = JSON.parse(content);
 
         if (pkg.dependencies || pkg.devDependencies) {
           validation.checks.dependencies.passed = true;
         }
       } catch (error) {
-        validation.warnings.push('Could not validate dependencies');
+        validation.warnings.push("Could not validate dependencies");
       }
 
       return validation;
@@ -305,7 +299,7 @@ class SandboxTester {
   async compareResults(originalPath) {
     try {
       if (!this.sandboxPath) {
-        throw new Error('Sandbox not initialized');
+        throw new Error("Sandbox not initialized");
       }
 
       const comparison = {
@@ -322,26 +316,16 @@ class SandboxTester {
       const originalFiles = await this.getProjectFiles(originalPath);
       const sandboxFiles = await this.getProjectFiles(this.sandboxPath);
 
-      const originalSet = new Set(originalFiles.map(f =>
-        path.relative(originalPath, f),
-      ));
-      const sandboxSet = new Set(sandboxFiles.map(f =>
-        path.relative(this.sandboxPath, f),
-      ));
+      const originalSet = new Set(originalFiles.map((f) => path.relative(originalPath, f)));
+      const sandboxSet = new Set(sandboxFiles.map((f) => path.relative(this.sandboxPath, f)));
 
       // Find changes
       for (const file of sandboxSet) {
         if (!originalSet.has(file)) {
           comparison.filesAdded.push(file);
         } else {
-          const originalContent = await fs.readFile(
-            path.join(originalPath, file),
-            'utf-8',
-          );
-          const sandboxContent = await fs.readFile(
-            path.join(this.sandboxPath, file),
-            'utf-8',
-          );
+          const originalContent = await fs.readFile(path.join(originalPath, file), "utf-8");
+          const sandboxContent = await fs.readFile(path.join(this.sandboxPath, file), "utf-8");
 
           if (originalContent !== sandboxContent) {
             comparison.filesChanged.push(file);
@@ -364,7 +348,7 @@ class SandboxTester {
       };
 
       if (this.verbose) {
-        console.log(chalk.blue('Comparison results:'));
+        console.log(chalk.blue("Comparison results:"));
         console.log(`  Changed: ${comparison.filesChanged.length}`);
         console.log(`  Added: ${comparison.filesAdded.length}`);
         console.log(`  Removed: ${comparison.filesRemoved.length}`);
@@ -401,7 +385,7 @@ class SandboxTester {
       results.validation = await this.validateImprovement(improvement);
       if (!results.validation.success) {
         results.success = false;
-        results.errors.push('Validation failed');
+        results.errors.push("Validation failed");
       }
 
       // Apply improvement
@@ -412,7 +396,7 @@ class SandboxTester {
         results.tests = await this.runTests();
         if (!results.tests.success) {
           results.success = false;
-          results.errors.push('Tests failed');
+          results.errors.push("Tests failed");
         }
       }
 
@@ -421,7 +405,7 @@ class SandboxTester {
         results.lint = await this.runLint();
         if (!results.lint.success) {
           results.success = false;
-          results.errors.push('Lint failed');
+          results.errors.push("Lint failed");
         }
       }
 
@@ -447,7 +431,7 @@ class SandboxTester {
 
     try {
       // Split command into program and arguments
-      const parts = command.split(' ');
+      const parts = command.split(" ");
       const program = parts[0];
       const args = parts.slice(1);
 
@@ -455,8 +439,8 @@ class SandboxTester {
         cwd,
         shell: true,
         timeout,
-        encoding: 'utf8',
-        env: { ...process.env, CI: 'true', NODE_ENV: 'test' },
+        encoding: "utf8",
+        env: { ...process.env, CI: "true", NODE_ENV: "test" },
         all: true,
         reject: false,
       });
@@ -465,7 +449,7 @@ class SandboxTester {
         process.stdout.write(stdout);
       }
 
-      return stdout || '';
+      return stdout || "";
     } catch (error) {
       // Handle timeout
       if (error.timedOut) {
@@ -475,8 +459,8 @@ class SandboxTester {
       // Handle command failure
       if (error.exitCode !== undefined && error.exitCode !== 0) {
         const cmdError = new Error(`Command failed with code ${error.exitCode}`);
-        cmdError.stdout = error.stdout || '';
-        cmdError.stderr = error.stderr || '';
+        cmdError.stdout = error.stdout || "";
+        cmdError.stderr = error.stderr || "";
         throw cmdError;
       }
 
@@ -494,7 +478,7 @@ class SandboxTester {
         await fs.rm(this.sandboxPath, { recursive: true, force: true });
 
         if (this.verbose) {
-          console.log(chalk.blue('Sandbox cleaned up'));
+          console.log(chalk.blue("Sandbox cleaned up"));
         }
       }
 
@@ -510,7 +494,7 @@ class SandboxTester {
   async getStats() {
     try {
       if (!this.sandboxPath) {
-        throw new Error('Sandbox not initialized');
+        throw new Error("Sandbox not initialized");
       }
 
       const files = await this.getProjectFiles(this.sandboxPath);
@@ -522,7 +506,7 @@ class SandboxTester {
         const stats = await fs.stat(file);
         totalSize += stats.size;
 
-        const ext = path.extname(file) || 'no-extension';
+        const ext = path.extname(file) || "no-extension";
         fileTypes[ext] = (fileTypes[ext] || 0) + 1;
       }
 
@@ -542,13 +526,13 @@ class SandboxTester {
    * Format bytes to human readable
    */
   formatBytes(bytes) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
 
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   }
 
   /**
@@ -557,7 +541,7 @@ class SandboxTester {
   async snapshot() {
     try {
       if (!this.sandboxPath) {
-        throw new Error('Sandbox not initialized');
+        throw new Error("Sandbox not initialized");
       }
 
       const stats = await this.getStats();
@@ -566,7 +550,7 @@ class SandboxTester {
       const fileContents = {};
       for (const file of files) {
         const relativePath = path.relative(this.sandboxPath, file);
-        fileContents[relativePath] = await fs.readFile(file, 'utf-8');
+        fileContents[relativePath] = await fs.readFile(file, "utf-8");
       }
 
       return {

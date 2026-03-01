@@ -12,7 +12,7 @@ O ZERO possui três suítes Vitest (unitário/integração, e2e, live) e um pequ
 
 Este documento é um guia sobre "como testamos":
 
-- O que cada suíte cobre (e o que ela deliberadamente *não* cobre)
+- O que cada suíte cobre (e o que ela deliberadamente _não_ cobre)
 - Quais comandos executar para fluxos de trabalho comuns (local, pré-push, depuração)
 - Como os testes live descobrem credenciais e selecionam modelos/provedores
 - Como adicionar regressões para problemas reais de modelos/provedores
@@ -72,7 +72,7 @@ Pense nas suítes como "níveis crescentes de realismo" (e aumento de instabilid
 - Arquivos: `src/**/*.live.test.ts`
 - Padrão: **ativado** por `pnpm test:live` (define `ZERO_LIVE_TEST=1`)
 - Escopo:
-  - "Este provedor/modelo realmente funciona *hoje* com credenciais reais?"
+  - "Este provedor/modelo realmente funciona _hoje_ com credenciais reais?"
   - Captura mudanças no formato do provedor, peculiaridades na chamada de ferramentas, problemas de autenticação e comportamento de limite de taxa (rate limit).
 - Expectativas:
   - Não é estável para CI por design (redes reais, políticas reais de provedores, cotas, interrupções).

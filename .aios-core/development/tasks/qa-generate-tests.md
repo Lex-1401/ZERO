@@ -182,6 +182,7 @@ token_usage: ~800-2,500 tokens
 ```
 
 **Optimization Notes:**
+
 - Validate configuration early; use atomic writes; implement rollback checkpoints
 
 ---
@@ -202,28 +203,37 @@ updated_at: 2025-11-17
 ---
 
 tools:
-  - github-cli
+
+- github-cli
+
 # TODO: Create test-generation-checklist.md for validation (follow-up story needed)
+
 # checklists:
-#   - test-generation-checklist.md
+
+# - test-generation-checklist.md
+
 ---
 
 # Generate Tests - AIOS Developer Task
 
 ## Purpose
+
 Automatically generate comprehensive test suites for framework components using AI analysis and template systems.
 
 ## Command Pattern
+
 ```
 *generate-tests <component-type> <component-name> [options]
 ```
 
 ## Parameters
+
 - `component-type`: Type of component (agent, task, workflow, util)
 - `component-name`: Name/ID of the component to generate tests for
 - `options`: Test generation configuration
 
 ### Options
+
 - `--test-type <type>`: Type of tests to generate (unit, integration, e2e, all)
 - `--coverage-target <percentage>`: Target code coverage percentage (default: 80)
 - `--framework <name>`: Test framework to use (jest, mocha, vitest)
@@ -233,6 +243,7 @@ Automatically generate comprehensive test suites for framework components using 
 - `--output-dir <path>`: Custom output directory for generated tests
 
 ## Examples
+
 ```bash
 # Generate unit tests for an agent
 *generate-tests agent weather-fetcher --test-type unit --coverage-target 90
@@ -253,15 +264,15 @@ Automatically generate comprehensive test suites for framework components using 
 ## Implementation
 
 ```javascript
-const fs = require('fs').promises;
-const path = require('path');
-const chalk = require('chalk');
-const inquirer = require('inquirer');
+const fs = require("fs").promises;
+const path = require("path");
+const chalk = require("chalk");
+const inquirer = require("inquirer");
 
 class GenerateTestsTask {
   constructor() {
-    this.taskName = 'generate-tests';
-    this.description = 'Generate comprehensive test suites for framework components';
+    this.taskName = "generate-tests";
+    this.description = "Generate comprehensive test suites for framework components";
     this.rootPath = process.cwd();
     this.testTemplateSystem = null;
     this.testGenerator = null;
@@ -271,19 +282,19 @@ class GenerateTestsTask {
 
   async execute(params) {
     try {
-      console.log(chalk.blue('🧪 AIOS Test Generation'));
-      console.log(chalk.gray('Generating comprehensive test suites for components\n'));
+      console.log(chalk.blue("🧪 AIOS Test Generation"));
+      console.log(chalk.gray("Generating comprehensive test suites for components\n"));
 
       // Parse and validate parameters
       const config = await this.parseParameters(params);
-      
+
       // Initialize dependencies
       await this.initializeDependencies();
 
       // Analyze target components
       const components = await this.identifyTargetComponents(config);
       if (components.length === 0) {
-        throw new Error('No components found matching the criteria');
+        throw new Error("No components found matching the criteria");
       }
 
       console.log(chalk.gray(`Found ${components.length} component(s) for test generation`));
@@ -297,7 +308,7 @@ class GenerateTestsTask {
       // Request confirmation
       const confirmed = await this.requestConfirmation(testPlan);
       if (!confirmed) {
-        console.log(chalk.gray('Test generation cancelled'));
+        console.log(chalk.gray("Test generation cancelled"));
         return;
       }
 
@@ -311,7 +322,7 @@ class GenerateTestsTask {
       await this.updateTestDocumentation(generationResults);
 
       // Display success summary
-      console.log(chalk.green('\n✅ Test generation completed successfully'));
+      console.log(chalk.green("\n✅ Test generation completed successfully"));
       console.log(chalk.gray(`   Components tested: ${components.length}`));
       console.log(chalk.gray(`   Test files generated: ${generationResults.testFilesGenerated}`));
       console.log(chalk.gray(`   Expected coverage: ${analysisResults.expectedCoverage}%`));
@@ -322,9 +333,8 @@ class GenerateTestsTask {
         components: components.length,
         testFilesGenerated: generationResults.testFilesGenerated,
         expectedCoverage: analysisResults.expectedCoverage,
-        qualityScore: analysisResults.qualityScore
+        qualityScore: analysisResults.qualityScore,
       };
-
     } catch (error) {
       console.error(chalk.red(`\n❌ Test generation failed: ${error.message}`));
       throw error;
@@ -332,74 +342,84 @@ class GenerateTestsTask {
   }
 
   async parseParameters(params) {
-    if (params.length < 2 && params[0] !== 'all') {
-      throw new Error('Usage: *generate-tests <component-type> <component-name> [options]');
+    if (params.length < 2 && params[0] !== "all") {
+      throw new Error("Usage: *generate-tests <component-type> <component-name> [options]");
     }
 
     const config = {
       componentType: params[0],
       componentName: params[1] || null,
-      testType: 'unit',
+      testType: "unit",
       coverageTarget: 80,
-      framework: 'jest',
-      mockLevel: 'moderate',
+      framework: "jest",
+      mockLevel: "moderate",
       updateExisting: false,
-      qualityLevel: 'standard',
+      qualityLevel: "standard",
       outputDir: null,
-      generateAll: params[0] === 'all'
+      generateAll: params[0] === "all",
     };
 
     // Parse options
     for (let i = 2; i < params.length; i++) {
       const param = params[i];
-      
-      if (param === '--update-existing') {
+
+      if (param === "--update-existing") {
         config.updateExisting = true;
-      } else if (param.startsWith('--test-type') && params[i + 1]) {
+      } else if (param.startsWith("--test-type") && params[i + 1]) {
         config.testType = params[++i];
-      } else if (param.startsWith('--coverage-target') && params[i + 1]) {
+      } else if (param.startsWith("--coverage-target") && params[i + 1]) {
         config.coverageTarget = parseInt(params[++i]) || 80;
-      } else if (param.startsWith('--framework') && params[i + 1]) {
+      } else if (param.startsWith("--framework") && params[i + 1]) {
         config.framework = params[++i];
-      } else if (param.startsWith('--mock-level') && params[i + 1]) {
+      } else if (param.startsWith("--mock-level") && params[i + 1]) {
         config.mockLevel = params[++i];
-      } else if (param.startsWith('--quality-level') && params[i + 1]) {
+      } else if (param.startsWith("--quality-level") && params[i + 1]) {
         config.qualityLevel = params[++i];
-      } else if (param.startsWith('--output-dir') && params[i + 1]) {
+      } else if (param.startsWith("--output-dir") && params[i + 1]) {
         config.outputDir = params[++i];
       }
     }
 
     // Validation
     if (!config.generateAll) {
-      const validTypes = ['agent', 'task', 'workflow', 'util'];
+      const validTypes = ["agent", "task", "workflow", "util"];
       if (!validTypes.includes(config.componentType)) {
-        throw new Error(`Invalid component type: ${config.componentType}. Must be one of: ${validTypes.join(', ')}`);
+        throw new Error(
+          `Invalid component type: ${config.componentType}. Must be one of: ${validTypes.join(", ")}`,
+        );
       }
     }
 
-    const validTestTypes = ['unit', 'integration', 'e2e', 'all'];
+    const validTestTypes = ["unit", "integration", "e2e", "all"];
     if (!validTestTypes.includes(config.testType)) {
-      throw new Error(`Invalid test type: ${config.testType}. Must be one of: ${validTestTypes.join(', ')}`);
+      throw new Error(
+        `Invalid test type: ${config.testType}. Must be one of: ${validTestTypes.join(", ")}`,
+      );
     }
 
-    const validFrameworks = ['jest', 'mocha', 'vitest'];
+    const validFrameworks = ["jest", "mocha", "vitest"];
     if (!validFrameworks.includes(config.framework)) {
-      throw new Error(`Invalid framework: ${config.framework}. Must be one of: ${validFrameworks.join(', ')}`);
+      throw new Error(
+        `Invalid framework: ${config.framework}. Must be one of: ${validFrameworks.join(", ")}`,
+      );
     }
 
-    const validMockLevels = ['minimal', 'moderate', 'extensive'];
+    const validMockLevels = ["minimal", "moderate", "extensive"];
     if (!validMockLevels.includes(config.mockLevel)) {
-      throw new Error(`Invalid mock level: ${config.mockLevel}. Must be one of: ${validMockLevels.join(', ')}`);
+      throw new Error(
+        `Invalid mock level: ${config.mockLevel}. Must be one of: ${validMockLevels.join(", ")}`,
+      );
     }
 
-    const validQualityLevels = ['basic', 'standard', 'comprehensive'];
+    const validQualityLevels = ["basic", "standard", "comprehensive"];
     if (!validQualityLevels.includes(config.qualityLevel)) {
-      throw new Error(`Invalid quality level: ${config.qualityLevel}. Must be one of: ${validQualityLevels.join(', ')}`);
+      throw new Error(
+        `Invalid quality level: ${config.qualityLevel}. Must be one of: ${validQualityLevels.join(", ")}`,
+      );
     }
 
     if (config.coverageTarget < 0 || config.coverageTarget > 100) {
-      throw new Error('Coverage target must be between 0 and 100');
+      throw new Error("Coverage target must be between 0 and 100");
     }
 
     return config;
@@ -408,25 +428,24 @@ class GenerateTestsTask {
   async initializeDependencies() {
     try {
       // Initialize test template system
-      const TestTemplateSystem = require('../scripts/test-template-system');
+      const TestTemplateSystem = require("../scripts/test-template-system");
       this.testTemplateSystem = new TestTemplateSystem({ rootPath: this.rootPath });
       await this.testTemplateSystem.initialize();
 
       // Initialize test generator
-      const TestGenerator = require('../scripts/test-generator');
-      this.testGenerator = new TestGenerator({ 
+      const TestGenerator = require("../scripts/test-generator");
+      this.testGenerator = new TestGenerator({
         rootPath: this.rootPath,
-        templateSystem: this.testTemplateSystem
+        templateSystem: this.testTemplateSystem,
       });
 
       // Initialize coverage analyzer
-      const CoverageAnalyzer = require('../scripts/coverage-analyzer');
+      const CoverageAnalyzer = require("../scripts/coverage-analyzer");
       this.coverageAnalyzer = new CoverageAnalyzer({ rootPath: this.rootPath });
 
       // Initialize quality assessment
-      const TestQualityAssessment = require('../scripts/test-quality-assessment');
+      const TestQualityAssessment = require("../scripts/test-quality-assessment");
       this.qualityAssessment = new TestQualityAssessment({ rootPath: this.rootPath });
-
     } catch (error) {
       throw new Error(`Failed to initialize dependencies: ${error.message}`);
     }
@@ -441,22 +460,28 @@ class GenerateTestsTask {
       components.push(...allComponents);
     } else {
       // Find specific component
-      const ComponentSearch = require('../scripts/component-search');
+      const ComponentSearch = require("../scripts/component-search");
       const componentSearch = new ComponentSearch({ rootPath: this.rootPath });
-      
-      const component = await componentSearch.findComponent(config.componentType, config.componentName);
+
+      const component = await componentSearch.findComponent(
+        config.componentType,
+        config.componentName,
+      );
       if (!component) {
         // Suggest similar components
-        const suggestions = await componentSearch.findSimilarComponents(config.componentType, config.componentName);
+        const suggestions = await componentSearch.findSimilarComponents(
+          config.componentType,
+          config.componentName,
+        );
         if (suggestions.length > 0) {
-          console.log(chalk.yellow('\nDid you mean one of these?'));
-          suggestions.forEach(suggestion => {
+          console.log(chalk.yellow("\nDid you mean one of these?"));
+          suggestions.forEach((suggestion) => {
             console.log(chalk.gray(`  - ${suggestion.type}/${suggestion.name}`));
           });
         }
         throw new Error(`Component not found: ${config.componentType}/${config.componentName}`);
       }
-      
+
       components.push(component);
     }
 
@@ -465,27 +490,27 @@ class GenerateTestsTask {
 
   async discoverAllComponents() {
     const components = [];
-    const componentTypes = ['agents', 'tasks', 'workflows', 'utils'];
+    const componentTypes = ["agents", "tasks", "workflows", "utils"];
 
     for (const type of componentTypes) {
-      const typeDir = path.join(this.rootPath, 'aios-core', type);
-      
+      const typeDir = path.join(this.rootPath, "aios-core", type);
+
       try {
         const files = await fs.readdir(typeDir);
-        
+
         for (const file of files) {
           const filePath = path.join(typeDir, file);
           const stats = await fs.stat(filePath);
-          
+
           if (stats.isFile()) {
             const componentType = type.slice(0, -1); // Remove 's' from plural
             const componentName = path.basename(file, path.extname(file));
-            
+
             components.push({
               id: `${componentType}/${componentName}`,
               type: componentType,
               name: componentName,
-              filePath: filePath
+              filePath: filePath,
             });
           }
         }
@@ -506,15 +531,15 @@ class GenerateTestsTask {
       test_suites: [],
       estimated_duration: 0,
       expected_files: 0,
-      quality_targets: {}
+      quality_targets: {},
     };
 
-    console.log(chalk.gray('Analyzing components and generating test plan...'));
+    console.log(chalk.gray("Analyzing components and generating test plan..."));
 
     for (const component of components) {
       const componentAnalysis = await this.analyzeComponentForTesting(component, config);
       const testSuite = await this.planTestSuite(component, componentAnalysis, config);
-      
+
       testPlan.test_suites.push(testSuite);
       testPlan.estimated_duration += testSuite.estimated_duration;
       testPlan.expected_files += testSuite.test_files.length;
@@ -525,7 +550,7 @@ class GenerateTestsTask {
       coverage_target: config.coverageTarget,
       quality_level: config.qualityLevel,
       mock_coverage: this.calculateMockCoverage(config.mockLevel),
-      assertion_density: this.calculateAssertionDensity(config.qualityLevel)
+      assertion_density: this.calculateAssertionDensity(config.qualityLevel),
     };
 
     return testPlan;
@@ -534,38 +559,37 @@ class GenerateTestsTask {
   async analyzeComponentForTesting(component, config) {
     const analysis = {
       component_id: component.id,
-      complexity: 'medium',
+      complexity: "medium",
       dependencies: [],
       external_dependencies: [],
       testable_functions: [],
       edge_cases: [],
       mock_requirements: [],
-      existing_tests: null
+      existing_tests: null,
     };
 
     try {
       // Read component file
-      const content = await fs.readFile(component.filePath, 'utf-8');
-      
+      const content = await fs.readFile(component.filePath, "utf-8");
+
       // Analyze component complexity
       analysis.complexity = this.assessComplexity(content, component.type);
-      
+
       // Identify dependencies
       analysis.dependencies = this.extractDependencies(content, component.type);
       analysis.external_dependencies = this.extractExternalDependencies(content);
-      
+
       // Identify testable functions/methods
       analysis.testable_functions = this.extractTestableFunctions(content, component.type);
-      
+
       // Identify edge cases
       analysis.edge_cases = this.identifyEdgeCases(content, component.type);
-      
+
       // Determine mock requirements
       analysis.mock_requirements = this.determineMockRequirements(analysis, config.mockLevel);
-      
+
       // Check for existing tests
       analysis.existing_tests = await this.findExistingTests(component);
-
     } catch (error) {
       console.warn(chalk.yellow(`Failed to analyze ${component.id}: ${error.message}`));
     }
@@ -581,23 +605,23 @@ class GenerateTestsTask {
       total_tests: 0,
       estimated_duration: 0,
       coverage_plan: {},
-      quality_metrics: {}
+      quality_metrics: {},
     };
 
     // Plan different types of tests based on config
-    if (config.testType === 'unit' || config.testType === 'all') {
+    if (config.testType === "unit" || config.testType === "all") {
       const unitTestFile = await this.planUnitTests(component, analysis, config);
       testSuite.test_files.push(unitTestFile);
     }
 
-    if (config.testType === 'integration' || config.testType === 'all') {
+    if (config.testType === "integration" || config.testType === "all") {
       const integrationTestFile = await this.planIntegrationTests(component, analysis, config);
       if (integrationTestFile) {
         testSuite.test_files.push(integrationTestFile);
       }
     }
 
-    if (config.testType === 'e2e' || config.testType === 'all') {
+    if (config.testType === "e2e" || config.testType === "all") {
       const e2eTestFile = await this.planE2ETests(component, analysis, config);
       if (e2eTestFile) {
         testSuite.test_files.push(e2eTestFile);
@@ -606,13 +630,17 @@ class GenerateTestsTask {
 
     // Calculate totals
     testSuite.total_tests = testSuite.test_files.reduce((sum, file) => sum + file.test_count, 0);
-    testSuite.estimated_duration = testSuite.test_files.reduce((sum, file) => sum + file.estimated_duration, 0);
+    testSuite.estimated_duration = testSuite.test_files.reduce(
+      (sum, file) => sum + file.estimated_duration,
+      0,
+    );
 
     // Plan coverage
     testSuite.coverage_plan = {
       target_percentage: config.coverageTarget,
       lines_to_cover: analysis.testable_functions.length * 5, // Estimate
-      assertions_planned: testSuite.total_tests * this.calculateAssertionDensity(config.qualityLevel)
+      assertions_planned:
+        testSuite.total_tests * this.calculateAssertionDensity(config.qualityLevel),
     };
 
     return testSuite;
@@ -620,13 +648,13 @@ class GenerateTestsTask {
 
   async planUnitTests(component, analysis, config) {
     const testFile = {
-      file_path: this.generateTestFilePath(component, 'unit', config),
-      test_type: 'unit',
+      file_path: this.generateTestFilePath(component, "unit", config),
+      test_type: "unit",
       test_count: 0,
       estimated_duration: 0,
       test_cases: [],
       mocks_required: [],
-      setup_requirements: []
+      setup_requirements: [],
     };
 
     // Generate test cases for each testable function
@@ -644,7 +672,7 @@ class GenerateTestsTask {
     }
 
     // Determine mocks required
-    testFile.mocks_required = analysis.mock_requirements.filter(mock => mock.level !== 'none');
+    testFile.mocks_required = analysis.mock_requirements.filter((mock) => mock.level !== "none");
 
     // Calculate estimated duration
     testFile.estimated_duration = testFile.test_count * 2; // 2 minutes per test case
@@ -654,18 +682,18 @@ class GenerateTestsTask {
 
   async planIntegrationTests(component, analysis, config) {
     // Skip integration tests for simple components
-    if (analysis.complexity === 'low' && analysis.dependencies.length === 0) {
+    if (analysis.complexity === "low" && analysis.dependencies.length === 0) {
       return null;
     }
 
     const testFile = {
-      file_path: this.generateTestFilePath(component, 'integration', config),
-      test_type: 'integration',
+      file_path: this.generateTestFilePath(component, "integration", config),
+      test_type: "integration",
       test_count: 0,
       estimated_duration: 0,
       test_cases: [],
       integration_scenarios: [],
-      setup_requirements: ['test database', 'mock services']
+      setup_requirements: ["test database", "mock services"],
     };
 
     // Generate integration scenarios
@@ -678,17 +706,17 @@ class GenerateTestsTask {
 
   async planE2ETests(component, analysis, config) {
     // Only generate E2E tests for workflows and certain tasks
-    if (component.type !== 'workflow' && component.type !== 'task') {
+    if (component.type !== "workflow" && component.type !== "task") {
       return null;
     }
 
     const testFile = {
-      file_path: this.generateTestFilePath(component, 'e2e', config),
-      test_type: 'e2e',
+      file_path: this.generateTestFilePath(component, "e2e", config),
+      test_type: "e2e",
       test_count: 0,
       estimated_duration: 0,
       test_scenarios: [],
-      setup_requirements: ['full system', 'test data']
+      setup_requirements: ["full system", "test data"],
     };
 
     // Generate E2E scenarios
@@ -700,39 +728,46 @@ class GenerateTestsTask {
   }
 
   generateTestFilePath(component, testType, config) {
-    const baseDir = config.outputDir || path.join(this.rootPath, 'tests');
-    const typeDir = testType === 'unit' ? 'unit' : testType === 'integration' ? 'integration' : 'e2e';
-    const componentDir = component.type === 'util' ? 'utils' : component.type;
-    
+    const baseDir = config.outputDir || path.join(this.rootPath, "tests");
+    const typeDir =
+      testType === "unit" ? "unit" : testType === "integration" ? "integration" : "e2e";
+    const componentDir = component.type === "util" ? "utils" : component.type;
+
     const fileName = `${component.name}.${testType}.test.js`;
     return path.join(baseDir, typeDir, componentDir, fileName);
   }
 
   async displayTestGenerationSummary(testPlan) {
-    console.log(chalk.blue('\n📋 Test Generation Plan'));
-    console.log(chalk.gray('━'.repeat(50)));
-    
+    console.log(chalk.blue("\n📋 Test Generation Plan"));
+    console.log(chalk.gray("━".repeat(50)));
+
     console.log(`Components: ${chalk.white(testPlan.components.length)}`);
     console.log(`Test suites: ${chalk.white(testPlan.test_suites.length)}`);
     console.log(`Expected test files: ${chalk.white(testPlan.expected_files)}`);
-    console.log(`Total tests planned: ${chalk.white(testPlan.test_suites.reduce((sum, suite) => sum + suite.total_tests, 0))}`);
+    console.log(
+      `Total tests planned: ${chalk.white(testPlan.test_suites.reduce((sum, suite) => sum + suite.total_tests, 0))}`,
+    );
     console.log(`Coverage target: ${chalk.white(testPlan.config.coverageTarget)}%`);
     console.log(`Quality level: ${chalk.white(testPlan.config.qualityLevel)}`);
-    console.log(`Estimated duration: ${chalk.white(Math.round(testPlan.estimated_duration / 60))} hours`);
+    console.log(
+      `Estimated duration: ${chalk.white(Math.round(testPlan.estimated_duration / 60))} hours`,
+    );
 
-    console.log(chalk.blue('\nTest Suites:'));
+    console.log(chalk.blue("\nTest Suites:"));
     testPlan.test_suites.forEach((suite, index) => {
       console.log(`  ${index + 1}. ${suite.component_id} (${suite.total_tests} tests)`);
     });
   }
 
   async requestConfirmation(testPlan) {
-    const { confirmed } = await inquirer.prompt([{
-      type: 'confirm',
-      name: 'confirmed',
-      message: `Generate ${testPlan.expected_files} test files for ${testPlan.components.length} components?`,
-      default: true
-    }]);
+    const { confirmed } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "confirmed",
+        message: `Generate ${testPlan.expected_files} test files for ${testPlan.components.length} components?`,
+        default: true,
+      },
+    ]);
 
     return confirmed;
   }
@@ -742,22 +777,24 @@ class GenerateTestsTask {
       testFilesGenerated: 0,
       testsGenerated: 0,
       errors: [],
-      generated_files: []
+      generated_files: [],
     };
 
-    console.log(chalk.gray('\nGenerating test files...'));
+    console.log(chalk.gray("\nGenerating test files..."));
 
     for (const testSuite of testPlan.test_suites) {
       try {
-        const component = testPlan.components.find(c => c.id === testSuite.component_id);
-        
+        const component = testPlan.components.find((c) => c.id === testSuite.component_id);
+
         for (const testFile of testSuite.test_files) {
-          console.log(chalk.gray(`  Generating ${testFile.test_type} tests for ${component.name}...`));
-          
+          console.log(
+            chalk.gray(`  Generating ${testFile.test_type} tests for ${component.name}...`),
+          );
+
           const generatedContent = await this.testGenerator.generateTestFile(
             component,
             testFile,
-            testPlan.config
+            testPlan.config,
           );
 
           // Ensure directory exists
@@ -769,19 +806,22 @@ class GenerateTestsTask {
             results.testFilesGenerated++;
             results.testsGenerated += testFile.test_count;
             results.generated_files.push(testFile.file_path);
-            
+
             console.log(chalk.green(`    ✓ Generated ${testFile.file_path}`));
           } else {
             console.log(chalk.yellow(`    ⚠ Skipped ${testFile.file_path} (already exists)`));
           }
         }
-
       } catch (error) {
         results.errors.push({
           component_id: testSuite.component_id,
-          error: error.message
+          error: error.message,
         });
-        console.error(chalk.red(`    ✗ Failed to generate tests for ${testSuite.component_id}: ${error.message}`));
+        console.error(
+          chalk.red(
+            `    ✗ Failed to generate tests for ${testSuite.component_id}: ${error.message}`,
+          ),
+        );
       }
     }
 
@@ -793,7 +833,7 @@ class GenerateTestsTask {
       expectedCoverage: 0,
       qualityScore: 0,
       testDistribution: {},
-      recommendations: []
+      recommendations: [],
     };
 
     if (generationResults.testFilesGenerated > 0) {
@@ -809,8 +849,11 @@ class GenerateTestsTask {
       }
 
       // Calculate averages
-      analysis.expectedCoverage = Math.round(analysis.expectedCoverage / generationResults.testFilesGenerated);
-      analysis.qualityScore = Math.round((analysis.qualityScore / generationResults.testFilesGenerated) * 10) / 10;
+      analysis.expectedCoverage = Math.round(
+        analysis.expectedCoverage / generationResults.testFilesGenerated,
+      );
+      analysis.qualityScore =
+        Math.round((analysis.qualityScore / generationResults.testFilesGenerated) * 10) / 10;
     }
 
     return analysis;
@@ -822,11 +865,11 @@ class GenerateTestsTask {
       generated_at: new Date().toISOString(),
       test_files: generationResults.generated_files,
       total_tests: generationResults.testsGenerated,
-      generation_notes: 'Auto-generated by AIOS test generation system'
+      generation_notes: "Auto-generated by AIOS test generation system",
     };
 
-    const docsPath = path.join(this.rootPath, 'docs', 'testing', 'auto-generated-tests.json');
-    
+    const docsPath = path.join(this.rootPath, "docs", "testing", "auto-generated-tests.json");
+
     try {
       await fs.mkdir(path.dirname(docsPath), { recursive: true });
       await fs.writeFile(docsPath, JSON.stringify(testDocs, null, 2));
@@ -848,34 +891,34 @@ class GenerateTestsTask {
 
   assessComplexity(content, componentType) {
     // Simple heuristic for complexity assessment
-    const lines = content.split('\n').length;
+    const lines = content.split("\n").length;
     const functions = (content.match(/function|=>/g) || []).length;
     const conditions = (content.match(/if|switch|for|while/g) || []).length;
-    
-    const complexityScore = (lines / 10) + (functions * 2) + (conditions * 3);
-    
-    if (complexityScore > 50) return 'high';
-    if (complexityScore > 20) return 'medium';
-    return 'low';
+
+    const complexityScore = lines / 10 + functions * 2 + conditions * 3;
+
+    if (complexityScore > 50) return "high";
+    if (complexityScore > 20) return "medium";
+    return "low";
   }
 
   extractDependencies(content, componentType) {
     const dependencies = [];
-    
+
     // Extract require/import statements
     const requireMatches = content.match(/require\(['"]([^'"]+)['"]\)/g) || [];
     const importMatches = content.match(/import .+ from ['"]([^'"]+)['"]/g) || [];
-    
-    requireMatches.forEach(match => {
+
+    requireMatches.forEach((match) => {
       const dep = match.match(/require\(['"]([^'"]+)['"]\)/)[1];
-      if (dep.startsWith('./') || dep.startsWith('../')) {
+      if (dep.startsWith("./") || dep.startsWith("../")) {
         dependencies.push(dep);
       }
     });
 
-    importMatches.forEach(match => {
+    importMatches.forEach((match) => {
       const dep = match.match(/from ['"]([^'"]+)['"]/)[1];
-      if (dep.startsWith('./') || dep.startsWith('../')) {
+      if (dep.startsWith("./") || dep.startsWith("../")) {
         dependencies.push(dep);
       }
     });
@@ -885,20 +928,20 @@ class GenerateTestsTask {
 
   extractExternalDependencies(content) {
     const externalDeps = [];
-    
+
     const requireMatches = content.match(/require\(['"]([^'"]+)['"]\)/g) || [];
     const importMatches = content.match(/import .+ from ['"]([^'"]+)['"]/g) || [];
-    
-    requireMatches.forEach(match => {
+
+    requireMatches.forEach((match) => {
       const dep = match.match(/require\(['"]([^'"]+)['"]\)/)[1];
-      if (!dep.startsWith('./') && !dep.startsWith('../') && !dep.startsWith('node:')) {
+      if (!dep.startsWith("./") && !dep.startsWith("../") && !dep.startsWith("node:")) {
         externalDeps.push(dep);
       }
     });
 
-    importMatches.forEach(match => {
+    importMatches.forEach((match) => {
       const dep = match.match(/from ['"]([^'"]+)['"]/)[1];
-      if (!dep.startsWith('./') && !dep.startsWith('../') && !dep.startsWith('node:')) {
+      if (!dep.startsWith("./") && !dep.startsWith("../") && !dep.startsWith("node:")) {
         externalDeps.push(dep);
       }
     });
@@ -908,24 +951,27 @@ class GenerateTestsTask {
 
   extractTestableFunctions(content, componentType) {
     const functions = [];
-    
+
     // Extract function declarations and expressions
-    const functionMatches = content.match(/(?:function\s+(\w+)|(\w+)\s*[:=]\s*(?:async\s+)?function|(\w+)\s*[:=]\s*(?:async\s+)?\([^)]*\)\s*=>)/g) || [];
-    
-    functionMatches.forEach(match => {
+    const functionMatches =
+      content.match(
+        /(?:function\s+(\w+)|(\w+)\s*[:=]\s*(?:async\s+)?function|(\w+)\s*[:=]\s*(?:async\s+)?\([^)]*\)\s*=>)/g,
+      ) || [];
+
+    functionMatches.forEach((match) => {
       let functionName = null;
-      
-      if (match.includes('function ')) {
+
+      if (match.includes("function ")) {
         functionName = match.match(/function\s+(\w+)/)?.[1];
       } else {
         functionName = match.match(/(\w+)\s*[:=]/)?.[1];
       }
-      
-      if (functionName && !functionName.startsWith('_')) {
+
+      if (functionName && !functionName.startsWith("_")) {
         functions.push({
           name: functionName,
-          type: 'function',
-          visibility: 'public'
+          type: "function",
+          visibility: "public",
         });
       }
     });
@@ -935,22 +981,22 @@ class GenerateTestsTask {
 
   identifyEdgeCases(content, componentType) {
     const edgeCases = [];
-    
+
     // Look for common edge case patterns
-    if (content.includes('null') || content.includes('undefined')) {
-      edgeCases.push({ type: 'null_undefined', description: 'Handle null/undefined values' });
+    if (content.includes("null") || content.includes("undefined")) {
+      edgeCases.push({ type: "null_undefined", description: "Handle null/undefined values" });
     }
-    
-    if (content.includes('length') || content.includes('size')) {
-      edgeCases.push({ type: 'empty_collections', description: 'Handle empty arrays/objects' });
+
+    if (content.includes("length") || content.includes("size")) {
+      edgeCases.push({ type: "empty_collections", description: "Handle empty arrays/objects" });
     }
-    
-    if (content.includes('catch') || content.includes('throw')) {
-      edgeCases.push({ type: 'error_handling', description: 'Test error conditions' });
+
+    if (content.includes("catch") || content.includes("throw")) {
+      edgeCases.push({ type: "error_handling", description: "Test error conditions" });
     }
-    
-    if (content.includes('async') || content.includes('await')) {
-      edgeCases.push({ type: 'async_operations', description: 'Test async operation failures' });
+
+    if (content.includes("async") || content.includes("await")) {
+      edgeCases.push({ type: "async_operations", description: "Test async operation failures" });
     }
 
     return edgeCases;
@@ -958,27 +1004,27 @@ class GenerateTestsTask {
 
   determineMockRequirements(analysis, mockLevel) {
     const mocks = [];
-    
-    if (mockLevel === 'minimal') {
+
+    if (mockLevel === "minimal") {
       // Only mock external dependencies
-      analysis.external_dependencies.forEach(dep => {
-        mocks.push({ type: 'external', target: dep, level: 'full' });
+      analysis.external_dependencies.forEach((dep) => {
+        mocks.push({ type: "external", target: dep, level: "full" });
       });
-    } else if (mockLevel === 'moderate') {
+    } else if (mockLevel === "moderate") {
       // Mock external dependencies and some internal ones
-      analysis.external_dependencies.forEach(dep => {
-        mocks.push({ type: 'external', target: dep, level: 'full' });
+      analysis.external_dependencies.forEach((dep) => {
+        mocks.push({ type: "external", target: dep, level: "full" });
       });
-      analysis.dependencies.slice(0, 3).forEach(dep => {
-        mocks.push({ type: 'internal', target: dep, level: 'partial' });
+      analysis.dependencies.slice(0, 3).forEach((dep) => {
+        mocks.push({ type: "internal", target: dep, level: "partial" });
       });
-    } else if (mockLevel === 'extensive') {
+    } else if (mockLevel === "extensive") {
       // Mock everything possible
-      analysis.external_dependencies.forEach(dep => {
-        mocks.push({ type: 'external', target: dep, level: 'full' });
+      analysis.external_dependencies.forEach((dep) => {
+        mocks.push({ type: "external", target: dep, level: "full" });
       });
-      analysis.dependencies.forEach(dep => {
-        mocks.push({ type: 'internal', target: dep, level: 'full' });
+      analysis.dependencies.forEach((dep) => {
+        mocks.push({ type: "internal", target: dep, level: "full" });
       });
     }
 
@@ -987,17 +1033,17 @@ class GenerateTestsTask {
 
   async findExistingTests(component) {
     const possibleTestPaths = [
-      path.join(this.rootPath, 'tests', 'unit', component.type, `${component.name}.test.js`),
-      path.join(this.rootPath, 'tests', 'unit', component.type, `${component.name}.spec.js`),
-      path.join(this.rootPath, 'test', `${component.name}.test.js`),
-      path.join(this.rootPath, '__tests__', `${component.name}.test.js`)
+      path.join(this.rootPath, "tests", "unit", component.type, `${component.name}.test.js`),
+      path.join(this.rootPath, "tests", "unit", component.type, `${component.name}.spec.js`),
+      path.join(this.rootPath, "test", `${component.name}.test.js`),
+      path.join(this.rootPath, "__tests__", `${component.name}.test.js`),
     ];
 
     for (const testPath of possibleTestPaths) {
       if (await this.fileExists(testPath)) {
         return {
           path: testPath,
-          exists: true
+          exists: true,
         };
       }
     }
@@ -1009,7 +1055,7 @@ class GenerateTestsTask {
     const coverage = {
       minimal: 30,
       moderate: 60,
-      extensive: 90
+      extensive: 90,
     };
     return coverage[mockLevel] || 60;
   }
@@ -1018,7 +1064,7 @@ class GenerateTestsTask {
     const density = {
       basic: 2,
       standard: 4,
-      comprehensive: 6
+      comprehensive: 6,
     };
     return density[qualityLevel] || 4;
   }
@@ -1029,45 +1075,45 @@ class GenerateTestsTask {
     return [
       {
         name: `should ${func.name} successfully`,
-        type: 'success_case',
+        type: "success_case",
         description: `Test successful execution of ${func.name}`,
-        assertions: config.qualityLevel === 'comprehensive' ? 3 : 2
+        assertions: config.qualityLevel === "comprehensive" ? 3 : 2,
       },
       {
         name: `should handle ${func.name} errors`,
-        type: 'error_case',
+        type: "error_case",
         description: `Test error handling in ${func.name}`,
-        assertions: 2
-      }
+        assertions: 2,
+      },
     ];
   }
 
   async generateEdgeCaseTest(edgeCase, analysis, config) {
     return {
       name: `should handle ${edgeCase.type}`,
-      type: 'edge_case',
+      type: "edge_case",
       description: edgeCase.description,
-      assertions: 1
+      assertions: 1,
     };
   }
 
   async generateIntegrationScenarios(component, analysis) {
     // Generate integration test scenarios based on component dependencies
     const scenarios = [];
-    
+
     if (analysis.dependencies.length > 0) {
       scenarios.push({
-        name: 'should integrate with dependencies',
-        description: 'Test integration with internal dependencies',
-        dependencies: analysis.dependencies.slice(0, 3)
+        name: "should integrate with dependencies",
+        description: "Test integration with internal dependencies",
+        dependencies: analysis.dependencies.slice(0, 3),
       });
     }
 
     if (analysis.external_dependencies.length > 0) {
       scenarios.push({
-        name: 'should integrate with external services',
-        description: 'Test integration with external dependencies',
-        dependencies: analysis.external_dependencies.slice(0, 2)
+        name: "should integrate with external services",
+        description: "Test integration with external dependencies",
+        dependencies: analysis.external_dependencies.slice(0, 2),
       });
     }
 
@@ -1076,20 +1122,20 @@ class GenerateTestsTask {
 
   async generateE2EScenarios(component, analysis) {
     const scenarios = [];
-    
-    if (component.type === 'workflow') {
+
+    if (component.type === "workflow") {
       scenarios.push({
-        name: 'should complete full workflow',
-        description: 'Test complete workflow execution end-to-end',
-        steps: ['initialize', 'execute', 'validate', 'cleanup']
+        name: "should complete full workflow",
+        description: "Test complete workflow execution end-to-end",
+        steps: ["initialize", "execute", "validate", "cleanup"],
       });
     }
 
-    if (component.type === 'task') {
+    if (component.type === "task") {
       scenarios.push({
-        name: 'should execute task end-to-end',
-        description: 'Test complete task execution with real dependencies',
-        steps: ['setup', 'execute', 'verify_output']
+        name: "should execute task end-to-end",
+        description: "Test complete task execution with real dependencies",
+        steps: ["setup", "execute", "verify_output"],
       });
     }
 
@@ -1103,18 +1149,21 @@ module.exports = GenerateTestsTask;
 ## Validation Rules
 
 ### Input Validation
+
 - Component type must be valid or 'all' for bulk generation
 - Coverage target must be 0-100%
 - Test framework must be supported
 - Quality level must be recognized
 
 ### Safety Checks
+
 - Don't overwrite existing tests without confirmation
 - Validate component exists before test generation
 - Ensure output directory is writable
 - Check for conflicting test frameworks
 
 ### Generation Requirements
+
 - Must generate syntactically valid test code
 - Should include appropriate setup/teardown
 - Must include meaningful test descriptions
@@ -1123,24 +1172,28 @@ module.exports = GenerateTestsTask;
 ## Integration Points
 
 ### Test Template System
+
 - Provides reusable test templates
 - Manages test code generation patterns
 - Handles framework-specific syntax
 - Supports custom test structures
 
 ### Test Generator
+
 - Orchestrates test file creation
 - Analyzes components for testable elements
 - Generates comprehensive test suites
 - Handles different test types (unit, integration, e2e)
 
 ### Coverage Analyzer
+
 - Analyzes existing test coverage
 - Identifies coverage gaps
 - Provides coverage metrics
 - Suggests coverage improvements
 
 ### Quality Assessment
+
 - Evaluates generated test quality
 - Provides quality metrics and scores
 - Identifies test improvement opportunities
@@ -1149,6 +1202,7 @@ module.exports = GenerateTestsTask;
 ## Output Structure
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -1160,6 +1214,7 @@ module.exports = GenerateTestsTask;
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -1169,7 +1224,8 @@ module.exports = GenerateTestsTask;
 ```
 
 ## Security Considerations
+
 - Validate all file paths to prevent directory traversal
 - Sanitize component names and test descriptions
 - Ensure generated code doesn't include sensitive information
-- Validate test framework dependencies for security vulnerabilities 
+- Validate test framework dependencies for security vulnerabilities

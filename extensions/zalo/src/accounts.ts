@@ -24,10 +24,7 @@ export function resolveDefaultZaloAccountId(cfg: ZeroConfig): string {
   return ids[0] ?? DEFAULT_ACCOUNT_ID;
 }
 
-function resolveAccountConfig(
-  cfg: ZeroConfig,
-  accountId: string,
-): ZaloAccountConfig | undefined {
+function resolveAccountConfig(cfg: ZeroConfig, accountId: string): ZaloAccountConfig | undefined {
   const accounts = (cfg.channels?.zalo as ZaloConfig | undefined)?.accounts;
   if (!accounts || typeof accounts !== "object") return undefined;
   return accounts[accountId] as ZaloAccountConfig | undefined;

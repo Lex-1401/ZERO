@@ -1,6 +1,6 @@
-const diffLib = require('diff');
-const chalk = require('chalk');
-const yaml = require('js-yaml');
+const diffLib = require("diff");
+const chalk = require("chalk");
+const yaml = require("js-yaml");
 
 /**
  * Generates visual diffs for component modifications
@@ -12,7 +12,7 @@ class DiffGenerator {
       removed: chalk.red,
       unchanged: chalk.gray,
       header: chalk.cyan,
-      lineNumber: chalk.yellow
+      lineNumber: chalk.yellow,
     };
   }
 
@@ -25,19 +25,15 @@ class DiffGenerator {
    * @returns {string} Formatted diff output
    */
   generateUnifiedDiff(originalContent, modifiedContent, fileName, options = {}) {
-    const {
-      contextLines = 3,
-      showLineNumbers = true,
-      colorize = true
-    } = options;
+    const { contextLines = 3, showLineNumbers = true, colorize = true } = options;
 
     const patch = diffLib.createPatch(
       fileName,
       originalContent,
       modifiedContent,
-      'Current Version',
-      'Modified Version',
-      { context: contextLines }
+      "Current Version",
+      "Modified Version",
+      { context: contextLines },
     );
 
     if (!colorize) {
@@ -64,8 +60,8 @@ class DiffGenerator {
       summary: {
         added: [],
         removed: [],
-        modified: []
-      }
+        modified: [],
+      },
     };
 
     // Compare top-level keys
@@ -73,17 +69,17 @@ class DiffGenerator {
 
     for (const key of allKeys) {
       if (!original.hasOwnProperty(key)) {
-        diff.sections[key] = { status: 'added', value: modified[key] };
+        diff.sections[key] = { status: "added", value: modified[key] };
         diff.summary.added.push(key);
       } else if (!modified.hasOwnProperty(key)) {
-        diff.sections[key] = { status: 'removed', value: original[key] };
+        diff.sections[key] = { status: "removed", value: original[key] };
         diff.summary.removed.push(key);
       } else if (JSON.stringify(original[key]) !== JSON.stringify(modified[key])) {
         diff.sections[key] = {
-          status: 'modified',
+          status: "modified",
           original: original[key],
           modified: modified[key],
-          changes: this.compareValues(original[key], modified[key])
+          changes: this.compareValues(original[key], modified[key]),
         };
         diff.summary.modified.push(key);
       }
@@ -104,24 +100,20 @@ class DiffGenerator {
     const originalParts = this.splitAgentContent(originalContent);
     const modifiedParts = this.splitAgentContent(modifiedContent);
 
-    const yamlDiff = this.generateYamlDiff(
-      originalParts.yaml,
-      modifiedParts.yaml,
-      agentName
-    );
+    const yamlDiff = this.generateYamlDiff(originalParts.yaml, modifiedParts.yaml, agentName);
 
     const markdownDiff = this.generateUnifiedDiff(
       originalParts.markdown,
       modifiedParts.markdown,
       `${agentName}.md`,
-      { contextLines: 5 }
+      { contextLines: 5 },
     );
 
     return {
       agent: agentName,
       yamlChanges: yamlDiff,
       markdownChanges: markdownDiff,
-      impactSummary: this.generateImpactSummary(yamlDiff)
+      impactSummary: this.generateImpactSummary(yamlDiff),
     };
   }
 
@@ -132,37 +124,37 @@ class DiffGenerator {
    */
   generateDiffSummary(diff) {
     const lines = [];
-    
-    lines.push(this.colors.header('=== Modification Summary ==='));
-    lines.push('');
+
+    lines.push(this.colors.header("=== Modification Summary ==="));
+    lines.push("");
 
     if (diff.summary) {
       if (diff.summary.added.length > 0) {
         lines.push(this.colors.added(`+ Added (${diff.summary.added.length}):`));
-        diff.summary.added.forEach(item => {
+        diff.summary.added.forEach((item) => {
           lines.push(this.colors.added(`  + ${item}`));
         });
-        lines.push('');
+        lines.push("");
       }
 
       if (diff.summary.modified.length > 0) {
         lines.push(this.colors.header(`~ Modified (${diff.summary.modified.length}):`));
-        diff.summary.modified.forEach(item => {
+        diff.summary.modified.forEach((item) => {
           lines.push(this.colors.header(`  ~ ${item}`));
         });
-        lines.push('');
+        lines.push("");
       }
 
       if (diff.summary.removed.length > 0) {
         lines.push(this.colors.removed(`- Removed (${diff.summary.removed.length}):`));
-        diff.summary.removed.forEach(item => {
+        diff.summary.removed.forEach((item) => {
           lines.push(this.colors.removed(`  - ${item}`));
         });
-        lines.push('');
+        lines.push("");
       }
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -172,12 +164,12 @@ class DiffGenerator {
   splitAgentContent(content) {
     const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
     if (!match) {
-      throw new Error('Invalid agent content format');
+      throw new Error("Invalid agent content format");
     }
 
     return {
       yaml: match[1],
-      markdown: match[2]
+      markdown: match[2],
     };
   }
 
@@ -189,37 +181,37 @@ class DiffGenerator {
     const changes = [];
 
     if (Array.isArray(original) && Array.isArray(modified)) {
-      const added = modified.filter(item => !original.includes(item));
-      const removed = original.filter(item => !modified.includes(item));
+      const added = modified.filter((item) => !original.includes(item));
+      const removed = original.filter((item) => !modified.includes(item));
 
       if (added.length > 0) {
-        changes.push({ type: 'added', items: added });
+        changes.push({ type: "added", items: added });
       }
       if (removed.length > 0) {
-        changes.push({ type: 'removed', items: removed });
+        changes.push({ type: "removed", items: removed });
       }
-    } else if (typeof original === 'object' && typeof modified === 'object') {
+    } else if (typeof original === "object" && typeof modified === "object") {
       const allKeys = new Set([...Object.keys(original), ...Object.keys(modified)]);
-      
+
       for (const key of allKeys) {
         if (!original.hasOwnProperty(key)) {
-          changes.push({ type: 'added', key, value: modified[key] });
+          changes.push({ type: "added", key, value: modified[key] });
         } else if (!modified.hasOwnProperty(key)) {
-          changes.push({ type: 'removed', key, value: original[key] });
+          changes.push({ type: "removed", key, value: original[key] });
         } else if (JSON.stringify(original[key]) !== JSON.stringify(modified[key])) {
           changes.push({
-            type: 'modified',
+            type: "modified",
             key,
             original: original[key],
-            modified: modified[key]
+            modified: modified[key],
           });
         }
       }
     } else {
       changes.push({
-        type: 'value_changed',
+        type: "value_changed",
         original,
-        modified
+        modified,
       });
     }
 
@@ -231,13 +223,13 @@ class DiffGenerator {
    * @private
    */
   colorizeDiff(patch, showLineNumbers) {
-    const lines = patch.split('\n');
+    const lines = patch.split("\n");
     const colorized = [];
     let lineNumOriginal = 0;
     let lineNumModified = 0;
 
     for (const line of lines) {
-      if (line.startsWith('@@')) {
+      if (line.startsWith("@@")) {
         // Parse line numbers from hunk header
         const match = line.match(/@@ -(\d+),\d+ \+(\d+),\d+ @@/);
         if (match) {
@@ -245,17 +237,16 @@ class DiffGenerator {
           lineNumModified = parseInt(match[2]);
         }
         colorized.push(this.colors.header(line));
-      } else if (line.startsWith('+')) {
-        const lineNum = showLineNumbers ? `${lineNumModified.toString().padStart(4)}: ` : '';
+      } else if (line.startsWith("+")) {
+        const lineNum = showLineNumbers ? `${lineNumModified.toString().padStart(4)}: ` : "";
         colorized.push(this.colors.added(`+${lineNum}${line.substring(1)}`));
         lineNumModified++;
-      } else if (line.startsWith('-')) {
-        const lineNum = showLineNumbers ? `${lineNumOriginal.toString().padStart(4)}: ` : '';
+      } else if (line.startsWith("-")) {
+        const lineNum = showLineNumbers ? `${lineNumOriginal.toString().padStart(4)}: ` : "";
         colorized.push(this.colors.removed(`-${lineNum}${line.substring(1)}`));
         lineNumOriginal++;
-      } else if (line.startsWith(' ')) {
-        const lineNum = showLineNumbers ? 
-          `${lineNumOriginal.toString().padStart(4)}: ` : '';
+      } else if (line.startsWith(" ")) {
+        const lineNum = showLineNumbers ? `${lineNumOriginal.toString().padStart(4)}: ` : "";
         colorized.push(this.colors.unchanged(` ${lineNum}${line.substring(1)}`));
         lineNumOriginal++;
         lineNumModified++;
@@ -264,7 +255,7 @@ class DiffGenerator {
       }
     }
 
-    return colorized.join('\n');
+    return colorized.join("\n");
   }
 
   /**
@@ -278,22 +269,22 @@ class DiffGenerator {
     if (yamlDiff.sections.dependencies) {
       const changes = yamlDiff.sections.dependencies.changes || [];
       for (const change of changes) {
-        if (change.type === 'added') {
-          impacts.push(`New dependency added: ${change.items.join(', ')}`);
-        } else if (change.type === 'removed') {
-          impacts.push(`Dependency removed: ${change.items.join(', ')}`);
+        if (change.type === "added") {
+          impacts.push(`New dependency added: ${change.items.join(", ")}`);
+        } else if (change.type === "removed") {
+          impacts.push(`Dependency removed: ${change.items.join(", ")}`);
         }
       }
     }
 
     // Check for command changes
     if (yamlDiff.sections.commands) {
-      impacts.push('Commands modified - users may need to update their workflows');
+      impacts.push("Commands modified - users may need to update their workflows");
     }
 
     // Check for persona changes
     if (yamlDiff.sections.persona) {
-      impacts.push('Agent persona modified - behavior may change');
+      impacts.push("Agent persona modified - behavior may change");
     }
 
     return impacts;
@@ -310,22 +301,22 @@ class DiffGenerator {
     const { width = 80, gutter = 3 } = options;
     const columnWidth = Math.floor((width - gutter) / 2);
 
-    const originalLines = original.split('\n');
-    const modifiedLines = modified.split('\n');
+    const originalLines = original.split("\n");
+    const modifiedLines = modified.split("\n");
     const maxLines = Math.max(originalLines.length, modifiedLines.length);
 
     const output = [];
-    output.push(this.colors.header('─'.repeat(width)));
+    output.push(this.colors.header("─".repeat(width)));
     output.push(
-      this.colors.header('Original'.padEnd(columnWidth)) +
-      ' '.repeat(gutter) +
-      this.colors.header('Modified'.padEnd(columnWidth))
+      this.colors.header("Original".padEnd(columnWidth)) +
+        " ".repeat(gutter) +
+        this.colors.header("Modified".padEnd(columnWidth)),
     );
-    output.push(this.colors.header('─'.repeat(width)));
+    output.push(this.colors.header("─".repeat(width)));
 
     for (let i = 0; i < maxLines; i++) {
-      const origLine = (originalLines[i] || '').substring(0, columnWidth);
-      const modLine = (modifiedLines[i] || '').substring(0, columnWidth);
+      const origLine = (originalLines[i] || "").substring(0, columnWidth);
+      const modLine = (modifiedLines[i] || "").substring(0, columnWidth);
 
       let coloredOrig = origLine.padEnd(columnWidth);
       let coloredMod = modLine.padEnd(columnWidth);
@@ -341,11 +332,11 @@ class DiffGenerator {
         }
       }
 
-      output.push(coloredOrig + ' '.repeat(gutter) + coloredMod);
+      output.push(coloredOrig + " ".repeat(gutter) + coloredMod);
     }
 
-    output.push(this.colors.header('─'.repeat(width)));
-    return output.join('\n');
+    output.push(this.colors.header("─".repeat(width)));
+    return output.join("\n");
   }
 }
 

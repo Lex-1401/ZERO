@@ -27,21 +27,21 @@
  * }
  */
 
-'use strict';
+"use strict";
 
 const {
   PatternCapture,
   createPatternCapture,
   DEFAULT_MIN_SEQUENCE_LENGTH,
   KEY_WORKFLOW_COMMANDS,
-} = require('./pattern-capture');
+} = require("./pattern-capture");
 
 const {
   PatternValidator,
   createPatternValidator,
   DEFAULT_VALIDATION_RULES,
   KNOWN_COMMANDS,
-} = require('./pattern-validator');
+} = require("./pattern-validator");
 
 const {
   PatternStore,
@@ -50,24 +50,24 @@ const {
   DEFAULT_MAX_PATTERNS,
   DEFAULT_PRUNE_THRESHOLD,
   PATTERN_STATUS,
-} = require('./pattern-store');
+} = require("./pattern-store");
 
 const {
   GotchaRegistry,
   DEFAULT_CONFIG: GOTCHA_DEFAULT_CONFIG,
   GOTCHA_SCHEMA,
-} = require('./gotcha-registry');
+} = require("./gotcha-registry");
 
 const {
   QAFeedbackProcessor,
   DEFAULT_CONFIG: QA_FEEDBACK_DEFAULT_CONFIG,
-} = require('./qa-feedback');
+} = require("./qa-feedback");
 
 const {
   SemanticSearch,
   createSemanticSearch,
   DEFAULT_CONFIG: SEMANTIC_SEARCH_DEFAULT_CONFIG,
-} = require('./semantic-search');
+} = require("./semantic-search");
 
 /**
  * Singleton instances for default usage
@@ -169,7 +169,7 @@ function captureAndStore(sessionData) {
   if (!captureResult.valid) {
     return {
       success: false,
-      stage: 'capture',
+      stage: "capture",
       reason: captureResult.reason,
     };
   }
@@ -180,7 +180,7 @@ function captureAndStore(sessionData) {
   if (!validation.valid) {
     return {
       success: false,
-      stage: 'validation',
+      stage: "validation",
       reason: validation.reason,
       errors: validation.errors,
     };
@@ -197,7 +197,7 @@ function captureAndStore(sessionData) {
       store.save(existing); // This will increment occurrences
       return {
         success: true,
-        action: 'merged',
+        action: "merged",
         patternId: existing.id,
       };
     }

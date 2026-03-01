@@ -113,9 +113,9 @@ Substitua via configuração:
   agents: {
     defaults: {
       subagents: {
-        maxConcurrent: 1
-      }
-    }
+        maxConcurrent: 1,
+      },
+    },
   },
   tools: {
     subagents: {
@@ -124,9 +124,9 @@ Substitua via configuração:
         deny: ["gateway", "cron"],
         // if allow is set, it becomes allow-only (deny still wins)
         // allow: ["read", "exec", "process"]
-      }
-    }
-  }
+      },
+    },
+  },
 }
 ```
 

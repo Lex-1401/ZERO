@@ -4,6 +4,7 @@ read_when:
   - Adicionando suporte a nó de localização ou UI de permissões
   - Projetando fluxos de localização em segundo plano + push
 ---
+
 # Comando de Localização (Nós)
 
 ## TL;DR
@@ -88,9 +89,9 @@ Objetivo: o modelo pode solicitar localização mesmo quando o nó estiver em se
 
 Fluxo acionado por push (futuro):
 
-1) O Gateway envia um push para o nó (silent push ou dados FCM).
-2) O nó acorda brevemente e solicita a localização do dispositivo.
-3) O nó encaminha o payload para o Gateway.
+1. O Gateway envia um push para o nó (silent push ou dados FCM).
+2. O nó acorda brevemente e solicita a localização do dispositivo.
+3. O nó encaminha o payload para o Gateway.
 
 Notas:
 

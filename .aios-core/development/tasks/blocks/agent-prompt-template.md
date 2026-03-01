@@ -10,20 +10,20 @@ Standardized template for spawning AIOS agents with consistent structure. Ensure
 
 ## Input
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `agent_name` | string | Yes | - | Agent's display name (e.g., "Aria", "Max") |
-| `agent_role` | string | Yes | - | Agent's role title (e.g., "Architect", "Dev") |
-| `agent_file_path` | string | Yes | - | Path to agent definition file |
-| `context_category` | string | No | `null` | Category for context-loading block (e.g., "Architecture,Security") |
-| `mission_description` | string | Yes | - | What the agent must accomplish |
-| `output_path` | string | Yes | - | Where to save the result |
-| `output_format` | string | No | `markdown` | Expected format (markdown, yaml, json) |
+| Parameter             | Type   | Required | Default    | Description                                                        |
+| --------------------- | ------ | -------- | ---------- | ------------------------------------------------------------------ |
+| `agent_name`          | string | Yes      | -          | Agent's display name (e.g., "Aria", "Max")                         |
+| `agent_role`          | string | Yes      | -          | Agent's role title (e.g., "Architect", "Dev")                      |
+| `agent_file_path`     | string | Yes      | -          | Path to agent definition file                                      |
+| `context_category`    | string | No       | `null`     | Category for context-loading block (e.g., "Architecture,Security") |
+| `mission_description` | string | Yes      | -          | What the agent must accomplish                                     |
+| `output_path`         | string | Yes      | -          | Where to save the result                                           |
+| `output_format`       | string | No       | `markdown` | Expected format (markdown, yaml, json)                             |
 
 ## Output
 
-| Field | Type | Description |
-|-------|------|-------------|
+| Field    | Type   | Description                               |
+| -------- | ------ | ----------------------------------------- |
 | `prompt` | string | Complete agent prompt ready for Task tool |
 
 ## Core Template
@@ -74,38 +74,38 @@ After saving, send a message to the team lead with a summary.
 ### Programmatic Usage
 
 ```javascript
-const { loadBlock, renderTemplate } = require('.aios-core/utils/block-loader');
+const { loadBlock, renderTemplate } = require(".aios-core/utils/block-loader");
 
-const template = await loadBlock('agent-prompt-template');
+const template = await loadBlock("agent-prompt-template");
 const prompt = await renderTemplate(template, {
-  agent_name: 'Aria',
-  agent_role: 'Architect',
-  agent_file_path: '.claude/commands/AIOS/agents/architect.md',
-  context_category: 'Architecture',
-  context_from_user: 'We need to design auth for a multi-tenant SaaS.',
-  mission_description: 'Create detailed authentication architecture document.',
-  output_path: 'docs/architecture/auth-design.md',
-  output_format: 'markdown'
+  agent_name: "Aria",
+  agent_role: "Architect",
+  agent_file_path: ".claude/commands/AIOS/agents/architect.md",
+  context_category: "Architecture",
+  context_from_user: "We need to design auth for a multi-tenant SaaS.",
+  mission_description: "Create detailed authentication architecture document.",
+  output_path: "docs/architecture/auth-design.md",
+  output_format: "markdown",
 });
 
 // Use with Task tool
-Task({ prompt, subagent_type: 'general-purpose' });
+Task({ prompt, subagent_type: "general-purpose" });
 ```
 
 ## Files Accessed
 
-| File | Purpose |
-|------|---------|
-| Agent file at `{agent_file_path}` | Agent persona and capabilities |
-| Via `context-loading` block | Git state, gotchas, preferences |
+| File                              | Purpose                         |
+| --------------------------------- | ------------------------------- |
+| Agent file at `{agent_file_path}` | Agent persona and capabilities  |
+| Via `context-loading` block       | Git state, gotchas, preferences |
 
 ## Error Handling
 
-| Error | Behavior |
-|-------|----------|
-| Missing required parameter | Block fails with validation error |
-| Agent file not found | Agent reads empty, continues with defaults |
-| Invalid output_format | Default to `markdown` |
+| Error                      | Behavior                                   |
+| -------------------------- | ------------------------------------------ |
+| Missing required parameter | Block fails with validation error          |
+| Agent file not found       | Agent reads empty, continues with defaults |
+| Invalid output_format      | Default to `markdown`                      |
 
 ## Notes
 

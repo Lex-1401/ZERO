@@ -5,6 +5,7 @@ read_when:
   - Investigando linhas de instância duplicadas ou obsoletas
   - Alterando o beacon de conexão WS do gateway ou de eventos do sistema
 ---
+
 # Presença
 
 A “presença” do ZERO é uma visão leve e de melhor esforço de:

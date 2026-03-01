@@ -4,6 +4,7 @@ read_when:
   - Adicionando ou modificando a captura de câmera em nós iOS ou macOS
   - Estendendo os fluxos de trabalho de arquivos temporários MEDIA acessíveis por agentes
 ---
+
 # Captura de Câmera (Agente)
 
 O ZERO suporta a **captura de câmera** para fluxos de trabalho de agentes:
@@ -142,7 +143,7 @@ Notas:
 
 ## Vídeo de tela macOS (nível do SO)
 
-Para vídeo de *tela* (não câmera), use o complementar do macOS:
+Para vídeo de _tela_ (não câmera), use o complementar do macOS:
 
 ```bash
 zero nodes screen record --node <id> --duration 10s --fps 15   # imprime MEDIA:<caminho>

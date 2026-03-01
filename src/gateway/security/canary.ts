@@ -27,7 +27,6 @@ export class CanaryTrap {
         await fs.writeFile(baitPath, fakeContent, { mode: 0o600 });
       }
 
-      console.log(`[Zero Sentinel] Canary Trap deployed at ${TRAP_DIR}`);
       // In a real implementation, we would start an fs.watch here
       // CanaryTrap.startWatch();
     } catch (err) {

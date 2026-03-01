@@ -2,7 +2,24 @@
 name: 1password
 description: Configure e use a CLI do 1Password (op). Use ao instalar a CLI, habilitar a integração com o app de desktop, fazer login (conta única ou múltipla) ou ler/injetar/executar segredos via op.
 homepage: https://developer.1password.com/docs/cli/get-started/
-metadata: {"zero":{"emoji":"🔐","requires":{"bins":["op"]},"install":[{"id":"brew","kind":"brew","formula":"1password-cli","bins":["op"],"label":"Instalar CLI do 1Password (brew)"}]}}
+metadata:
+  {
+    "zero":
+      {
+        "emoji": "🔐",
+        "requires": { "bins": ["op"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "1password-cli",
+              "bins": ["op"],
+              "label": "Instalar CLI do 1Password (brew)",
+            },
+          ],
+      },
+  }
 ---
 
 # 1Password CLI

@@ -5,6 +5,7 @@ read_when:
   - Integrando o Peekaboo via Swift Package Manager
   - Alterando o protocolo/caminhos do PeekabooBridge
 ---
+
 # Peekaboo Bridge (automação de interface no macOS)
 
 O ZERO pode hospedar o **PeekabooBridge** como um broker de automação de interface local e ciente de permissões. Isso permite que a CLI `peekaboo` execute automações de interface reutilizando as permissões de TCC do app macOS.

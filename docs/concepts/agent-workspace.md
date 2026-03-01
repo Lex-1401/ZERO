@@ -4,6 +4,7 @@ read_when:
   - Você precisa explicar o espaço de trabalho do agente ou seu layout de arquivos
   - Você deseja fazer backup ou migrar um espaço de trabalho de agente
 ---
+
 # Espaço de Trabalho do Agente
 
 O espaço de trabalho (workspace) é a casa do agente. É o único diretório de trabalho usado para ferramentas de arquivo e para o contexto do espaço de trabalho. Mantenha-o privado e trate-o como uma memória.
@@ -21,8 +22,8 @@ Isso é separado de `~/.zero/`, que armazena configurações, credenciais e sess
 ```json5
 {
   agent: {
-    workspace: "~/zero"
-  }
+    workspace: "~/zero",
+  },
 }
 ```
 

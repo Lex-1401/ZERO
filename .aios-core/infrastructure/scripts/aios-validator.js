@@ -9,26 +9,26 @@
  * Refactored to use execa for cross-platform compatibility
  */
 
-const { execaSync } = require('execa');
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const { execaSync } = require("execa");
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
 // Terminal colors
 const colors = {
-  reset: '\x1b[0m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  cyan: '\x1b[36m',
-  bold: '\x1b[1m',
+  reset: "\x1b[0m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  cyan: "\x1b[36m",
+  bold: "\x1b[1m",
 };
 
 function printHeader(message) {
-  console.log(`\n${colors.cyan}${colors.bold}${'='.repeat(60)}${colors.reset}`);
+  console.log(`\n${colors.cyan}${colors.bold}${"=".repeat(60)}${colors.reset}`);
   console.log(`${colors.cyan}${colors.bold}${message}${colors.reset}`);
-  console.log(`${colors.cyan}${colors.bold}${'='.repeat(60)}${colors.reset}\n`);
+  console.log(`${colors.cyan}${colors.bold}${"=".repeat(60)}${colors.reset}\n`);
 }
 
 function printSuccess(message) {
@@ -51,7 +51,7 @@ function printInfo(message) {
  * Validate story file structure
  */
 async function validateStoryFile(storyPath) {
-  printHeader('Story File Validation');
+  printHeader("Story File Validation");
 
   const errors = [];
 
@@ -61,14 +61,14 @@ async function validateStoryFile(storyPath) {
       return { success: false, errors: [`File not found: ${storyPath}`] };
     }
 
-    const content = fs.readFileSync(storyPath, 'utf-8');
+    const content = fs.readFileSync(storyPath, "utf-8");
 
     // Check for required sections
     const requiredSections = [
-      '# Story',
-      '## Problem Statement',
-      '## Proposed Solution',
-      '## Acceptance Criteria',
+      "# Story",
+      "## Problem Statement",
+      "## Proposed Solution",
+      "## Acceptance Criteria",
     ];
 
     for (const section of requiredSections) {
@@ -78,14 +78,13 @@ async function validateStoryFile(storyPath) {
     }
 
     if (errors.length > 0) {
-      printError('Story file validation failed:');
-      errors.forEach(err => console.log(`  - ${err}`));
+      printError("Story file validation failed:");
+      errors.forEach((err) => console.log(`  - ${err}`));
       return { success: false, errors };
     }
 
-    printSuccess('Story file structure is valid');
+    printSuccess("Story file structure is valid");
     return { success: true, errors: [] };
-
   } catch (error) {
     printError(`Story file validation error: ${error.message}`);
     return { success: false, errors: [`Validation error: ${error.message}`] };
@@ -96,29 +95,28 @@ async function validateStoryFile(storyPath) {
  * Run ESLint validation
  */
 async function runESLint(files = []) {
-  printHeader('ESLint Validation');
+  printHeader("ESLint Validation");
 
   const errors = [];
 
   try {
-    const filePattern = files.length > 0 ? files.join(' ') : '.';
+    const filePattern = files.length > 0 ? files.join(" ") : ".";
     // ESLint 9.x: removed compact formatter from core, using default (stylish)
 
-    execaSync('npx', ['eslint', filePattern, '--cache', '--cache-location', '.eslintcache'], {
-      stdio: 'pipe',
-      encoding: 'utf8',
+    execaSync("npx", ["eslint", filePattern, "--cache", "--cache-location", ".eslintcache"], {
+      stdio: "pipe",
+      encoding: "utf8",
     });
 
-    printSuccess('ESLint validation passed');
+    printSuccess("ESLint validation passed");
     return { success: true, errors: [] };
-
   } catch (error) {
-    const output = error.stdout || error.stderr || '';
+    const output = error.stdout || error.stderr || "";
 
     if (output) {
-      printError('ESLint found issues:');
-      console.log('\n' + output);
-      errors.push('ESLint validation failed');
+      printError("ESLint found issues:");
+      console.log("\n" + output);
+      errors.push("ESLint validation failed");
     } else {
       printError(`ESLint execution error: ${error.message}`);
       errors.push(`ESLint error: ${error.message}`);
@@ -132,26 +130,25 @@ async function runESLint(files = []) {
  * Run TypeScript type checking
  */
 async function runTypeScript() {
-  printHeader('TypeScript Type Checking');
+  printHeader("TypeScript Type Checking");
 
   const errors = [];
 
   try {
-    execaSync('npx', ['tsc', '--noEmit'], {
-      stdio: 'pipe',
-      encoding: 'utf8',
+    execaSync("npx", ["tsc", "--noEmit"], {
+      stdio: "pipe",
+      encoding: "utf8",
     });
 
-    printSuccess('TypeScript validation passed');
+    printSuccess("TypeScript validation passed");
     return { success: true, errors: [] };
-
   } catch (error) {
-    const output = error.stdout || error.stderr || '';
+    const output = error.stdout || error.stderr || "";
 
     if (output) {
-      printError('TypeScript found type errors:');
-      console.log('\n' + output);
-      errors.push('TypeScript validation failed');
+      printError("TypeScript found type errors:");
+      console.log("\n" + output);
+      errors.push("TypeScript validation failed");
     } else {
       printError(`TypeScript execution error: ${error.message}`);
       errors.push(`TypeScript error: ${error.message}`);
@@ -165,21 +162,20 @@ async function runTypeScript() {
  * Validate YAML files
  */
 async function validateYAML(files = []) {
-  printHeader('YAML Validation');
+  printHeader("YAML Validation");
 
   const errors = [];
-  const yamlFiles = files.length > 0
-    ? files.filter(f => f.endsWith('.yml') || f.endsWith('.yaml'))
-    : [];
+  const yamlFiles =
+    files.length > 0 ? files.filter((f) => f.endsWith(".yml") || f.endsWith(".yaml")) : [];
 
   if (yamlFiles.length === 0) {
-    printInfo('No YAML files to validate');
+    printInfo("No YAML files to validate");
     return { success: true, errors: [] };
   }
 
   for (const file of yamlFiles) {
     try {
-      const content = fs.readFileSync(file, 'utf-8');
+      const content = fs.readFileSync(file, "utf-8");
       yaml.load(content);
       printSuccess(`Valid YAML: ${file}`);
     } catch (error) {
@@ -195,11 +191,7 @@ async function validateYAML(files = []) {
  * Main validation orchestrator
  */
 async function validate(options = {}) {
-  const {
-    type = 'all',
-    files = [],
-    storyPath = null,
-  } = options;
+  const { type = "all", files = [], storyPath = null } = options;
 
   printHeader(`AIOS-FullStack Validation: ${type}`);
 
@@ -210,7 +202,7 @@ async function validate(options = {}) {
 
   try {
     // Story validation
-    if (type === 'story' || type === 'all') {
+    if (type === "story" || type === "all") {
       if (storyPath) {
         const storyResult = await validateStoryFile(storyPath);
         if (!storyResult.success) {
@@ -221,7 +213,7 @@ async function validate(options = {}) {
     }
 
     // ESLint validation
-    if (type === 'eslint' || type === 'all' || type === 'pre-commit') {
+    if (type === "eslint" || type === "all" || type === "pre-commit") {
       const eslintResult = await runESLint(files);
       if (!eslintResult.success) {
         results.success = false;
@@ -230,7 +222,7 @@ async function validate(options = {}) {
     }
 
     // TypeScript validation
-    if (type === 'typescript' || type === 'typecheck' || type === 'all' || type === 'pre-push') {
+    if (type === "typescript" || type === "typecheck" || type === "all" || type === "pre-push") {
       const tsResult = await runTypeScript();
       if (!tsResult.success) {
         results.success = false;
@@ -239,7 +231,7 @@ async function validate(options = {}) {
     }
 
     // YAML validation
-    if (type === 'yaml' || type === 'all') {
+    if (type === "yaml" || type === "all") {
       const yamlResult = await validateYAML(files);
       if (!yamlResult.success) {
         results.success = false;
@@ -248,18 +240,17 @@ async function validate(options = {}) {
     }
 
     // Final summary
-    console.log('\n' + '='.repeat(60));
+    console.log("\n" + "=".repeat(60));
     if (results.success) {
-      printSuccess('All validations passed!');
+      printSuccess("All validations passed!");
     } else {
       printError(`Validation failed with ${results.errors.length} error(s)`);
-      console.log('\nErrors:');
-      results.errors.forEach(err => console.log(`  - ${err}`));
+      console.log("\nErrors:");
+      results.errors.forEach((err) => console.log(`  - ${err}`));
     }
-    console.log('='.repeat(60) + '\n');
+    console.log("=".repeat(60) + "\n");
 
     return results;
-
   } catch (error) {
     printError(`Validation system error: ${error.message}`);
     return {
@@ -272,15 +263,15 @@ async function validate(options = {}) {
 // CLI execution
 if (require.main === module) {
   const args = process.argv.slice(2);
-  const type = args[0] || 'all';
+  const type = args[0] || "all";
   const files = args.slice(1);
 
   validate({ type, files })
-    .then(results => {
+    .then((results) => {
       process.exit(results.success ? 0 : 1);
     })
-    .catch(error => {
-      console.error('Fatal error:', error);
+    .catch((error) => {
+      console.error("Fatal error:", error);
       process.exit(1);
     });
 }

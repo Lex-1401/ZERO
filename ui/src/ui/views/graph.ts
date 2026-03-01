@@ -4,7 +4,16 @@ import { icons } from "../icons";
 import { t } from "../i18n";
 
 // --- Types ---
-type GraphNode = { id: string; name: string; type: string; description?: string; x?: number; y?: number; vx?: number; vy?: number };
+type GraphNode = {
+  id: string;
+  name: string;
+  type: string;
+  description?: string;
+  x?: number;
+  y?: number;
+  vx?: number;
+  vy?: number;
+};
 type GraphEdge = { source_id: string; target_id: string; relation: string; description?: string };
 
 // --- Force Graph Component ---
@@ -30,7 +39,7 @@ export class ZEROForceGraph extends LitElement {
       position: relative;
       overflow: hidden;
     }
-    
+
     svg {
       width: 100%;
       height: 100%;
@@ -38,7 +47,7 @@ export class ZEROForceGraph extends LitElement {
       background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       background-size: 20px 20px;
     }
-    
+
     svg:active {
       cursor: grabbing;
     }
@@ -49,20 +58,20 @@ export class ZEROForceGraph extends LitElement {
       stroke-width: 1.5px;
       transition: all 0.2s ease;
     }
-    
+
     .node-circle:hover {
-        fill: var(--bg-surface-2, #2c2c2c);
-        stroke: var(--accent-blue, #007aff);
-        stroke-width: 2px;
-        filter: drop-shadow(0 0 4px rgba(0, 122, 255, 0.5));
+      fill: var(--bg-surface-2, #2c2c2c);
+      stroke: var(--accent-blue, #007aff);
+      stroke-width: 2px;
+      filter: drop-shadow(0 0 4px rgba(0, 122, 255, 0.5));
     }
 
     .node-circle.active {
-        stroke: var(--accent-magenta, #ff2d55);
-        stroke-width: 2px;
-        filter: drop-shadow(0 0 6px rgba(255, 45, 85, 0.5));
+      stroke: var(--accent-magenta, #ff2d55);
+      stroke-width: 2px;
+      filter: drop-shadow(0 0 6px rgba(255, 45, 85, 0.5));
     }
-    
+
     .node-label {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 10px;
@@ -70,9 +79,9 @@ export class ZEROForceGraph extends LitElement {
       fill: var(--text-muted, #888);
       pointer-events: none;
       text-anchor: middle;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
-    
+
     .edge-path {
       stroke: var(--border-subtle, #333);
       stroke-width: 1px;
@@ -81,45 +90,47 @@ export class ZEROForceGraph extends LitElement {
     }
 
     .edge-label {
-        font-family: monospace;
-        font-size: 8px;
-        fill: var(--text-dim, #555);
-        text-anchor: middle;
-        opacity: 0;
-        transition: opacity 0.2s;
+      font-family: monospace;
+      font-size: 8px;
+      fill: var(--text-dim, #555);
+      text-anchor: middle;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
-    
+
     g:hover .edge-label {
-        opacity: 1;
+      opacity: 1;
     }
-    
+
     .controls {
-        position: absolute;
-        bottom: 24px;
-        right: 24px;
-        background: var(--bg-surface, #1e1e1e);
-        border: 1px solid var(--border-subtle, #333);
-        border-radius: 8px;
-        padding: 4px;
-        display: flex;
-        gap: 4px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-surface, #1e1e1e);
+      border: 1px solid var(--border-subtle, #333);
+      border-radius: 8px;
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    
+
     button {
-        background: transparent;
-        border: none;
-        color: var(--text-main, #fff);
-        cursor: pointer;
-        padding: 6px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
+      background: transparent;
+      border: none;
+      color: var(--text-main, #fff);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
     }
-    button:hover { background: rgba(255,255,255,0.1); }
+    button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
   `;
 
   updated(changed: Map<string, unknown>) {
@@ -145,18 +156,20 @@ export class ZEROForceGraph extends LitElement {
         x: width / 2 + (Math.random() - 0.5) * 200,
         y: height / 2 + (Math.random() - 0.5) * 200,
         vx: 0,
-        vy: 0
+        vy: 0,
       };
       nodeMap.set(n.id, node);
       return node;
     });
 
-    this.links = this.data.edges.map(e => {
-      const source = nodeMap.get(e.source_id);
-      const target = nodeMap.get(e.target_id);
-      if (source && target) return { source, target, relation: e.relation };
-      return null;
-    }).filter(Boolean) as any[];
+    this.links = this.data.edges
+      .map((e) => {
+        const source = nodeMap.get(e.source_id);
+        const target = nodeMap.get(e.target_id);
+        if (source && target) return { source, target, relation: e.relation };
+        return null;
+      })
+      .filter(Boolean) as any[];
 
     this.startTick();
   }
@@ -166,7 +179,10 @@ export class ZEROForceGraph extends LitElement {
     this.simulationRunning = true;
 
     const tick = () => {
-      if (!this.isConnected) { this.simulationRunning = false; return; }
+      if (!this.isConnected) {
+        this.simulationRunning = false;
+        return;
+      }
 
       let totalVel = 0;
       const k = 140;
@@ -191,8 +207,10 @@ export class ZEROForceGraph extends LitElement {
             const f = repulsion / d2;
             const fx = (dx / d) * f;
             const fy = (dy / d) * f;
-            n1.vx! += fx; n1.vy! += fy;
-            n2.vx! -= fx; n2.vy! -= fy;
+            n1.vx! += fx;
+            n1.vy! += fy;
+            n2.vx! -= fx;
+            n2.vy! -= fy;
           }
         }
         n1.vx! += (cx - n1.x!) * gravity;
@@ -208,8 +226,10 @@ export class ZEROForceGraph extends LitElement {
         const f = (d - k) * 0.08;
         const fx = (dx / d) * f;
         const fy = (dy / d) * f;
-        n1.vx! -= fx; n1.vy! -= fy;
-        n2.vx! += fx; n2.vy! += fy;
+        n1.vx! -= fx;
+        n1.vy! -= fy;
+        n2.vx! += fx;
+        n2.vy! += fy;
       }
 
       for (const n of this.nodes) {
@@ -248,7 +268,9 @@ export class ZEROForceGraph extends LitElement {
     }
   }
 
-  private onMouseUp() { this.isDragging = false; }
+  private onMouseUp() {
+    this.isDragging = false;
+  }
 
   render() {
     if (!this.data) return html``;
@@ -263,21 +285,25 @@ export class ZEROForceGraph extends LitElement {
             @mouseleave=${this.onMouseUp}
         >
           <g transform="translate(${x},${y}) scale(${k})">
-            ${this.links.map(l => html`
+            ${this.links.map(
+              (l) => html`
                 <line x1=${l.source.x} y1=${l.source.y} x2=${l.target.x} y2=${l.target.y} class="edge-path" />
                 <text x=${(l.source.x! + l.target.x!) / 2} y=${(l.source.y! + l.target.y!) / 2 - 5} class="edge-label">${l.relation}</text>
-            `)}
-            ${this.nodes.map(n => html`
+            `,
+            )}
+            ${this.nodes.map(
+              (n) => html`
                 <g transform="translate(${n.x}, ${n.y})">
                     <circle r="12" class="node-circle ${this.thinkingNodeIds.includes(n.id) ? "active" : ""}" />
                     <text dy="26" class="node-label">${n.name}</text>
                 </g>
-            `)}
+            `,
+            )}
           </g>
         </svg>
         <div class="controls">
             <button @click=${() => this.initSimulation()} title="${t("graph.controls.reorganize" as any)}">${icons.rotateCcw || "R"}</button>
-            <button @click=${() => this.transform = { x: 0, y: 0, k: 1 }} title="${t("graph.controls.center" as any)}">${icons.maximize || "C"}</button>
+            <button @click=${() => (this.transform = { x: 0, y: 0, k: 1 })} title="${t("graph.controls.center" as any)}">${icons.maximize || "C"}</button>
         </div>
       `;
   }

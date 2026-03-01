@@ -3,13 +3,14 @@ summary: "Ciclo de vida da sobreposição de voz (voice overlay) quando a palavr
 read_when:
   - Ajustando o comportamento da sobreposição de voz
 ---
+
 # Ciclo de Vida da Sobreposição de Voz (macOS)
 
 Público: colaboradores do app macOS. Objetivo: manter a sobreposição de voz (voice overlay) previsível quando a palavra de ativação (wake-word) e o push-to-talk se sobrepõem.
 
 ### Intenção atual
 
-- Se a sobreposição já estiver visível a partir da palavra de ativação e o usuário pressionar a tecla de atalho, a sessão da tecla de atalho *adota* o texto existente em vez de resetá-lo. A sobreposição permanece ativa enquanto a tecla de atalho for mantida. Quando o usuário soltar: envia se houver texto limpo (trimmed), caso contrário, descarta.
+- Se a sobreposição já estiver visível a partir da palavra de ativação e o usuário pressionar a tecla de atalho, a sessão da tecla de atalho _adota_ o texto existente em vez de resetá-lo. A sobreposição permanece ativa enquanto a tecla de atalho for mantida. Quando o usuário soltar: envia se houver texto limpo (trimmed), caso contrário, descarta.
 - A palavra de ativação sozinha ainda envia automaticamente após o silêncio; o push-to-talk envia imediatamente ao ser solto.
 
 ### Implementado (09 de dezembro de 2025)

@@ -23,7 +23,7 @@ Checklist:
   - "[ ] Display next steps"
 ---
 
-# *design-squad
+# \*design-squad
 
 Analyzes documentation and guides the user through designing a squad structure with intelligent recommendations for agents and tasks.
 
@@ -47,13 +47,13 @@ Analyzes documentation and guides the user through designing a squad structure w
 
 ## Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `--docs` | string | - | Comma-separated paths to documentation files |
-| `--domain` | string | - | Domain hint to guide analysis |
-| `--output` | string | ./squads/.designs/ | Output directory for blueprint |
-| `--quick` | flag | false | Accept all recommendations without review |
-| `--verbose` | flag | false | Show detailed analysis output |
+| Parameter   | Type   | Default            | Description                                  |
+| ----------- | ------ | ------------------ | -------------------------------------------- |
+| `--docs`    | string | -                  | Comma-separated paths to documentation files |
+| `--domain`  | string | -                  | Domain hint to guide analysis                |
+| `--output`  | string | ./squads/.designs/ | Output directory for blueprint               |
+| `--quick`   | flag   | false              | Accept all recommendations without review    |
+| `--verbose` | flag   | false              | Show detailed analysis output                |
 
 ## Interactive Flow
 
@@ -260,15 +260,16 @@ metadata:
   overall_confidence: 0.87
 ```
 
-## Integration with *create-squad
+## Integration with \*create-squad
 
-After generating a blueprint, use it with *create-squad:
+After generating a blueprint, use it with \*create-squad:
 
 ```bash
 *create-squad my-domain-squad --from-design ./squads/.designs/my-domain-squad-design.yaml
 ```
 
 This will:
+
 1. Load the blueprint
 2. Validate against schema
 3. Generate squad structure with custom agents/tasks from blueprint
@@ -276,17 +277,17 @@ This will:
 
 ## Error Handling
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| `NO_DOCUMENTATION` | No input provided | Provide docs via --docs or interactively |
-| `PARSE_ERROR` | Cannot read/parse file | Check file format (md, yaml, json) |
-| `EMPTY_ANALYSIS` | No domain concepts extracted | Provide more detailed documentation |
-| `BLUEPRINT_EXISTS` | Blueprint already exists | Use --force to overwrite |
+| Error              | Cause                        | Resolution                               |
+| ------------------ | ---------------------------- | ---------------------------------------- |
+| `NO_DOCUMENTATION` | No input provided            | Provide docs via --docs or interactively |
+| `PARSE_ERROR`      | Cannot read/parse file       | Check file format (md, yaml, json)       |
+| `EMPTY_ANALYSIS`   | No domain concepts extracted | Provide more detailed documentation      |
+| `BLUEPRINT_EXISTS` | Blueprint already exists     | Use --force to overwrite                 |
 
 ## Implementation
 
 ```javascript
-const { SquadDesigner } = require('./.aios-core/development/scripts/squad');
+const { SquadDesigner } = require("./.aios-core/development/scripts/squad");
 
 async function designSquad(options) {
   const designer = new SquadDesigner();
@@ -300,7 +301,7 @@ async function designSquad(options) {
   // 3. Generate recommendations
   const recommendations = {
     agents: designer.generateAgentRecommendations(analysis),
-    tasks: designer.generateTaskRecommendations(analysis)
+    tasks: designer.generateTaskRecommendations(analysis),
   };
 
   // 4. Interactive refinement (unless --quick)
@@ -314,8 +315,8 @@ async function designSquad(options) {
     recommendations,
     metadata: {
       source_docs: options.docs,
-      created_at: new Date().toISOString()
-    }
+      created_at: new Date().toISOString(),
+    },
   });
 
   // 6. Save blueprint
@@ -330,5 +331,5 @@ async function designSquad(options) {
 - **Agent:** @squad-creator (Craft)
 - **Script:** squad-designer.js
 - **Schema:** squad-design-schema.json
-- **Integration:** *create-squad --from-design
+- **Integration:** \*create-squad --from-design
 - **Story:** SQS-9 (Squad Designer)

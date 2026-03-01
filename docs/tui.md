@@ -9,19 +9,19 @@ read_when:
 
 ## Início rápido
 
-1) Inicie o Gateway.
+1. Inicie o Gateway.
 
 ```bash
 zero gateway
 ```
 
-1) Abra a TUI.
+1. Abra a TUI.
 
 ```bash
 zero tui
 ```
 
-1) Digite uma mensagem e pressione Enter.
+1. Digite uma mensagem e pressione Enter.
 
 Gateway Remoto:
 

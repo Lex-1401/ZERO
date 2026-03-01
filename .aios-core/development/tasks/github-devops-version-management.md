@@ -11,16 +11,19 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -188,6 +191,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -207,8 +211,8 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Prerequisites
+
 - Git repository with commit history
 - package.json with current version
 - Understanding of semantic versioning (MAJOR.MINOR.PATCH)
@@ -222,6 +226,7 @@ updated_at: 2025-11-17
 ## Keywords for Detection
 
 **Breaking Changes** (MAJOR):
+
 - `BREAKING CHANGE:`
 - `BREAKING:`
 - `!` in commit type (e.g., `feat!:`)
@@ -230,12 +235,14 @@ updated_at: 2025-11-17
 - Incompatible changes
 
 **New Features** (MINOR):
+
 - `feat:`
 - `feature:`
 - New capability
 - Enhancement
 
 **Bug Fixes** (PATCH):
+
 - `fix:`
 - `bugfix:`
 - `hotfix:`
@@ -246,7 +253,7 @@ updated_at: 2025-11-17
 ### Step 1: Detect Repository Context
 
 ```javascript
-const { detectRepositoryContext } = require('./../scripts/repository-detector');
+const { detectRepositoryContext } = require("./../scripts/repository-detector");
 const context = detectRepositoryContext();
 
 if (!context) {
@@ -272,6 +279,7 @@ git log <last-tag>..HEAD --oneline
 ```
 
 Parse each commit message:
+
 - Count breaking changes
 - Count features
 - Count fixes
@@ -279,6 +287,7 @@ Parse each commit message:
 ### Step 4: Recommend Version Bump
 
 **Logic**:
+
 1. If `breakingChanges > 0` → MAJOR bump
 2. Else if `features > 0` → MINOR bump
 3. Else if `fixes > 0` → PATCH bump
@@ -307,15 +316,15 @@ Proceed with version v4.32.0? (Y/n)
 ### Step 6: Update package.json
 
 ```javascript
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const packageJsonPath = path.join(context.projectRoot, 'package.json');
-const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const packageJsonPath = path.join(context.projectRoot, "package.json");
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
 packageJson.version = newVersion;
 
-fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n");
 console.log(`✓ Updated package.json to ${newVersion}`);
 ```
 
@@ -333,11 +342,13 @@ Extract commits since last tag and format:
 ## [4.32.0] - 2025-10-25
 
 ### Added
+
 - New feature A
 - New feature B
 - New feature C
 
 ### Fixed
+
 - Bug fix 1
 - Bug fix 2
 ```
@@ -345,19 +356,19 @@ Extract commits since last tag and format:
 ## Example Implementation
 
 ```javascript
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const inquirer = require('inquirer');
-const semver = require('semver');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+const inquirer = require("inquirer");
+const semver = require("semver");
 
 async function manageVersion() {
   // Step 1: Detect context
-  const { detectRepositoryContext } = require('./../scripts/repository-detector');
+  const { detectRepositoryContext } = require("./../scripts/repository-detector");
   const context = detectRepositoryContext();
 
   if (!context) {
-    console.error('❌ Unable to detect repository context');
+    console.error("❌ Unable to detect repository context");
     process.exit(1);
   }
 
@@ -367,20 +378,26 @@ async function manageVersion() {
   // Step 2: Get last tag
   let lastTag;
   try {
-    lastTag = execSync('git describe --tags --abbrev=0', {
-      cwd: context.projectRoot
-    }).toString().trim();
+    lastTag = execSync("git describe --tags --abbrev=0", {
+      cwd: context.projectRoot,
+    })
+      .toString()
+      .trim();
   } catch (error) {
-    lastTag = 'v0.0.0';
-    console.log('⚠️  No tags found, using v0.0.0 as baseline');
+    lastTag = "v0.0.0";
+    console.log("⚠️  No tags found, using v0.0.0 as baseline");
   }
 
   console.log(`Last tag: ${lastTag}\n`);
 
   // Step 3: Analyze commits
   const commits = execSync(`git log ${lastTag}..HEAD --oneline`, {
-    cwd: context.projectRoot
-  }).toString().trim().split('\n').filter(Boolean);
+    cwd: context.projectRoot,
+  })
+    .toString()
+    .trim()
+    .split("\n")
+    .filter(Boolean);
 
   let breakingChanges = 0;
   let features = 0;
@@ -390,71 +407,71 @@ async function manageVersion() {
   const featurePattern = /^feat:|^feature:/;
   const fixPattern = /^fix:|^bugfix:|^hotfix:/;
 
-  commits.forEach(commit => {
+  commits.forEach((commit) => {
     if (breakingPattern.test(commit)) breakingChanges++;
     else if (featurePattern.test(commit)) features++;
     else if (fixPattern.test(commit)) fixes++;
   });
 
   // Step 4: Recommend version
-  const currentVersion = context.packageVersion.replace(/^v/, '');
+  const currentVersion = context.packageVersion.replace(/^v/, "");
   let newVersion;
   let bumpType;
 
   if (breakingChanges > 0) {
-    newVersion = semver.inc(currentVersion, 'major');
-    bumpType = 'MAJOR';
+    newVersion = semver.inc(currentVersion, "major");
+    bumpType = "MAJOR";
   } else if (features > 0) {
-    newVersion = semver.inc(currentVersion, 'minor');
-    bumpType = 'MINOR';
+    newVersion = semver.inc(currentVersion, "minor");
+    bumpType = "MINOR";
   } else if (fixes > 0) {
-    newVersion = semver.inc(currentVersion, 'patch');
-    bumpType = 'PATCH';
+    newVersion = semver.inc(currentVersion, "patch");
+    bumpType = "PATCH";
   } else {
-    console.log('ℹ️  No version bump needed (no changes detected)');
+    console.log("ℹ️  No version bump needed (no changes detected)");
     process.exit(0);
   }
 
   // Step 5: User confirmation
-  console.log('📊 Version Analysis');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log("📊 Version Analysis");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log(`Current version:  v${currentVersion}`);
   console.log(`Recommended:      v${newVersion} (${bumpType})`);
-  console.log('');
+  console.log("");
   console.log(`Changes since ${lastTag}:`);
   console.log(`  Breaking changes: ${breakingChanges}`);
   console.log(`  New features:     ${features}`);
   console.log(`  Bug fixes:        ${fixes}`);
-  console.log('');
+  console.log("");
 
   const { confirm } = await inquirer.prompt([
     {
-      type: 'confirm',
-      name: 'confirm',
+      type: "confirm",
+      name: "confirm",
       message: `Proceed with version v${newVersion}?`,
-      default: true
-    }
+      default: true,
+    },
   ]);
 
   if (!confirm) {
-    console.log('❌ Version update cancelled');
+    console.log("❌ Version update cancelled");
     process.exit(0);
   }
 
   // Step 6: Update package.json
-  const packageJsonPath = path.join(context.projectRoot, 'package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const packageJsonPath = path.join(context.projectRoot, "package.json");
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
   packageJson.version = newVersion;
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n");
   console.log(`\n✓ Updated package.json to v${newVersion}`);
 
   // Step 7: Create git tag
   execSync(`git tag -a v${newVersion} -m "Release v${newVersion}"`, {
-    cwd: context.projectRoot
+    cwd: context.projectRoot,
   });
   console.log(`✓ Created git tag v${newVersion}`);
 
-  console.log('\n✅ Version management complete!');
+  console.log("\n✅ Version management complete!");
   console.log(`\nNext steps:`);
   console.log(`  - Review changes: git show v${newVersion}`);
   console.log(`  - Push tag: git push origin v${newVersion}`);
@@ -480,4 +497,4 @@ Called by `@github-devops` agent via `*version-check` command.
 - Works with ANY repository (framework or project)
 - Respects conventional commits format
 - User always has final approval
-- Does NOT push to remote (that's done by *push command)
+- Does NOT push to remote (that's done by \*push command)

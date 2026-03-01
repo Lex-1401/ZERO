@@ -17,30 +17,31 @@
  *   --quiet       - Minimal output (for pre-commit hooks)
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs-extra");
+const path = require("path");
+const yaml = require("js-yaml");
 
-const { parseAllAgents } = require('./agent-parser');
-const { generateAllRedirects, writeRedirects } = require('./redirect-generator');
-const { validateAllIdes, formatValidationReport } = require('./validator');
-const { syncGeminiCommands, buildGeminiCommandFiles } = require('./gemini-commands');
+const { parseAllAgents } = require("./agent-parser");
+const { generateAllRedirects, writeRedirects } = require("./redirect-generator");
+const { validateAllIdes, formatValidationReport } = require("./validator");
+const { syncGeminiCommands, buildGeminiCommandFiles } = require("./gemini-commands");
 
 // Transformers
-const claudeCodeTransformer = require('./transformers/claude-code');
-const cursorTransformer = require('./transformers/cursor');
-const antigravityTransformer = require('./transformers/antigravity');
+const claudeCodeTransformer = require("./transformers/claude-code");
+const cursorTransformer = require("./transformers/cursor");
+const antigravityTransformer = require("./transformers/antigravity");
+const githubCopilotTransformer = require("./transformers/github-copilot");
 
 // ANSI colors for output
 const colors = {
-  reset: '\x1b[0m',
-  bright: '\x1b[1m',
-  dim: '\x1b[2m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  cyan: '\x1b[36m',
+  reset: "\x1b[0m",
+  bright: "\x1b[1m",
+  dim: "\x1b[2m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  cyan: "\x1b[36m",
 };
 
 /**
@@ -49,49 +50,49 @@ const colors = {
  * @returns {object} - ideSync configuration
  */
 function loadConfig(projectRoot) {
-  const configPath = path.join(projectRoot, '.aios-core', 'core-config.yaml');
+  const configPath = path.join(projectRoot, ".aios-core", "core-config.yaml");
 
   // Default configuration
   const defaultConfig = {
     enabled: true,
-    source: '.aios-core/development/agents',
+    source: ".aios-core/development/agents",
     targets: {
-      'claude-code': {
+      "claude-code": {
         enabled: true,
-        path: '.claude/commands/AIOS/agents',
-        format: 'full-markdown-yaml',
+        path: ".claude/commands/AIOS/agents",
+        format: "full-markdown-yaml",
       },
       codex: {
         enabled: true,
-        path: '.codex/agents',
-        format: 'full-markdown-yaml',
+        path: ".codex/agents",
+        format: "full-markdown-yaml",
       },
       gemini: {
         enabled: true,
-        path: '.gemini/rules/AIOS/agents',
-        format: 'full-markdown-yaml',
+        path: ".gemini/rules/AIOS/agents",
+        format: "full-markdown-yaml",
       },
-      'github-copilot': {
+      "github-copilot": {
         enabled: true,
-        path: '.github/agents',
-        format: 'full-markdown-yaml',
+        path: ".github/agents",
+        format: "github-copilot",
       },
       cursor: {
         enabled: true,
-        path: '.cursor/rules/agents',
-        format: 'condensed-rules',
+        path: ".cursor/rules/agents",
+        format: "condensed-rules",
       },
       antigravity: {
         enabled: true,
-        path: '.antigravity/rules/agents',
-        format: 'cursor-style',
+        path: ".antigravity/rules/agents",
+        format: "cursor-style",
       },
     },
     redirects: {
-      'aios-developer': 'aios-master',
-      'aios-orchestrator': 'aios-master',
-      'db-sage': 'data-engineer',
-      'github-devops': 'devops',
+      "aios-developer": "aios-master",
+      "aios-orchestrator": "aios-master",
+      "db-sage": "data-engineer",
+      "github-devops": "devops",
     },
     validation: {
       strictMode: true,
@@ -102,7 +103,7 @@ function loadConfig(projectRoot) {
 
   try {
     if (fs.existsSync(configPath)) {
-      const content = fs.readFileSync(configPath, 'utf8');
+      const content = fs.readFileSync(configPath, "utf8");
       const config = yaml.load(content);
 
       if (config && config.ideSync) {
@@ -123,9 +124,10 @@ function loadConfig(projectRoot) {
  */
 function getTransformer(format) {
   const transformers = {
-    'full-markdown-yaml': claudeCodeTransformer,
-    'condensed-rules': cursorTransformer,
-    'cursor-style': antigravityTransformer,
+    "full-markdown-yaml": claudeCodeTransformer,
+    "condensed-rules": cursorTransformer,
+    "cursor-style": antigravityTransformer,
+    "github-copilot": githubCopilotTransformer,
   };
 
   return transformers[format] || claudeCodeTransformer;
@@ -163,14 +165,14 @@ function syncIde(agents, ideConfig, ideName, projectRoot, options) {
   // Transform and write each agent
   for (const agent of agents) {
     // Skip agents with fatal errors (no YAML block found or failed parse with no fallback)
-    if (agent.error && agent.error === 'Failed to parse YAML') {
+    if (agent.error && agent.error === "Failed to parse YAML") {
       result.errors.push({
         agent: agent.id,
         error: agent.error,
       });
       continue;
     }
-    if (agent.error && agent.error === 'No YAML block found') {
+    if (agent.error && agent.error === "No YAML block found") {
       result.errors.push({
         agent: agent.id,
         error: agent.error,
@@ -184,7 +186,7 @@ function syncIde(agents, ideConfig, ideName, projectRoot, options) {
       const targetPath = path.join(result.targetDir, filename);
 
       if (!options.dryRun) {
-        fs.writeFileSync(targetPath, content, 'utf8');
+        fs.writeFileSync(targetPath, content, "utf8");
       }
 
       result.files.push({
@@ -221,7 +223,7 @@ async function commandSync(options) {
 
   if (!options.quiet) {
     console.log(`${colors.bright}${colors.blue}🔄 IDE Sync${colors.reset}`);
-    console.log('');
+    console.log("");
   }
 
   // Parse all agents
@@ -233,7 +235,7 @@ async function commandSync(options) {
   const agents = parseAllAgents(agentsDir);
   if (!options.quiet) {
     console.log(`${colors.dim}Found ${agents.length} agents${colors.reset}`);
-    console.log('');
+    console.log("");
   }
 
   // Filter IDEs if --ide flag specified
@@ -264,7 +266,7 @@ async function commandSync(options) {
     const result = syncIde(agents, ideConfig, ideName, projectRoot, options);
 
     // Gemini CLI: also sync slash launcher command files (.gemini/commands/*.toml)
-    if (ideName === 'gemini') {
+    if (ideName === "gemini") {
       const geminiCommands = syncGeminiCommands(agents, projectRoot, options);
       result.commandFiles = geminiCommands.files;
     } else {
@@ -293,7 +295,7 @@ async function commandSync(options) {
       }
 
       console.log(
-        `   ${status} ${agentCount} agents${commandCount > 0 ? `, ${commandCount} commands` : ''}, ${redirectCount} redirects${errorCount > 0 ? `, ${errorCount} errors` : ''}`
+        `   ${status} ${agentCount} agents${commandCount > 0 ? `, ${commandCount} commands` : ""}, ${redirectCount} redirects${errorCount > 0 ? `, ${errorCount} errors` : ""}`,
       );
 
       if (options.verbose && result.errors.length > 0) {
@@ -305,21 +307,24 @@ async function commandSync(options) {
   }
 
   // Summary
-  const totalFiles = results.reduce((sum, r) => sum + r.files.length + (r.commandFiles || []).length, 0);
+  const totalFiles = results.reduce(
+    (sum, r) => sum + r.files.length + (r.commandFiles || []).length,
+    0,
+  );
   const totalRedirects =
     Object.keys(config.redirects).length * targetIdes.filter(([, c]) => c.enabled).length;
   const totalErrors = results.reduce((sum, r) => sum + r.errors.length, 0);
 
   if (!options.quiet) {
-    console.log('');
+    console.log("");
 
     if (options.dryRun) {
       console.log(
-        `${colors.yellow}Dry run: ${totalFiles} agents + ${totalRedirects} redirects would be written${colors.reset}`
+        `${colors.yellow}Dry run: ${totalFiles} agents + ${totalRedirects} redirects would be written${colors.reset}`,
       );
     } else {
       console.log(
-        `${colors.green}✅ Sync complete: ${totalFiles} agents + ${totalRedirects} redirects${colors.reset}`
+        `${colors.green}✅ Sync complete: ${totalFiles} agents + ${totalRedirects} redirects${colors.reset}`,
       );
     }
 
@@ -343,7 +348,7 @@ async function commandValidate(options) {
   }
 
   console.log(`${colors.bright}${colors.blue}🔍 IDE Sync Validation${colors.reset}`);
-  console.log('');
+  console.log("");
 
   // Parse all agents
   const agentsDir = path.join(projectRoot, config.source);
@@ -363,7 +368,6 @@ async function commandValidate(options) {
   }
 
   for (const [ideName, ideConfig] of targetIdes) {
-
     const transformer = getTransformer(ideConfig.format);
     const expectedFiles = [];
 
@@ -383,7 +387,7 @@ async function commandValidate(options) {
     const redirects = generateAllRedirects(
       config.redirects,
       path.join(projectRoot, ideConfig.path),
-      ideConfig.format
+      ideConfig.format,
     );
 
     for (const redirect of redirects) {
@@ -399,14 +403,14 @@ async function commandValidate(options) {
     };
 
     // Gemini CLI command launcher files are synced under .gemini/commands/*.toml
-    if (ideName === 'gemini') {
+    if (ideName === "gemini") {
       const commandFiles = buildGeminiCommandFiles(agents).map((entry) => ({
         filename: entry.filename,
         content: entry.content,
       }));
-      ideConfigs['gemini-commands'] = {
+      ideConfigs["gemini-commands"] = {
         expectedFiles: commandFiles,
-        targetDir: path.join(projectRoot, '.gemini', 'commands'),
+        targetDir: path.join(projectRoot, ".gemini", "commands"),
       };
     }
   }
@@ -420,7 +424,7 @@ async function commandValidate(options) {
 
   // Exit code
   if (options.strict && !results.summary.pass) {
-    console.log('');
+    console.log("");
     console.log(`${colors.red}Validation failed in strict mode${colors.reset}`);
     process.exit(1);
   }
@@ -433,7 +437,7 @@ async function commandValidate(options) {
 function parseArgs() {
   const args = process.argv.slice(2);
   const options = {
-    command: args[0] || 'sync',
+    command: args[0] || "sync",
     ide: null,
     strict: false,
     dryRun: false,
@@ -444,15 +448,15 @@ function parseArgs() {
   for (let i = 1; i < args.length; i++) {
     const arg = args[i];
 
-    if (arg === '--ide' && args[i + 1]) {
+    if (arg === "--ide" && args[i + 1]) {
       options.ide = args[++i];
-    } else if (arg === '--strict') {
+    } else if (arg === "--strict") {
       options.strict = true;
-    } else if (arg === '--dry-run') {
+    } else if (arg === "--dry-run") {
       options.dryRun = true;
-    } else if (arg === '--verbose' || arg === '-v') {
+    } else if (arg === "--verbose" || arg === "-v") {
       options.verbose = true;
-    } else if (arg === '--quiet' || arg === '-q') {
+    } else if (arg === "--quiet" || arg === "-q") {
       options.quiet = true;
     }
   }
@@ -499,18 +503,18 @@ ${colors.bright}Examples:${colors.reset}
 async function main() {
   const options = parseArgs();
 
-  if (options.command === 'help' || options.command === '--help' || options.command === '-h') {
+  if (options.command === "help" || options.command === "--help" || options.command === "-h") {
     showHelp();
     return;
   }
 
   switch (options.command) {
-    case 'sync':
+    case "sync":
       await commandSync(options);
       break;
 
-    case 'validate':
-    case 'report':
+    case "validate":
+    case "report":
       await commandValidate(options);
       break;
 

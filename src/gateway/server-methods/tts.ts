@@ -48,7 +48,6 @@ export const ttsHandlers: GatewayRequestHandlers = {
     try {
       const cfg = loadConfig();
       const config = resolveTtsConfig(cfg);
-      const prefsPath = resolveTtsPrefsPath(config);
       setTtsEnabled(config, true);
       respond(true, { enabled: true });
     } catch (err) {
@@ -59,7 +58,6 @@ export const ttsHandlers: GatewayRequestHandlers = {
     try {
       const cfg = loadConfig();
       const config = resolveTtsConfig(cfg);
-      const prefsPath = resolveTtsPrefsPath(config);
       setTtsEnabled(config, false);
       respond(true, { enabled: false });
     } catch (err) {

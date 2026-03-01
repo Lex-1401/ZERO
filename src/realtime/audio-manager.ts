@@ -1,5 +1,9 @@
 import { EventEmitter } from "events";
 
+/**
+ * Manages buffering, chunking, and playback tracking for real-time
+ * multimodal audio streams in a sequential manner.
+ */
 export class AudioSessionManager extends EventEmitter {
   private isPlaying = false;
   private audioQueue: Buffer[] = [];
@@ -12,6 +16,9 @@ export class AudioSessionManager extends EventEmitter {
     super();
   }
 
+  /**
+   * Pushes a new raw audio chunk to the playback queue.
+   */
   public pushToQueue(chunk: Buffer) {
     if (this.isPlaying) {
       // If we receive new audio while playing, we might append or drop depending on latency strategy
@@ -24,6 +31,9 @@ export class AudioSessionManager extends EventEmitter {
     }
   }
 
+  /**
+   * Instantly halts active playback and flushes the remaining audio queue.
+   */
   public interrupt() {
     // Clear queue and stop playback
     this.audioQueue = [];

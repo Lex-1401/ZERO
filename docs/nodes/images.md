@@ -3,6 +3,7 @@ summary: "Regras de tratamento de imagem e mídia para envio, gateway e resposta
 read_when:
   - Modificando o pipeline de mídia ou anexos
 ---
+
 # Suporte a Imagem & Mídia — 05-12-2025
 
 O canal do WhatsApp funciona via **Baileys Web**. Este documento captura as regras atuais de tratamento de mídia para envio, gateway e respostas de agentes.

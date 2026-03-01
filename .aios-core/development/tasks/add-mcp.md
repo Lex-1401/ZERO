@@ -180,30 +180,33 @@ docker mcp server enable {mcp-name}
 # Edit: ~/.docker/mcp/catalogs/docker-mcp.yaml
 # Find your MCP entry and add/modify the env section:
 
-{mcp-name}:
+{ mcp-name }:
   # ... other config ...
   env:
-    - name: {ENV_VAR_NAME}
-      value: '{actual-api-key-value}'
+    - name: { ENV_VAR_NAME }
+      value: "{actual-api-key-value}"
     - name: TOOLS
-      value: 'tool1,tool2,tool3'
+      value: "tool1,tool2,tool3"
 ```
 
 **Example for Apify:**
+
 ```yaml
 apify-mcp-server:
   env:
     - name: TOOLS
-      value: 'actors,docs,apify/rag-web-browser'
+      value: "actors,docs,apify/rag-web-browser"
     - name: APIFY_TOKEN
-      value: 'apify_api_xxxxxxxxxxxxx'
+      value: "apify_api_xxxxxxxxxxxxx"
 ```
 
 **Security Note:** This exposes credentials in a local file. Ensure:
+
 1. `~/.docker/mcp/catalogs/` is not committed to any repo
 2. File permissions restrict access to current user only
 
 **Alternative (if secrets work in future):**
+
 ```bash
 # Set secret (currently NOT working)
 docker mcp secret set {mcp-name}.{credential_name}={value}
@@ -252,13 +255,15 @@ Add the new MCP to `.claude/rules/mcp-usage.md`:
 ## {MCP-Name} MCP Usage (via Docker)
 
 ### Use {MCP-Name} for:
+
 1. [Primary use case 1]
 2. [Primary use case 2]
 
 ### Access pattern:
+
 \`\`\`
-mcp__docker-gateway__{tool-name-1}
-mcp__docker-gateway__{tool-name-2}
+mcp**docker-gateway**{tool-name-1}
+mcp**docker-gateway**{tool-name-2}
 \`\`\`
 ```
 
@@ -385,16 +390,16 @@ Next steps:
 
 ## Common MCPs Reference
 
-| MCP | Purpose | Credentials | Popular Tools |
-|-----|---------|-------------|---------------|
-| `notion` | Notion workspace | NOTION_API_KEY | getPage, createPage, search |
-| `postgres` | PostgreSQL DB | DATABASE_URL | query, execute, listTables |
-| `sqlite` | SQLite DB | None | query, execute |
-| `slack` | Slack messaging | SLACK_BOT_TOKEN | sendMessage, listChannels |
-| `puppeteer` | Browser automation | None | navigate, screenshot, click |
-| `redis` | Redis cache | REDIS_URL | get, set, del |
-| `s3` | AWS S3 | AWS_* | upload, download, list |
-| `stripe` | Stripe payments | STRIPE_SECRET_KEY | createPayment, listCustomers |
+| MCP         | Purpose            | Credentials       | Popular Tools                |
+| ----------- | ------------------ | ----------------- | ---------------------------- |
+| `notion`    | Notion workspace   | NOTION_API_KEY    | getPage, createPage, search  |
+| `postgres`  | PostgreSQL DB      | DATABASE_URL      | query, execute, listTables   |
+| `sqlite`    | SQLite DB          | None              | query, execute               |
+| `slack`     | Slack messaging    | SLACK_BOT_TOKEN   | sendMessage, listChannels    |
+| `puppeteer` | Browser automation | None              | navigate, screenshot, click  |
+| `redis`     | Redis cache        | REDIS_URL         | get, set, del                |
+| `s3`        | AWS S3             | AWS\_\*           | upload, download, list       |
+| `stripe`    | Stripe payments    | STRIPE_SECRET_KEY | createPayment, listCustomers |
 
 ---
 

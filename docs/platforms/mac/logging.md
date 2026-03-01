@@ -4,6 +4,7 @@ read_when:
   - Capturando logs do macOS ou investigando o registro de dados privados
   - Depurando problemas de ativação por voz/ciclo de vida da sessão
 ---
+
 # Registro de Logs (macOS)
 
 ## Log de diagnóstico de arquivos rotativos (Painel Debug)

@@ -9,22 +9,22 @@
  * @story 2.11 - MCP System Global
  */
 
-const { Command } = require('commander');
-const { createSetupCommand } = require('./setup');
-const { createLinkCommand } = require('./link');
-const { createStatusCommand } = require('./status');
-const { createAddCommand } = require('./add');
+const { Command } = require("commander");
+const { createSetupCommand } = require("./setup");
+const { createLinkCommand } = require("./link");
+const { createStatusCommand } = require("./status");
+const { createAddCommand } = require("./add");
 
 /**
  * Create the mcp command with all subcommands
  * @returns {Command} Commander command instance
  */
 function createMcpCommand() {
-  const mcp = new Command('mcp');
+  const mcp = new Command("mcp");
 
-  mcp
-    .description('Manage global MCP (Model Context Protocol) configuration')
-    .addHelpText('after', `
+  mcp.description("Manage global MCP (Model Context Protocol) configuration").addHelpText(
+    "after",
+    `
 Commands:
   setup             Create global ~/.aios/mcp/ structure
   link              Link project to global MCP config
@@ -60,7 +60,8 @@ Examples:
   $ aios mcp add myserver --type sse --url https://example.com/mcp
   $ aios mcp add myserver --remove
   $ aios mcp add --list-templates
-`);
+`,
+  );
 
   // Add subcommands
   mcp.addCommand(createSetupCommand());

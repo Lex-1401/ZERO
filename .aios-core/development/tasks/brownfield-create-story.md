@@ -182,6 +182,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -202,9 +203,11 @@ updated_at: 2025-11-17
 ---
 
 tools:
-  - github-cli
-checklists:
-  - po-master-checklist.md
+
+- github-cli
+  checklists:
+- po-master-checklist.md
+
 ---
 
 # Create Brownfield Story Task
@@ -354,4 +357,12 @@ The story creation is successful when:
 - Always prioritize existing system integrity
 - When in doubt about integration complexity, use brownfield-create-epic instead
 - Stories should take no more than 4 hours of focused development work
- 
+
+## Handoff
+
+next_agent: @po
+next_command: \*validate-story-draft {story-id}
+condition: Brownfield story created from assessment
+alternatives:
+
+- agent: @sm, command: \*draft, condition: Need additional stories from same assessment

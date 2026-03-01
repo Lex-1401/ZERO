@@ -27,9 +27,9 @@ Você pode sobrescrever isso com:
     defaults: {
       envelopeTimezone: "local", // "utc" | "local" | "user" | fuso horário IANA
       envelopeTimestamp: "on", // "on" | "off"
-      envelopeElapsed: "on" // "on" | "off"
-    }
-  }
+      envelopeElapsed: "on", // "on" | "off"
+    },
+  },
 }
 ```
 
@@ -74,7 +74,7 @@ Defina `agents.defaults.userTimezone` para informar ao modelo o fuso horário lo
 
 ```json5
 {
-  agents: { defaults: { userTimezone: "America/Chicago" } }
+  agents: { defaults: { userTimezone: "America/Chicago" } },
 }
 ```
 

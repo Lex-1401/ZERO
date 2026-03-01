@@ -4,6 +4,7 @@ read_when:
   - Projetando o assistente de integração do macOS
   - Implementando configuração de autenticação ou identidade
 ---
+
 # Integração (app macOS)
 
 Este documento descreve o fluxo **atual** de integração da primeira execução. O objetivo é uma
@@ -12,14 +13,14 @@ assistente (wizard) e deixar o agente fazer seu próprio bootstrap.
 
 ## Ordem das páginas (atual)
 
-1) Boas-vindas + aviso de segurança
-2) **Seleção do Gateway** (Local / Remoto / Configurar depois)
-3) **Autenticação (OAuth Anthropic)** — apenas local
-4) **Assistente de Configuração** (guiado pelo Gateway)
-5) **Permissões** (solicitações TCC)
-6) **CLI** (opcional)
-7) **Chat de Integração** (sessão dedicada)
-8) Pronto
+1. Boas-vindas + aviso de segurança
+2. **Seleção do Gateway** (Local / Remoto / Configurar depois)
+3. **Autenticação (OAuth Anthropic)** — apenas local
+4. **Assistente de Configuração** (guiado pelo Gateway)
+5. **Permissões** (solicitações TCC)
+6. **CLI** (opcional)
+7. **Chat de Integração** (sessão dedicada)
+8. Pronto
 
 ## 1) Local vs Remoto
 

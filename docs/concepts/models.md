@@ -5,6 +5,7 @@ read_when:
   - Alterando o comportamento de fallback de modelos ou o UX de seleção
   - Atualizando as sondagens (probes) de varredura de modelos (ferramentas/imagens)
 ---
+
 # CLI de Modelos
 
 Veja [/concepts/model-failover](/concepts/model-failover) para rotação de perfis de autenticação, cooldowns e como isso interage com os fallbacks (opções de reserva). Para uma visão geral rápida do provedor + exemplos: [/concepts/model-providers](/concepts/model-providers).
@@ -13,9 +14,9 @@ Veja [/concepts/model-failover](/concepts/model-failover) para rotação de perf
 
 O ZERO seleciona os modelos nesta ordem:
 
-1) Modelo **Primário** (`agents.defaults.model.primary` ou `agents.defaults.model`).
-2) **Fallbacks** em `agents.defaults.model.fallbacks` (em ordem).
-3) O **failover de autenticação do provedor** ocorre dentro de um provedor antes de passar para o próximo modelo.
+1. Modelo **Primário** (`agents.defaults.model.primary` ou `agents.defaults.model`).
+2. **Fallbacks** em `agents.defaults.model.fallbacks` (em ordem).
+3. O **failover de autenticação do provedor** ocorre dentro de um provedor antes de passar para o próximo modelo.
 
 Relacionado:
 
@@ -71,9 +72,9 @@ Exemplo de configuração da lista de permissões:
     model: { primary: "anthropic/claude-sonnet-4-5" },
     models: {
       "anthropic/claude-sonnet-4-5": { alias: "Sonnet" },
-      "anthropic/claude-opus-4-5": { alias: "Opus" }
-    }
-  }
+      "anthropic/claude-opus-4-5": { alias: "Opus" },
+    },
+  },
 }
 ```
 
@@ -167,10 +168,10 @@ A sondagem (probe) exige uma chave de API do OpenRouter (dos perfis de autentica
 
 Os resultados da varredura são classificados por:
 
-1) Suporte a imagens
-2) Latência de ferramentas
-3) Tamanho do contexto
-4) Contagem de parâmetros
+1. Suporte a imagens
+2. Latência de ferramentas
+3. Tamanho do contexto
+4. Contagem de parâmetros
 
 Entrada:
 

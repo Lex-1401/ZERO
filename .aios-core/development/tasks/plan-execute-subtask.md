@@ -16,7 +16,7 @@ Execute a single subtask from an implementation.yaml plan following the 13-step 
 
 ```yaml
 autoClaude:
-  version: '3.0'
+  version: "3.0"
   pipelinePhase: execution-subtask
 
   deterministic: true
@@ -27,8 +27,8 @@ autoClaude:
     enabled: true
     checklistRef: self-critique-checklist.md
     phases:
-      - '5.5'
-      - '6.5'
+      - "5.5"
+      - "6.5"
 
   recovery:
     trackAttempts: true
@@ -44,7 +44,7 @@ autoClaude:
     - name: storyId
       type: string
       required: true
-      description: 'Story ID for context loading'
+      description: "Story ID for context loading"
 
     - name: implementationPlan
       type: file
@@ -95,17 +95,17 @@ autoClaude:
 
 ```yaml
 command:
-  name: '*execute-subtask'
-  syntax: '*execute-subtask {subtask-id}'
+  name: "*execute-subtask"
+  syntax: "*execute-subtask {subtask-id}"
   agent: dev
 
   examples:
-    - '*execute-subtask ST-1.1'
-    - '*execute-subtask ST-2.3'
+    - "*execute-subtask ST-1.1"
+    - "*execute-subtask ST-2.3"
 
   aliases:
-    - '*subtask'
-    - '*exec-subtask'
+    - "*subtask"
+    - "*exec-subtask"
 ```
 
 ---
@@ -129,7 +129,7 @@ step_enforcement:
 
   on_violation:
     action: halt
-    message: 'Step {step} cannot be skipped. Execute all 13 steps.'
+    message: "Step {step} cannot be skipped. Execute all 13 steps."
 ```
 
 ---
@@ -140,23 +140,23 @@ step_enforcement:
 
 ```yaml
 step_1:
-  id: '1'
-  name: 'Load Context'
-  description: 'Load project-context.yaml and files-context.yaml'
+  id: "1"
+  name: "Load Context"
+  description: "Load project-context.yaml and files-context.yaml"
 
   actions:
     - action: load_file
       path: .aios/project-context.yaml
       required: false
-      fallback: 'Use codebase defaults'
+      fallback: "Use codebase defaults"
 
     - action: load_file
       path: docs/stories/{storyId}/files-context.yaml
       required: false
-      fallback: 'Generate minimal context from implementation.yaml'
+      fallback: "Generate minimal context from implementation.yaml"
 
   validation:
-    check: 'Context files loaded or fallbacks applied'
+    check: "Context files loaded or fallbacks applied"
     onFailure: continue # Non-blocking
 
   output:
@@ -168,9 +168,9 @@ step_1:
 
 ```yaml
 step_2:
-  id: '2'
-  name: 'Read Implementation Plan'
-  description: 'Load and parse implementation.yaml for current subtask'
+  id: "2"
+  name: "Read Implementation Plan"
+  description: "Load and parse implementation.yaml for current subtask"
 
   actions:
     - action: load_file
@@ -184,7 +184,7 @@ step_2:
         - currentStatus
 
   validation:
-    check: 'implementation.yaml exists and is valid YAML'
+    check: "implementation.yaml exists and is valid YAML"
     onFailure: halt
 
   output:
@@ -197,13 +197,13 @@ step_2:
 
 ```yaml
 step_3:
-  id: '3'
-  name: 'Understand Current Subtask'
-  description: 'Extract and comprehend the specific subtask requirements'
+  id: "3"
+  name: "Understand Current Subtask"
+  description: "Extract and comprehend the specific subtask requirements"
 
   actions:
     - action: find_subtask
-      subtaskId: '{subtaskId}'
+      subtaskId: "{subtaskId}"
       in: plan.subtasks
 
     - action: extract
@@ -216,20 +216,20 @@ step_3:
         - estimatedComplexity
 
     - action: verify_dependencies
-      check: 'All dependency subtasks are completed'
+      check: "All dependency subtasks are completed"
 
   validation:
-    check: 'Subtask found and dependencies met'
+    check: "Subtask found and dependencies met"
     onFailure: halt
 
   error_cases:
-    - condition: 'Subtask not found'
+    - condition: "Subtask not found"
       action: halt
-      message: 'Subtask {subtaskId} not found in implementation.yaml'
+      message: "Subtask {subtaskId} not found in implementation.yaml"
 
-    - condition: 'Dependencies not met'
+    - condition: "Dependencies not met"
       action: halt
-      message: 'Subtask depends on incomplete subtasks: {unmet_deps}'
+      message: "Subtask depends on incomplete subtasks: {unmet_deps}"
 
   output:
     subtask: object
@@ -240,9 +240,9 @@ step_3:
 
 ```yaml
 step_4:
-  id: '4'
-  name: 'Plan Approach'
-  description: 'Create detailed implementation approach before coding'
+  id: "4"
+  name: "Plan Approach"
+  description: "Create detailed implementation approach before coding"
 
   actions:
     - action: analyze_requirements
@@ -254,16 +254,16 @@ step_4:
 
     - action: plan_changes
       for_each_file:
-        - what: 'What changes are needed'
-        - where: 'Which functions/classes to modify'
-        - how: 'Implementation approach'
+        - what: "What changes are needed"
+        - where: "Which functions/classes to modify"
+        - how: "Implementation approach"
 
     - action: identify_tests
-      unit: 'Unit tests needed'
-      integration: 'Integration tests if applicable'
+      unit: "Unit tests needed"
+      integration: "Integration tests if applicable"
 
   validation:
-    check: 'Approach documented with specific file changes'
+    check: "Approach documented with specific file changes"
     onFailure: retry
 
   output:
@@ -277,24 +277,24 @@ step_4:
 
 ```yaml
 step_5:
-  id: '5'
-  name: 'Write Code'
-  description: 'Implement the subtask according to the plan'
+  id: "5"
+  name: "Write Code"
+  description: "Implement the subtask according to the plan"
 
   actions:
     - action: implement
       follow: approach
-      style: 'Match existing codebase patterns'
+      style: "Match existing codebase patterns"
 
     - action: for_each_file
       in: approach.files
       do:
         - create_or_modify: file
         - apply_changes: approach.changes[file]
-        - preserve: 'Existing functionality'
+        - preserve: "Existing functionality"
 
   validation:
-    check: 'Code compiles/loads without syntax errors'
+    check: "Code compiles/loads without syntax errors"
     onFailure: fix_immediately
 
   output:
@@ -380,13 +380,13 @@ step_5_5:
 
 ```yaml
 step_6:
-  id: '6'
-  name: 'Run Tests'
-  description: 'Execute all relevant tests'
+  id: "6"
+  name: "Run Tests"
+  description: "Execute all relevant tests"
 
   actions:
     - action: run_command
-      command: 'npm run test'
+      command: "npm run test"
       timeout: 120000
 
     - action: run_command
@@ -394,7 +394,7 @@ step_6:
       optional: true
 
   validation:
-    check: 'All tests pass'
+    check: "All tests pass"
     onFailure: goto step_7
 
   output:
@@ -486,34 +486,34 @@ step_6_5:
 
 ```yaml
 step_7:
-  id: '7'
-  name: 'Fix Issues'
-  description: 'Fix any test failures'
+  id: "7"
+  name: "Fix Issues"
+  description: "Fix any test failures"
 
-  condition: 'Execute only if Step 6 had failures'
+  condition: "Execute only if Step 6 had failures"
 
   actions:
     - action: analyze_failure
       for_each: failedTest
-      identify: 'Root cause of failure'
+      identify: "Root cause of failure"
 
     - action: fix
-      apply: 'Minimal change to fix issue'
-      preserve: 'Working functionality'
+      apply: "Minimal change to fix issue"
+      preserve: "Working functionality"
 
     - action: re_run_tests
-      verify: 'Fix resolved the issue'
+      verify: "Fix resolved the issue"
 
   max_iterations: 3
 
   validation:
-    check: 'All tests pass after fixes'
+    check: "All tests pass after fixes"
     onFailure: escalate
 
   escalation:
     after: 3
     action: halt
-    message: 'Unable to fix test failures after 3 attempts'
+    message: "Unable to fix test failures after 3 attempts"
 
   output:
     issuesFixed: array
@@ -524,17 +524,17 @@ step_7:
 
 ```yaml
 step_8:
-  id: '8'
-  name: 'Run Linter'
-  description: 'Execute code linting'
+  id: "8"
+  name: "Run Linter"
+  description: "Execute code linting"
 
   actions:
     - action: run_command
-      command: 'npm run lint'
+      command: "npm run lint"
       timeout: 60000
 
   validation:
-    check: 'No linting errors (warnings acceptable)'
+    check: "No linting errors (warnings acceptable)"
     onFailure: goto step_9
 
   output:
@@ -546,15 +546,15 @@ step_8:
 
 ```yaml
 step_9:
-  id: '9'
-  name: 'Fix Lint Issues'
-  description: 'Fix any linting errors'
+  id: "9"
+  name: "Fix Lint Issues"
+  description: "Fix any linting errors"
 
-  condition: 'Execute only if Step 8 had errors'
+  condition: "Execute only if Step 8 had errors"
 
   actions:
     - action: auto_fix
-      command: 'npm run lint:fix'
+      command: "npm run lint:fix"
       attempt: 1
 
     - action: manual_fix
@@ -562,10 +562,10 @@ step_9:
       if: "Auto-fix didn't resolve"
 
     - action: re_run_linter
-      verify: 'All errors fixed'
+      verify: "All errors fixed"
 
   validation:
-    check: 'No linting errors'
+    check: "No linting errors"
     onFailure: halt
 
   output:
@@ -576,11 +576,11 @@ step_9:
 
 ```yaml
 step_10:
-  id: '10'
-  name: 'Verify Manually'
-  description: 'Manual verification for UI/UX or complex logic'
+  id: "10"
+  name: "Verify Manually"
+  description: "Manual verification for UI/UX or complex logic"
 
-  condition: 'Execute if subtask involves UI or requires manual check'
+  condition: "Execute if subtask involves UI or requires manual check"
 
   triggers:
     - subtask.type == "ui"
@@ -593,10 +593,10 @@ step_10:
 
     - action: execute_verification
       type: browser|api|cli
-      document: 'Results of each step'
+      document: "Results of each step"
 
   validation:
-    check: 'Manual verification passed'
+    check: "Manual verification passed"
     onFailure: return_to_step_5
 
   output:
@@ -610,9 +610,9 @@ step_10:
 
 ```yaml
 step_11:
-  id: '11'
-  name: 'Update Plan Status'
-  description: 'Update implementation.yaml with subtask completion'
+  id: "11"
+  name: "Update Plan Status"
+  description: "Update implementation.yaml with subtask completion"
 
   actions:
     - action: update_yaml
@@ -622,22 +622,22 @@ step_11:
           value: completed
 
         - path: subtasks[{subtaskId}].completedAt
-          value: '{timestamp}'
+          value: "{timestamp}"
 
         - path: subtasks[{subtaskId}].attempt
-          value: '{attemptNumber}'
+          value: "{attemptNumber}"
 
         - path: subtasks[{subtaskId}].filesModified
-          value: '{filesModified}'
+          value: "{filesModified}"
 
     - action: record_attempt
       in: recovery_system
       data:
-        subtaskId: '{subtaskId}'
-        storyId: '{storyId}'
-        attempt: '{attemptNumber}'
-        status: 'completed'
-        timestamp: '{timestamp}'
+        subtaskId: "{subtaskId}"
+        storyId: "{storyId}"
+        attempt: "{attemptNumber}"
+        status: "completed"
+        timestamp: "{timestamp}"
 
     # AC7 Story 4.6: Update status.json for dashboard integration
     - action: update_dashboard_status
@@ -646,10 +646,10 @@ step_11:
         const tracker = new PlanTracker({ storyId: '{storyId}' });
         tracker.load();
         tracker.updateStatusJson();
-      description: 'Auto-update status.json after subtask completion'
+      description: "Auto-update status.json after subtask completion"
 
   validation:
-    check: 'implementation.yaml updated successfully'
+    check: "implementation.yaml updated successfully"
     onFailure: retry
 
   output:
@@ -661,13 +661,13 @@ step_11:
 
 ```yaml
 step_12:
-  id: '12'
-  name: 'Commit Changes'
-  description: 'Commit all changes with proper message'
+  id: "12"
+  name: "Commit Changes"
+  description: "Commit all changes with proper message"
 
   actions:
     - action: git_add
-      files: '{filesModified}'
+      files: "{filesModified}"
 
     - action: git_commit
       message: |
@@ -679,7 +679,7 @@ step_12:
         Co-Authored-By: Claude <noreply@anthropic.com>
 
   validation:
-    check: 'Commit created successfully'
+    check: "Commit created successfully"
     onFailure: retry
 
   output:
@@ -691,9 +691,9 @@ step_12:
 
 ```yaml
 step_13:
-  id: '13'
-  name: 'Signal Completion'
-  description: 'Report subtask completion and provide summary'
+  id: "13"
+  name: "Signal Completion"
+  description: "Report subtask completion and provide summary"
 
   actions:
     - action: generate_summary
@@ -706,7 +706,7 @@ step_13:
         - commitHash
 
     - action: check_next_subtask
-      determine: 'What subtask is next (if any)'
+      determine: "What subtask is next (if any)"
 
     - action: report
       format: |
@@ -736,7 +736,7 @@ step_13:
 
 ```yaml
 recovery:
-  description: 'Track attempts and enable rollback on failure'
+  description: "Track attempts and enable rollback on failure"
 
   attempt_tracking:
     storage: .aios/recovery/{storyId}/{subtaskId}.json
@@ -754,12 +754,12 @@ recovery:
     - If attempts >= maxAttempts:
         action: halt
         status: blocked
-        message: 'Subtask failed after {maxAttempts} attempts'
+        message: "Subtask failed after {maxAttempts} attempts"
 
   rollback:
     enabled: true
-    command: 'git reset --hard {lastGoodCommit}'
-    trigger: 'Manual or on critical failure'
+    command: "git reset --hard {lastGoodCommit}"
+    trigger: "Manual or on critical failure"
 
   attempt_record:
     fields:
@@ -779,33 +779,33 @@ recovery:
 ```yaml
 errors:
   - id: subtask-not-found
-    condition: 'Subtask ID not in implementation.yaml'
+    condition: "Subtask ID not in implementation.yaml"
     action: halt
-    message: 'Subtask {subtaskId} not found. Check implementation.yaml'
+    message: "Subtask {subtaskId} not found. Check implementation.yaml"
     blocking: true
 
   - id: dependencies-not-met
-    condition: 'Required subtasks not completed'
+    condition: "Required subtasks not completed"
     action: halt
-    message: 'Complete these subtasks first: {unmetDeps}'
+    message: "Complete these subtasks first: {unmetDeps}"
     blocking: true
 
   - id: tests-failing-after-retries
-    condition: 'Tests fail after 3 fix attempts'
+    condition: "Tests fail after 3 fix attempts"
     action: escalate
-    message: 'Unable to fix test failures. Manual intervention required.'
+    message: "Unable to fix test failures. Manual intervention required."
     blocking: true
 
   - id: self-critique-infinite-loop
-    condition: 'Self-critique finds issues > 5 times'
+    condition: "Self-critique finds issues > 5 times"
     action: halt
-    message: 'Self-critique found recurring issues. Review approach.'
+    message: "Self-critique found recurring issues. Review approach."
     blocking: true
 
   - id: implementation-yaml-corrupt
-    condition: 'Cannot parse implementation.yaml'
+    condition: "Cannot parse implementation.yaml"
     action: halt
-    message: 'implementation.yaml is invalid. Fix YAML syntax.'
+    message: "implementation.yaml is invalid. Fix YAML syntax."
     blocking: true
 ```
 
@@ -816,24 +816,24 @@ errors:
 ```yaml
 quality_gates:
   - id: no-skipped-steps
-    description: 'All 13 steps must execute'
-    check: 'Step execution log contains all 13 steps'
+    description: "All 13 steps must execute"
+    check: "Step execution log contains all 13 steps"
 
   - id: self-critique-passed
-    description: 'Both self-critique phases must pass'
-    check: 'selfCritiquePost.passed && selfCritiqueQuality.passed'
+    description: "Both self-critique phases must pass"
+    check: "selfCritiquePost.passed && selfCritiqueQuality.passed"
 
   - id: tests-pass
-    description: 'All tests must pass'
-    check: 'testsFailed == 0'
+    description: "All tests must pass"
+    check: "testsFailed == 0"
 
   - id: lint-clean
-    description: 'No lint errors'
-    check: 'lintErrors.length == 0'
+    description: "No lint errors"
+    check: "lintErrors.length == 0"
 
   - id: plan-updated
-    description: 'implementation.yaml reflects completion'
-    check: 'planUpdated == true'
+    description: "implementation.yaml reflects completion"
+    check: "planUpdated == true"
 ```
 
 ---
@@ -936,8 +936,8 @@ pipeline:
     - Check if all subtasks complete
 
   triggers_next:
-    condition: 'All subtasks in implementation.yaml completed'
-    action: 'Proceed to plan-verify phase'
+    condition: "All subtasks in implementation.yaml completed"
+    action: "Proceed to plan-verify phase"
 ```
 
 ---
@@ -946,11 +946,11 @@ pipeline:
 
 ```yaml
 metadata:
-  story: '4.3'
-  epic: 'Epic 4 - Execution Pipeline'
-  created: '2026-01-28'
-  author: '@dev (Dex)'
-  version: '1.0.0'
+  story: "4.3"
+  epic: "Epic 4 - Execution Pipeline"
+  created: "2026-01-28"
+  author: "@dev (Dex)"
+  version: "1.0.0"
   tags:
     - execution-pipeline
     - subtask

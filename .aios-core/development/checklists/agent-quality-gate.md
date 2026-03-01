@@ -7,7 +7,7 @@ checklist:
   created: 2026-01-30
   updated: 2026-02-04
   purpose: "Validate agent definitions meet Hybrid Loader quality standard + operational completeness"
-  mode: blocking  # Prevents publication if critical items fail
+  mode: blocking # Prevents publication if critical items fail
   architecture: "hybrid-loader"
   new_in_v4: "SC_AGT_004 — Operational Completeness (task files, templates, checklists, maturity scoring)"
   reference: "aprendizado/32-ANATOMIA-AGENTE-100-PORCENTO-REPLICAVEL.md"
@@ -389,10 +389,10 @@ operational_completeness_checks:
       Max = 10.0
     threshold: 7.0
     levels:
-      '0.0-3.9': 'Nivel 1 — Persona only (FAIL)'
-      '4.0-6.9': 'Nivel 2 — Frameworks only (CONDITIONAL)'
-      '7.0-8.9': 'Nivel 3 — Complete (PASS)'
-      '9.0-10.0': 'Nivel 3+ — Integrated (EXCELLENT)'
+      "0.0-3.9": "Nivel 1 — Persona only (FAIL)"
+      "4.0-6.9": "Nivel 2 — Frameworks only (CONDITIONAL)"
+      "7.0-8.9": "Nivel 3 — Complete (PASS)"
+      "9.0-10.0": "Nivel 3+ — Integrated (EXCELLENT)"
 ```
 
 ---
@@ -446,6 +446,7 @@ Copy this checklist and fill in:
 ### Blocking Requirements (Must Pass)
 
 **Level 1: Identity**
+
 - [ ] agent.name defined
 - [ ] agent.id is kebab-case
 - [ ] agent.tier is 1-3
@@ -453,28 +454,33 @@ Copy this checklist and fill in:
 - [ ] persona complete (role, style, identity, focus)
 
 **Level 2: Operational**
+
 - [ ] core_principles has 5-9 items
 - [ ] operational_frameworks has 1+ framework
 - [ ] Each framework has name, philosophy, steps, examples
 - [ ] commands has 5+ items including *help, *exit
 
 **Level 3: Voice DNA**
+
 - [ ] vocabulary.always_use has 5+ terms
 - [ ] vocabulary.never_use has 3+ terms
 
 **Level 4: Quality**
+
 - [ ] output_examples has 3+ complete examples
 - [ ] anti_patterns.never_do has 5+ items
 - [ ] completion_criteria.task_done_when defined
 - [ ] completion_criteria.handoff_to has 1+ items
 
 **Level 6: Integration**
+
 - [ ] integration.tier_position defined
 - [ ] workflow_integration.position_in_flow defined
 - [ ] handoff_to has 1+ items
 - [ ] activation.greeting defined (50+ chars)
 
 **Operational Completeness (SC_AGT_004)**
+
 - [ ] Task file exists for each operational command
 - [ ] Each task file has 3+ steps
 - [ ] Each task file has 1+ veto conditions
@@ -500,33 +506,34 @@ Copy this checklist and fill in:
 ### Domain-Specific (If Applicable)
 
 For Copy/Legal/Storytelling/Data:
+
 - [ ] authority_proof_arsenal.achievements has 3+ items
 - [ ] publications defined
 - [ ] testimonials has 1+ items
 
 ### Result
 
-**Blocking:** ___/24 passed
-**Recommended:** ___/11 passed
-**Maturity Score:** ___/10
-**Maturity Level:** Nivel ___
-**Total Score:** ___%
+**Blocking:** **_/24 passed
+**Recommended:** _**/11 passed
+**Maturity Score:** **_/10
+**Maturity Level:** Nivel _**
+**Total Score:** \_\_\_%
 
 **Decision:** [ ] PASS - Ready for publication (Nivel 3+)
-              [ ] CONDITIONAL - Pass with documented gaps (Nivel 2)
-              [ ] FAIL - Must fix blocking items (Nivel 1)
+[ ] CONDITIONAL - Pass with documented gaps (Nivel 2)
+[ ] FAIL - Must fix blocking items (Nivel 1)
 ```
 
 ---
 
 ## Scoring
 
-| Score | Result | Action |
-|-------|--------|--------|
-| 100% Blocking + 80%+ Recommended | EXCELLENT | Publish |
-| 100% Blocking + 50-79% Recommended | GOOD | Publish with note |
-| 100% Blocking + <50% Recommended | CONDITIONAL | Document gaps, publish |
-| <100% Blocking | FAIL | Fix before publish |
+| Score                              | Result      | Action                 |
+| ---------------------------------- | ----------- | ---------------------- |
+| 100% Blocking + 80%+ Recommended   | EXCELLENT   | Publish                |
+| 100% Blocking + 50-79% Recommended | GOOD        | Publish with note      |
+| 100% Blocking + <50% Recommended   | CONDITIONAL | Document gaps, publish |
+| <100% Blocking                     | FAIL        | Fix before publish     |
 
 ---
 
@@ -554,6 +561,7 @@ research-then-create-agent workflow
 **Updated:** 2026-02-04
 **Standard:** AIOS Agent Quality Level + Operational Completeness
 **Changelog:**
+
 - v4.0: Added SC_AGT_004 (Operational Completeness), maturity scoring, task/template/checklist validation
 - v3.0: Added Level 0 loader checks
 - v2.0: Initial hybrid loader architecture

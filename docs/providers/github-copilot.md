@@ -4,6 +4,7 @@ read_when:
   - You want to use GitHub Copilot as a model provider
   - You need the `zero models auth login-github-copilot` flow
 ---
+
 # Github Copilot
 
 ## What is GitHub Copilot?
@@ -57,7 +58,7 @@ zero models set github-copilot/gpt-4o
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "github-copilot/gpt-4o" } } }
+  agents: { defaults: { model: { primary: "github-copilot/gpt-4o" } } },
 }
 ```
 

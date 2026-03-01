@@ -11,16 +11,19 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -188,6 +191,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -207,8 +211,8 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Prerequisites
+
 - GitHub CLI (`gh`) installed and authenticated
 - Feature branch pushed to remote
 - Repository context detected
@@ -219,7 +223,7 @@ updated_at: 2025-11-17
 ### Step 1: Detect Repository Context
 
 ```javascript
-const { detectRepositoryContext } = require('./../scripts/repository-detector');
+const { detectRepositoryContext } = require("./../scripts/repository-detector");
 
 const context = detectRepositoryContext();
 if (!context) {
@@ -241,7 +245,7 @@ function extractStoryInfo(storyPath) {
     return null;
   }
 
-  const content = fs.readFileSync(storyPath, 'utf8');
+  const content = fs.readFileSync(storyPath, "utf8");
 
   // Extract story ID from path or content
   const storyIdMatch = storyPath.match(/(\d+\.\d+)/);
@@ -257,7 +261,7 @@ function extractStoryInfo(storyPath) {
   return {
     id: storyId,
     title,
-    hasAcceptanceCriteria: !!acMatch
+    hasAcceptanceCriteria: !!acMatch,
   };
 }
 ```
@@ -268,49 +272,49 @@ function extractStoryInfo(storyPath) {
 > This allows each project to choose the format that matches their workflow.
 
 ```javascript
-const yaml = require('js-yaml');
-const fs = require('fs');
-const path = require('path');
+const yaml = require("js-yaml");
+const fs = require("fs");
+const path = require("path");
 
 /**
  * Load PR configuration from core-config.yaml
  * @returns {Object} PR configuration with defaults
  */
 function loadPRConfig() {
-  const configPath = path.join(process.cwd(), '.aios-core', 'core-config.yaml');
+  const configPath = path.join(process.cwd(), ".aios-core", "core-config.yaml");
 
   // Default configuration (for projects without core-config)
   const defaults = {
-    title_format: 'story-first',  // Safe default for most projects
+    title_format: "story-first", // Safe default for most projects
     include_story_id: true,
     conventional_commits: {
       enabled: false,
       branch_type_map: {
-        'feature/': 'feat',
-        'feat/': 'feat',
-        'fix/': 'fix',
-        'bugfix/': 'fix',
-        'hotfix/': 'fix',
-        'docs/': 'docs',
-        'chore/': 'chore',
-        'refactor/': 'refactor',
-        'test/': 'test',
-        'perf/': 'perf',
-        'ci/': 'ci',
-        'style/': 'style',
-        'build/': 'build'
+        "feature/": "feat",
+        "feat/": "feat",
+        "fix/": "fix",
+        "bugfix/": "fix",
+        "hotfix/": "fix",
+        "docs/": "docs",
+        "chore/": "chore",
+        "refactor/": "refactor",
+        "test/": "test",
+        "perf/": "perf",
+        "ci/": "ci",
+        "style/": "style",
+        "build/": "build",
       },
-      default_type: 'feat'
-    }
+      default_type: "feat",
+    },
   };
 
   try {
     if (fs.existsSync(configPath)) {
-      const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+      const config = yaml.load(fs.readFileSync(configPath, "utf8"));
       return { ...defaults, ...config?.github?.pr };
     }
   } catch (error) {
-    console.warn('Could not load core-config.yaml, using defaults');
+    console.warn("Could not load core-config.yaml, using defaults");
   }
 
   return defaults;
@@ -336,14 +340,14 @@ function loadPRConfig() {
  */
 function generatePRTitle(branchName, storyInfo) {
   const config = loadPRConfig();
-  const format = config.title_format || 'story-first';
+  const format = config.title_format || "story-first";
 
   switch (format) {
-    case 'conventional':
+    case "conventional":
       return generateConventionalTitle(branchName, storyInfo, config);
-    case 'story-first':
+    case "story-first":
       return generateStoryFirstTitle(branchName, storyInfo, config);
-    case 'branch-based':
+    case "branch-based":
       return generateBranchBasedTitle(branchName, storyInfo, config);
     default:
       return generateStoryFirstTitle(branchName, storyInfo, config);
@@ -356,7 +360,7 @@ function generatePRTitle(branchName, storyInfo) {
  */
 function generateConventionalTitle(branchName, storyInfo, config) {
   const typeMap = config.conventional_commits?.branch_type_map || {};
-  const defaultType = config.conventional_commits?.default_type || 'feat';
+  const defaultType = config.conventional_commits?.default_type || "feat";
 
   // Detect commit type from branch prefix
   let type = defaultType;
@@ -370,24 +374,22 @@ function generateConventionalTitle(branchName, storyInfo, config) {
   // Extract scope from branch name (e.g., feat/auth/login -> scope=auth)
   const scopeMatch = branchName.match(/^[a-z-]+\/([a-z-]+)\//);
   const scope = scopeMatch ? scopeMatch[1] : null;
-  const scopeStr = scope ? `(${scope})` : '';
+  const scopeStr = scope ? `(${scope})` : "";
 
   // Generate description
   if (storyInfo && storyInfo.id && storyInfo.title) {
-    let cleanTitle = storyInfo.title
-      .replace(/^Story\s*\d+\.\d+[:\s-]*/i, '')
-      .trim();
+    let cleanTitle = storyInfo.title.replace(/^Story\s*\d+\.\d+[:\s-]*/i, "").trim();
     cleanTitle = cleanTitle.charAt(0).toLowerCase() + cleanTitle.slice(1);
 
-    const storyRef = config.include_story_id ? ` [Story ${storyInfo.id}]` : '';
+    const storyRef = config.include_story_id ? ` [Story ${storyInfo.id}]` : "";
     return `${type}${scopeStr}: ${cleanTitle}${storyRef}`;
   }
 
   // Fallback: convert branch name to description
   const description = branchName
-    .replace(/^(feature|feat|fix|bugfix|hotfix|docs|chore|refactor|test|perf|ci|style|build)\//, '')
-    .replace(/^[a-z-]+\//, '')
-    .replace(/-/g, ' ')
+    .replace(/^(feature|feat|fix|bugfix|hotfix|docs|chore|refactor|test|perf|ci|style|build)\//, "")
+    .replace(/^[a-z-]+\//, "")
+    .replace(/-/g, " ")
     .toLowerCase()
     .trim();
 
@@ -405,9 +407,9 @@ function generateStoryFirstTitle(branchName, storyInfo, config) {
 
   // Fallback: convert branch name to title
   return branchName
-    .replace(/^(feature|feat|fix|bugfix|hotfix|docs|chore|refactor|test|perf|ci|style|build)\//, '')
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase());
+    .replace(/^(feature|feat|fix|bugfix|hotfix|docs|chore|refactor|test|perf|ci|style|build)\//, "")
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /**
@@ -416,9 +418,9 @@ function generateStoryFirstTitle(branchName, storyInfo, config) {
  */
 function generateBranchBasedTitle(branchName, storyInfo, config) {
   const title = branchName
-    .replace(/^(feature|feat|fix|bugfix|hotfix|docs|chore|refactor|test|perf|ci|style|build)\//, '')
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, c => c.toUpperCase());
+    .replace(/^(feature|feat|fix|bugfix|hotfix|docs|chore|refactor|test|perf|ci|style|build)\//, "")
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 
   if (config.include_story_id && storyInfo?.id) {
     return `${title} [Story ${storyInfo.id}]`;
@@ -436,7 +438,7 @@ Add to your project's `core-config.yaml`:
 github:
   pr:
     # Options: conventional | story-first | branch-based
-    title_format: conventional  # For semantic-release projects
+    title_format: conventional # For semantic-release projects
     # title_format: story-first  # For simple projects (default)
 
     include_story_id: true
@@ -451,19 +453,19 @@ github:
       default_type: feat
 
   semantic_release:
-    enabled: true  # Set false if not using semantic-release
+    enabled: true # Set false if not using semantic-release
 ```
 
 ## Title Format Examples
 
-| Format | Branch | Story | Generated Title |
-|--------|--------|-------|-----------------|
-| `conventional` | `feature/user-auth` | 6.17: User Auth | `feat: user auth [Story 6.17]` |
-| `conventional` | `fix/cli/parsing` | 6.18: CLI Fix | `fix(cli): cLI fix [Story 6.18]` |
-| `story-first` | `feature/user-auth` | 6.17: User Auth | `[Story 6.17] User Auth` |
-| `story-first` | `fix/cli-bug` | - | `Cli Bug` |
-| `branch-based` | `feature/user-auth` | 6.17 | `User Auth [Story 6.17]` |
-| `branch-based` | `docs/readme` | - | `Readme` |
+| Format         | Branch              | Story           | Generated Title                  |
+| -------------- | ------------------- | --------------- | -------------------------------- |
+| `conventional` | `feature/user-auth` | 6.17: User Auth | `feat: user auth [Story 6.17]`   |
+| `conventional` | `fix/cli/parsing`   | 6.18: CLI Fix   | `fix(cli): cLI fix [Story 6.18]` |
+| `story-first`  | `feature/user-auth` | 6.17: User Auth | `[Story 6.17] User Auth`         |
+| `story-first`  | `fix/cli-bug`       | -               | `Cli Bug`                        |
+| `branch-based` | `feature/user-auth` | 6.17            | `User Auth [Story 6.17]`         |
+| `branch-based` | `docs/readme`       | -               | `Readme`                         |
 
 ### Step 5: Generate PR Description
 
@@ -501,20 +503,72 @@ function generatePRDescription(storyInfo, context) {
 }
 ```
 
+### Step 5.1: Enrich PR Description with Impact Analysis (Code Intelligence — Advisory)
+
+> **Added by:** Story NOG-7 (DevOps Pre-Push Impact Analysis)
+> **Behavior:** Auto-skips if code intelligence unavailable. Appends "Impact Analysis" section to PR body.
+
+```javascript
+const { generateImpactSummary } = require(".aios-core/core/code-intel/helpers/devops-helper");
+
+async function enrichPRWithImpactAnalysis(description, changedFiles) {
+  // Auto-skip if code intelligence unavailable
+  const { isCodeIntelAvailable } = require(".aios-core/core/code-intel");
+  if (!isCodeIntelAvailable()) {
+    return description; // Return original description unchanged
+  }
+
+  const impact = await generateImpactSummary(changedFiles);
+
+  if (!impact) {
+    return description; // No impact data — return original
+  }
+
+  // Append Impact Analysis section to PR description
+  const impactSection = [
+    "",
+    "## Impact Analysis",
+    "",
+    impact.summary,
+    "",
+    "---",
+    "*Generated by Code Intelligence (advisory only)*",
+  ].join("\n");
+
+  return description + impactSection;
+}
+```
+
+**Usage in PR creation flow:**
+
+After `generatePRDescription()` returns the base description, call `enrichPRWithImpactAnalysis()` to optionally append the impact section:
+
+```javascript
+let description = generatePRDescription(storyInfo, context);
+description = await enrichPRWithImpactAnalysis(description, changedFiles);
+```
+
+**Important:** If code intelligence is unavailable or returns null, the PR description remains unchanged — zero impact on existing workflow.
+
+---
+
 ### Step 6: Determine Base Branch
 
 ```javascript
 function determineBaseBranch(projectRoot) {
   // Check default branch from git
   try {
-    const defaultBranch = execSync('git symbolic-ref refs/remotes/origin/HEAD', {
-      cwd: projectRoot
-    }).toString().trim().replace('refs/remotes/origin/', '');
+    const defaultBranch = execSync("git symbolic-ref refs/remotes/origin/HEAD", {
+      cwd: projectRoot,
+    })
+      .toString()
+      .trim()
+      .replace("refs/remotes/origin/", "");
 
-    return defaultBranch || 'main';
+    return defaultBranch || "main";
   } catch (error) {
     // Fallback to main
-    return 'main';
+    return "main";
   }
 }
 ```
@@ -534,16 +588,16 @@ gh pr create \
 ```javascript
 function assignReviewers(storyType, prNumber) {
   const reviewerMap = {
-    'feature': ['@dev-team'],
-    'bugfix': ['@qa-team'],
-    'docs': ['@tech-writer'],
-    'security': ['@security-team']
+    feature: ["@dev-team"],
+    bugfix: ["@qa-team"],
+    docs: ["@tech-writer"],
+    security: ["@security-team"],
   };
 
-  const reviewers = reviewerMap[storyType] || ['@dev-team'];
+  const reviewers = reviewerMap[storyType] || ["@dev-team"];
 
-  execSync(`gh pr edit ${prNumber} --add-reviewer ${reviewers.join(',')}`, {
-    cwd: projectRoot
+  execSync(`gh pr edit ${prNumber} --add-reviewer ${reviewers.join(",")}`, {
+    cwd: projectRoot,
   });
 }
 ```
@@ -551,22 +605,24 @@ function assignReviewers(storyType, prNumber) {
 ## Example Usage
 
 ```javascript
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
 async function createPullRequest(storyPath) {
   // Detect repository
-  const { detectRepositoryContext } = require('./../scripts/repository-detector');
+  const { detectRepositoryContext } = require("./../scripts/repository-detector");
   const context = detectRepositoryContext();
 
   console.log(`\n🔀 Creating Pull Request`);
   console.log(`Repository: ${context.repositoryUrl}\n`);
 
   // Get current branch
-  const currentBranch = execSync('git branch --show-current', {
-    cwd: context.projectRoot
-  }).toString().trim();
+  const currentBranch = execSync("git branch --show-current", {
+    cwd: context.projectRoot,
+  })
+    .toString()
+    .trim();
 
   console.log(`Branch: ${currentBranch}`);
 
@@ -584,8 +640,10 @@ async function createPullRequest(storyPath) {
   // Create PR
   const prUrl = execSync(
     `gh pr create --title "${title}" --body "${description}" --base ${baseBranch}`,
-    { cwd: context.projectRoot }
-  ).toString().trim();
+    { cwd: context.projectRoot },
+  )
+    .toString()
+    .trim();
 
   console.log(`\n✅ Pull Request created: ${prUrl}`);
 
@@ -610,6 +668,7 @@ Called by `@github-devops` via `*create-pr` command.
 ## Semantic-Release Integration (Optional)
 
 > **Note:** This section only applies when `core-config.yaml` has:
+>
 > - `github.pr.title_format: conventional`
 > - `github.semantic_release.enabled: true`
 >
@@ -617,20 +676,22 @@ Called by `@github-devops` via `*create-pr` command.
 
 **When enabled:** PRs merged via "Squash and merge" use the PR title as commit message, triggering semantic-release:
 
-| Branch Pattern | Generated Title | Release |
-|---------------|-----------------|---------|
-| `feature/user-auth` | `feat: user auth` | ✅ Minor |
+| Branch Pattern        | Generated Title         | Release  |
+| --------------------- | ----------------------- | -------- |
+| `feature/user-auth`   | `feat: user auth`       | ✅ Minor |
 | `feat/auth/sso-login` | `feat(auth): sso login` | ✅ Minor |
-| `fix/cli-parsing` | `fix: cli parsing` | ✅ Patch |
-| `docs/readme-update` | `docs: readme update` | ❌ None |
-| `chore/deps-update` | `chore: deps update` | ❌ None |
+| `fix/cli-parsing`     | `fix: cli parsing`      | ✅ Patch |
+| `docs/readme-update`  | `docs: readme update`   | ❌ None  |
+| `chore/deps-update`   | `chore: deps update`    | ❌ None  |
 
 For breaking changes, manually edit the PR title to include `!`:
+
 - `feat!: redesign authentication API [Story 7.1]`
 
 ## Configuration for Different Project Types
 
 ### NPM Package with Semantic-Release (aios-core)
+
 ```yaml
 github:
   pr:
@@ -640,19 +701,21 @@ github:
 ```
 
 ### Simple Web App (no releases)
+
 ```yaml
 github:
   pr:
-    title_format: story-first  # [Story 6.17] Title
+    title_format: story-first # [Story 6.17] Title
   semantic_release:
     enabled: false
 ```
 
 ### Quick Prototypes
+
 ```yaml
 github:
   pr:
-    title_format: branch-based  # Just branch name as title
+    title_format: branch-based # Just branch name as title
     include_story_id: false
 ```
 
@@ -662,3 +725,12 @@ github:
 - Gracefully handles missing story file
 - Uses GitHub CLI for reliability
 - Repository context from detector
+
+## Handoff
+
+next_agent: @po
+next_command: \*close-story {story-id}
+condition: PR merged successfully
+alternatives:
+
+- agent: @dev, command: \*apply-qa-fixes, condition: PR review requested changes

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface MemoryResult {
   id: string;
@@ -10,10 +10,10 @@ interface MemoryResult {
   endLine?: number;
 }
 
-import { gatewayClient } from './lib/gateway';
+import { gatewayClient } from "./lib/gateway";
 
 export default function MemoryView() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<MemoryResult[]>([]);
   const [loading, setLoading] = useState(false);
   const stats = { totalFiles: 0, totalChunks: 0 };
@@ -24,11 +24,11 @@ export default function MemoryView() {
 
     setLoading(true);
     try {
-      console.log('Buscando por:', query);
-      const res = await gatewayClient.call('memory.search', { query, limit: 10 });
+      console.log("Buscando por:", query);
+      const res = await gatewayClient.call("memory.search", { query, limit: 10 });
       setResults(res.results || []);
     } catch (err) {
-      console.error('Falha na busca:', err);
+      console.error("Falha na busca:", err);
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function MemoryView() {
           onChange={(e) => setQuery(e.target.value)}
         />
         <button type="submit" className="search-button" disabled={loading}>
-          {loading ? '...' : 'Buscar'}
+          {loading ? "..." : "Buscar"}
         </button>
       </form>
 
@@ -63,7 +63,9 @@ export default function MemoryView() {
             <div key={res.id} className="memory-card glass-morphism">
               <div className="card-header">
                 <span className="source-tag">{res.source}</span>
-                <span className="score-tag">{(res.score * 100).toFixed(0)}% de correspondência</span>
+                <span className="score-tag">
+                  {(res.score * 100).toFixed(0)}% de correspondência
+                </span>
               </div>
               <p className="memory-snippet">{res.snippet}</p>
               <div className="card-footer">
@@ -80,7 +82,10 @@ export default function MemoryView() {
         ) : (
           <div className="empty-state">
             <div className="empty-icon">🧠</div>
-            <p>Nenhuma memória corresponde à sua consulta. Tente pesquisar por fatos ou preferências específicos.</p>
+            <p>
+              Nenhuma memória corresponde à sua consulta. Tente pesquisar por fatos ou preferências
+              específicos.
+            </p>
           </div>
         )}
       </div>

@@ -3,16 +3,17 @@ summary: "Como as notas de voz/áudio de entrada são baixadas, transcritas e in
 read_when:
   - Alterando a transcrição de áudio ou tratamento de mídia
 ---
+
 # Áudio / Notas de Voz — 17-01-2026
 
 ## O que funciona
 
 - **Entendimento de mídia (áudio)**: Se o entendimento de áudio estiver habilitado (ou for auto-detectado), o ZERO:
-  1) Localiza o primeiro anexo de áudio (caminho local ou URL) e o baixa, se necessário.
-  2) Impõe o `maxBytes` antes de enviar para cada entrada de modelo.
-  3) Executa a primeira entrada de modelo elegível em ordem (provedor ou CLI).
-  4) Se falhar ou for ignorado (por tamanho/timeout), tenta a próxima entrada.
-  5) Em caso de sucesso, substitui o `Body` (corpo) por um bloco `[Audio]` e define `{{Transcript}}`.
+  1. Localiza o primeiro anexo de áudio (caminho local ou URL) e o baixa, se necessário.
+  2. Impõe o `maxBytes` antes de enviar para cada entrada de modelo.
+  3. Executa a primeira entrada de modelo elegível em ordem (provedor ou CLI).
+  4. Se falhar ou for ignorado (por tamanho/timeout), tenta a próxima entrada.
+  5. Em caso de sucesso, substitui o `Body` (corpo) por um bloco `[Audio]` e define `{{Transcript}}`.
 - **Análise de comandos**: Quando a transcrição é bem-sucedida, `CommandBody`/`RawBody` são definidos com a transcrição para que os comandos de barra (slash commands) ainda funcionem.
 - **Log detalhado (verbose)**: No modo `--verbose`, registramos quando a transcrição é executada e quando ela substitui o corpo da mensagem.
 
@@ -20,12 +21,12 @@ read_when:
 
 Se você **não configurar modelos** e `tools.media.audio.enabled` **não** estiver definido como `false`, o ZERO auto-detecta nesta ordem e para na primeira opção que funcionar:
 
-1) **CLIs Locais** (se instaladas)
+1. **CLIs Locais** (se instaladas)
    - `sherpa-onnx-offline` (exige `SHERPA_ONNX_MODEL_DIR` com encoder/decoder/joiner/tokens)
    - `whisper-cli` (do `whisper-cpp`; usa `WHISPER_CPP_MODEL` ou o modelo tiny embutido)
    - `whisper` (CLI Python; baixa modelos automaticamente)
-2) **Gemini CLI** (`gemini`) usando `read_many_files`
-3) **Chaves de provedores** (OpenAI → Groq → Deepgram → Google)
+2. **Gemini CLI** (`gemini`) usando `read_many_files`
+3. **Chaves de provedores** (OpenAI → Groq → Deepgram → Google)
 
 Para desativar a auto-detecção, defina `tools.media.audio.enabled: false`.
 Para personalizar, defina `tools.media.audio.models`.
@@ -48,12 +49,12 @@ Nota: A detecção de binários é feita pelo melhor esforço em macOS/Linux/Win
             type: "cli",
             command: "whisper",
             args: ["--model", "base", "{{MediaPath}}"],
-            timeoutSeconds: 45
-          }
-        ]
-      }
-    }
-  }
+            timeoutSeconds: 45,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -67,16 +68,12 @@ Nota: A detecção de binários é feita pelo melhor esforço em macOS/Linux/Win
         enabled: true,
         scope: {
           default: "allow",
-          rules: [
-            { action: "deny", match: { chatType: "group" } }
-          ]
+          rules: [{ action: "deny", match: { chatType: "group" } }],
         },
-        models: [
-          { provider: "openai", model: "gpt-4o-mini-transcribe" }
-        ]
-      }
-    }
-  }
+        models: [{ provider: "openai", model: "gpt-4o-mini-transcribe" }],
+      },
+    },
+  },
 }
 ```
 
@@ -88,10 +85,10 @@ Nota: A detecção de binários é feita pelo melhor esforço em macOS/Linux/Win
     media: {
       audio: {
         enabled: true,
-        models: [{ provider: "deepgram", model: "nova-3" }]
-      }
-    }
-  }
+        models: [{ provider: "deepgram", model: "nova-3" }],
+      },
+    },
+  },
 }
 ```
 

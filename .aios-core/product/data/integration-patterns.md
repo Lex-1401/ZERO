@@ -10,14 +10,14 @@
 ```typescript
 // Design system provides hooks
 interface DesignSystemHook {
-    getTokens(context: Context): Tokens;
-    getComponents(): ComponentLibrary;
-    applyTheme(theme: Theme): void;
+  getTokens(context: Context): Tokens;
+  getComponents(): ComponentLibrary;
+  applyTheme(theme: Theme): void;
 }
 
 // Squads consume
 const designSystem = useDesignSystem();
-const tokens = designSystem.getTokens({ personality: 'formal' });
+const tokens = designSystem.getTokens({ personality: "formal" });
 ```
 
 ---

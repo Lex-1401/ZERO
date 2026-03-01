@@ -409,10 +409,10 @@ tool:
         description: "Create story task with discovered list_id"
         command: create_task
         input:
-          list_id: "901317181013"  # ← From step 1 (numeric string)
+          list_id: "901317181013" # ← From step 1 (numeric string)
           name: "Story 5.2: Implement Feature X"
           markdown_description: "Complete story content here..."
-          parent: "86acfeqeq"  # Epic task ID (if creating as subtask)
+          parent: "86acfeqeq" # Epic task ID (if creating as subtask)
           tags: ["story", "epic-5", "story-5.2"]
           custom_fields:
             - id: "epic_number"
@@ -443,7 +443,7 @@ tool:
         input:
           name: "Fix login bug"
           list_id: "123456789"
-          assignees: {add: [456]}
+          assignees: { add: [456] }
         error:
           code: VALIDATION_ERROR
           message: "assignees must be array for create_task, got object"

@@ -64,7 +64,7 @@ export async function deliverWebReply(params: {
   // Text-only replies
   if (mediaList.length === 0 && textChunks.length) {
     const totalChunks = textChunks.length;
-    for (const [index, chunk] of textChunks.entries()) {
+    for (const [index, chunk] of Array.from(textChunks.entries())) {
       const chunkStarted = Date.now();
       await sendWithRetry(() => msg.reply(chunk), "text");
       if (!skipLog) {
@@ -94,7 +94,7 @@ export async function deliverWebReply(params: {
   const remainingText = [...textChunks];
 
   // Media (with optional caption on first item)
-  for (const [index, mediaUrl] of mediaList.entries()) {
+  for (const [index, mediaUrl] of Array.from(mediaList.entries())) {
     const caption = index === 0 ? remainingText.shift() || undefined : undefined;
     try {
       const media = await loadWebMedia(mediaUrl, maxMediaBytes);
