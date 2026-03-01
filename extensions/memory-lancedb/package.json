@@ -6,7 +6,7 @@
   "dependencies": {
     "@lancedb/lancedb": "^0.26.2",
     "@sinclair/typebox": "0.34.47",
-    "openai": "^6.21.0"
+    "openai": "^6.25.0"
   },
   "zero": {
     "extensions": [
