@@ -1,0 +1,167 @@
+/* =============================================
+   VISION OS CHAT LAYOUT
+   Cinematic Thread & Glass Composer
+   ============================================= */
+
+.chat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: transparent;
+  /* Shell provides the ambient background */
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Thread Area with fade masks */
+.chat-thread {
+  flex: 1 1 0;
+  overflow-y: auto;
+  padding: var(--s-10) var(--s-16);
+  /* Golden Ratio breathing room */
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-8);
+  scroll-behavior: smooth;
+  /* fade mask removed for better visibility of bottom items */
+  /* mask-image: linear-gradient(to bottom, transparent 0%, black 20px, black calc(100% - 20px), transparent 100%); */
+}
+
+.chat-thread::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 10px 0;
+}
+
+/* Floating Composer Panel */
+.chat-compose {
+  padding: var(--s-6) var(--s-10) var(--s-8);
+  background: var(--bg-surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: 1px solid var(--glass-border);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  margin: 0 var(--s-10);
+  /* Detached look */
+  margin-bottom: 0;
+  border-left: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+}
+
+.chat-compose__field {
+  display: flex;
+  background: var(--input-glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  /* High-definition radius */
+  padding: var(--s-3) var(--s-6);
+  transition: all var(--duration-fast) var(--ease-out);
+  position: relative;
+  box-shadow: var(--shadow-inset);
+}
+
+.chat-compose__field:focus-within {
+  border-color: var(--accent-blue);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 0 2px rgba(0, 122, 255, 0.25);
+}
+
+.chat-compose__field span {
+  display: none;
+}
+
+.chat-compose__field textarea {
+  width: 100%;
+  min-height: 24px;
+  max-height: 300px;
+  border: none !important;
+  background: transparent !important;
+  padding: 0;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 16px;
+  /* Optimized readability */
+  line-height: 1.6;
+  outline: none;
+  resize: none;
+}
+
+.chat-compose__field textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.chat-compose__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--s-4);
+  gap: var(--s-3);
+}
+
+.chat-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+/* Chat Sidebar (Markdown/Data View) */
+.chat-split-container {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.chat-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--glass-border);
+}
+
+.chat-sidebar {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-glass);
+  backdrop-filter: blur(40px);
+  overflow: hidden;
+  min-width: 360px;
+  border-left: 1px solid var(--glass-border);
+}
+
+@media (max-width: 1024px) {
+  .chat-thread {
+    padding: var(--s-5);
+    mask-image: none;
+  }
+
+  .chat-compose {
+    padding: var(--s-5);
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .chat-compose__actions {
+    gap: var(--s-2);
+  }
+
+  .chat-sidebar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60%;
+    z-index: 50;
+    box-shadow: var(--shadow-floating);
+  }
+}

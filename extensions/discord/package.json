@@ -1,0 +1,11 @@
+{
+  "name": "@zero/discord",
+  "version": "2026.1.25",
+  "description": "Zero Discord channel plugin",
+  "type": "module",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
