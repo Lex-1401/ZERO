@@ -1,0 +1,11 @@
+# zizmor configuration
+# https://docs.zizmor.sh/configuration/
+
+rules:
+  # Enable unpinned-uses - ensures all actions use SHA hashes for security
+  unpinned-uses:
+    disable: false
+
+  # Enable excessive-permissions - ensures workflows use the least privilege needed
+  excessive-permissions:
+    disable: false

@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "lastTouchedVersion": "1.0.0-sovereign",
+    "lastTouchedAt": "2026-02-25T11:20:00.000Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-14T13:30:28.941Z",
+    "lastRunVersion": "0.1.0-distro",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "models": {
+    "providers": {}
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "allowInsecureAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "4f9d2e7a1b8c5d6e2a9f3b7c4d1e8a0f2b5d7e9a1c4b6d3e8f0a2c5b7d9e1a3"
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
+    },
+    "cors": {
+      "enabled": true,
+      "allowedOrigins": ["http://localhost:18789", "http://127.0.0.1:18789", "*"]
+    }
+  }
+}

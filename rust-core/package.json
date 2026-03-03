@@ -1,0 +1,24 @@
+{
+  "name": "@zero/ratchet",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "napi build --platform --dts index.d.ts --release",
+    "build:dev": "napi build --platform --dts index.d.ts",
+    "build:linux-x64-gnu": "napi build --platform --target x86_64-unknown-linux-gnu --dts index.d.ts --release",
+    "build:linux-arm64-gnu": "napi build --platform --target aarch64-unknown-linux-gnu --dts index.d.ts --release",
+    "build:darwin-arm64": "napi build --platform --target aarch64-apple-darwin --dts index.d.ts --release",
+    "build:darwin-x64": "napi build --platform --target x86_64-apple-darwin --dts index.d.ts --release",
+    "build:all": "napi build --platform --target x86_64-unknown-linux-gnu --target aarch64-unknown-linux-gnu --target aarch64-apple-darwin --target x86_64-apple-darwin --dts index.d.ts --release"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.5.1"
+  },
+  "napi": {
+    "binaryName": "ratchet",
+    "packageName": "@zero/ratchet"
+  }
+}

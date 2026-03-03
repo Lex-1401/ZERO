@@ -1,0 +1,11 @@
+{
+  "name": "@zero/void",
+  "version": "2026.1.25",
+  "description": "VOID workflow tool plugin (typed pipelines + resumable approvals)",
+  "type": "module",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

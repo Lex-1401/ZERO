@@ -1,0 +1,24 @@
+# AIOS Framework Configuration (Level 1)
+# DO NOT EDIT — Part of the AIOS framework.
+# Override in project-config.yaml or local-config.yaml.
+
+markdownExploder: true
+metadata:
+  name: Synkra AIOS
+  framework_version: 3.12.0
+resource_locations:
+  tools_dir: .aios-core/tools
+  scripts: .aios-core/scripts
+  data_dir: .aios-core/data
+  elicitation_dir: .aios-core/elicitation
+  minds_dir: outputs/minds
+performance_defaults:
+  lazy_loading:
+    enabled: true
+    heavySections:
+      - pvMindContext
+      - squads
+      - registry
+  git:
+    showConfigWarning: true
+    cacheTimeSeconds: 300

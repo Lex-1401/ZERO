@@ -1,0 +1,11 @@
+{
+  "name": "@zero/telegram",
+  "version": "2026.1.25",
+  "description": "Zero Telegram channel plugin",
+  "type": "module",
+  "zero": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
