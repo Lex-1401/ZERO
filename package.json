@@ -190,7 +190,7 @@
     "fast-xml-parser": "^5.3.7",
     "file-type": "^21.3.0",
     "grammy": "^1.40.0",
-    "hono": "4.12.2",
+    "hono": "4.12.4",
     "jiti": "^2.6.1",
     "json5": "^2.2.3",
     "jszip": "^3.10.1",
@@ -275,7 +275,7 @@
     "overrides": {
       "signal-exit": "3.0.7",
       "@sinclair/typebox": "0.34.48",
-      "hono": "4.12.2",
+      "hono": "4.12.4",
       "rollup": ">=4.59.0",
       "tar": "7.5.8",
       "mongodb": "3.7.4",
