@@ -14,7 +14,7 @@ import {
 } from "./session/types.js";
 import { resolveSlackSession } from "./session/slack.js";
 import { resolveDiscordSession } from "./session/discord.js";
-import { buildBaseSessionKey } from "./session/core.js";
+
 
 export async function resolveOutboundSessionRoute(
   params: ResolveOutboundSessionRouteParams,
@@ -28,14 +28,15 @@ export async function resolveOutboundSessionRoute(
       // Fallback logic
       const target = params.target.startsWith(`${channel}:`) ? params.target.slice(channel.length + 1) : params.target;
       const peer = { id: target, kind: "dm" as const };
-      const baseSessionKey = buildBaseSessionKey({ ...params, peer });
+      const baseSessionKey = `agent:${params.agentId}:${params.channel}:dm:${target.toLowerCase()}`;
       return {
-        sessionKey: `${baseSessionKey}:${params.threadId || "main"}`,
+        sessionKey: params.threadId ? `${baseSessionKey}:thread:${params.threadId}` : baseSessionKey,
         baseSessionKey,
         peer,
         chatType: "direct",
-        from: `agent:${params.agentId}`,
+        from: `${channel}:dm:${target}`,
         to: `${channel}:${target}`,
+        threadId: params.threadId || undefined,
       };
   }
 }

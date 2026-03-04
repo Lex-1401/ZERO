@@ -28,6 +28,8 @@ A arquitetura se divide em **Quatro Camadas Principais**:
 | **Node Registry** | `src/node-host/` | Orquestra "nós" remotos (outras máquinas na LAN/WAN) permitindo execução distribuída (SSH/Docker exec) controlada. |
 | **Channels** | `src/channels/`, `src/web/`, `src/slack/` | Adaptadores de comunicação bi-direcionais para mensageria. Normalizam as interações dos usuários para o padrão de Sessão Interna do ZERO. |
 | **Agent Core** | `src/agents/` | Lógica de governança do modelo de IA. Resolução de ferramentas (TUI/Bash/Web/Memory) baseada nos Escopos de Identidade (`agent-scope.ts`). |
+| **Graph-RAG** | `src/memory/` | Motor de Memória Semântica baseado em Grafos (SQLite). Realiza extração automática de entidades/relações e injeção de contexto associativo. |
+| **D2L (Context)** | `src/memory/` | Dynamic Document-to-LoRA. Gerencia Context Caching via fingerprinting e internalização de documentos via adapters LoRA dinâmicos. |
 | **Realtime Engine** | `src/realtime/` | Cliente WebRTC/WebSocket para interfaces multimodais contínuas de latência mínima (Gemini/OpenAI realtime APIs). |
 | **Quantum Altair (UI)** | `ui/` | Interface visual premium. Oferece controle mestre e telemetria (dashboards, chat, marketplace interno). |
 

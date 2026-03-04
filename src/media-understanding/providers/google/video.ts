@@ -1,6 +1,9 @@
 // @ts-nocheck
 import type { VideoDescriptionRequest, VideoDescriptionResult } from "../../types.js";
-function normalizeGoogleModelId(v: string) { return v; }
+function normalizeGoogleModelId(v: string) {
+  if (v === "gemini-3-pro") return "gemini-3-pro-preview";
+  return v;
+}
 import { fetchWithTimeout, normalizeBaseUrl, readErrorResponse } from "../shared.js";
 
 export const DEFAULT_GOOGLE_VIDEO_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";

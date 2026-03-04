@@ -6,22 +6,33 @@
  * Delegated to src/memory/manager/ for maintainability and Atomic Modularity.
  */
 
+import path from "node:path";
 import { type ZEROConfig } from "../config/config.js";
+import { resolveAgentDir } from "../agents/agent-scope.js";
 import { type MemorySearchResult } from "./manager.types.js";
 import { searchMemory } from "./manager/search.js";
 import { runSafeReindex } from "./manager/reindex.js";
+import { KnowledgeGraph } from "./graph.js";
+import { openDatabaseAtPath } from "./manager.db.js";
 
 export class MemoryIndexManager {
-  graph: any = {
-    getWholeGraph: () => ({ nodes: [], edges: [] }),
-    addRelation: () => { },
-    searchEntities: () => { },
-    getGraphContext: () => { },
-    addEntity: () => { },
-  };
+  graph: KnowledgeGraph;
 
-  static async get(_params: { cfg: ZEROConfig; agentId: string }): Promise<MemoryIndexManager | null> {
-    return new MemoryIndexManager();
+  constructor(graph: KnowledgeGraph) {
+    this.graph = graph;
+  }
+
+  static async get(params: { cfg: ZEROConfig; agentId: string }): Promise<MemoryIndexManager | null> {
+    const agentDir = resolveAgentDir(params.cfg, params.agentId);
+    const dbPath = path.join(agentDir, "index.sqlite");
+
+    const db = openDatabaseAtPath({
+      dbPath,
+      allowExtension: true
+    });
+
+    const graph = new KnowledgeGraph(db);
+    return new MemoryIndexManager(graph);
   }
 
   async search(query: string, opts?: { maxResults?: number; minScore?: number; sessionKey?: string }): Promise<MemorySearchResult[]> {

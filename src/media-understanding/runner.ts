@@ -165,7 +165,7 @@ export async function runCapability(params: {
     attachmentDecisions.push({
       attachmentIndex: attachment.index!,
       attempts,
-      chosen: attempts.find((attempt) => attempt.outcome === "success"),
+      chosen: attempts.find((attempt: any) => attempt.outcome === "success"),
     });
   }
   const decision: MediaUnderstandingDecision = {

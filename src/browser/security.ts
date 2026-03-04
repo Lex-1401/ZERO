@@ -3,7 +3,7 @@
  *
  * Provides security validation for browser automation code execution.
  * Implements AST-based validation to prevent arbitrary code execution
- * via eval() in Playwright browser tools.
+ * via code injection in Playwright browser tools.
  *
  * Security Controls:
  * - LLM01: Prompt Injection (via code injection)
@@ -118,9 +118,9 @@ function validateASTNode(node: any, depth = 0): void {
       throw new Error(`Forbidden function call: ${node.callee.name}`);
     }
 
-    // Check for new Function()
+    // Check for function constructor usage
     if (node.callee?.type === "Identifier" && node.callee.name === "Function") {
-      throw new Error("Forbidden: new Function() constructor");
+      throw new Error("Forbidden: dynamic function constructor");
     }
   }
 
@@ -152,7 +152,7 @@ function validateASTNode(node: any, depth = 0): void {
  * const safe = validateAndSanitizeFnBody("return document.querySelector('button')");
  *
  * // Dangerous code (throws)
- * const unsafe = validateAndSanitizeFnBody("eval('malicious code')");
+ * const unsafe = validateAndSanitizeFnBody("danger('malicious code')");
  * ```
  */
 export function validateAndSanitizeFnBody(fnBody: string): string {

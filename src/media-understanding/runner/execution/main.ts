@@ -157,7 +157,7 @@ export async function runProviderEntry(params: any): Promise<any> {
 }
 
 export async function runCliEntry(params: any): Promise<any> {
-    const { capability, entry, attachmentIndex, cache, config } = params;
+    const { entry, attachmentIndex, cache, config } = params;
 
     const timeoutMs = (config?.timeoutSeconds || entry.timeoutSeconds || 120) * 1000;
     const maxBytes = config?.maxBytes || entry.maxBytes;
@@ -200,7 +200,7 @@ export async function runCliEntry(params: any): Promise<any> {
     });
 
     try {
-        const { stdout, stderr } = await runExec(entry.command, args, {
+        const { stdout } = await runExec(entry.command, args, {
             timeoutMs,
         });
 

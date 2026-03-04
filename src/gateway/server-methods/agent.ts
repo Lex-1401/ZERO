@@ -26,20 +26,13 @@ import {
 import { normalizeAgentId } from "../../routing/session-key.js";
 import { parseMessageWithAttachments } from "../chat-attachments.js";
 import {
-  type AgentIdentityParams,
-  type AgentWaitParams,
   ErrorCodes,
   errorShape,
   formatValidationErrors,
-  validateAgentIdentityParams,
   validateAgentParams,
-  validateAgentWaitParams,
 } from "../protocol/index.js";
 import { loadSessionEntry } from "../session-utils.js";
 import { formatForLog } from "../ws-log.js";
-import { resolveAssistantIdentity } from "../assistant-identity.js";
-import { resolveAssistantAvatarUrl } from "../control-ui-shared.js";
-import { waitForAgentJob } from "./agent-job.js";
 import type { GatewayRequestHandlers } from "./types.js";
 import { agentIdentityWaitHandlers } from "./agent-identity-wait.js";
 

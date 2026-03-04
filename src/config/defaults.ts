@@ -294,17 +294,14 @@ export function applyAgentDefaults(cfg: ZEROConfig): ZEROConfig {
     Number.isFinite(defaults.subagents.maxConcurrent);
   if (hasMax && hasSubMax && cfg.agents) return cfg;
 
-  let mutated = false;
   const nextDefaults = { ...defaults };
   if (!hasMax) {
     nextDefaults.maxConcurrent = DEFAULT_AGENT_MAX_CONCURRENT;
-    mutated = true;
   }
 
-  const nextSubagents = { ...(defaults.subagents || {}) };
+  const nextSubagents = { ...defaults.subagents };
   if (!hasSubMax) {
     nextSubagents.maxConcurrent = DEFAULT_SUBAGENT_MAX_CONCURRENT;
-    mutated = true;
   }
 
   return {

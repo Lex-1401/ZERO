@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import { appendCdpPath, createTargetViaCdp, getHeadersWithAuth, normalizeCdpWsUrl } from "./cdp.js";
+import { appendCdpPath, createTargetViaCdp } from "./cdp.js";
 import { normalizeWsUrl, fetchJson, fetchOk } from "./cdp-http.js";
 import {
   isChromeCdpReady,
@@ -10,7 +10,6 @@ import {
   stopZeroChrome,
 } from "./chrome.js";
 import type { ResolvedBrowserProfile } from "./config.js";
-import { resolveProfile } from "./config.js";
 import type {
   BrowserRouteContext,
   BrowserTab,

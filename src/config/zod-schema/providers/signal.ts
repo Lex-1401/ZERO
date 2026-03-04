@@ -6,7 +6,6 @@ import {
     MarkdownConfigSchema,
     BlockStreamingCoalesceSchema,
     DmConfigSchema,
-    requireOpenAllowFrom,
 } from "../../zod-schema.core.js";
 import { ToolPolicySchema } from "../../zod-schema.agent-runtime.js";
 import { ChannelHeartbeatVisibilitySchema } from "../../zod-schema.channels.js";

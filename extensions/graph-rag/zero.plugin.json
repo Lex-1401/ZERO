@@ -1,0 +1,21 @@
+{
+    "id": "graph-rag",
+    "name": "Graph-RAG",
+    "description": "Knowledge Graph integration for RAG using SQLite and LLM extraction.",
+    "version": "1.0.0",
+    "kind": "memory",
+    "author": "Antigravity",
+    "configSchema": {
+        "type": "object",
+        "properties": {
+            "autoExtract": {
+                "type": "boolean",
+                "default": true
+            },
+            "injectContext": {
+                "type": "boolean",
+                "default": true
+            }
+        }
+    }
+}
