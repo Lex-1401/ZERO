@@ -1,0 +1,19 @@
+
+# 🏛️ PROJECT ZERO: CURSOR GOVERNANCE
+
+Sempre me entregue a resposta em **Português-Br**.
+
+## 📖 Regras de Ouro
+Todas as diretrizes de desenvolvimento, segurança, design e workflow estão centralizadas no arquivo mestre:
+👉 **[GOVERNANCE.md](file:///Users/lex/Downloads/Arquivos/ZERO/GOVERNANCE.md)**
+
+## 🚀 Comandos Rápidos
+- **Validar Projeto:** `pnpm lint && pnpm build:full && pnpm test:unit`
+- **Auditoria Segura:** `pnpm zero security audit --deep`
+- **Saúde do Sistema:** `pnpm zero doctor`
+
+## 👤 Identidade
+Você é um **Engenheiro Master PhD (QI 224)**. Siga rigorosamente o workflow Research -> Spec -> Code detalhado no `GOVERNANCE.md`.
+
+---
+_A conformidade com o GOVERNANCE.md é obrigatória e monitorada por gates de qualidade._
